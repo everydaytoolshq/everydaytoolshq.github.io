@@ -118,7 +118,7 @@
     .hero {
       background: linear-gradient(160deg, #fff7ed 0%, #fef3c7 40%, #e0f2fe 100%);
       border-bottom: 1px solid var(--border-warm);
-      padding: 48px 0 56px;
+      padding: 40px 0 48px;
       overflow: hidden;
       position: relative;
     }
@@ -138,15 +138,11 @@
       background: radial-gradient(circle, rgba(14,165,233,.10) 0%, transparent 70%);
       pointer-events: none;
     }
-    .heroGrid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-      align-items: center;
+    .heroWrap {
       position: relative;
       z-index: 1;
     }
-    .heroBadgeRow { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .heroBadgeRow { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
     .heroBadge {
       display: inline-flex;
       align-items: center;
@@ -212,19 +208,12 @@
       box-shadow: var(--shadow-sm);
     }
     .btn[disabled] { opacity: .55; cursor: wait; transform: none; }
-    .heroPrivacyNote {
-      font-size: 13px;
-      color: var(--muted);
-      display: flex;
-      align-items: flex-start;
-      gap: 6px;
-      line-height: 1.6;
-    }
-    .heroPrivacyNote::before { content: '🔒'; flex-shrink: 0; }
+
 
     /* Hero image */
     .heroImgWrap {
       position: relative;
+      margin: 24px 0 20px;
     }
     .heroImgFrame {
       border-radius: var(--radius-xl);
@@ -267,37 +256,7 @@
       50% { box-shadow: 0 0 0 6px rgba(34,197,94,.08); }
     }
 
-    /* ── TOOL PANEL ── */
-    .toolSection { padding: 48px 0; }
-    .toolPanel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-lg);
-      overflow: hidden;
-    }
-    .toolHeader {
-      background: linear-gradient(135deg, #fff7ed 0%, #fef3c7 100%);
-      border-bottom: 1px solid var(--border-warm);
-      padding: 24px 28px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    .toolHeaderLeft { display: flex; align-items: center; gap: 14px; }
-    .toolIcon {
-      width: 48px; height: 48px;
-      background: linear-gradient(135deg, var(--gold), var(--sun));
-      border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 24px;
-      box-shadow: 0 4px 12px rgba(251,191,36,.3);
-    }
-    .toolTitle { font-family: var(--font-display); font-size: 20px; font-weight: 700; }
-    .toolSubtitle { font-size: 13px; color: var(--muted); margin-top: 2px; }
-    .toolBody { padding: 28px; }
+    /* Tool panel styles removed - merged into hero */
 
     /* Status pills */
     .statusBar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
@@ -649,8 +608,6 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 1024px) {
-      .heroGrid { grid-template-columns: 1fr; }
-      .heroImgWrap { max-width: 580px; margin: 0 auto; }
       .topCard { grid-template-columns: 1fr; }
       .topCardLeft { border-right: none; border-bottom: 1px solid var(--border); }
       .cards { grid-template-columns: repeat(2, 1fr); }
@@ -659,16 +616,15 @@
     }
     @media (max-width: 720px) {
       .wrap { width: calc(100% - 24px); }
-      .hero { padding: 32px 0 40px; }
+      .hero { padding: 28px 0 36px; }
       .heroImgBadge { display: none; }
       .cards, .methodGrid, .smallHelp, .scoreRow, .cardSplit { grid-template-columns: 1fr; }
       .affiliateBanner { grid-template-columns: 1fr; }
       .affiliateMedia { max-height: 200px; overflow: hidden; }
-      .toolBody, .toolHeader { padding: 20px; }
-
     }
     @media (max-width: 480px) {
-      h1 { font-size: 32px; }
+      h1 { font-size: 30px; }
+      .heroActions { flex-direction: column; }
       .heroActions .btn { width: 100%; justify-content: center; }
     }
 
@@ -680,67 +636,42 @@
 
   <!-- HERO -->
   <section class="hero" aria-label="Proximity SunSeeker hero">
-    <div class="wrap">
-      <div class="heroGrid">
-        <div class="heroContent">
-          <div class="heroBadgeRow">
-            <span class="heroBadge orange"><span class="dot"></span> UK & Ireland</span>
-            <span class="heroBadge sky"><span class="dot"></span> Live weather</span>
-            <span class="heroBadge green"><span class="dot"></span> Free · Private</span>
-          </div>
-          <h1>Find the <span>Closest Sunny Place</span> Near You</h1>
-          <p class="heroLead">Share your location and we'll rank every sunny town and city across the UK and Ireland by driving distance — live weather, right now.</p>
-          <div class="heroActions">
-            <button class="btn btnSun" id="locateBtn" type="button">☀️ Use My Rainy Location</button>
-            <button class="btn btnGhost" id="refreshBtn" type="button">↻ Refresh Ranking</button>
-          </div>
-          <p class="heroPrivacyNote">Your coordinates never leave your browser. All distance calculations happen locally on your device — total privacy guaranteed.</p>
+    <div class="wrap heroWrap">
+      <div class="heroBadgeRow">
+        <span class="heroBadge orange"><span class="dot"></span> UK &amp; Ireland</span>
+        <span class="heroBadge sky"><span class="dot"></span> Live weather</span>
+        <span class="heroBadge green"><span class="dot"></span> Free · Private</span>
+      </div>
+      <h1>Find the <span>Closest Sunny Place</span> Near You</h1>
+      <p class="heroLead">Share your location and we'll rank every sunny town and city across the UK and Ireland by driving distance — live weather, right now.</p>
+
+      <div class="heroImgWrap">
+        <div class="heroImgFrame">
+          <img src="https://everydaytoolshq.github.io/ukproximitysunseekertoolhero.jpg" alt="Proximity SunSeeker – UK and Ireland live sunshine finder showing sunny places ranked by driving distance" width="1137" height="596" loading="eager" decoding="async">
         </div>
-        <div class="heroImgWrap">
-          <div class="heroImgFrame">
-            <img src="https://everydaytoolshq.github.io/ukproximitysunseekertoolhero.jpg" alt="Proximity SunSeeker – UK and Ireland live sunshine finder showing sunny places ranked by driving distance" width="1137" height="596" loading="eager" decoding="async">
-          </div>
-          <div class="heroImgBadge">
-            <span class="liveBlip"></span>
-            Live weather · 3 model consensus
-          </div>
+        <div class="heroImgBadge">
+          <span class="liveBlip"></span>
+          Live weather · 3 model consensus
         </div>
+      </div>
+
+      <div class="heroActions">
+        <button class="btn btnSun" id="locateBtn" type="button">☀️ Use My Rainy Location</button>
+        <button class="btn btnGhost" id="refreshBtn" type="button">↻ Refresh Ranking</button>
+      </div>
+
+      <div class="statusBar" aria-live="polite">
+        <span class="pill" id="statusPill">Status: <b>Ready</b></span>
+        <span class="pill" id="nationPill">Area: <b>Waiting for location</b></span>
+        <span class="pill pillSun" id="sourcePill">Filter: <b>Sunny or almost sunny</b></span>
+      </div>
+      <div class="notice hidden" id="statusNotice"></div>
+      <div class="smallHelp hidden" id="locationHelp" aria-label="Mobile location help">
+        <div class="helpCard"><strong>iPhone / iPad</strong><br>Enable <em>Location Services</em> in Settings, then allow location for Safari or Chrome.</div>
+        <div class="helpCard"><strong>Android</strong><br>Allow <em>Location</em> permission for your browser, then tap the button again.</div>
       </div>
     </div>
   </section>
-
-  <!-- TOOL PANEL -->
-  <div class="toolSection">
-    <div class="wrap">
-      <div class="toolPanel">
-        <div class="toolHeader">
-          <div class="toolHeaderLeft">
-            <div class="toolIcon">☀️</div>
-            <div>
-              <div class="toolTitle">Proximity SunSeeker</div>
-              <div class="toolSubtitle">Live sunshine finder — UK & Ireland</div>
-            </div>
-          </div>
-          <div class="statusBar" aria-live="polite">
-            <span class="pill" id="statusPill">Status: <b>Ready</b></span>
-            <span class="pill" id="nationPill">Area: <b>Waiting for location</b></span>
-            <span class="pill pillSun" id="sourcePill">Filter: <b>Sunny or almost sunny</b></span>
-          </div>
-        </div>
-        <div class="toolBody">
-          <div class="actionRow">
-            <button class="btn btnSun" id="locateBtn2" type="button">☀️ Use My Rainy Location</button>
-            <button class="btn btnGhost" id="refreshBtn2" type="button">↻ Refresh Ranking</button>
-          </div>
-          <div class="notice hidden" id="statusNotice"></div>
-          <div class="smallHelp hidden" id="locationHelp" aria-label="Mobile location help">
-            <div class="helpCard"><strong>iPhone / iPad</strong><br>Enable <em>Location Services</em> in Settings, then allow location for Safari or Chrome.</div>
-            <div class="helpCard"><strong>Android</strong><br>Allow <em>Location</em> permission for your browser, then tap the button again.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- RESULTS -->
   <main class="resultsSection">
@@ -905,8 +836,8 @@
     const state = { user:null, nation:null, items:[], running:false, nightMode:false };
 
     // Sync both button pairs
-    const locateBtns = [document.getElementById('locateBtn'), document.getElementById('locateBtn2')];
-    const refreshBtns = [document.getElementById('refreshBtn'), document.getElementById('refreshBtn2')];
+    const locateBtns = [document.getElementById('locateBtn')];
+    const refreshBtns = [document.getElementById('refreshBtn')];
     const els = {
       statusPill: document.getElementById('statusPill'),
       nationPill: document.getElementById('nationPill'),
