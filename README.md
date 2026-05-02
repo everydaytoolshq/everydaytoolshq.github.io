@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,6 +6,7 @@
     <title>EverydayToolsHQ - Free Online Tools</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
         
@@ -39,12 +40,12 @@
 </head>
 <body>
 
-    <!-- Hero Section -->
-    <div class="pt-16 pb-20 text-center">
+    <!-- Hero Section - Logo pushed way up -->
+    <div class="pt-8 pb-16 text-center">
         <div class="max-w-4xl mx-auto px-6">
             <img src="https://everydaytoolshq.github.io/edtlogo.jpg" 
                  alt="EverydayToolsHQ Logo" 
-                 class="w-64 h-64 mx-auto mb-8 rounded-3xl shadow-xl">
+                 class="w-60 h-60 mx-auto mb-6 rounded-3xl shadow-xl">
 
             <h1 class="logo-font text-6xl md:text-7xl font-bold tracking-tighter mb-4 text-gray-900">
                 EverydayToolsHQ
@@ -64,7 +65,6 @@
         </div>
 
         <div class="rubik-grid">
-            <!-- Example Tool Cards -->
             <a href="#" class="tool-card bg-white rounded-3xl overflow-hidden group">
                 <div class="h-64 bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
                     <i class="fas fa-calculator text-8xl text-white"></i>
@@ -134,26 +134,26 @@
     </div>
 
     <!-- Footer -->
-    <footer style="margin-top:60px;padding:20px 0;border-top:1px solid #ddd;text-align:center;font-size:14px; background-color: #f9fafb;">
+    <footer style="margin-top:80px;padding:40px 0 30px;border-top:1px solid #ddd;text-align:center;font-size:14px; background-color: #f9fafb;">
         <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
-            <div style="margin-bottom:10px;">
+            <div style="margin-bottom:12px;">
                 <strong>EverydayToolsHQ</strong>
             </div>
 
-            <div style="margin-bottom:10px;">
-                <a href="/" style="margin:0 8px; color: #374151; text-decoration: none;">Home</a>
-                <a href="/about/" style="margin:0 8px; color: #374151; text-decoration: none;">About</a>
+            <div style="margin-bottom:12px;">
+                <a href="/" style="margin:0 10px; color:#374151; text-decoration:none; font-weight:500;">Home</a>
+                <a href="/about/" style="margin:0 10px; color:#374151; text-decoration:none;">About</a>
             </div>
 
-            <div style="margin-bottom:10px;">
-                <a href="https://powerstationhq.com/privacy-policy/" target="_blank" style="color: #374151; text-decoration: none;">Privacy Policy</a> |
-                <a href="https://powerstationhq.com/terms-and-conditions/" target="_blank" style="color: #374151; text-decoration: none;">Terms</a> |
-                <a href="https://powerstationhq.com/affiliate-disclosure/" target="_blank" style="color: #374151; text-decoration: none;">Affiliate Disclosure</a>
+            <div style="margin-bottom:16px;">
+                <a href="https://powerstationhq.com/privacy-policy/" target="_blank" style="color:#374151;text-decoration:none;">Privacy Policy</a> |
+                <a href="https://powerstationhq.com/terms-and-conditions/" target="_blank" style="color:#374151;text-decoration:none;">Terms</a> |
+                <a href="https://powerstationhq.com/affiliate-disclosure/" target="_blank" style="color:#374151;text-decoration:none;">Affiliate Disclosure</a>
             </div>
 
-            <div style="margin-top:10px;">
-                Powered by
-                <a href="https://powerstationhq.com/" target="_blank" style="color: #2563eb; font-weight: bold; text-decoration: none;">PowerstationHQ</a>
+            <div style="color:#6b7280;">
+                Powered by 
+                <a href="https://powerstationhq.com/" target="_blank" style="color:#2563eb;font-weight:600;text-decoration:none;">PowerstationHQ</a>
             </div>
         </div>
     </footer>
