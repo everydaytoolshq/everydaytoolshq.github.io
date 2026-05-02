@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -22,12 +23,21 @@
         .tool-card {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             border: 2px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
         
         .tool-card:hover {
             transform: translateY(-12px) scale(1.05);
             border-color: #3b82f6;
             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        .tool-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .rubik-grid {
@@ -39,7 +49,7 @@
 </head>
 <body>
 
-    <!-- Hero Section - Logo pushed way up -->
+    <!-- Hero Section -->
     <div class="pt-8 pb-16 text-center">
         <div class="max-w-4xl mx-auto px-6">
             <img src="https://everydaytoolshq.github.io/edtlogo.jpg" 
@@ -64,14 +74,15 @@
         </div>
 
         <div class="rubik-grid">
+            
             <a href="#" class="tool-card bg-white rounded-3xl overflow-hidden group">
                 <div class="h-64 bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
                     <i class="fas fa-calculator text-8xl text-white"></i>
                 </div>
-                <div class="p-6">
-                    <h3 class="font-semibold text-2xl mb-1">BMI Calculator</h3>
-                    <p class="text-gray-600">Calculate your Body Mass Index instantly.</p>
-                    <div class="mt-6 text-blue-600 font-medium group-hover:underline">Open Tool →</div>
+                <div class="tool-content p-6">
+                    <h3 class="font-semibold text-2xl mb-3">BMI Calculator</h3>
+                    <p class="text-gray-600 flex-grow">Calculate your Body Mass Index instantly.</p>
+                    <div class="mt-auto pt-6 text-blue-600 font-medium group-hover:underline">Open Tool →</div>
                 </div>
             </a>
 
@@ -79,10 +90,10 @@
                 <div class="h-64 bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
                     <i class="fas fa-key text-8xl text-white"></i>
                 </div>
-                <div class="p-6">
-                    <h3 class="font-semibold text-2xl mb-1">Password Generator</h3>
-                    <p class="text-gray-600">Generate strong and secure passwords.</p>
-                    <div class="mt-6 text-blue-600 font-medium group-hover:underline">Open Tool →</div>
+                <div class="tool-content p-6">
+                    <h3 class="font-semibold text-2xl mb-3">Password Generator</h3>
+                    <p class="text-gray-600 flex-grow">Generate strong and secure passwords.</p>
+                    <div class="mt-auto pt-6 text-blue-600 font-medium group-hover:underline">Open Tool →</div>
                 </div>
             </a>
 
@@ -90,10 +101,10 @@
                 <div class="h-64 bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center">
                     <i class="fas fa-exchange-alt text-8xl text-white"></i>
                 </div>
-                <div class="p-6">
-                    <h3 class="font-semibold text-2xl mb-1">Unit Converter</h3>
-                    <p class="text-gray-600">Convert length, weight, temperature & more.</p>
-                    <div class="mt-6 text-blue-600 font-medium group-hover:underline">Open Tool →</div>
+                <div class="tool-content p-6">
+                    <h3 class="font-semibold text-2xl mb-3">Unit Converter</h3>
+                    <p class="text-gray-600 flex-grow">Convert length, weight, temperature &amp; more.</p>
+                    <div class="mt-auto pt-6 text-blue-600 font-medium group-hover:underline">Open Tool →</div>
                 </div>
             </a>
 
@@ -101,10 +112,10 @@
                 <div class="h-64 bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
                     <i class="fas fa-qrcode text-8xl text-white"></i>
                 </div>
-                <div class="p-6">
-                    <h3 class="font-semibold text-2xl mb-1">QR Code Generator</h3>
-                    <p class="text-gray-600">Create custom QR codes instantly.</p>
-                    <div class="mt-6 text-blue-600 font-medium group-hover:underline">Open Tool →</div>
+                <div class="tool-content p-6">
+                    <h3 class="font-semibold text-2xl mb-3">QR Code Generator</h3>
+                    <p class="text-gray-600 flex-grow">Create custom QR codes instantly.</p>
+                    <div class="mt-auto pt-6 text-blue-600 font-medium group-hover:underline">Open Tool →</div>
                 </div>
             </a>
 
@@ -112,10 +123,10 @@
                 <div class="h-64 bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center">
                     <i class="fas fa-dollar-sign text-8xl text-white"></i>
                 </div>
-                <div class="p-6">
-                    <h3 class="font-semibold text-2xl mb-1">Loan Calculator</h3>
-                    <p class="text-gray-600">Calculate EMI and total interest.</p>
-                    <div class="mt-6 text-blue-600 font-medium group-hover:underline">Open Tool →</div>
+                <div class="tool-content p-6">
+                    <h3 class="font-semibold text-2xl mb-3">Loan Calculator</h3>
+                    <p class="text-gray-600 flex-grow">Calculate monthly payments and total interest.</p>
+                    <div class="mt-auto pt-6 text-blue-600 font-medium group-hover:underline">Open Tool →</div>
                 </div>
             </a>
 
@@ -123,12 +134,13 @@
                 <div class="h-64 bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center">
                     <i class="fas fa-birthday-cake text-8xl text-white"></i>
                 </div>
-                <div class="p-6">
-                    <h3 class="font-semibold text-2xl mb-1">Age Calculator</h3>
-                    <p class="text-gray-600">Calculate exact age in years, months & days.</p>
-                    <div class="mt-6 text-blue-600 font-medium group-hover:underline">Open Tool →</div>
+                <div class="tool-content p-6">
+                    <h3 class="font-semibold text-2xl mb-3">Age Calculator</h3>
+                    <p class="text-gray-600 flex-grow">Calculate exact age in years, months &amp; days.</p>
+                    <div class="mt-auto pt-6 text-blue-600 font-medium group-hover:underline">Open Tool →</div>
                 </div>
             </a>
+
         </div>
     </div>
 
