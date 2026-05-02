@@ -982,6 +982,11 @@
         setNotice('');
         showLocationHelp(false);
         renderResults(routed);
+        // Scroll to results after a short delay so DOM has painted
+        setTimeout(() => {
+          const target = document.getElementById('closestTitle');
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 120);
       }catch(err){
         const msg=err&&err.message?err.message:'Unable to complete the sunshine ranking right now.';
         setStatus('Needs permission or retry');
