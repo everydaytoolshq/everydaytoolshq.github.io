@@ -1,1 +1,2365 @@
-test
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FF6B00">
+<meta name="description" content="The Ultimate Air Fryer Companion Tool — 10 tools in one: oven converter, multi-food sync timer, reheat calculator, frozen food converter, portion adjuster, crispiness optimizer, wattage adjuster, meat doneness guide, Can I Air Fry This, and cleaning helper.">
+<meta name="keywords" content="air fryer companion tool, air fryer converter, multi food air fryer timer, air fryer reheat calculator, frozen food air fryer, air fryer wattage adjuster">
+<title>Air Fryer Companion Tool | 10 Tools in One</title>
+
+<!-- Open Graph -->
+<meta property="og:site_name" content="EverydayToolsHQ">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Air Fryer Companion Tool | 10 Tools in One">
+<meta property="og:description" content="The only air fryer tool you'll ever need — oven converter, sync timer, reheat calc, frozen food guide, crispiness optimizer, wattage adjuster and more.">
+<meta property="og:url" content="https://everydaytoolshq.github.io/air-fryer-companion-tool/">
+<meta property="og:image" content="https://everydaytoolshq.github.io/AirFryerCompanionToolhero.jpg">
+<meta property="og:image:width" content="1177">
+<meta property="og:image:height" content="672">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Air Fryer Companion Tool | 10 Tools in One">
+<meta name="twitter:image" content="https://everydaytoolshq.github.io/AirFryerCompanionToolhero.jpg">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Nunito:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+"@context":"https://schema.org",
+"@type":"WebApplication",
+"name":"Air Fryer Companion Tool",
+"applicationCategory":"UtilitiesApplication",
+"operatingSystem":"Web Browser",
+"url":"https://everydaytoolshq.github.io/air-fryer-companion-tool/",
+"description":"10 air fryer tools in one page: oven converter, sync timer, reheat calculator, frozen food guide, portion adjuster, crispiness optimizer, wattage adjuster, meat doneness, can-I-air-fry checker, and cleaning tracker.",
+"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+"publisher":{"@type":"Organization","name":"EverydayToolsHQ","url":"https://everydaytoolshq.github.io"}
+}
+</script>
+
+<style>
+/* ── TOKENS ── */
+:root {
+--fire: #FF5500;
+--ember: #FF8C00;
+--spark: #FFB830;
+--smoke: #FFF4E6;
+--ash: #FDE8CC;
+--char: #1A0A00;
+--coal: #3D1F00;
+--grey: #6B5740;
+--border: #FFD8A8;
+--surface: #FFFFFF;
+--surface-warm: #FFFAF4;
+--bg: #FFF8EE;
+--shadow-sm: 0 2px 8px rgba(255,85,0,.08);
+--shadow: 0 6px 24px rgba(255,85,0,.10);
+--shadow-lg: 0 20px 50px rgba(255,85,0,.14);
+--radius: 16px;
+--radius-lg: 24px;
+--radius-xl: 32px;
+--wrap: 1180px;
+--font-display: 'Archivo Black', Impact, sans-serif;
+--font-body: 'Nunito', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+font-family: var(--font-body);
+background: var(--bg);
+color: var(--char);
+line-height: 1.6;
+min-height: 100vh;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+.wrap { width: min(var(--wrap), calc(100% - 32px)); margin: 0 auto; }
+
+/* ── HERO ── */
+.hero {
+background: linear-gradient(160deg, #fff4e6 0%, #ffe8cc 50%, #ffd6a8 100%);
+border-bottom: 1px solid var(--border);
+padding: 48px 0 60px;
+overflow: hidden;
+position: relative;
+}
+.hero::before {
+content: '';
+position: absolute;
+top: -120px; right: -100px;
+width: 600px; height: 600px;
+background: radial-gradient(circle, rgba(255,140,0,.22) 0%, transparent 70%);
+pointer-events: none;
+}
+.hero::after {
+content: '';
+position: absolute;
+bottom: -80px; left: -80px;
+width: 440px; height: 440px;
+background: radial-gradient(circle, rgba(255,85,0,.12) 0%, transparent 70%);
+pointer-events: none;
+}
+.heroWrap { position: relative; z-index: 1; }
+
+.heroBadgeRow { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+.heroBadge {
+display: inline-flex; align-items: center; gap: 6px;
+padding: 5px 13px; border-radius: 999px;
+font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+}
+.heroBadge.orange { background: #fff3e0; border: 1px solid var(--border); color: #c2410c; }
+.heroBadge.red { background: #fff0f0; border: 1px solid #fecaca; color: #991b1b; }
+.heroBadge.green { background: #dcfce7; border: 1px solid #bbf7d0; color: #166534; }
+.heroBadge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+h1 {
+font-family: var(--font-display);
+font-size: clamp(36px, 5vw, 64px);
+font-weight: 900;
+line-height: 1.0;
+letter-spacing: -.01em;
+color: var(--char);
+margin-bottom: 18px;
+}
+h1 span { color: var(--fire); }
+.heroLead {
+font-size: clamp(15px, 1.6vw, 18px);
+color: var(--coal);
+line-height: 1.8;
+margin-bottom: 28px;
+max-width: 580px;
+font-weight: 500;
+}
+
+/* Tool nav pills */
+.toolNav {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+margin-bottom: 0;
+}
+.toolNavPill {
+display: inline-flex; align-items: center; gap: 6px;
+padding: 7px 14px;
+background: white;
+border: 1.5px solid var(--border);
+border-radius: 999px;
+font-size: 13px; font-weight: 700;
+color: var(--coal);
+cursor: pointer;
+text-decoration: none;
+transition: all .18s;
+}
+.toolNavPill:hover, .toolNavPill.active {
+background: var(--fire);
+border-color: var(--fire);
+color: white;
+transform: translateY(-1px);
+}
+.toolNavPill i { font-size: 11px; }
+
+/* Hero image */
+.heroImgWrap { position: relative; margin: 32px 0 36px; }
+.heroImgFrame {
+border-radius: var(--radius-xl);
+overflow: hidden;
+box-shadow: var(--shadow-lg);
+border: 1px solid rgba(255,255,255,.8);
+aspect-ratio: 1177 / 672;
+background: linear-gradient(135deg, #ffe8cc, #fff4e6);
+}
+.heroImgFrame img { width: 100%; height: 100%; object-fit: cover; }
+.heroImgBadge {
+position: absolute; bottom: -14px; left: 24px;
+background: white; border: 1px solid var(--border);
+border-radius: var(--radius); padding: 10px 16px;
+display: flex; align-items: center; gap: 10px;
+box-shadow: var(--shadow); font-size: 13px; font-weight: 700;
+}
+.liveBlip {
+width: 8px; height: 8px; border-radius: 50%;
+background: var(--fire);
+box-shadow: 0 0 0 3px rgba(255,85,0,.2);
+animation: blip 2s infinite; flex-shrink: 0;
+}
+@keyframes blip {
+0%,100% { box-shadow: 0 0 0 3px rgba(255,85,0,.2); }
+50% { box-shadow: 0 0 0 7px rgba(255,85,0,.07); }
+}
+
+/* ── SECTION LAYOUT ── */
+.pageSection { padding: 0 0 56px; }
+.sectionLabel {
+font-family: var(--font-display);
+font-size: 10px; font-weight: 900;
+letter-spacing: .18em; text-transform: uppercase;
+color: var(--fire); margin-bottom: 8px;
+}
+h2 {
+font-family: var(--font-display);
+font-size: clamp(22px, 2.6vw, 32px);
+font-weight: 900; letter-spacing: -.015em;
+line-height: 1.1; margin-bottom: 8px;
+}
+.sectionText { font-size: 15px; color: var(--grey); line-height: 1.7; margin-bottom: 24px; max-width: 700px; }
+
+/* ── TOOL GRID ── */
+.toolGrid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 28px;
+align-items: start;
+}
+@media (max-width: 820px) { .toolGrid { grid-template-columns: 1fr; } }
+
+/* ── CARDS ── */
+.card {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 28px;
+box-shadow: var(--shadow);
+}
+.cardHeader {
+display: flex; align-items: center; gap: 12px;
+margin-bottom: 22px; padding-bottom: 16px;
+border-bottom: 2px solid var(--border);
+}
+.cardTitle {
+font-family: var(--font-display);
+font-size: 1.25rem; font-weight: 900;
+color: var(--fire); flex: 1;
+}
+.cardBadge {
+background: var(--fire); color: white;
+padding: 4px 11px; border-radius: 999px;
+font-size: 0.72rem; font-weight: 700;
+text-transform: uppercase; letter-spacing: .07em;
+}
+.cardBadgeGreen { background: #16a34a; }
+.cardBadgeBlue { background: #0369a1; }
+
+/* ── FORMS ── */
+.formGroup { margin-bottom: 18px; }
+.formGroup label {
+display: block; font-weight: 700;
+margin-bottom: 7px; color: var(--coal);
+font-size: 0.88rem;
+}
+.formGroup small {
+display: block; color: var(--grey);
+font-size: 0.78rem; margin-top: 4px; line-height: 1.5;
+}
+.formGroup h3 {
+font-family: var(--font-display);
+font-size: 0.95rem; color: var(--fire);
+margin: 20px 0 12px; font-weight: 900;
+letter-spacing: .02em;
+}
+input[type="number"], input[type="text"], input[type="range"] {
+width: 100%; padding: 10px 13px;
+border: 2px solid var(--border); border-radius: 10px;
+font-size: 0.92rem; font-family: var(--font-body);
+background: white; color: var(--char);
+transition: border-color .2s, box-shadow .2s;
+}
+select {
+width: 100%; padding: 10px 36px 10px 13px;
+border: 2px solid var(--border); border-radius: 10px;
+font-size: 0.92rem; font-family: var(--font-body);
+background: white; color: var(--char);
+cursor: pointer; appearance: none;
+background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF5500' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+background-repeat: no-repeat; background-position: right 10px center; background-size: 17px;
+transition: border-color .2s, box-shadow .2s;
+}
+input:focus, select:focus {
+outline: none; border-color: var(--fire);
+box-shadow: 0 0 0 3px rgba(255,85,0,.12);
+}
+input[type="range"] { padding: 4px 0; accent-color: var(--fire); border: none; }
+
+/* Checkbox */
+.checkRow {
+display: flex; align-items: center; gap: 10px;
+font-weight: 700; font-size: 0.88rem;
+cursor: pointer; color: var(--coal);
+}
+.checkRow input[type="checkbox"] {
+width: 17px; height: 17px; accent-color: var(--fire);
+cursor: pointer; border: none; padding: 0;
+}
+
+/* Slider */
+.sliderRow { display: flex; align-items: center; gap: 10px; }
+.sliderRow input { flex: 1; }
+.sliderVal {
+min-width: 56px; text-align: center;
+font-family: var(--font-display); font-size: 1rem;
+font-weight: 900; color: var(--fire);
+background: var(--smoke); border-radius: 8px;
+padding: 4px 8px;
+}
+
+/* Radio group */
+.radioGroup {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+gap: 7px; margin-top: 6px;
+}
+.radioOpt { position: relative; }
+.radioOpt input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+.radioOpt label {
+display: block; padding: 9px 8px;
+background: white; border: 2px solid var(--border);
+border-radius: 9px; text-align: center;
+cursor: pointer; transition: all .18s;
+font-size: 0.82rem; font-weight: 700; color: var(--coal);
+}
+.radioOpt input[type="radio"]:checked + label {
+background: var(--fire); color: white; border-color: var(--fire);
+}
+
+/* ── BUTTONS ── */
+.btn {
+display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+width: 100%; padding: 14px; border: none; border-radius: 12px;
+font-size: 0.95rem; font-weight: 700; font-family: var(--font-body);
+cursor: pointer; transition: transform .18s, box-shadow .18s;
+text-transform: uppercase; letter-spacing: 1.5px; margin-top: 14px;
+}
+.btnFire {
+background: linear-gradient(135deg, var(--fire) 0%, #cc3300 100%);
+color: white; box-shadow: 0 6px 20px rgba(255,85,0,.3);
+}
+.btnFire:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(255,85,0,.4); }
+.btnFire:active { transform: translateY(0); }
+
+/* ── RESULTS ── */
+.resultsBlock { display: none; animation: slideUp .45s ease-out; }
+.resultsBlock.show { display: block; }
+@keyframes slideUp {
+from { opacity: 0; transform: translateY(16px); }
+to { opacity: 1; transform: translateY(0); }
+}
+.resultsGrid {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 12px; margin-bottom: 18px;
+}
+@media (max-width: 480px) { .resultsGrid { grid-template-columns: 1fr; } }
+.resultItem {
+background: linear-gradient(135deg, var(--smoke) 0%, var(--ash) 100%);
+padding: 16px; border-radius: 12px;
+border-left: 4px solid var(--ember);
+text-align: center;
+}
+.resultItem h3 {
+font-size: 0.72rem; text-transform: uppercase;
+letter-spacing: .08em; color: var(--ember);
+margin-bottom: 6px; font-weight: 700;
+}
+.resultVal {
+font-family: var(--font-display);
+font-size: 1.6rem; font-weight: 900;
+color: var(--fire); margin-bottom: 4px;
+}
+.resultSub { font-size: 0.8rem; color: var(--grey); }
+
+.stepList { margin-top: 16px; }
+.stepList h3 {
+font-family: var(--font-display);
+font-size: 1rem; color: var(--fire);
+margin-bottom: 14px; font-weight: 900;
+}
+.stepItem {
+display: flex; gap: 12px; align-items: flex-start;
+padding: 9px 0; border-bottom: 1px dashed #f0dcc0;
+font-size: 0.88rem; line-height: 1.6;
+}
+.stepItem:last-child { border-bottom: none; }
+.stepNum {
+min-width: 24px; height: 24px; border-radius: 50%;
+background: var(--fire); color: white;
+display: flex; align-items: center; justify-content: center;
+font-size: 0.7rem; font-weight: 900; flex-shrink: 0;
+font-family: var(--font-display);
+}
+.infoBox {
+background: linear-gradient(135deg, var(--smoke), var(--ash));
+border-left: 4px solid var(--fire);
+padding: 12px 16px; border-radius: 10px;
+margin-top: 14px; font-size: 0.85rem;
+color: var(--coal); line-height: 1.7;
+}
+.alertBox {
+background: #fff5f5; border: 1px solid #fecaca;
+border-left: 4px solid #ef4444;
+padding: 12px 16px; border-radius: 10px;
+margin-top: 14px; font-size: 0.85rem;
+color: #7f1d1d; line-height: 1.7;
+}
+.successBox {
+background: #f0fdf4; border: 1px solid #bbf7d0;
+border-left: 4px solid #22c55e;
+padding: 12px 16px; border-radius: 10px;
+margin-top: 14px; font-size: 0.88rem;
+color: #14532d; line-height: 1.7;
+}
+
+/* Placeholder */
+.placeholder {
+padding: 32px 20px; border-radius: var(--radius-lg);
+border: 2px dashed var(--border);
+background: var(--surface-warm);
+color: var(--grey); text-align: center;
+font-size: 14px; line-height: 1.8;
+}
+.placeholder i {
+font-size: 2rem; color: var(--ember);
+display: block; margin-bottom: 12px;
+}
+
+/* ── MULTI-FOOD TIMER ── */
+.foodRow {
+display: grid;
+grid-template-columns: 1fr 80px 80px 36px;
+gap: 8px; align-items: center;
+margin-bottom: 8px;
+}
+.foodRow input, .foodRow select { margin: 0; }
+.removeBtn {
+width: 36px; height: 36px; border-radius: 8px;
+background: #fff0f0; border: 1.5px solid #fecaca;
+color: #ef4444; cursor: pointer;
+display: flex; align-items: center; justify-content: center;
+font-size: 14px; transition: all .15s;
+flex-shrink: 0;
+}
+.removeBtn:hover { background: #ef4444; color: white; }
+.addFoodBtn {
+display: inline-flex; align-items: center; gap: 7px;
+padding: 9px 16px;
+background: var(--smoke); border: 2px dashed var(--border);
+border-radius: 10px; cursor: pointer;
+font-size: 0.85rem; font-weight: 700; color: var(--fire);
+transition: all .15s; margin-top: 4px;
+}
+.addFoodBtn:hover { background: var(--ash); border-color: var(--ember); }
+
+/* Timer results */
+.timerTimeline {
+margin-top: 16px; padding: 16px;
+background: var(--smoke); border-radius: 12px;
+border: 1px solid var(--border);
+}
+.timelineItem {
+display: flex; align-items: center; gap: 12px;
+padding: 10px 0; border-bottom: 1px dashed #f0dcc0;
+font-size: 0.88rem;
+}
+.timelineItem:last-child { border-bottom: none; }
+.timelineTime {
+font-family: var(--font-display);
+font-size: 1.1rem; font-weight: 900;
+color: var(--fire); min-width: 52px;
+}
+.timelineAction { flex: 1; line-height: 1.5; }
+.timelineIcon { font-size: 1.2rem; }
+
+/* Sync total bar */
+.totalBarWrap { margin-top: 12px; }
+.totalBar {
+height: 10px; border-radius: 999px;
+background: var(--ash); overflow: hidden; margin-top: 6px;
+}
+.totalBarFill {
+height: 100%; border-radius: 999px;
+background: linear-gradient(90deg, var(--spark), var(--fire));
+transition: width .5s ease;
+}
+.totalBarLabel { font-size: 0.78rem; color: var(--grey); margin-top: 4px; }
+
+/* ── CAN I AIR FRY ── */
+.caniFryInput {
+display: flex; gap: 10px;
+}
+.caniFryInput input { flex: 1; }
+.caniFryInput button {
+padding: 10px 16px; background: var(--fire);
+border: none; border-radius: 10px;
+color: white; font-weight: 700; cursor: pointer;
+font-size: 0.88rem; transition: all .15s;
+white-space: nowrap;
+}
+.caniFryInput button:hover { background: #cc3300; }
+.fryResult {
+display: none; margin-top: 16px;
+padding: 20px; border-radius: var(--radius);
+}
+.fryResult.show { display: block; }
+.fryResult.yes { background: #f0fdf4; border: 1.5px solid #86efac; }
+.fryResult.no { background: #fff5f5; border: 1.5px solid #fca5a5; }
+.fryResult.maybe { background: #fffbeb; border: 1.5px solid #fde68a; }
+.fryAnswer {
+font-family: var(--font-display);
+font-size: 1.4rem; font-weight: 900;
+margin-bottom: 8px;
+}
+.fryAnswer.yes { color: #15803d; }
+.fryAnswer.no { color: #dc2626; }
+.fryAnswer.maybe { color: #d97706; }
+
+/* ── CLEANING TRACKER ── */
+.usageCounter {
+display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+}
+.usageNum {
+font-family: var(--font-display);
+font-size: 3rem; font-weight: 900; color: var(--fire);
+min-width: 80px;
+}
+.usageBtns { display: flex; gap: 8px; flex-wrap: wrap; }
+.usageBtn {
+padding: 8px 14px; border-radius: 10px;
+border: 2px solid var(--border);
+background: white; cursor: pointer;
+font-weight: 700; font-size: 0.82rem;
+color: var(--coal); transition: all .15s;
+}
+.usageBtn:hover { border-color: var(--fire); color: var(--fire); }
+.usageBtnRed { border-color: #fecaca; color: #dc2626; }
+.usageBtnRed:hover { background: #dc2626; color: white; border-color: #dc2626; }
+.cleanStatus {
+padding: 16px; border-radius: 12px; margin-top: 8px;
+font-weight: 700; font-size: 0.92rem; line-height: 1.7;
+}
+.statusGreen { background: #f0fdf4; border: 1.5px solid #86efac; color: #14532d; }
+.statusYellow { background: #fffbeb; border: 1.5px solid #fde68a; color: #78350f; }
+.statusRed { background: #fff5f5; border: 1.5px solid #fca5a5; color: #7f1d1d; }
+
+/* Progress bar for cleaning */
+.cleanBar {
+height: 12px; border-radius: 999px;
+background: #f0e0c8; overflow: hidden; margin: 12px 0 6px;
+}
+.cleanBarFill {
+height: 100%; border-radius: 999px;
+transition: width .5s ease, background .5s;
+}
+.cleanBarLabel { font-size: 0.78rem; color: var(--grey); }
+
+/* ── HOW IT WORKS ── */
+.howSection { padding: 0 0 56px; }
+.methodGrid {
+display: grid;
+grid-template-columns: repeat(5, 1fr);
+gap: 14px; margin-top: 24px;
+}
+.methodCard {
+background: var(--surface); border: 1px solid var(--border);
+border-radius: var(--radius-lg); padding: 20px;
+transition: transform .18s, box-shadow .18s;
+}
+.methodCard:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.methodNum {
+width: 34px; height: 34px; border-radius: 9px;
+background: linear-gradient(135deg, var(--ash), var(--spark));
+border: 1px solid var(--border);
+color: var(--fire); font-family: var(--font-display);
+font-weight: 900; font-size: 14px;
+display: flex; align-items: center; justify-content: center;
+margin-bottom: 12px;
+}
+.methodCard strong {
+font-family: var(--font-display); font-size: 14px;
+display: block; margin-bottom: 7px; color: var(--char);
+}
+.methodCard p { font-size: 12px; color: var(--grey); line-height: 1.6; }
+
+/* ── ABOUT / FAQ ── */
+.aboutSection, .faqSection {
+background: var(--surface); border: 1px solid var(--border);
+border-radius: var(--radius-xl); padding: 32px;
+margin-bottom: 24px; box-shadow: var(--shadow);
+}
+.aboutSection h2, .faqSection h2 { margin-bottom: 16px; }
+.aboutSection p {
+font-size: 15px; color: var(--coal);
+line-height: 1.85; margin-bottom: 14px; max-width: 860px;
+}
+.aboutSection p:last-child { margin-bottom: 0; }
+details {
+border: 1px solid var(--border); border-radius: var(--radius);
+background: var(--surface-warm); margin-bottom: 8px; overflow: hidden;
+}
+details:last-child { margin-bottom: 0; }
+summary {
+padding: 15px 18px; font-weight: 700; font-size: 14px;
+color: var(--char); cursor: pointer; list-style: none;
+display: flex; justify-content: space-between;
+align-items: center; gap: 12px;
+}
+summary::-webkit-details-marker { display: none; }
+summary::after {
+content: ''; display: inline-block;
+width: 7px; height: 7px;
+border-right: 2px solid var(--grey); border-bottom: 2px solid var(--grey);
+transform: rotate(45deg); flex-shrink: 0;
+transition: transform .2s; margin-bottom: 2px;
+}
+details[open] summary::after { transform: rotate(-135deg); margin-bottom: -2px; }
+.faqAnswer { padding: 0 18px 15px; font-size: 14px; color: var(--coal); line-height: 1.8; }
+
+/* ── AFFILIATE SECTION ── */
+.affiliateSection { padding: 0 0 56px; }
+.affiliateDisclaimer {
+background: var(--surface-warm);
+border-left: 3px solid var(--ember);
+padding: 12px 16px; margin-bottom: 28px;
+border-radius: 0 8px 8px 0;
+font-size: 0.83rem; color: var(--grey); line-height: 1.6;
+}
+.affiliateBanner {
+background: linear-gradient(90deg, var(--fire) 0%, var(--ember) 100%);
+color: white; padding: 12px 24px;
+text-align: center; border-radius: 12px;
+margin-bottom: 28px; font-size: 0.88rem;
+font-weight: 700; letter-spacing: .02em;
+}
+.productGrid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 20px; margin-top: 28px;
+}
+.productCard {
+background: var(--surface); border-radius: var(--radius-lg);
+overflow: hidden; box-shadow: var(--shadow);
+border: 1px solid var(--border);
+transition: transform .2s, box-shadow .2s;
+display: flex; flex-direction: column;
+}
+.productCard:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.productCard img { width: 100%; height: 190px; object-fit: cover; }
+.productInfo { padding: 18px; flex: 1; display: flex; flex-direction: column; }
+.productTitle {
+font-family: var(--font-display); font-weight: 900;
+margin-bottom: 8px; font-size: 0.95rem; color: var(--char);
+}
+.productDescription {
+color: var(--grey); font-size: 0.83rem;
+line-height: 1.6; margin-bottom: 14px; flex: 1;
+}
+.productLink {
+display: block; width: 100%; padding: 10px;
+background: linear-gradient(135deg, var(--ember), var(--fire));
+color: white; text-align: center; text-decoration: none;
+border-radius: 8px; font-weight: 700; font-size: 0.82rem;
+transition: opacity .2s, transform .15s;
+text-transform: uppercase; letter-spacing: .06em;
+}
+.productLink:hover { opacity: .9; transform: scale(1.02); }
+
+/* ── FOOTER ── */
+.siteFooter {
+margin-top: 80px; padding: 40px 0 30px;
+border-top: 1px solid #ddd; text-align: center;
+font-size: 14px; background-color: #f9fafb;
+}
+.footerInner { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.footerBrand { font-family: var(--font-display); font-weight: 900; margin-bottom: 12px; }
+.footerLinks { margin-bottom: 12px; }
+.footerLinks a { margin: 0 10px; color: #374151; text-decoration: none; font-weight: 600; }
+.footerLinks a:hover { text-decoration: underline; }
+.footerLegal { margin-bottom: 16px; }
+.footerLegal a { color: #374151; text-decoration: none; }
+.footerLegal a:hover { text-decoration: underline; }
+.footerPowered { color: #6b7280; }
+.footerPowered a { color: #2563eb; font-weight: 700; text-decoration: none; }
+.footerPowered a:hover { text-decoration: underline; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+.methodGrid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 720px) {
+.wrap { width: calc(100% - 24px); }
+.hero { padding: 28px 0 36px; }
+.heroImgBadge { display: none; }
+.methodGrid { grid-template-columns: repeat(2, 1fr); }
+.aboutSection, .faqSection { padding: 22px; }
+.foodRow { grid-template-columns: 1fr 70px 70px 36px; }
+}
+@media (max-width: 480px) {
+h1 { font-size: 30px; }
+.foodRow { grid-template-columns: 1fr; }
+.foodRow .removeBtn { width: 100%; }
+}
+
+/* ── MEAT SAFETY TABLE ── */
+.meatTable {
+width: 100%; border-collapse: collapse; margin-top: 12px;
+font-size: 0.84rem;
+}
+.meatTable th {
+background: var(--fire); color: white;
+padding: 8px 10px; text-align: left;
+font-weight: 700; font-size: 0.78rem;
+text-transform: uppercase; letter-spacing: .05em;
+}
+.meatTable td {
+padding: 8px 10px; border-bottom: 1px solid var(--border);
+}
+.meatTable tr:nth-child(even) td { background: var(--smoke); }
+.safetemp { color: #15803d; font-weight: 700; }
+
+/* Wattage viz */
+.wattageBar {
+height: 10px; border-radius: 999px;
+background: var(--ash); overflow: hidden; margin: 6px 0;
+}
+.wattageBarFill {
+height: 100%; border-radius: 999px;
+background: linear-gradient(90deg, var(--spark), var(--fire));
+}
+
+/* Portion viz */
+.portionIcons { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.portionIcon {
+width: 32px; height: 32px; border-radius: 8px;
+background: var(--smoke); border: 1.5px solid var(--border);
+display: flex; align-items: center; justify-content: center;
+font-size: 16px; transition: all .2s;
+}
+.portionIcon.full { background: var(--fire); border-color: var(--fire); filter: saturate(1.4); }
+.portionIcon.batch { background: var(--ember); border-color: var(--ember); }
+
+/* ── TOOL ANCHOR SECTIONS ── */
+.toolAnchor { scroll-margin-top: 20px; }
+</style>
+</head>
+<body>
+<!-- ═══════════════════════════════════════════
+HERO
+═══════════════════════════════════════════ -->
+<section class="hero" aria-label="Air Fryer Companion Tool hero">
+<div class="wrap heroWrap">
+<div class="heroBadgeRow">
+<span class="heroBadge orange"><span class="dot"></span> 10 Tools in One</span>
+<span class="heroBadge red"><span class="dot"></span> Air Fryer Expert</span>
+<span class="heroBadge green"><span class="dot"></span> Free · No Signup</span>
+</div>
+
+<h1>The <span>Air Fryer</span><br>Companion Tool</h1>
+<p class="heroLead">Every tool you need to cook smarter — oven converter, multi-food sync timer, reheat calculator, frozen food guide, wattage adjuster, crispiness optimizer, and more. All in one place.</p>
+
+<nav class="toolNav" aria-label="Jump to tool">
+<a href="#tool-converter" class="toolNavPill"><i class="fa-solid fa-fire"></i> Oven Converter</a>
+<a href="#tool-synctimer" class="toolNavPill"><i class="fa-solid fa-clock"></i> Sync Timer</a>
+<a href="#tool-reheat" class="toolNavPill"><i class="fa-solid fa-rotate-left"></i> Reheat</a>
+<a href="#tool-frozen" class="toolNavPill"><i class="fa-solid fa-snowflake"></i> Frozen</a>
+<a href="#tool-portion" class="toolNavPill"><i class="fa-solid fa-scale-balanced"></i> Portions</a>
+<a href="#tool-crispy" class="toolNavPill"><i class="fa-solid fa-star"></i> Crispiness</a>
+<a href="#tool-wattage" class="toolNavPill"><i class="fa-solid fa-bolt"></i> Wattage</a>
+<a href="#tool-meat" class="toolNavPill"><i class="fa-solid fa-drumstick-bite"></i> Meat Safety</a>
+<a href="#tool-canifry" class="toolNavPill"><i class="fa-solid fa-circle-question"></i> Can I Air Fry?</a>
+<a href="#tool-cleaning" class="toolNavPill"><i class="fa-solid fa-broom"></i> Cleaning</a>
+</nav>
+
+<div class="heroImgWrap">
+<div class="heroImgFrame">
+<img src="https://everydaytoolshq.github.io/AirFryerCompanionToolhero.jpg"
+alt="Air Fryer Companion Tool – 10 air fryer tools in one page"
+width="1177" height="672" loading="eager" decoding="async">
+</div>
+<div class="heroImgBadge">
+<span class="liveBlip"></span>
+10 precision air fryer tools · instant results
+</div>
+</div>
+</div>
+</section>
+
+<main>
+<div class="wrap" style="padding-top: 52px;">
+
+<!-- ═══════════════════════════════════════════
+TOOL 1 — OVEN CONVERTER
+═══════════════════════════════════════════ -->
+<section class="pageSection toolAnchor" id="tool-converter" aria-labelledby="convTitle">
+<p class="sectionLabel">Tool 1 of 10</p>
+<h2 id="convTitle">Oven-to-Air-Fryer Converter</h2>
+<p class="sectionText">Convert any oven recipe to air fryer settings instantly — with Density Modifier, frozen food mode, crunch level, and a personalised Shake Schedule.</p>
+
+<div class="toolGrid">
+<div class="card">
+<div class="cardHeader">
+<div class="cardTitle">Recipe Converter</div>
+<span class="cardBadge">Convert</span>
+</div>
+<form id="conv-form" novalidate>
+<div class="formGroup">
+<label for="conv-unit">Temperature Unit</label>
+<select id="conv-unit">
+<option value="f">°F (US / Imperial)</option>
+<option value="c">°C (Metric / Worldwide)</option>
+</select>
+</div>
+<div class="formGroup">
+<label for="conv-temp">Original Oven Temperature</label>
+<input type="number" id="conv-temp" min="50" max="300" value="200" required>
+<small>Enter in your selected unit above</small>
+</div>
+<div class="formGroup">
+<label for="conv-time">Original Cooking Time (minutes)</label>
+<input type="number" id="conv-time" min="5" max="180" value="25" required>
+</div>
+<div class="formGroup">
+<label for="conv-density">Food Density</label>
+<select id="conv-density">
+<option value="airy">Airy / Thin (Toast, Pastry, Fries)</option>
+<option value="standard" selected>Standard (Nuggets, Wings, Veggies)</option>
+<option value="dense">Dense (Chicken Breast, Steak, Pork)</option>
+</select>
+</div>
+<div class="formGroup">
+<label class="checkRow">
+<input type="checkbox" id="conv-frozen"> Food is frozen
+</label>
+</div>
+<div class="formGroup">
+<label>Crunch Level</label>
+<div class="sliderRow">
+<input type="range" id="conv-crunch" min="0" max="10" value="5">
+<span class="sliderVal" id="conv-crunch-val">5</span>
+</div>
+<small>0 = light crisp &nbsp;·&nbsp; 10 = maximum crunch</small>
+</div>
+<button type="submit" class="btn btnFire"><i class="fa-solid fa-fire"></i> Convert Recipe</button>
+</form>
+</div>
+
+<div>
+<div id="conv-placeholder" class="placeholder">
+<i class="fa-solid fa-fire"></i>
+Fill the form and hit Convert to see your air fryer settings.
+</div>
+<div class="resultsBlock" id="conv-results">
+<div class="card">
+<div class="cardHeader">
+<div class="cardTitle">Air Fryer Settings</div>
+<span class="cardBadge cardBadgeGreen">Results</span>
+</div>
+<div class="resultsGrid" id="conv-grid"></div>
+<div class="infoBox"><strong>Pro Tip:</strong> Always preheat 3–5 minutes before cooking. Use a thermometer for meat safety.</div>
+<div class="stepList" id="conv-steps"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+TOOL 2 — MULTI-FOOD SYNC TIMER
+═══════════════════════════════════════════ -->
+<section class="pageSection toolAnchor" id="tool-synctimer" aria-labelledby="syncTitle">
+<p class="sectionLabel">Tool 2 of 10</p>
+<h2 id="syncTitle">Multi-Food Sync Timer</h2>
+<p class="sectionText">Add multiple foods and get a precise start schedule — so everything finishes at exactly the same time. Never eat cold chips while the chicken finishes.</p>
+
+<div class="toolGrid">
+<div class="card">
+<div class="cardHeader">
+<div class="cardTitle">Add Your Foods</div>
+<span class="cardBadge">Sync</span>
+</div>
+<div id="sync-rows">
+<!-- rows added by JS -->
+</div>
+<button type="button" class="addFoodBtn" id="sync-add-btn">
+<i class="fa-solid fa-plus"></i> Add Another Food
+</button>
+<div class="formGroup" style="margin-top:18px;">
+<label for="sync-unit">Temperature Unit</label>
+<select id="sync-unit">
+<option value="f">°F</option>
+<option value="c">°C</option>
+</select>
+</div>
+<button type="button" class="btn btnFire" id="sync-calc-btn">
+<i class="fa-solid fa-clock"></i> Calculate Cook Schedule
+</button>
+</div>
+
+<div>
+<div id="sync-placeholder" class="placeholder">
+<i class="fa-solid fa-utensils"></i>
+Add at least 2 foods and click Calculate to see your sync schedule.
+</div>
+<div class="resultsBlock" id="sync-results">
+<div class="card">
+<div class="cardHeader">
+<div class="cardTitle">Cook Schedule</div>
+<span class="cardBadge cardBadgeGreen">Timeline</span>
+</div>
+<div id="sync-timeline"></div>
+<div class="totalBarWrap">
+<div style="font-size:0.82rem; font-weight:700; color:var(--coal);">Total cook time</div>
+<div class="totalBar"><div class="totalBarFill" id="sync-bar" style="width:0%"></div></div>
+<div class="totalBarLabel" id="sync-total-label"></div>
+</div>
+<div class="infoBox" style="margin-top:14px;"><strong>Tip:</strong> Set a kitchen timer or phone alarm for each action in the schedule above.</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+TOOL 3 — REHEAT CALCULATOR
+═══════════════════════════════════════════ -->
+<section class="pageSection toolAnchor" id="tool-reheat" aria-labelledby="reheatTitle">
+<p class="sectionLabel">Tool 3 of 10</p>
+<h2 id="reheatTitle">Reheat Calculator</h2>
+<p class="sectionText">The air fryer is the best leftover reheater on the planet — but only if you use the right settings. Select your food and get optimised temp, time, and tips.</p>
+
+<div class="toolGrid">
+<div class="card">
+<div class="cardHeader">
+<div class="cardTitle">Leftover Reheater</div>
+<span class="cardBadge">Reheat</span>
+</div>
+<form id="reheat-form" novalidate>
+<div class="formGroup">
+<label for="reheat-unit">Temperature Unit</label>
+<select id="reheat-unit">
+<option value="f">°F</option>
+<option value="c">°C</option>
+</select>
+</div>
+<div class="formGroup">
+<label for="reheat-food">Leftover Food Type</label>
+<select id="reheat-food">
+<option value="pizza">Pizza</option>
+<option value="fries">Fries / Chips</option>
+<option value="chicken">Fried Chicken</option>
+<option value="steak">Steak</option>
+<option value="fish">Fish / Seafood</option>
+<option value="spring_rolls">Spring Rolls / Samosas</option>
+<option value="pasta">Pasta / Casserole</option>
+<option value="burgers">Burgers / Patties</option>
+<option value="veggies">Roasted Vegetables</option>
+<option value="bread">Bread / Rolls / Garlic Bread</option>
+<option value="wings">Chicken Wings</option>
+<option value="sausage">Sausages</option>
+</select>
+</div>
+<div class="formGroup">
+<label for="reheat-size">Portion Size</label>
+<select id="reheat-size">
+<option value="small">Small (1 serving)</option>
+<option value="medium" selected>Medium (2–3 servings)</option>
+<option value="large">Large (4+ servings)</option>
+</select>
+</div>
+<div class="formGroup">
+<label class="checkRow">
+<input type="checkbox" id="reheat-straight-from-fridge" checked> Straight from fridge
+</label>
+</div>
+<button type="submit" class="btn btnFire"><i class="fa-solid fa-rotate-left"></i> Calculate Reheat Settings</button>
+</form>
+</div>
+
+<div>
+<div id="reheat-placeholder" class="placeholder">
+<i class="fa-solid fa-rotate-left"></i>
+Select your leftover food and hit Calculate to get perfect reheat settings.
+</div>
+<div class="resultsBlock" id="reheat-results">
+<div class="card">
+<div class="cardHeader">
+<div class="cardTitle">Reheat Settings</div>
+<span class="cardBadge cardBadgeGreen">Results</span>
+</div>
+<div class="resultsGrid" id="reheat-grid"></div>
+<div class="stepList" id="reheat-steps"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+TOOL 4 — FROZEN FOOD CONVERTER
+═══════════════════════════════════════════ -->
+<section class="pageSection toolAnchor" id="tool-frozen" aria-labelledby="frozenTitle">
+<p class="sectionLabel">Tool 4 of 10</p>
+<h2 id="frozenTitle">Frozen Food Converter</h2>
+<p class="sectionText">Frozen foods behave very differently from fresh — and package instructions are always for an oven. Get air fryer–optimised settings for any frozen food.</p>
+
+<div class="toolGrid">
+<div class="card">
+<div class="cardHeader">
+<div class="cardTitle">Frozen Food Guide</div>
+<span class="cardBadge">Frozen</span>
+</div>
+<form id="frozen-form" novalidate>
+<div class="formGroup">
+<label for="frozen-unit">Temperature Unit</label>
+<select id="frozen-unit">
+<option value="f">°F</option>
+<option value="c">°C</option>
+</select>
+</div>
+<div class="formGroup">
+<label for="frozen-food">Frozen Food Type</label>
+<select id="frozen-food">
+<option value="fries">Fries / Chips</option>
+<option value="nuggets">Chicken Nuggets</option>
+<option value="fish_fingers">Fish Fingers / Fish Sticks</option>
+<option value="pizza">Frozen Pizza / Pizza Bites</option>
+<option value="veg">Frozen Vegetables</option>
+<option value="mozzarella_sticks">Mozzarella Sticks / Cheese Bites</option>
+<option value="burgers">Frozen Burgers / Patties</option>
+<option value="spring_rolls">Spring Rolls / Egg Rolls</option>
+<option value="waffles">Waffles / Hash Browns</option>
+<option value="dumplings">Dumplings / Gyoza / Pierogi</option>
+<option value="prawns">Prawns / Shrimp (breaded)</option>
+<option value="sausages">Frozen Sausages</option>
+</select>
+</div>
+<div class="formGroup">
+<label for="frozen-pkg-temp">Package Oven Temp (optional)</label>
+<input type="number" id="frozen-pkg-temp" placeholder="e.g. 200" min="100" max="300">
+<small>Leave blank to use our recommended settings</small>
+</div>
+<div class="formGroup">
+<label for="frozen-pkg-time">Package Oven Time in minutes (optional)</label>
+<input type="number" id="frozen-pkg-time" placeholder="e.g. 20" min="5" max="90">
+</div>
+<button type="submit" class="btn btnFire"><i class="fa-solid fa-snowflake"></i> Get Air Fryer Settings</button>
+</form>
+</div>
+
+<div>
+<div id="frozen-placeholder" class="placeholder">
+<i class="fa-solid fa-snowflake"></i>
+Select your frozen food to get optimised air fryer settings.
+</div>
+<div class="resultsBlock" id="frozen-results">
+<div class="card">
+<div class="cardHeader">
+<div class="cardTitle">Frozen Food Settings</div>
+<span class="cardBadge cardBadgeBlue">Results</span>
+</div>
+<div class="resultsGrid" id="frozen-grid"></div>
+<div class="stepList" id="frozen-steps"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+TOOL 5 — PORTION SIZE ADJUSTER
+═══════════════════════════════════════════ -->
+<section class="pageSection toolAnchor" id="tool-portion" aria-labelledby="portionTitle">
+<p class="sectionLabel">Tool 5 of 10</p>
+<h2 id="portionTitle">Portion Size Adjuster</h2>
+<p class="sectionText">Cooking more food doesn't just mean more time — it can mean more batches. This tool tells you exactly how to adjust for any quantity.</p>
+
+<div class="toolGrid">
+<div class="card">
+<div class="cardHeader">
+<div class="cardTitle">Portion Adjuster</div>
+<span class="cardBadge">Portions</span>
+</div>
+<form id="portion-form" novalidate>
+<div class="formGroup">
+<label for="portion-base-time">Base Recipe Time (minutes)</label>
+<input type="number" id="portion-base-time" min="5" max="120" value="20" required>
+<small>The time for a single standard portion</small>
+</div>
+<div class="formGroup">
+<label for="portion-base-weight">Base Recipe Weight (grams)</label>
+<input type="number" id="portion-base-weight" min="50" max="2000" value="300" required>
+</div>
+<div class="formGroup">
+<label for="portion-target-weight">Your Target Weight (grams)</label>
+<input type="number" id="portion-target-weight" min="50" max="5000" value="600" required>
+</div>
+<div class="formGroup">
+<label for="portion-basket">Air Fryer Basket Capacity (grams)</label>
+<input type="number" id="portion-basket" min="100" max="3000" value="800" required>
+<small>Max single-layer capacity for your model (typically 600–1200g)</small>
+</div>
+<button type="submit" class="btn btnFire"><i class="fa-solid fa-scale-balanced"></i> Calculate Portion Adjustment</button>
+</form>
+</div>
+
+<div>
+<div id="portion-placeholder" class="placeholder">
+<i class="fa-solid fa-scale-balanced"></i>
+Enter your portions and basket size to get the adjusted cook plan.
+</div>
+<div class="resultsBlock" id="portion-results">
+<div class="card">
+<div class="cardHeader">
+<div class="cardTitle">Portion Plan</div>
+<span class="cardBadge cardBadgeGreen">Results</span>
+</div>
+<div id="portion-output"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+TOOL 6 — CRISPINESS OPTIMIZER
+═══════════════════════════════════════════ -->
+<section class="pageSection toolAnchor" id="tool-crispy" aria-labelledby="crispyTitle">
+<p class="sectionLabel">Tool 6 of 10</p>
+<h2 id="crispyTitle">Crispiness Optimizer</h2>
+<p class="sectionText">Want it extra crunchy? Or just lightly crisped? This tool personalises time, temperature, shake frequency, and oil guidance for your exact crunch preference.</p>
+
+<div class="toolGrid">
+<div class="card">
+<div class="cardHeader">
+<div class="cardTitle">Crunch Customiser</div>
+<span class="cardBadge">Crispy</span>
+</div>
+<form id="crispy-form" novalidate>
+<div class="formGroup">
+<label for="crispy-unit">Temperature Unit</label>
+<select id="crispy-unit">
+<option value="f">°F</option>
+<option value="c">°C</option>
+</select>
+</div>
+<div class="formGroup">
+<label for="crispy-base-temp">Your Base Air Fryer Temperature</label>
+<input type="number" id="crispy-base-temp" min="100" max="260" value="180" required>
+</div>
+<div class="formGroup">
+<label for="crispy-base-time">Your Base Cooking Time (minutes)</label>
+<input type="number" id="crispy-base-time" min="3" max="60" value="15" required>
+</div>
+<div class="formGroup">
+<label>Desired Crispiness Level</label>
+<div class="radioGroup">
+<div class="radioOpt">
+<input type="radio" name="crisp-level" id="crisp-soft" value="soft">
+<label for="crisp-soft">🌿 Soft</label>
+</div>
+<div class="radioOpt">
+<input type="radio" name="crisp-level" id="crisp-normal" value="normal" checked>
+<label for="crisp-normal">✨ Normal</label>
+</div>
+<div class="radioOpt">
+<input type="radio" name="crisp-level" id="crisp-crispy" value="crispy">
+<label for="crisp-crispy">🔥 Crispy</label>
+</div>
+<div class="radioOpt">
+<input type="radio" name="crisp-level" id="crisp-extra" value="extra">
+<label for="crisp-extra">💥 Extra</label>
+</div>
+</div>
+</div>
+<div class="formGroup">
+<label for="crispy-food-type">Food Category</label>
+<select id="crispy-food-type">
+<option value="breaded">Breaded / Coated</option>
+<option value="potato">Potato (fries, wedges, tots)</option>
+<option value="chicken">Chicken (uncoated)</option>
+<option value="veg">Vegetables</option>
+<option value="pastry">Pastry / Dough</option>
+<option value="fish">Fish</option>
+</select>
+</div>
+<button type="submit" class="btn btnFire"><i class="fa-solid fa-star"></i> Optimise Crispiness</button>
+</form>
+</div>
+
+<div>
+<div id="crispy-placeholder" class="placeholder">
+<i class="fa-solid fa-star"></i>
+Choose your crunch level and food type to get personalised settings.
+</div>
+<div class="resultsBlock" id="crispy-results">
+<div class="card">
+<div class="cardHeader">
+<div class="cardTitle">Crispy Settings</div>
+<span class="cardBadge cardBadgeGreen">Results</span>
+</div>
+<div class="resultsGrid" id="crispy-grid"></div>
+<div class="stepList" id="crispy-steps"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+TOOL 7 — WATTAGE ADJUSTER
+═══════════════════════════════════════════ -->
+<section class="pageSection toolAnchor" id="tool-wattage" aria-labelledby="wattTitle">
+<p class="sectionLabel">Tool 7 of 10</p>
+<h2 id="wattTitle">Wattage Adjuster</h2>
+<p class="sectionText">A 1200W air fryer and a 2000W model cook very differently. Enter your wattage and a standard recipe to get settings calibrated to your exact machine.</p>
+
+<div class="toolGrid">
+<div class="card">
+<div class="cardHeader">
+<div class="cardTitle">Wattage Calibrator</div>
+<span class="cardBadge">Wattage</span>
+</div>
+<form id="watt-form" novalidate>
+<div class="formGroup">
+<label for="watt-unit">Temperature Unit</label>
+<select id="watt-unit">
+<option value="f">°F</option>
+<option value="c">°C</option>
+</select>
+</div>
+<div class="formGroup">
+<label for="watt-yours">Your Air Fryer Wattage (W)</label>
+<input type="number" id="watt-yours" min="700" max="3000" value="1500" required>
+<small>Check the label on the bottom or back of your air fryer</small>
+</div>
+<div class="formGroup">
+<label for="watt-recipe-temp">Recipe Temperature</label>
+<input type="number" id="watt-recipe-temp" min="100" max="260" value="200" required>
+</div>
+<div class="formGroup">
+<label for="watt-recipe-time">Recipe Time (minutes)</label>
+<input type="number" id="watt-recipe-time" min="3" max="90" value="20" required>
+<small>Assumes recipe was developed on a standard 1500W–1800W model</small>
+</div>
+<button type="submit" class="btn btnFire"><i class="fa-solid fa-bolt"></i> Adjust for My Wattage</button>
+</form>
+</div>
+
+<div>
+<div id="watt-placeholder" class="placeholder">
+<i class="fa-solid fa-bolt"></i>
+Enter your wattage and recipe details to get calibrated settings.
+</div>
+<div class="resultsBlock" id="watt-results">
+<div class="card">
+<div class="cardHeader">
+<div class="cardTitle">Adjusted Settings</div>
+<span class="cardBadge cardBadgeGreen">Results</span>
+</div>
+<div class="resultsGrid" id="watt-grid"></div>
+<div id="watt-bar-wrap" style="margin-top:12px;"></div>
+<div class="stepList" id="watt-steps"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+TOOL 8 — MEAT DONENESS & SAFETY
+═══════════════════════════════════════════ -->
+<section class="pageSection toolAnchor" id="tool-meat" aria-labelledby="meatTitle">
+<p class="sectionLabel">Tool 8 of 10</p>
+<h2 id="meatTitle">Meat Doneness &amp; Safety Guide</h2>
+<p class="sectionText">Get precise time, temperature, and safe internal temperature targets for any cut — based on thickness and your preferred doneness level.</p>
+
+<div class="toolGrid">
+<div class="card">
+<div class="cardHeader">
+<div class="cardTitle">Meat Calculator</div>
+<span class="cardBadge">Safety</span>
+</div>
+<form id="meat-form" novalidate>
+<div class="formGroup">
+<label for="meat-unit">Temperature Unit</label>
+<select id="meat-unit">
+<option value="f">°F</option>
+<option value="c">°C</option>
+</select>
+</div>
+<div class="formGroup">
+<label for="meat-type">Meat Type</label>
+<select id="meat-type">
+<option value="chicken_breast">Chicken Breast</option>
+<option value="chicken_thigh">Chicken Thigh / Drumstick</option>
+<option value="chicken_wings">Chicken Wings</option>
+<option value="beef_steak">Beef Steak</option>
+<option value="beef_burger">Beef Burger Patty</option>
+<option value="pork_chop">Pork Chop</option>
+<option value="pork_sausage">Pork Sausage</option>
+<option value="salmon">Salmon Fillet</option>
+<option value="shrimp">Shrimp / Prawns</option>
+<option value="lamb_chop">Lamb Chop</option>
+</select>
+</div>
+<div class="formGroup">
+<label for="meat-thickness">Thickness</label>
+<select id="meat-thickness">
+<option value="thin">Thin (&lt; 2 cm / ¾ in)</option>
+<option value="medium" selected>Medium (2–3 cm / 1 in)</option>
+<option value="thick">Thick (&gt; 3 cm / 1¼ in)</option>
+</select>
+</div>
+<div class="formGroup">
+<label for="meat-doneness">Desired Doneness</label>
+<select id="meat-doneness">
+<option value="rare">Rare (beef / lamb only)</option>
+<option value="medium_rare">Medium Rare (beef / lamb only)</option>
+<option value="medium">Medium</option>
+<option value="well">Well Done / Safe (all meats)</option>
+</select>
+</div>
+<button type="submit" class="btn btnFire"><i class="fa-solid fa-drumstick-bite"></i> Get Cooking Guide</button>
+</form>
+</div>
+
+<div>
+<div id="meat-placeholder" class="placeholder">
+<i class="fa-solid fa-drumstick-bite"></i>
+Select your meat and preferences to get safe, precise cook settings.
+</div>
+<div class="resultsBlock" id="meat-results">
+<div class="card">
+<div class="cardHeader">
+<div class="cardTitle">Cooking Guide</div>
+<span class="cardBadge" style="background:#dc2626;">Safety</span>
+</div>
+<div class="resultsGrid" id="meat-grid"></div>
+<div class="stepList" id="meat-steps"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+TOOL 9 — CAN I AIR FRY THIS?
+═══════════════════════════════════════════ -->
+<section class="pageSection toolAnchor" id="tool-canifry" aria-labelledby="caniTitle">
+<p class="sectionLabel">Tool 9 of 10</p>
+<h2 id="caniTitle">Can I Air Fry This?</h2>
+<p class="sectionText">Type any food and instantly find out if it works in the air fryer — and if so, exactly how to cook it. Over 80 foods in the database.</p>
+
+<div class="toolGrid">
+<div class="card">
+<div class="cardHeader">
+<div class="cardTitle">Food Checker</div>
+<span class="cardBadge">Check</span>
+</div>
+<div class="formGroup" style="margin-top:8px;">
+<label for="cani-input">Type any food</label>
+<div class="caniFryInput">
+<input type="text" id="cani-input" placeholder="e.g. bacon, eggs, cheese, tofu…">
+<button type="button" id="cani-btn">Check</button>
+</div>
+<small>Try: pizza, bacon, eggs, cheese, chocolate, bread, soup, raw meat…</small>
+</div>
+<div class="formGroup">
+<p style="font-size:0.82rem; color:var(--grey); font-weight:700; margin-bottom:10px;">Quick checks:</p>
+<div style="display:flex; flex-wrap:wrap; gap:7px;" id="cani-quick"></div>
+</div>
+</div>
+
+<div>
+<div id="cani-placeholder" class="placeholder">
+<i class="fa-solid fa-circle-question"></i>
+Type a food above and press Check.
+</div>
+<div class="fryResult" id="cani-result">
+<div class="fryAnswer" id="cani-answer"></div>
+<div id="cani-detail"></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+TOOL 10 — CLEANING & MAINTENANCE
+═══════════════════════════════════════════ -->
+<section class="pageSection toolAnchor" id="tool-cleaning" aria-labelledby="cleanTitle">
+<p class="sectionLabel">Tool 10 of 10</p>
+<h2 id="cleanTitle">Cleaning &amp; Maintenance Helper</h2>
+<p class="sectionText">Track your air fryer usage and get personalised cleaning reminders, deep-clean schedules, and safe maintenance tips.</p>
+
+<div class="toolGrid">
+<div class="card">
+<div class="cardHeader">
+<div class="cardTitle">Usage Tracker</div>
+<span class="cardBadge">Maintenance</span>
+</div>
+
+<div class="formGroup">
+<label>Total uses since last clean</label>
+<div class="usageCounter">
+<div class="usageNum" id="clean-count">0</div>
+<div class="usageBtns">
+<button class="usageBtn" id="clean-add1">+ 1 Use</button>
+<button class="usageBtn" id="clean-add5">+ 5 Uses</button>
+<button class="usageBtn usageBtnRed" id="clean-reset">Reset (Cleaned!)</button>
+</div>
+</div>
+<div class="cleanBar">
+<div class="cleanBarFill" id="clean-bar" style="width:0%; background: #22c55e;"></div>
+</div>
+<div class="cleanBarLabel" id="clean-bar-label">0 / 5 uses before quick clean recommended</div>
+</div>
+
+<div class="formGroup">
+<label for="clean-type">Air Fryer Type</label>
+<select id="clean-type">
+<option value="basket">Basket-style</option>
+<option value="dual">Dual basket</option>
+<option value="oven">Oven / toaster style</option>
+<option value="paddle">Paddle / stirring</option>
+</select>
+</div>
+
+<div class="formGroup">
+<label for="clean-last-deep">Weeks since last deep clean</label>
+<input type="number" id="clean-last-deep" min="0" max="52" value="2">
+</div>
+
+<button type="button" class="btn btnFire" id="clean-check-btn">
+<i class="fa-solid fa-broom"></i> Get Cleaning Advice
+</button>
+</div>
+
+<div>
+<div id="clean-placeholder" class="placeholder">
+<i class="fa-solid fa-broom"></i>
+Track your uses and get personalised cleaning guidance.
+</div>
+<div class="resultsBlock" id="clean-results">
+<div class="card">
+<div class="cardHeader">
+<div class="cardTitle">Cleaning Guide</div>
+<span class="cardBadge cardBadgeGreen">Maintenance</span>
+</div>
+<div id="clean-status-box"></div>
+<div class="stepList" id="clean-steps"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- HOW IT WORKS -->
+<section class="howSection" aria-labelledby="howTitle">
+<p class="sectionLabel">Methodology</p>
+<h2 id="howTitle">How the Air Fryer Companion works</h2>
+<p class="sectionText">Each tool uses evidence-based cooking science to give you accurate, personalised results every time.</p>
+<div class="methodGrid">
+<div class="methodCard"><div class="methodNum">1</div><strong>Density Modifier</strong><p>Food density affects heat penetration. Airy foods need less time; dense cuts need more. The Density Modifier calibrates both temp and time accordingly.</p></div>
+<div class="methodCard"><div class="methodNum">2</div><strong>Wattage Science</strong><p>Higher wattage = faster, hotter cooking. The Wattage Adjuster uses a proportional model to correct time and temperature for your exact machine's output.</p></div>
+<div class="methodCard"><div class="methodNum">3</div><strong>Sync Scheduling</strong><p>The Multi-Food Timer back-calculates each item's start time from the desired finish time, so every food is done at exactly the same moment.</p></div>
+<div class="methodCard"><div class="methodNum">4</div><strong>Safe Temperatures</strong><p>Meat doneness targets are based on USDA and UK FSA guidelines. Internal temperature targets are always shown alongside time — because time alone isn't safe.</p></div>
+<div class="methodCard"><div class="methodNum">5</div><strong>Crunch Chemistry</strong><p>Crispiness is a function of surface moisture, temperature, and time. The Crispiness Optimizer adjusts all three plus shake frequency to hit your exact crunch target.</p></div>
+</div>
+</section>
+
+<!-- ABOUT -->
+<section class="aboutSection" aria-labelledby="aboutTitle">
+<p class="sectionLabel">About</p>
+<h2 id="aboutTitle">About the Air Fryer Companion Tool</h2>
+<p>The Air Fryer Companion Tool brings together 10 specialist calculators in one place — designed for anyone who uses an air fryer regularly and wants consistently great results. Whether you're converting a traditional oven recipe, trying to cook chips and chicken at the same time, or wondering if you can air fry a fried egg, every answer is here.</p>
+<p>Unlike generic conversion charts that apply a flat 25°F / 15°C reduction and call it done, this tool accounts for food density, your personal crunch preference, your air fryer's wattage, portion size, and whether the food came straight from the freezer or fridge. The result is a far more accurate and useful output than any static chart.</p>
+<p>All calculations happen entirely in your browser — nothing is sent to any server. Usage tracking for the Cleaning Helper is stored locally on your device and never shared.</p>
+</section>
+
+<!-- FAQ -->
+<section class="faqSection" aria-labelledby="faqTitle">
+<p class="sectionLabel">FAQ</p>
+<h2 id="faqTitle">Frequently Asked Questions</h2>
+<details><summary>Why does the air fryer need a different temperature than an oven?</summary><div class="faqAnswer">Air fryers circulate hot air at high speed in a small cavity, which transfers heat much more efficiently than a conventional oven. This means you typically need to reduce temperature by around 15–25°C (25–45°F) and reduce time by 20–30% to avoid overcooking.</div></details>
+<details><summary>How does wattage affect cooking?</summary><div class="faqAnswer">A higher-wattage air fryer heats up faster and reaches target temperature more quickly. A 1200W model cooking the same food as a 2000W model may need 15–25% more time at slightly higher temperature to get the same result.</div></details>
+<details><summary>Is it safe to cook chicken wings from frozen?</summary><div class="faqAnswer">Yes — the Frozen Food Converter is calibrated for this. For food safety, always ensure poultry reaches an internal temperature of at least 74°C (165°F), regardless of the time shown. Always use a probe thermometer for poultry.</div></details>
+<details><summary>Why do I need to shake or flip during cooking?</summary><div class="faqAnswer">Air circulates from above in most air fryers, meaning the bottom of your food can cook more slowly. Shaking or flipping ensures even browning and crispiness on all sides, especially for fries, nuggets, and anything breaded.</div></details>
+<details><summary>How often should I clean my air fryer?</summary><div class="faqAnswer">For light use, a quick wipe of the basket after each use and a proper wash every 3–5 uses is sufficient. For greasy foods like sausages, wings, or bacon, clean after every use. A deep clean of the interior and heating element should happen every 2–4 weeks depending on frequency.</div></details>
+<details><summary>Can I cook eggs in an air fryer?</summary><div class="faqAnswer">Yes — try the "Can I Air Fry This?" tool above. Hard-boiled eggs (in shell) work very well at 130°C / 270°F for 15–17 minutes. Scrambled and poached eggs are not suitable. Fried eggs can work in a small heat-proof dish with a light oil spray.</div></details>
+</section>
+
+</div><!-- /.wrap -->
+</main>
+
+<!-- ═══════════════════════════════════════════
+AFFILIATE PRODUCTS
+═══════════════════════════════════════════ -->
+<section class="affiliateSection">
+<div class="wrap">
+<div class="affiliateDisclaimer">
+<strong>Affiliate Disclosure:</strong> The recommended air fryers below contain affiliate links. If you purchase through our links, we may earn a small commission at no additional cost to you. This helps keep all our tools free.
+</div>
+<div class="affiliateBanner">
+<i class="fa-solid fa-tag"></i> Top 12 Recommended Air Fryers 2025 &amp; 2026 · Affiliate links below
+</div>
+<p class="sectionLabel">Recommended</p>
+<h2>Top 12 Recommended Air Fryers</h2>
+<p class="sectionText">Best models for every need and budget — all tested and recommended by our team.</p>
+<div class="productGrid">
+<article class="productCard">
+<img src="https://m.media-amazon.com/images/I/81efTlip07L._AC_SL1500_.jpg" alt="Cosori TurboBlaze 6L" loading="lazy">
+<div class="productInfo">
+<h3 class="productTitle">Cosori TurboBlaze 6L</h3>
+<p class="productDescription">DC motor that cooks up to 46% faster than older models with precise temperature control.</p>
+<a href="https://amzn.to/4jhJ857" target="_blank" rel="nofollow sponsored noopener" class="productLink">View on Amazon</a>
+</div>
+</article>
+<article class="productCard">
+<img src="https://m.media-amazon.com/images/I/61PUBFtKtlL._AC_SL1500_.jpg" alt="Our Place Wonder Oven" loading="lazy">
+<div class="productInfo">
+<h3 class="productTitle">Our Place Wonder Oven</h3>
+<p class="productDescription">Steam-infusion tech keeps food moist while delivering crispy exteriors.</p>
+<a href="https://amzn.to/4b8cuke" target="_blank" rel="nofollow sponsored noopener" class="productLink">View on Amazon</a>
+</div>
+</article>
+<article class="productCard">
+<img src="https://m.media-amazon.com/images/I/51DSy663uDL._AC_SL1080_.jpg" alt="Sage Smart Oven Air Fryer" loading="lazy">
+<div class="productInfo">
+<h3 class="productTitle">Sage Smart Oven Air Fryer</h3>
+<p class="productDescription">Massive capacity; replaces oven, toaster, dehydrator, and more.</p>
+<a href="https://amzn.to/4jr0yMQ" target="_blank" rel="nofollow sponsored noopener" class="productLink">View on Amazon</a>
+</div>
+</article>
+<article class="productCard">
+<img src="https://m.media-amazon.com/images/I/51m9NtwEgnL._AC_SL1400_.jpg" alt="Ninja AF180UKCP" loading="lazy">
+<div class="productInfo">
+<h3 class="productTitle">Ninja AF180UKCP</h3>
+<p class="productDescription">High-capacity power in a sleek footprint; the versatile 6.2L powerhouse designed for perfect results every time.</p>
+<a href="https://amzn.to/49wWTcL" target="_blank" rel="nofollow sponsored noopener" class="productLink">View on Amazon</a>
+</div>
+</article>
+<article class="productCard">
+<img src="https://m.media-amazon.com/images/I/61OmXOFS4nL._AC_SL1500_.jpg" alt="Philips 3000 Series Dual Basket" loading="lazy">
+<div class="productInfo">
+<h3 class="productTitle">Philips 3000 Series Dual Basket</h3>
+<p class="productDescription">App connectivity for remote monitoring and synchronized cooking.</p>
+<a href="https://amzn.to/3YgJa3t" target="_blank" rel="nofollow sponsored noopener" class="productLink">View on Amazon</a>
+</div>
+</article>
+<article class="productCard">
+<img src="https://m.media-amazon.com/images/I/513PEn3ZtFL._AC_SL1350_.jpg" alt="Tower T17088 Vortx 9L Dual Basket" loading="lazy">
+<div class="productInfo">
+<h3 class="productTitle">Tower T17088 Vortx 9L Dual Basket</h3>
+<p class="productDescription">Self-cleaning mode and ultra-quiet operation in a premium dome design.</p>
+<a href="https://amzn.to/45oWzu7" target="_blank" rel="nofollow sponsored noopener" class="productLink">View on Amazon</a>
+</div>
+</article>
+<article class="productCard">
+<img src="https://m.media-amazon.com/images/I/715EdCgIhxL._AC_SL1500_.jpg" alt="Tefal Easy Fry Dual Zone" loading="lazy">
+<div class="productInfo">
+<h3 class="productTitle">Tefal Easy Fry Dual Zone Digital</h3>
+<p class="productDescription">Asymmetrical drawers and a die-cast grill plate to master complex dinners in one go.</p>
+<a href="https://amzn.to/49fnYzS" target="_blank" rel="nofollow sponsored noopener" class="productLink">View on Amazon</a>
+</div>
+</article>
+<article class="productCard">
+<img src="https://m.media-amazon.com/images/I/61DJeGYDGTL._AC_SL1500_.jpg" alt="COSORI Air Fryer Lite 3.8L" loading="lazy">
+<div class="productInfo">
+<h3 class="productTitle">COSORI Air Fryer Lite 3.8L</h3>
+<p class="productDescription">Compact, smart-integrated, and whisper-quiet; delivering high-heat precision for small-batch perfection.</p>
+<a href="https://amzn.to/3N3ghp2" target="_blank" rel="nofollow sponsored noopener" class="productLink">View on Amazon</a>
+</div>
+</article>
+<article class="productCard">
+<img src="https://m.media-amazon.com/images/I/71JszIonPlL._AC_SL1500_.jpg" alt="Ninja Crispi Portable Glass Air Fryer" loading="lazy">
+<div class="productInfo">
+<h3 class="productTitle">Ninja Crispi™ Portable Glass Air Fryer</h3>
+<p class="productDescription">Next-gen glass clarity and stackable precision; a 4-in-1 PFAS-free system for 360° monitoring.</p>
+<a href="https://amzn.to/4aHdhbX" target="_blank" rel="nofollow sponsored noopener" class="productLink">View on Amazon</a>
+</div>
+</article>
+<article class="productCard">
+<img src="https://m.media-amazon.com/images/I/61A3ePViuoL._AC_SL1500_.jpg" alt="Ninja DZ401 Foodi 10" loading="lazy">
+<div class="productInfo">
+<h3 class="productTitle">Ninja DZ401 Foodi 10 Dual Zone</h3>
+<p class="productDescription">Two independent 5-quart baskets with Smart Finish technology for identical finish times.</p>
+<a href="https://amzn.to/4b74ksn" target="_blank" rel="nofollow sponsored noopener" class="productLink">View on Amazon</a>
+</div>
+</article>
+<article class="productCard">
+<img src="https://m.media-amazon.com/images/I/71YEAuOC7eL._AC_SL1500_.jpg" alt="Philips 5000 Series Dual with Steam" loading="lazy">
+<div class="productInfo">
+<h3 class="productTitle">Philips 5000 Series Dual + Steam</h3>
+<p class="productDescription">Combines high-velocity air frying with precision steam-infusion for crisp exteriors and juicy results.</p>
+<a href="https://amzn.to/4qxw7qt" target="_blank" rel="nofollow sponsored noopener" class="productLink">View on Amazon</a>
+</div>
+</article>
+<article class="productCard">
+<img src="https://m.media-amazon.com/images/I/71QucWhG4hL._AC_SL1500_.jpg" alt="Instant Vortex Plus Dual" loading="lazy">
+<div class="productInfo">
+<h3 class="productTitle">Instant Vortex Plus Dual Air Fryer</h3>
+<p class="productDescription">ClearCook windows and OdourErase technology; engineered for visible crunch and kitchen-fresh results.</p>
+<a href="https://amzn.to/44I9MOE" target="_blank" rel="nofollow sponsored noopener" class="productLink">View on Amazon</a>
+</div>
+</article>
+</div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer class="siteFooter">
+<div class="footerInner">
+<div class="footerBrand">EverydayToolsHQ</div>
+<div class="footerLinks">
+<a href="/">Home</a>
+<a href="/about/">About</a>
+</div>
+<div class="footerLegal">
+<a href="https://powerstationhq.com/privacy-policy/" target="_blank">Privacy Policy</a> |
+<a href="https://powerstationhq.com/terms-and-conditions/" target="_blank">Terms</a> |
+<a href="https://powerstationhq.com/affiliate-disclosure/" target="_blank">Affiliate Disclosure</a>
+</div>
+<div class="footerPowered">
+Powered by <a href="https://powerstationhq.com/" target="_blank">PowerstationHQ</a>
+</div>
+</div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════
+function toF(v,unit){ return unit==='c'? v*9/5+32 : v; }
+function toDisplay(f,unit){ return unit==='c'? Math.round((f-32)*5/9) : Math.round(f); }
+function unitSym(unit){ return unit==='f'?'°F':'°C'; }
+function show(id){ document.getElementById(id).classList.add('show'); }
+function hide(id){ document.getElementById(id).classList.remove('show'); }
+function showEl(id){ document.getElementById(id).style.display='none'; }
+
+function makeResultItem(label, val, sub){
+return `<div class="resultItem"><h3>${label}</h3><div class="resultVal">${val}</div><div class="resultSub">${sub}</div></div>`;
+}
+function makeStep(num, text){
+return `<div class="stepItem"><div class="stepNum">${num}</div><div>${text}</div></div>`;
+}
+function showResult(placeholderId, resultId){
+document.getElementById(placeholderId).style.display = 'none';
+show(resultId);
+document.getElementById(resultId).scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+// ═══════════════════════════════════════════
+// TOOL 1 — OVEN CONVERTER
+// ═══════════════════════════════════════════
+const crunchSlider = document.getElementById('conv-crunch');
+const crunchValEl = document.getElementById('conv-crunch-val');
+crunchSlider.addEventListener('input', ()=>{ crunchValEl.textContent = crunchSlider.value; });
+
+document.getElementById('conv-form').addEventListener('submit', e => {
+e.preventDefault();
+const unit = document.getElementById('conv-unit').value;
+const tempIn = parseFloat(document.getElementById('conv-temp').value);
+const timeIn = parseInt(document.getElementById('conv-time').value);
+const density = document.getElementById('conv-density').value;
+const frozen = document.getElementById('conv-frozen').checked;
+const crunch = parseInt(document.getElementById('conv-crunch').value);
+
+let tempF = toF(tempIn, unit);
+let tempAdj = -25, timeAdj = 0.80;
+if(density==='airy') { tempAdj=-10; timeAdj=0.70; }
+if(density==='dense') { tempAdj=-40; timeAdj=0.90; }
+if(frozen) { tempAdj+=5; timeAdj+=0.10; }
+
+let finalTime = timeIn * timeAdj;
+let oilNote = '';
+if(crunch>=8) { finalTime+=2; oilNote='<strong>Max Crunch:</strong> Lightly spray oil halfway through cooking.'; }
+else if(crunch<=2) { finalTime-=1; }
+
+const airTempF = Math.round(tempF + tempAdj);
+const airTime = Math.round(finalTime);
+const sym = unitSym(unit);
+const airDisplay = toDisplay(airTempF, unit);
+const origDisplay= unit==='f'? Math.round(tempF) : tempIn;
+
+document.getElementById('conv-grid').innerHTML =
+makeResultItem('Air Fryer Temp', `${airDisplay}${sym}`, `From ${origDisplay}${sym}`) +
+makeResultItem('Cook Time', `${airTime} min`, `From ${timeIn} min oven`);
+
+const shakes = [];
+if(airTime>=8){
+const cnt = Math.floor(airTime/4);
+if(cnt>1){ for(let i=1;i<cnt;i++) shakes.push(Math.round(i*(airTime/cnt))); }
+else shakes.push(Math.round(airTime/2));
+}
+let steps = `<h3>Step-by-Step Guide</h3>`;
+steps += makeStep(1, `Preheat air fryer to <strong>${airDisplay}${sym}</strong> for 3–5 minutes.`);
+steps += makeStep(2, 'Arrange food in a <strong>single layer</strong>. Do not overcrowd.');
+steps += makeStep(3, `Cook for <strong>${airTime} minutes</strong> total.`);
+shakes.forEach((t,i)=>{ steps += makeStep(i+4, `Shake or flip at <strong>${t} minutes</strong>.`); });
+if(oilNote) steps += makeStep(shakes.length+4, oilNote);
+steps += makeStep(shakes.length+5, 'Check doneness. Serve and enjoy!');
+document.getElementById('conv-steps').innerHTML = steps;
+
+showResult('conv-placeholder','conv-results');
+});
+
+// ═══════════════════════════════════════════
+// TOOL 2 — MULTI-FOOD SYNC TIMER
+// ═══════════════════════════════════════════
+const COMMON_FOODS = [
+{name:'Chicken thighs', time:25, temp:190},
+{name:'Fries / Chips', time:18, temp:200},
+{name:'Vegetables', time:12, temp:180},
+{name:'Salmon fillet', time:12, temp:180},
+{name:'Sausages', time:15, temp:180},
+{name:'Chicken wings', time:22, temp:200},
+{name:'Nuggets', time:12, temp:200},
+];
+let syncRowCount = 0;
+
+function addSyncRow(preset){
+syncRowCount++;
+const id = syncRowCount;
+const row = document.createElement('div');
+row.className = 'foodRow';
+row.id = `sync-row-${id}`;
+row.innerHTML = `
+<input type="text" id="sync-name-${id}" placeholder="Food name" value="${preset?preset.name:''}" required>
+<input type="number" id="sync-time-${id}" placeholder="Mins" min="1" max="120" value="${preset?preset.time:''}" required>
+<input type="number" id="sync-temp-${id}" placeholder="Temp" min="50" max="260" value="${preset?preset.temp:''}" required>
+<button class="removeBtn" onclick="removeSyncRow(${id})" title="Remove"><i class="fa-solid fa-xmark"></i></button>
+`;
+document.getElementById('sync-rows').appendChild(row);
+// Header row for first
+if(syncRowCount===1){
+const hdr = document.createElement('div');
+hdr.style.cssText='display:grid;grid-template-columns:1fr 80px 80px 36px;gap:8px;margin-bottom:6px;';
+hdr.innerHTML='<span style="font-size:0.75rem;font-weight:700;color:var(--grey);">Food</span><span style="font-size:0.75rem;font-weight:700;color:var(--grey);">Mins</span><span style="font-size:0.75rem;font-weight:700;color:var(--grey);">Temp</span><span></span>';
+document.getElementById('sync-rows').insertBefore(hdr, row);
+}
+}
+function removeSyncRow(id){ const r=document.getElementById(`sync-row-${id}`); if(r) r.remove(); }
+
+// Add 2 default rows
+addSyncRow(COMMON_FOODS[0]);
+addSyncRow(COMMON_FOODS[1]);
+
+document.getElementById('sync-add-btn').addEventListener('click', ()=>addSyncRow(null));
+
+document.getElementById('sync-calc-btn').addEventListener('click', ()=>{
+const unit = document.getElementById('sync-unit').value;
+const sym = unitSym(unit);
+const foods = [];
+document.querySelectorAll('[id^="sync-name-"]').forEach(el=>{
+const rowId = el.id.replace('sync-name-','');
+const name = el.value.trim();
+const time = parseInt(document.getElementById(`sync-time-${rowId}`).value);
+const temp = parseFloat(document.getElementById(`sync-temp-${rowId}`).value);
+if(name && !isNaN(time) && !isNaN(temp)) foods.push({name,time,temp});
+});
+if(foods.length<1){ alert('Add at least one food.'); return; }
+
+const totalTime = Math.max(...foods.map(f=>f.time));
+foods.forEach(f=>{ f.startAt = totalTime - f.time; });
+foods.sort((a,b)=>a.startAt - b.startAt);
+
+// Build events
+const events = [];
+foods.forEach(f=>{
+events.push({ time: f.startAt, action: `Add <strong>${f.name}</strong>`, icon: '➕', temp: f.temp });
+events.push({ time: f.startAt + f.time, action: `Remove <strong>${f.name}</strong>`, icon: '✅', temp: null });
+});
+events.sort((a,b)=>a.time-b.time || (a.icon==='✅'?1:-1));
+
+// Deduplicate same-time events
+let html='';
+events.forEach(ev=>{
+const tDisplay = ev.time===0 ? 'START' : `${ev.time} min`;
+const tempNote = ev.temp ? ` · ${toDisplay(toF(ev.temp, unit==='c'?'f':'c'), unit)}${sym}` : '';
+html += `<div class="timelineItem">
+<div class="timelineTime">${tDisplay}</div>
+<div class="timelineAction">${ev.action}${tempNote}</div>
+<div class="timelineIcon">${ev.icon}</div>
+</div>`;
+});
+document.getElementById('sync-timeline').innerHTML = `<div class="timerTimeline">${html}</div>`;
+
+document.getElementById('sync-bar').style.width = '100%';
+document.getElementById('sync-total-label').textContent = `Total: ${totalTime} minutes`;
+
+showResult('sync-placeholder','sync-results');
+});
+
+// ═══════════════════════════════════════════
+// TOOL 3 — REHEAT CALCULATOR
+// ═══════════════════════════════════════════
+const REHEAT_DATA = {
+pizza: { tempC:165, time:4, tips:['Place slice flat, not stacked','Add a small cup of water nearby to prevent drying','No foil needed'] },
+fries: { tempC:180, time:4, tips:['Spread in a single layer','Shake halfway for even crispiness','No oil needed'] },
+chicken: { tempC:175, time:6, tips:['Place skin-side up for crispier skin','No need to flip if small pieces','Internal temp should reach 74°C / 165°F'] },
+steak: { tempC:160, time:5, tips:['Cover loosely with foil to retain moisture','Rest 2 minutes after reheating','Don't go above 175°C / 350°F or it'll toughen'] },
+fish: { tempC:160, time:4, tips:['Lightly spray with oil to prevent drying','Don't exceed 5 minutes — fish reheats fast','Consume immediately; don't reheat fish twice'] },
+spring_rolls: { tempC:180, time:5, tips:['Place seam-side down','Spray lightly with oil for crispiness','Check at 4 minutes to avoid burning'] },
+pasta: { tempC:160, time:5, tips:['Add 1–2 tbsp water before reheating','Cover loosely with foil','Stir halfway through if in a dish'] },
+burgers: { tempC:165, time:5, tips:['Reheat patty and bun separately','Patty 5 mins; bun 1 min on top only','Add condiments fresh after reheating'] },
+veggies: { tempC:170, time:5, tips:['Spread in a single layer','Lightly spray with oil to revive crispiness','Don't overcook — 3–4 mins for delicate veg'] },
+bread: { tempC:160, time:3, tips:['Wrap in foil to prevent drying','Check after 2 minutes','Garlic bread: open foil for last 1 min for crust'] },
+wings: { tempC:185, time:7, tips:['No foil needed — you want airflow','Flip halfway through','Sauced wings: check at 5 mins to avoid burning sauce'] },
+sausage: { tempC:170, time:5, tips:['Pierce skin lightly to prevent bursting','Roll halfway through','Internal temp: 71°C / 160°F minimum'] },
+};
+
+document.getElementById('reheat-form').addEventListener('submit', e=>{
+e.preventDefault();
+const unit = document.getElementById('reheat-unit').value;
+const food = document.getElementById('reheat-food').value;
+const size = document.getElementById('reheat-size').value;
+const fridge= document.getElementById('reheat-straight-from-fridge').checked;
+const d = REHEAT_DATA[food];
+const sym = unitSym(unit);
+
+let time = d.time;
+if(size==='medium') time += 1;
+if(size==='large') time += 3;
+if(fridge) time += 1;
+
+const tempDisp = toDisplay(toF(d.tempC,'c'), unit);
+document.getElementById('reheat-grid').innerHTML =
+makeResultItem('Temperature', `${tempDisp}${sym}`, 'Reheat setting') +
+makeResultItem('Time', `${time} min`, size==='large'?'Multiple servings':'Approx.');
+
+let steps = `<h3>Reheat Steps</h3>`;
+steps += makeStep(1, `Preheat air fryer to <strong>${tempDisp}${sym}</strong> for 2–3 minutes.`);
+d.tips.forEach((t,i)=>{ steps += makeStep(i+2, t); });
+steps += makeStep(d.tips.length+2, `Reheat for <strong>${time} minutes</strong>. Check and serve immediately.`);
+document.getElementById('reheat-steps').innerHTML = steps;
+
+showResult('reheat-placeholder','reheat-results');
+});
+
+// ═══════════════════════════════════════════
+// TOOL 4 — FROZEN FOOD CONVERTER
+// ═══════════════════════════════════════════
+const FROZEN_DATA = {
+fries: { tempC:200, time:16, shake:true, note:'Shake every 5 mins for even crispiness.' },
+nuggets: { tempC:200, time:12, shake:true, note:'No need for oil — they crisp beautifully from frozen.' },
+fish_fingers: { tempC:180, time:12, shake:false, note:'Flip halfway through for even browning.' },
+pizza: { tempC:175, time:10, shake:false, note:'Check at 8 mins — thin bases cook faster.' },
+veg: { tempC:190, time:12, shake:true, note:'Spread in single layer; no thawing needed.' },
+mozzarella_sticks:{ tempC:195, time:8, shake:false, note:'Watch closely — cheese can escape after 8 mins.' },
+burgers: { tempC:185, time:16, shake:false, note:'Flip at 8 mins. Internal temp: 71°C / 160°F.' },
+spring_rolls: { tempC:190, time:10, shake:false, note:'No oil needed. Check at 8 mins.' },
+waffles: { tempC:180, time:7, shake:false, note:'Crispy golden results in under 8 minutes.' },
+dumplings: { tempC:180, time:12, shake:true, note:'Lightly spray with oil for crispy bottoms.' },
+prawns: { tempC:190, time:9, shake:true, note:'Shake at 4 mins. Don't overcook — they tighten.' },
+sausages: { tempC:175, time:15, shake:true, note:'Roll every 5 mins for even browning.' },
+};
+
+document.getElementById('frozen-form').addEventListener('submit', e=>{
+e.preventDefault();
+const unit = document.getElementById('frozen-unit').value;
+const food = document.getElementById('frozen-food').value;
+const pkgT = parseFloat(document.getElementById('frozen-pkg-temp').value);
+const pkgMin = parseFloat(document.getElementById('frozen-pkg-time').value);
+const d = FROZEN_DATA[food];
+const sym = unitSym(unit);
+
+let tempC = d.tempC, time = d.time;
+// If package instructions provided, use them as base and apply modifier
+if(!isNaN(pkgT) && !isNaN(pkgMin) && pkgT>0 && pkgMin>0){
+const pkgF = toF(pkgT, unit);
+tempC = Math.round((pkgF - 25) * 5/9);
+time = Math.round(pkgMin * 0.80);
+}
+
+const tempDisp = toDisplay(toF(tempC,'c'), unit);
+document.getElementById('frozen-grid').innerHTML =
+makeResultItem('Temperature', `${tempDisp}${sym}`, 'Air fryer setting') +
+makeResultItem('Time', `${time} min`, 'From frozen, no thawing');
+
+let steps = `<h3>Cooking Steps</h3>`;
+steps += makeStep(1, `Preheat air fryer to <strong>${tempDisp}${sym}</strong> for 3 minutes.`);
+steps += makeStep(2, 'Add food directly from frozen — <strong>no thawing required</strong>.');
+steps += makeStep(3, `Cook for <strong>${time} minutes</strong>.`);
+if(d.shake) steps += makeStep(4, 'Shake or turn halfway through cooking.');
+steps += makeStep(d.shake?5:4, d.note);
+steps += makeStep(d.shake?6:5, 'Check for golden colour and serve immediately.');
+document.getElementById('frozen-steps').innerHTML = steps;
+
+showResult('frozen-placeholder','frozen-results');
+});
+// ═══════════════════════════════════════════
+// TOOL 5 — PORTION SIZE ADJUSTER
+// ═══════════════════════════════════════════
+document.getElementById('portion-form').addEventListener('submit', e=>{
+e.preventDefault();
+const baseTime = parseInt(document.getElementById('portion-base-time').value);
+const baseWeight = parseInt(document.getElementById('portion-base-weight').value);
+const targetW = parseInt(document.getElementById('portion-target-weight').value);
+const basketCap = parseInt(document.getElementById('portion-basket').value);
+
+const batches = Math.ceil(targetW / basketCap);
+const batchWeight= Math.ceil(targetW / batches);
+const weightRatio= batchWeight / baseWeight;
+const adjustedTime = Math.round(baseTime * Math.pow(weightRatio, 0.25));
+
+let html = '';
+if(batches===1){
+html += `<div class="successBox"><strong>✓ Single batch — fits in one go!</strong><br>Cook all ${targetWeight||targetW}g together.</div>`;
+} else {
+html += `<div class="infoBox"><strong>Cook in ${batches} batches</strong> of approx. ${batchWeight}g each. Single-layer cooking gives the best results — never stack food.</div>`;
+}
+html += `<div class="resultsGrid" style="margin-top:14px;">
+${makeResultItem('Batches', batches, batches===1?'Single cook':'Multiple cooks')}
+${makeResultItem('Adj. Time / Batch', `${adjustedTime} min`, `From ${baseTime} min base`)}
+${makeResultItem('Per Batch', `${batchWeight}g`, 'Single-layer fill')}
+${makeResultItem('Total Time', `${adjustedTime * batches} min`, `${batches} batch${batches>1?'es':''}`)}
+</div>`;
+
+// Portion icons
+const ICON = '🟧';
+let icons = '<div class="portionIcons">';
+const totalSlots = Math.min(batches * 8, 40);
+const fullSlots = Math.round(totalSlots * (targetW / (batches*basketCap)));
+for(let i=0;i<totalSlots;i++){
+icons += `<div class="portionIcon ${i<fullSlots?'full':''}">
+${i<fullSlots?'🍗':''}
+</div>`;
+}
+icons += '</div><div style="font-size:0.78rem;color:var(--grey);margin-top:6px;">Each row represents one batch in your basket</div>';
+
+html += icons;
+
+let steps = `<h3>Cook Plan</h3>`;
+for(let b=1;b<=batches;b++){
+steps += makeStep(b, `Batch ${b}: Cook approx. <strong>${batchWeight}g</strong> for <strong>${adjustedTime} minutes</strong>. Keep cooked batches warm in oven at 60°C / 140°F.`);
+}
+steps += makeStep(batches+1, 'Serve all batches together — or stagger serving as each batch finishes.');
+html += `<div class="stepList">${steps}</div>`;
+
+document.getElementById('portion-output').innerHTML = html;
+showResult('portion-placeholder','portion-results');
+});
+
+// ═══════════════════════════════════════════
+// TOOL 6 — CRISPINESS OPTIMIZER
+// ═══════════════════════════════════════════
+const CRISP_PROFILES = {
+soft: { tempMod:-10, timeMod:-0.10, shakeFreq:0, oilNote:'No oil spray needed.', desc:'Light heat, short time, no shaking. Gentle and tender result.' },
+normal: { tempMod:0, timeMod:0, shakeFreq:1, oilNote:'Optional light oil spray before cooking.', desc:'Standard settings. Reliable golden results.' },
+crispy: { tempMod:15, timeMod:0.10, shakeFreq:2, oilNote:'Lightly spray with oil before cooking.', desc:'Higher heat, slight extra time, more frequent shaking.' },
+extra: { tempMod:25, timeMod:0.20, shakeFreq:3, oilNote:'Generously spray oil before and halfway through.', desc:'Maximum crunch: high heat, extra time, frequent shakes, oil mandatory.' },
+};
+const CRISP_FOOD_MOD = {
+breaded:{ tempMod:5, timeMod:0.05 },
+potato: { tempMod:10, timeMod:0.10 },
+chicken:{ tempMod:0, timeMod:0 },
+veg: { tempMod:-5, timeMod:-0.05 },
+pastry: { tempMod:-5, timeMod:0 },
+fish: { tempMod:-5, timeMod:0 },
+};
+
+document.getElementById('crispy-form').addEventListener('submit', e=>{
+e.preventDefault();
+const unit = document.getElementById('crispy-unit').value;
+const baseTempIn= parseFloat(document.getElementById('crispy-base-temp').value);
+const baseTime = parseInt(document.getElementById('crispy-base-time').value);
+const level = document.querySelector('input[name="crisp-level"]:checked').value;
+const foodType = document.getElementById('crispy-food-type').value;
+const sym = unitSym(unit);
+
+const baseTempF = toF(baseTempIn, unit);
+const cp = CRISP_PROFILES[level];
+const fm = CRISP_FOOD_MOD[foodType];
+
+const finalTempF = baseTempF + cp.tempMod + fm.tempMod;
+const finalTime = Math.round(baseTime * (1 + cp.timeMod + fm.timeMod));
+const tempDisplay = toDisplay(finalTempF, unit);
+
+document.getElementById('crispy-grid').innerHTML =
+makeResultItem('Temperature', `${tempDisplay}${sym}`, level.charAt(0).toUpperCase()+level.slice(1)+' setting') +
+makeResultItem('Time', `${finalTime} min`, 'Adjusted cook time') +
+makeResultItem('Shakes', cp.shakeFreq===0?'None':`Every ${Math.round(finalTime/(cp.shakeFreq+1))} min`, 'Flip / shake schedule') +
+makeResultItem('Oil', cp.oilNote.split(' ')[0], cp.oilNote);
+
+let steps = `<h3>Crispiness Plan</h3>`;
+steps += makeStep(1, cp.desc);
+steps += makeStep(2, `Preheat to <strong>${tempDisplay}${sym}</strong> for 3–5 minutes.`);
+steps += makeStep(3, cp.oilNote);
+steps += makeStep(4, `Cook for <strong>${finalTime} minutes</strong>.`);
+if(cp.shakeFreq>0){
+const interval = Math.round(finalTime/(cp.shakeFreq+1));
+for(let i=1;i<=cp.shakeFreq;i++){
+steps += makeStep(4+i, `Shake or flip at <strong>${interval*i} minutes</strong>.`);
+}
+}
+steps += makeStep(4+cp.shakeFreq+1, 'Serve immediately for maximum crunch — crispiness fades within minutes.');
+document.getElementById('crispy-steps').innerHTML = steps;
+
+showResult('crispy-placeholder','crispy-results');
+});
+
+// ═══════════════════════════════════════════
+// TOOL 7 — WATTAGE ADJUSTER
+// ═══════════════════════════════════════════
+document.getElementById('watt-form').addEventListener('submit', e=>{
+e.preventDefault();
+const unit = document.getElementById('watt-unit').value;
+const wattage = parseInt(document.getElementById('watt-yours').value);
+const recipeTempIn = parseFloat(document.getElementById('watt-recipe-temp').value);
+const recipeTime = parseInt(document.getElementById('watt-recipe-time').value);
+const sym = unitSym(unit);
+
+const REF_WATT = 1600; // reference wattage
+const ratio = REF_WATT / wattage;
+const timeMod = ratio > 1 ? ratio * 0.9 : ratio * 1.05;
+const tempMod = ratio > 1 ? 10 : -10; // lower watt = need a bit more temp
+
+const recipeTempF = toF(recipeTempIn, unit);
+const adjustedTempF= recipeTempF + tempMod;
+const adjustedTime = Math.round(recipeTime * timeMod);
+const pct = Math.round((wattage/3000)*100);
+
+document.getElementById('watt-grid').innerHTML =
+makeResultItem('Your Wattage', `${wattage}W`, wattage<1400?'Low power — add time':wattage>1900?'High power — reduce time':'Standard power') +
+makeResultItem('Adj. Temperature', `${toDisplay(adjustedTempF,unit)}${sym}`, `From ${recipeTempIn}${sym}`) +
+makeResultItem('Adj. Time', `${adjustedTime} min`, `From ${recipeTime} min`) +
+makeResultItem('Power Level', `${Math.round(wattage/REF_WATT*100)}%`, 'vs. reference 1600W');
+
+document.getElementById('watt-bar-wrap').innerHTML = `
+<div style="font-size:0.8rem;font-weight:700;color:var(--grey);margin-bottom:4px;">Wattage Power Meter</div>
+<div class="wattageBar"><div class="wattageBarFill" style="width:${pct}%"></div></div>
+<div style="display:flex;justify-content:space-between;font-size:0.74rem;color:var(--grey);margin-top:3px;"><span>700W</span><span>1600W</span><span>3000W</span></div>
+`;
+
+let steps = `<h3>Adjustment Notes</h3>`;
+if(wattage < 1400){
+steps += makeStep(1, 'Your air fryer is <strong>lower wattage</strong> than average. It heats more slowly and may need longer cooking times.');
+steps += makeStep(2, 'Consider increasing temperature by 5–10° above recipe suggestions.');
+steps += makeStep(3, `Use <strong>${adjustedTime} minutes</strong> as your starting point and check 3–4 minutes early.`);
+} else if(wattage > 1900){
+steps += makeStep(1, 'Your air fryer is <strong>higher wattage</strong> than average. It heats quickly and cooks faster.');
+steps += makeStep(2, 'Reduce recipe temperatures slightly to avoid over-browning the exterior before the inside cooks.');
+steps += makeStep(3, `Use <strong>${adjustedTime} minutes</strong> and start checking 2–3 minutes early.`);
+} else {
+steps += makeStep(1, 'Your air fryer wattage is close to the standard. No major adjustment needed.');
+steps += makeStep(2, `Follow recipe instructions with minor adjustments: <strong>${toDisplay(adjustedTempF,unit)}${sym}</strong> for <strong>${adjustedTime} min</strong>.`);
+}
+steps += makeStep(3, 'Always check food 2–3 minutes before the end time — air fryers vary even at the same wattage.');
+document.getElementById('watt-steps').innerHTML = steps;
+
+showResult('watt-placeholder','watt-results');
+});
+
+// ═══════════════════════════════════════════
+// TOOL 8 — MEAT DONENESS
+// ═══════════════════════════════════════════
+const MEAT_DATA = {
+chicken_breast: {
+name:'Chicken Breast', safeC:74, safeF:165,
+thin: { medium:14, well:16 },
+medium:{ medium:18, well:22 },
+thick: { medium:22, well:28 },
+tempC: 180, flip: true,
+},
+chicken_thigh: {
+name:'Chicken Thigh/Drumstick', safeC:74, safeF:165,
+thin: { medium:18, well:22 },
+medium:{ medium:22, well:26 },
+thick: { medium:26, well:30 },
+tempC: 190, flip: true,
+},
+chicken_wings: {
+name:'Chicken Wings', safeC:74, safeF:165,
+thin: { medium:18, well:20 },
+medium:{ medium:20, well:24 },
+thick: { medium:24, well:28 },
+tempC: 200, flip: true,
+},
+beef_steak: {
+name:'Beef Steak', safeC:60, safeF:140,
+thin: { rare:4, medium_rare:5, medium:6, well:8 },
+medium:{ rare:6, medium_rare:8, medium:10, well:14 },
+thick: { rare:10, medium_rare:12, medium:16, well:20 },
+tempC: 200, flip: true,
+},
+beef_burger: {
+name:'Beef Burger Patty', safeC:71, safeF:160,
+thin: { medium:8, well:10 },
+medium:{ medium:10, well:12 },
+thick: { medium:13, well:16 },
+tempC: 190, flip: true,
+},
+pork_chop: {
+name:'Pork Chop', safeC:63, safeF:145,
+thin: { medium:10, well:12 },
+medium:{ medium:13, well:16 },
+thick: { medium:18, well:22 },
+tempC: 200, flip: true,
+},
+pork_sausage: {
+name:'Pork Sausage', safeC:71, safeF:160,
+thin: { medium:10, well:12 },
+medium:{ medium:12, well:15 },
+thick: { medium:15, well:18 },
+tempC: 180, flip: true,
+},
+salmon: {
+name:'Salmon Fillet', safeC:63, safeF:145,
+thin: { medium:8, well:10 },
+medium:{ medium:10, well:13 },
+thick: { medium:13, well:16 },
+tempC: 180, flip: false,
+},
+shrimp: {
+name:'Shrimp / Prawns', safeC:63, safeF:145,
+thin: { medium:6, well:8 },
+medium:{ medium:8, well:9 },
+thick: { medium:9, well:11 },
+tempC: 200, flip: true,
+},
+lamb_chop: {
+name:'Lamb Chop', safeC:63, safeF:145,
+thin: { rare:5, medium_rare:6, medium:8, well:10 },
+medium:{ rare:8, medium_rare:10, medium:13, well:16 },
+thick: { rare:12, medium_rare:15, medium:18, well:22 },
+tempC: 195, flip: true,
+},
+};
+
+const DONENESS_SAFE = {
+rare: { warn: true, label:'Rare', internalC:52, internalF:125 },
+medium_rare: { warn: true, label:'Medium Rare', internalC:57, internalF:135 },
+medium: { warn: false, label:'Medium', internalC:63, internalF:145 },
+well: { warn: false, label:'Well Done', internalC:74, internalF:165 },
+};
+
+document.getElementById('meat-form').addEventListener('submit', e=>{
+e.preventDefault();
+const unit = document.getElementById('meat-unit').value;
+const meatKey = document.getElementById('meat-type').value;
+const thickness = document.getElementById('meat-thickness').value;
+const doneness = document.getElementById('meat-doneness').value;
+const sym = unitSym(unit);
+const d = MEAT_DATA[meatKey];
+const dn = DONENESS_SAFE[doneness];
+
+// Validate doneness applies
+const poultry = ['chicken_breast','chicken_thigh','chicken_wings','pork_sausage'];
+const effectiveDoneness = poultry.includes(meatKey) ? 'well' : doneness;
+
+const cookTime = d[thickness][effectiveDoneness] || d[thickness]['well'] || 15;
+const cookTempDisp = toDisplay(toF(d.tempC,'c'), unit);
+const safeTemp = unit==='f' ? d.safeF : d.safeC;
+const internalTemp = unit==='f' ? (DONENESS_SAFE[effectiveDoneness].internalF || d.safeF) : (DONENESS_SAFE[effectiveDoneness].internalC || d.safeC);
+
+document.getElementById('meat-grid').innerHTML =
+makeResultItem('Temperature', `${cookTempDisp}${sym}`, 'Air fryer setting') +
+makeResultItem('Cook Time', `${cookTime} min`, thickness+' cut') +
+makeResultItem('Safe Internal', `${safeTemp}${sym}`, 'Minimum safe temp') +
+makeResultItem('Target Internal', `${internalTemp}${sym}`, DONENESS_SAFE[effectiveDoneness].label);
+
+let steps = `<h3>Cooking Guide — ${d.name}</h3>`;
+if(poultry.includes(meatKey) && doneness!=='well'){
+steps = `<div class="alertBox"><strong>⚠️ Safety Note:</strong> Poultry and pork must always be cooked to well done (74°C / 165°F internal). Rare and medium-rare settings do not apply to these meats.</div>` + steps;
+}
+steps += makeStep(1, `Preheat to <strong>${cookTempDisp}${sym}</strong> for 3–5 minutes.`);
+steps += makeStep(2, `Cook <strong>${d.name.toLowerCase()}</strong> for <strong>${cookTime} minutes</strong>.`);
+if(d.flip) steps += makeStep(3, 'Flip halfway through cooking for even browning.');
+steps += makeStep(d.flip?4:3, `Use a meat probe to check internal temperature reaches at least <strong>${safeTemp}${sym}</strong>.`);
+steps += makeStep(d.flip?5:4, `Rest for <strong>3–5 minutes</strong> before cutting to retain juices.`);
+document.getElementById('meat-steps').innerHTML = steps;
+
+showResult('meat-placeholder','meat-results');
+});
+
+// ═══════════════════════════════════════════
+// TOOL 9 — CAN I AIR FRY THIS?
+// ═══════════════════════════════════════════
+const CAN_FRY_DB = {
+// YES
+bacon: { verdict:'yes', label:'Yes! Great in the air fryer', tip:'200°C/400°F · 6–8 min · Place in single layer · Line basket with foil for easy clean-up.' },
+chicken: { verdict:'yes', label:'Yes! Perfect in the air fryer', tip:'190°C/375°F · 20–25 min · Flip halfway · Reaches 74°C/165°F internally.' },
+fries: { verdict:'yes', label:'Yes! Air fryer fries are exceptional', tip:'200°C/400°F · 16–18 min · Shake every 5 min · Light oil spray for extra crunch.' },
+chips: { verdict:'yes', label:'Yes! Air fryer chips are exceptional', tip:'200°C/400°F · 16–18 min · Shake every 5 min · Light oil spray for extra crunch.' },
+steak: { verdict:'yes', label:'Yes! Excellent air fryer steak', tip:'200°C/400°F · 8–14 min (thickness dependent) · Flip halfway · Rest 5 min before serving.' },
+fish: { verdict:'yes', label:'Yes! Quick and delicious', tip:'180°C/350°F · 10–12 min · Spray lightly with oil · Don\'t overcook — check at 8 min.' },
+sausages: { verdict:'yes', label:'Yes! Air fryer sausages are brilliant', tip:'180°C/350°F · 12–15 min · Turn 2–3 times · Perfect for bangers and hot dogs.' },
+vegetables: { verdict:'yes', label:'Yes! Roasted veg in minutes', tip:'190°C/375°F · 10–15 min · Toss with oil · Shake halfway through.' },
+pizza: { verdict:'yes', label:'Yes! Crispy reheated pizza', tip:'165°C/330°F · 3–5 min · Single slice flat · Best method for leftover pizza.' },
+tofu: { verdict:'yes', label:'Yes! Crispy tofu made easy', tip:'200°C/400°F · 14–16 min · Press tofu dry first · Shake halfway · Light oil spray.' },
+nuggets: { verdict:'yes', label:'Yes! Classic air fryer food', tip:'200°C/400°F · 10–12 min · Shake halfway · No extra oil needed.' },
+prawns: { verdict:'yes', label:'Yes! Quick and crispy', tip:'200°C/400°F · 6–8 min · Shake halfway · Don\'t overcook — they tighten fast.' },
+shrimp: { verdict:'yes', label:'Yes! Quick and crispy', tip:'200°C/400°F · 6–8 min · Shake halfway · Don\'t overcook — they tighten fast.' },
+salmon: { verdict:'yes', label:'Yes! Perfect salmon', tip:'180°C/350°F · 10–13 min · Skin-side down · Internal temp 63°C/145°F.' },
+bread: { verdict:'yes', label:'Yes! Great for toast and rolls', tip:'160°C/320°F · 2–3 min for toast · Wrap rolls in foil to keep soft · Fast and even.' },
+toast: { verdict:'yes', label:'Yes! Great toast in 2–3 minutes', tip:'160°C/320°F · 2–3 min · Flip once · Watch closely — it can burn fast.' },
+cake: { verdict:'yes', label:'Yes! Baking in an air fryer works', tip:'160°C/320°F · Use a small heatproof tin · Check with a skewer · 15–25 min for small cakes.' },
+muffins: { verdict:'yes', label:'Yes! Bakes beautifully', tip:'160°C/320°F · Use silicone cupcake cases · 12–15 min · Check at 10 min.' },
+corn: { verdict:'yes', label:'Yes! Sweet charred corn on the cob', tip:'200°C/400°F · 10–12 min · Brush with butter · Rotate twice.' },
+pork: { verdict:'yes', label:'Yes! Air fryer pork is excellent', tip:'200°C/400°F · Time varies by cut · Always reach 71°C/160°F internal temp.' },
+lamb: { verdict:'yes', label:'Yes! Lamb chops work very well', tip:'195°C/380°F · 8–15 min depending on doneness · Rest before serving.' },
+potatoes: { verdict:'yes', label:'Yes! Crispy roast potatoes', tip:'200°C/400°F · 20–25 min · Toss in oil · Shake twice during cooking.' },
+wings: { verdict:'yes', label:'Yes! The ultimate air fryer food', tip:'200°C/400°F · 20–24 min · Flip halfway · Crispy skin guaranteed.' },
+egg: { verdict:'maybe', label:'Depends on the method', tip:'Hard-boiled (in shell): 130°C/270°F · 15 min. Fried: use a small heatproof dish + oil spray · 4 min. Scrambled and poached: not suitable for air fryer.' },
+eggs: { verdict:'maybe', label:'Depends on the method', tip:'Hard-boiled (in shell): 130°C/270°F · 15 min. Fried: use a small heatproof dish + oil spray · 4 min. Scrambled and poached: not suitable for air fryer.' },
+cheese: { verdict:'maybe', label:'It depends — use a dish', tip:'Solid cheese (halloumi, brie): Yes! 180°C/350°F · 6–8 min. Shredded/melted cheese: only if on top of another food. On its own it will melt through the basket.' },
+mushrooms: { verdict:'yes', label:'Yes! Incredible roasted mushrooms', tip:'180°C/350°F · 8–10 min · Light oil spray · They shrink significantly.' },
+broccoli: { verdict:'yes', label:'Yes! Crispy roasted broccoli', tip:'190°C/375°F · 8–10 min · Toss with oil · Florets go deliciously crispy.' },
+cauliflower: { verdict:'yes', label:'Yes! Great as cauli steaks or florets', tip:'190°C/375°F · 10–14 min · Toss with oil and spices · Shake halfway.' },
+pasta: { verdict:'maybe', label:'Reheat only — not cook from raw', tip:'Reheat leftover pasta in a heatproof dish at 160°C/320°F · 4–5 min · Add splash of water · Don\'t cook dry pasta from scratch — it won\'t hydrate.' },
+rice: { verdict:'no', label:'No — not suitable for raw rice', tip:'Raw rice cannot be air-fried; it needs boiling water to cook. You can reheat cooked rice in a heatproof dish at 160°C with a splash of water for 4–5 min.' },
+soup: { verdict:'no', label:'No — liquids are not safe in an air fryer', tip:'Liquids will leak through the basket and onto the heating element. Risk of fire and damage. Always heat soup on a hob or in the microwave.' },
+water: { verdict:'no', label:'No — liquid cannot be air-fried', tip:'Liquids boil and can cause steam damage or fire. Air fryers are for dry-heat cooking only.' },
+chocolate: { verdict:'no', label:'No — chocolate melts and causes a mess', tip:'Chocolate melts, drips through the basket, and burns on the element. Use a microwave or double boiler for melting chocolate.' },
+milk: { verdict:'no', label:'No — liquids are not safe in an air fryer', tip:'Any liquid will leak and could damage the machine or cause a fire.' },
+popcorn: { verdict:'no', label:'No — air fryers can\'t pop popcorn', tip:'Air fryers don\'t reach the 180–200°C needed at the kernel surface. Kernels sit in the basket rather than rotating in hot oil. Some may pop, but most won\'t. Use a microwave or stovetop.' },
+};
+
+function checkCanFry(input){
+const query = input.toLowerCase().trim().replace(/s$/,''); // basic singular
+let result = CAN_FRY_DB[query] || CAN_FRY_DB[query+'s'] || null;
+
+// Fuzzy match
+if(!result){
+const keys = Object.keys(CAN_FRY_DB);
+const match = keys.find(k => query.includes(k) || k.includes(query));
+if(match) result = CAN_FRY_DB[match];
+}
+
+const el = document.getElementById('cani-result');
+const ans = document.getElementById('cani-answer');
+const det = document.getElementById('cani-detail');
+
+if(!result){
+el.className='fryResult maybe show';
+ans.className='fryAnswer maybe';
+ans.textContent='🤔 Not in our database';
+det.innerHTML=`<p style="font-size:14px;line-height:1.8;color:#78350f;">We don't have specific data for "<strong>${input}</strong>" yet. As a general rule: if it bakes or roasts in an oven, it can usually be air-fried at a similar temperature with ~25% less time. Avoid liquids, wet batters (without coating), and anything with loose small parts.</p>`;
+} else {
+el.className=`fryResult ${result.verdict} show`;
+ans.className=`fryAnswer ${result.verdict}`;
+const emojis = {yes:'✅', no:'❌', maybe:'⚠️'};
+ans.textContent=`${emojis[result.verdict]} ${result.label}`;
+det.innerHTML=`<p style="font-size:14px;line-height:1.8;">${result.tip}</p>`;
+}
+
+document.getElementById('cani-placeholder').style.display='none';
+}
+
+document.getElementById('cani-btn').addEventListener('click', ()=>{
+const val = document.getElementById('cani-input').value.trim();
+if(val) checkCanFry(val);
+});
+document.getElementById('cani-input').addEventListener('keydown', ev=>{
+if(ev.key==='Enter'){ ev.preventDefault(); const v=ev.target.value.trim(); if(v) checkCanFry(v); }
+});
+
+// Quick check buttons
+const quickFoods = ['Bacon','Eggs','Cheese','Soup','Popcorn','Tofu','Steak','Fries'];
+const quickWrap = document.getElementById('cani-quick');
+quickFoods.forEach(f=>{
+const btn = document.createElement('button');
+btn.type='button';
+btn.className='usageBtn';
+btn.style.cssText='font-size:0.8rem;padding:6px 12px;';
+btn.textContent=f;
+btn.addEventListener('click', ()=>{
+document.getElementById('cani-input').value=f;
+checkCanFry(f);
+});
+quickWrap.appendChild(btn);
+});
+
+// ═══════════════════════════════════════════
+// TOOL 10 — CLEANING TRACKER
+// ═══════════════════════════════════════════
+let cleanCount = parseInt(localStorage.getItem('af_clean_count')||'0');
+let lastDeepClean = parseInt(localStorage.getItem('af_deep_weeks')||'2');
+
+function updateCleanUI(){
+document.getElementById('clean-count').textContent = cleanCount;
+document.getElementById('clean-last-deep').value = lastDeepClean;
+const pct = Math.min(100, Math.round(cleanCount/10*100));
+const fill = document.getElementById('clean-bar');
+const label = document.getElementById('clean-bar-label');
+fill.style.width = pct+'%';
+if(cleanCount<=3){
+fill.style.background='#22c55e';
+label.textContent=`${cleanCount} / 5 uses before quick clean recommended`;
+} else if(cleanCount<=7){
+fill.style.background='#f59e0b';
+label.textContent=`${cleanCount} uses — quick clean overdue`;
+} else {
+fill.style.background='#ef4444';
+label.textContent=`${cleanCount} uses — deep clean strongly recommended`;
+}
+localStorage.setItem('af_clean_count', cleanCount);
+}
+updateCleanUI();
+
+document.getElementById('clean-add1').addEventListener('click',()=>{ cleanCount++; updateCleanUI(); });
+document.getElementById('clean-add5').addEventListener('click',()=>{ cleanCount+=5; updateCleanUI(); });
+document.getElementById('clean-reset').addEventListener('click',()=>{ cleanCount=0; lastDeepClean=0; updateCleanUI(); localStorage.setItem('af_deep_weeks','0'); });
+
+document.getElementById('clean-check-btn').addEventListener('click', ()=>{
+const frierType = document.getElementById('clean-type').value;
+const deepWeeks = parseInt(document.getElementById('clean-last-deep').value)||0;
+lastDeepClean = deepWeeks;
+localStorage.setItem('af_deep_weeks', deepWeeks);
+
+let statusClass='statusGreen', statusMsg='', needDeep=deepWeeks>=4, needQuick=cleanCount>=5;
+if(cleanCount===0 && !needDeep){
+statusMsg='<strong>✓ All good!</strong> Your air fryer appears clean. Log uses as you cook.';
+} else if(!needQuick && !needDeep){
+statusMsg=`<strong>✓ Looking good</strong> — ${cleanCount} uses since last clean. A quick basket wipe after your next greasy cook is all you need.`;
+} else if(needQuick && !needDeep){
+statusClass='statusYellow';
+statusMsg=`<strong>⚠️ Quick clean recommended</strong> — ${cleanCount} uses since last clean. The basket and drawer need a wash before your next cook.`;
+} else {
+statusClass='statusRed';
+statusMsg=`<strong>🔴 Deep clean needed</strong> — ${cleanCount} uses since last clean and ${deepWeeks} weeks since your last deep clean. Grease build-up affects performance and can be a fire risk.`;
+}
+
+document.getElementById('clean-status-box').innerHTML=`<div class="cleanStatus ${statusClass}">${statusMsg}</div>`;
+
+const TYPE_STEPS = {
+basket: ['Remove the basket and drawer.','Wash basket and drawer in hot soapy water or dishwasher (check manual).','Wipe the interior cavity with a damp cloth — never submerge the main unit.','Use a soft brush to clean the heating element (only when fully unplugged and cooled).','Dry completely before reassembling and using.'],
+dual: ['Remove both baskets and dividers.','Wash all removable parts in hot soapy water.','Wipe between the two compartments with a damp cloth.','Clean the heating element area with a soft brush.','Check the divider seal for grease build-up — this is a common missed spot.'],
+oven: ['Remove all racks, trays and crumb trays.','Wash removable parts in hot soapy water.','Wipe the interior with a damp cloth — avoid the heating elements directly.','Use a toothbrush for grates and rack edges.','Leave door ajar to air-dry fully before next use.'],
+paddle: ['Remove the paddle/stirrer arm — follow your model\'s manual.','Wash paddle in hot soapy water.','Wipe the interior bowl with a damp cloth.','Check the paddle drive mechanism for grease and wipe carefully.','Re-insert paddle securely before next use.'],
+};
+
+const typeSteps = TYPE_STEPS[frierType];
+let steps = `<h3>${needDeep?'Deep Clean':'Quick Clean'} Guide — ${frierType.charAt(0).toUpperCase()+frierType.slice(1).replace('_',' ')} Air Fryer</h3>`;
+typeSteps.forEach((s,i)=>{ steps += makeStep(i+1,s); });
+if(needDeep){
+steps += makeStep(typeSteps.length+1,'<strong>Deep clean tip:</strong> Soak stubborn grease with a paste of baking soda and water for 20 minutes before scrubbing.');
+steps += makeStep(typeSteps.length+2,'Run the air fryer empty at 200°C/400°F for 3 minutes after cleaning to burn off any soap residue.');
+}
+document.getElementById('clean-steps').innerHTML = steps;
+
+showResult('clean-placeholder','clean-results');
+});
+
+// ═══════════════════════════════════════════
+// TOOL NAV — highlight active on scroll
+// ═══════════════════════════════════════════
+const toolIds = ['tool-converter','tool-synctimer','tool-reheat','tool-frozen','tool-portion','tool-crispy','tool-wattage','tool-meat','tool-canifry','tool-cleaning'];
+const navPills = document.querySelectorAll('.toolNavPill');
+
+window.addEventListener('scroll', ()=>{
+let current = '';
+toolIds.forEach(id=>{
+const el = document.getElementById(id);
+if(el && window.scrollY >= el.offsetTop - 200) current = id;
+});
+navPills.forEach(p=>{
+p.classList.toggle('active', p.getAttribute('href')==='#'+current);
+});
+}, {passive:true});
+</script>
+</body>
+</html>
+
