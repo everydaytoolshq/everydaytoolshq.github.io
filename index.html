@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -32,6 +32,12 @@
             transform: translateY(-12px) scale(1.05);
             border-color: #3b82f6;
             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        .tool-image {
+            height: 260px;
+            width: 100%;
+            object-fit: cover;
         }
 
         .tool-content {
@@ -76,13 +82,11 @@
 
         <div class="rubik-grid">
 
-            <!-- Real Tool -->
+            <!-- Real Tool - Full Image -->
             <a href="/uk-proximity-sunseeker" class="tool-card bg-white rounded-3xl overflow-hidden group">
-                <div class="h-64 bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center overflow-hidden">
-                    <img src="https://everydaytoolshq.github.io/ukproximitysunseekertoolicon.jpg" 
-                         alt="UK Proximity Sunseeker" 
-                         class="w-40 h-40 object-contain">
-                </div>
+                <img src="https://everydaytoolshq.github.io/ukproximitysunseekertoolicon.jpg" 
+                     alt="UK Proximity Sunseeker" 
+                     class="tool-image">
                 <div class="tool-content p-6">
                     <h3 class="font-semibold text-2xl mb-3">UK Proximity Sunseeker</h3>
                     <p class="text-gray-600 flex-grow">Find the best sunset &amp; sunrise spots near you in the UK.</p>
@@ -90,9 +94,9 @@
                 </div>
             </a>
 
-            <!-- Placeholder Tool 1 -->
+            <!-- Placeholder 1 -->
             <a href="#" class="tool-card bg-white rounded-3xl overflow-hidden group">
-                <div class="h-64 bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+                <div class="h-[260px] bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
                     <i class="fas fa-calculator text-8xl text-white"></i>
                 </div>
                 <div class="tool-content p-6">
@@ -102,9 +106,9 @@
                 </div>
             </a>
 
-            <!-- Placeholder Tool 2 -->
+            <!-- Placeholder 2 -->
             <a href="#" class="tool-card bg-white rounded-3xl overflow-hidden group">
-                <div class="h-64 bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
+                <div class="h-[260px] bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
                     <i class="fas fa-key text-8xl text-white"></i>
                 </div>
                 <div class="tool-content p-6">
@@ -114,9 +118,9 @@
                 </div>
             </a>
 
-            <!-- Placeholder Tool 3 -->
+            <!-- Placeholder 3 -->
             <a href="#" class="tool-card bg-white rounded-3xl overflow-hidden group">
-                <div class="h-64 bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
+                <div class="h-[260px] bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
                     <i class="fas fa-qrcode text-8xl text-white"></i>
                 </div>
                 <div class="tool-content p-6">
