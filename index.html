@@ -15,6 +15,7 @@
             font-family: 'Inter', system_ui, sans-serif;
             background-color: #ffffff;
             color: #1f2937;
+            overflow-x: hidden;
         }
         
         .logo-font {
@@ -35,10 +36,18 @@
             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
 
-        .tool-image {
-            height: 260px;
+        .tool-image-container {
             width: 100%;
-            object-fit: cover;
+            aspect-ratio: 1 / 1;           /* Perfect square */
+            overflow: hidden;
+            background-color: #f8fafc;
+        }
+
+        .tool-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;           /* Shows full image without cropping */
+            padding: 12px;
         }
 
         .tool-content {
@@ -50,33 +59,39 @@
         .rubik-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 2rem;
+            gap: 1.75rem;
+        }
+
+        @media (max-width: 640px) {
+            .rubik-grid {
+                gap: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
 
     <!-- Hero Section -->
-    <div class="pt-8 pb-10 text-center">
-        <div class="max-w-4xl mx-auto px-6">
+    <div class="pt-8 pb-10 text-center px-4">
+        <div class="max-w-4xl mx-auto">
             <img src="https://everydaytoolshq.github.io/edtlogo.jpg" 
                  alt="EverydayToolsHQ Logo" 
-                 class="w-60 h-60 mx-auto mb-6 rounded-3xl shadow-xl">
+                 class="w-56 h-56 mx-auto mb-6 rounded-3xl shadow-xl">
 
-            <h1 class="logo-font text-6xl md:text-7xl font-bold tracking-tighter mb-4 text-gray-900">
+            <h1 class="logo-font text-5xl md:text-6xl font-bold tracking-tighter mb-4 text-gray-900">
                 EverydayToolsHQ
             </h1>
             
-            <p class="text-3xl md:text-4xl text-gray-600 font-light max-w-2xl mx-auto">
+            <p class="text-2xl md:text-4xl text-gray-600 font-light max-w-2xl mx-auto">
                 Free online tools for everyday decisions
             </p>
         </div>
     </div>
 
     <!-- Tools Section -->
-    <div class="max-w-7xl mx-auto px-6 pb-24">
-        <div class="text-center -mt-4 mb-8">
-            <h2 class="logo-font text-6xl md:text-7xl font-bold tracking-tighter text-gray-900">
+    <div class="max-w-7xl mx-auto px-4 pb-24">
+        <div class="text-center -mt-2 mb-10">
+            <h2 class="logo-font text-5xl md:text-6xl font-bold tracking-tighter text-gray-900">
                 Our Tools
             </h2>
         </div>
@@ -85,9 +100,11 @@
 
             <!-- Real Tool -->
             <a href="/uk-proximity-sunseeker" class="tool-card bg-white rounded-3xl overflow-hidden group">
-                <img src="https://everydaytoolshq.github.io/ukproximitysunseekertoolicon.jpg" 
-                     alt="UK Proximity Sunseeker" 
-                     class="tool-image">
+                <div class="tool-image-container">
+                    <img src="https://everydaytoolshq.github.io/ukproximitysunseekertoolicon.jpg" 
+                         alt="UK Proximity Sunseeker" 
+                         class="tool-image">
+                </div>
                 <div class="tool-content p-6">
                     <h3 class="font-semibold text-2xl mb-3">UK Proximity Sunseeker</h3>
                     <p class="text-gray-600 flex-grow">Escape the rain, chase the UK's brightest skies.</p>
@@ -97,8 +114,10 @@
 
             <!-- Placeholder 1 -->
             <a href="#" class="tool-card bg-white rounded-3xl overflow-hidden group">
-                <div class="h-[260px] bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
-                    <i class="fas fa-calculator text-8xl text-white"></i>
+                <div class="tool-image-container">
+                    <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-cyan-500">
+                        <i class="fas fa-calculator text-7xl text-white"></i>
+                    </div>
                 </div>
                 <div class="tool-content p-6">
                     <h3 class="font-semibold text-2xl mb-3">Tool Name</h3>
@@ -109,8 +128,10 @@
 
             <!-- Placeholder 2 -->
             <a href="#" class="tool-card bg-white rounded-3xl overflow-hidden group">
-                <div class="h-[260px] bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
-                    <i class="fas fa-key text-8xl text-white"></i>
+                <div class="tool-image-container">
+                    <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-violet-500 to-purple-600">
+                        <i class="fas fa-key text-7xl text-white"></i>
+                    </div>
                 </div>
                 <div class="tool-content p-6">
                     <h3 class="font-semibold text-2xl mb-3">Tool Name</h3>
@@ -121,8 +142,10 @@
 
             <!-- Placeholder 3 -->
             <a href="#" class="tool-card bg-white rounded-3xl overflow-hidden group">
-                <div class="h-[260px] bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
-                    <i class="fas fa-qrcode text-8xl text-white"></i>
+                <div class="tool-image-container">
+                    <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-500 to-teal-500">
+                        <i class="fas fa-qrcode text-7xl text-white"></i>
+                    </div>
                 </div>
                 <div class="tool-content p-6">
                     <h3 class="font-semibold text-2xl mb-3">Tool Name</h3>
@@ -135,7 +158,7 @@
     </div>
 
     <!-- Footer -->
-    <footer style="margin-top:80px;padding:40px 0 30px;border-top:1px solid #ddd;text-align:center;font-size:14px; background-color: #f9fafb;">
+    <footer style="margin-top:60px;padding:40px 0 30px;border-top:1px solid #ddd;text-align:center;font-size:14px; background-color: #f9fafb;">
         <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
             <div style="margin-bottom:12px;">
                 <strong>EverydayToolsHQ</strong>
