@@ -1008,13 +1008,27 @@
       state.items=items.slice();
       els.closestTitle.textContent=state.nightMode?'Best sunny place in the next 24–48 hours':'Closest sunny place right now';
       els.rankingTitle.textContent=state.nightMode?'UK sunshine ranking for the next 24–48 hours':'UK sunshine ranking by drive distance';
-      if(!items.length){
-        els.topResult.className='placeholder';
-        els.topResult.innerHTML=state.nightMode?'Sorry, none of the places we checked looked sunny or almost sunny over the next 24–48 hours within a 1,000-mile drive. Consider a last-minute holiday on <a href="https://www.booking.com" target="_blank" rel="noopener sponsored nofollow">Booking.com</a>.':'Sorry, none of the places we checked were confirmed as sunny or almost sunny today within a 1,000-mile drive. Consider a last-minute holiday on <a href="https://www.booking.com" target="_blank" rel="noopener sponsored nofollow">Booking.com</a>.';
-        els.resultsGrid.innerHTML='';
-        const msg=state.nightMode?'No sunny or almost-sunny matches found for the next 24–48 hours.':'No majority-confirmed sunny or almost-sunny matches within 1,000 miles.';
-        els.resultsSummary.textContent=msg;
-        els.resultsSummaryTop.textContent=msg;
+      if (!items.length) {
+        const horizon = state.nightMode ? 'over the next 24–48 hours' : 'right now or today';
+        els.topResult.className = 'placeholder';
+        els.topResult.innerHTML = `
+          <div style="text-align:left;max-width:540px;margin:0 auto;">
+            <p style="font-size:22px;margin:0 0 10px;">☁️ No sunny spots found ${horizon}</p>
+            <p style="margin:0 0 12px;color:#44403c;line-height:1.75;">
+              We checked every city and town in our UK &amp; Ireland database and none of them are showing sunny or almost sunny conditions ${horizon} according to our live weather sources.
+            </p>
+            <p style="margin:0 0 16px;color:#44403c;line-height:1.75;">
+              It looks like it's a grey one across the board today. If you need some guaranteed sunshine, it might be time for a proper getaway!
+            </p>
+            <a href="https://www.booking.com" target="_blank" rel="noopener sponsored nofollow" style="display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 20px;border-radius:999px;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;text-decoration:none;font-weight:700;font-size:14px;box-shadow:0 6px 18px rgba(249,115,22,.3);">
+              🌍 Find a sunny holiday on Booking.com ↗
+            </a>
+            <p style="margin:14px 0 0;font-size:13px;color:#78716c;">Try tapping <strong>Refresh Ranking</strong> in a little while — weather data updates hourly.</p>
+          </div>`;
+        els.resultsGrid.innerHTML = '';
+        const msg = `No sunny or almost-sunny places found ${horizon} across the UK &amp; Ireland.`;
+        els.resultsSummary.textContent = msg;
+        els.resultsSummaryTop.textContent = msg;
         return;
       }
       els.topResult.className='';
@@ -1027,74 +1041,202 @@
       els.resultsSummaryTop.textContent='';
     }
 
-    async function runSunSeeker(fromRefresh){
-      if(state.running)return;
-      try{
+    // Track whether user has explicitly denied location
+    const PERM_DENIED = 'denied';
+
+    // Friendly HTML shown when location is denied
+    function deniedHTML() {
+      return `
+        <div style="text-align:left;max-width:560px;margin:0 auto;">
+          <p style="font-size:22px;margin:0 0 10px;">📍 Location access needed</p>
+          <p style="margin:0 0 14px;color:#44403c;line-height:1.75;">
+            Proximity SunSeeker needs to know roughly where you are so it can find the nearest sunny places and rank them by driving distance. <strong>Your location never leaves your phone</strong> — all calculations happen entirely on your device and nothing is sent to any server.
+          </p>
+          <p style="margin:0 0 16px;color:#44403c;line-height:1.75;">
+            It looks like location access was denied. Here's how to enable it and try again:
+          </p>
+          <div style="display:grid;gap:10px;margin-bottom:18px;">
+            <div style="background:#e0f2fe;border:1px solid #bae6fd;border-radius:12px;padding:14px 16px;">
+              <strong style="color:#075985;">📱 iPhone / iPad (Safari)</strong><br>
+              Go to <em>Settings → Privacy & Security → Location Services → Safari</em> and set it to <strong>While Using</strong>. Then come back and tap the button again.
+            </div>
+            <div style="background:#e0f2fe;border:1px solid #bae6fd;border-radius:12px;padding:14px 16px;">
+              <strong style="color:#075985;">📱 iPhone / iPad (Chrome)</strong><br>
+              Go to <em>Settings → Chrome → Location</em> and set it to <strong>While Using the App</strong>. Then come back and tap the button again.
+            </div>
+            <div style="background:#dcfce7;border:1px solid #bbf7d0;border-radius:12px;padding:14px 16px;">
+              <strong style="color:#166534;">🤖 Android</strong><br>
+              Tap the <strong>lock icon</strong> or <strong>ⓘ info icon</strong> in your browser address bar → tap <em>Permissions → Location</em> → set to <strong>Allow</strong>. Or go to <em>Settings → Apps → [your browser] → Permissions → Location → Allow</em>. Then tap the button again.
+            </div>
+          </div>
+          <p style="font-size:13px;color:#78716c;line-height:1.7;">
+            🔒 <strong>Privacy promise:</strong> your coordinates are only used to calculate distances inside your browser. We do not store, transmit, or share your location with anyone.
+          </p>
+        </div>`;
+    }
+
+    function showDenied() {
+      setStatus('Location denied');
+      setNation('Not available');
+      setConsensus('Location needed');
+      setNotice('');
+      showLocationHelp(false);
+      els.topResult.className = 'placeholder';
+      els.topResult.innerHTML = deniedHTML();
+      els.resultsGrid.innerHTML = '';
+      els.resultsSummary.textContent = '';
+      els.resultsSummaryTop.textContent = '';
+    }
+
+    function processWeatherResults(weatheredItems, user) {
+      const routed = fetchDriveData(user, weatheredItems);
+      state.nightMode = routed.some(item => item?.current?.is_day === 0);
+      const ranked = routed
+        .filter(item => safeNumber(item.drive_km, MAX_DRIVE_KM + 1) <= MAX_DRIVE_KM)
+        .map(item => ({...item, sun_score: sunnyScore(item), now_label: currentLabel(item)}))
+        .filter(isSunnyEnough)
+        .sort((a, b) => (a.drive_km - b.drive_km) || (b.sun_score - a.sun_score));
+      return ranked;
+    }
+
+    async function runSunSeeker(fromRefresh) {
+      if (state.running) return;
+
+      // If previously denied and not a refresh with known coords, show denied screen without requesting again
+      // (browser will auto-deny silently, so we show help proactively)
+      // We only skip the request if permState is 'denied' AND we have no stored user
+      // On re-click we always try again — browser will either prompt or use cached permission
+      try {
         setBusy(true);
         showLocationHelp(false);
         setNotice('');
-        els.topResult.className='placeholder';
-        els.topResult.innerHTML='Checking sunshine outlook…';
-        els.resultsGrid.innerHTML='';
-        els.resultsSummaryTop.textContent='Looking for the best bright options…';
-        els.resultsSummary.textContent='Looking for the best bright options…';
-        setStatus('Requesting location');
+        setStatus('Requesting location…');
         setNation('Detecting');
         setConsensus('Checking now');
+        els.topResult.className = 'placeholder';
+        els.topResult.innerHTML = '📍 Getting your location…';
+        els.resultsGrid.innerHTML = '';
+        els.resultsSummaryTop.textContent = '';
+        els.resultsSummary.textContent = '';
 
-        const user=fromRefresh&&state.user?state.user:await getLocation();
-        state.user=user;
-        setStatus('Matching UK nation');
-        const nation=guessNation(user.lat,user.lon);
-        if(!nation)throw new Error('This version of Proximity SunSeeker is designed for locations inside the UK and Ireland.');
-        state.nation=nation;
+        // --- STEP 1: Get location ---
+        const user = (fromRefresh && state.user) ? state.user : await getLocation();
+        state.user = user;
+        state.permDenied = false;
+
+        // --- STEP 2: Identify search area ---
+        setStatus('Finding search area…');
+        els.topResult.innerHTML = '🗺️ Identifying your UK / Ireland region…';
+        const nation = guessNation(user.lat, user.lon);
+        if (!nation) {
+          els.topResult.innerHTML = '<strong>Outside coverage area.</strong> Proximity SunSeeker covers the UK and Ireland only. It looks like your location is outside this area.';
+          setStatus('Outside coverage');
+          setBusy(false);
+          return;
+        }
+        state.nation = nation;
         setNation(getSearchArea(nation));
-        const candidates=getSearchCandidates(nation).map(item=>({...item,nation:item.nation||nation}));
-        setStatus('Checking live sunshine');
-        const [weathered,routedAll]=await Promise.all([fetchAllWeatherSources(candidates),Promise.resolve(fetchDriveData(user,candidates))]);
-        const driveMap=new Map(routedAll.map(item=>[item.name,item]));
-        const merged=weathered.map(item=>({...item,drive_km:driveMap.get(item.name)?.drive_km,drive_minutes:driveMap.get(item.name)?.drive_minutes,drive_estimated:Boolean(driveMap.get(item.name)?.drive_estimated)}));
-        state.nightMode=merged.some(item=>item?.current?.is_day===0);
-        const routed=merged.filter(item=>safeNumber(item.drive_km,MAX_DRIVE_KM+1)<=MAX_DRIVE_KM).map(item=>({...item,sun_score:sunnyScore(item),now_label:currentLabel(item)})).filter(isSunnyEnough).sort((a,b)=>(a.drive_km-b.drive_km)||(b.sun_score-a.sun_score));
+        const candidates = getSearchCandidates(nation).map(item => ({...item, nation: item.nation || nation}));
+
+        // --- STEP 3: Fast weather fetch (best_match model only → render immediately) ---
+        setStatus('Checking live sunshine…');
+        els.topResult.innerHTML = '☀️ Scanning sunshine across ' + getSearchArea(nation) + '…';
+
+        const fastItems = await fetchWeatherFast(candidates, (refinedItems) => {
+          // Background refinement callback — silently re-render with better consensus data
+          if (!state.running) {
+            const refined = processWeatherResults(refinedItems, user);
+            setConsensus(state.nightMode ? 'Best sunny outlook 24–48 hours (refined)' : 'Sunny or almost sunny today (refined)');
+            renderResults(refined);
+          }
+        });
+
+        // Render fast results immediately
+        const fastRanked = processWeatherResults(fastItems, user);
         setStatus('Ranking ready');
-        setConsensus(state.nightMode?'Best sunny outlook 24–48 hours':'Sunny or almost sunny today');
+        setConsensus(state.nightMode ? 'Best sunny outlook 24–48 hours' : 'Sunny or almost sunny today');
         setNotice('');
         showLocationHelp(false);
-        renderResults(routed);
-        // Scroll to results after a short delay so DOM has painted
+        renderResults(fastRanked);
+
         setTimeout(() => {
           const target = document.getElementById('closestTitle');
           if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 120);
-      }catch(err){
-        const msg=err&&err.message?err.message:'Unable to complete the sunshine ranking right now.';
-        setStatus('Needs permission or retry');
-        setConsensus('Location needed');
-        setNotice('<strong>Location help:</strong> '+esc(msg)+' Please allow location for your browser and try again.');
-        showLocationHelp(true);
-        els.topResult.className='placeholder';
-        els.topResult.innerHTML=esc(msg);
-        els.resultsGrid.innerHTML='';
-        els.resultsSummary.textContent='No ranking available right now.';
-        els.resultsSummaryTop.textContent='No ranking available right now.';
-      }finally{
+
+      } catch(err) {
+        const code = err && err.code !== undefined ? err.code : -1;
+        const isDenied = code === 1 || (err && err.message && err.message.includes('denied'));
+        const isUnsupported = err && err.message && err.message.includes('support');
+
+        if (isDenied) {
+          state.permDenied = true;
+          showDenied();
+        } else if (isUnsupported) {
+          setStatus('Not supported');
+          setNotice('');
+          els.topResult.className = 'placeholder';
+          els.topResult.innerHTML = '<strong>Geolocation not supported.</strong> Your browser does not support location sharing. Please try in Safari (iPhone) or Chrome (Android).';
+          els.resultsGrid.innerHTML = '';
+        } else {
+          // Timeout, unavailable, or other error — show retry prompt
+          const friendlyMsg = (err && err.message) ? err.message : 'Location could not be detected.';
+          setStatus('Location error — tap to retry');
+          setNotice('');
+          showLocationHelp(true);
+          els.topResult.className = 'placeholder';
+          els.topResult.innerHTML = `
+            <div style="text-align:left;max-width:520px;margin:0 auto;">
+              <p style="font-size:20px;margin:0 0 10px;">📍 Could not get your location</p>
+              <p style="margin:0 0 14px;color:#44403c;line-height:1.75;">${esc(friendlyMsg)}</p>
+              <p style="margin:0;color:#44403c;line-height:1.75;">Please make sure location is enabled for your browser and tap <strong>Use My Rainy Location</strong> again. Your location stays on your device — it is never sent anywhere.</p>
+            </div>`;
+          els.resultsGrid.innerHTML = '';
+        }
+        els.resultsSummary.textContent = '';
+        els.resultsSummaryTop.textContent = '';
+      } finally {
         setBusy(false);
       }
     }
 
-    function getLocation(){
-      return new Promise((resolve,reject)=>{
-        if(!navigator.geolocation){reject(new Error('Your browser does not support geolocation.'));return;}
+    // getLocation: use low-accuracy first (fast network-based), then optionally refine
+    // Low accuracy = cell/wifi triangulation = instant on mobile
+    // High accuracy = GPS = slow (5-15s) and drains battery
+    function getLocation() {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject({code: -1, message: 'Your browser does not support geolocation. Please use Safari on iPhone or Chrome on Android.'});
+          return;
+        }
+
+        let resolved = false;
+
+        // Try fast network-based location first (no GPS)
         navigator.geolocation.getCurrentPosition(
-          pos=>resolve({lat:pos.coords.latitude,lon:pos.coords.longitude}),
-          err=>{if(err.code===1)reject(new Error('Location permission was denied.'));else if(err.code===2)reject(new Error('Your location could not be detected.'));else if(err.code===3)reject(new Error('Location request timed out.'));else reject(new Error('Location access failed.'));},
-          {enableHighAccuracy:true,timeout:15000,maximumAge:120000}
+          pos => {
+            if (!resolved) {
+              resolved = true;
+              resolve({lat: pos.coords.latitude, lon: pos.coords.longitude});
+            }
+          },
+          err => {
+            if (!resolved) {
+              resolved = true;
+              reject(err);
+            }
+          },
+          {
+            enableHighAccuracy: false,  // Network/wifi — instant on mobile
+            timeout: 10000,
+            maximumAge: 300000          // Accept a cached position up to 5 min old
+          }
         );
       });
     }
 
-    locateBtns.forEach(b=>b.addEventListener('click',()=>runSunSeeker(false)));
-    refreshBtns.forEach(b=>b.addEventListener('click',()=>runSunSeeker(Boolean(state.user))));
+    locateBtns.forEach(b => b.addEventListener('click', () => runSunSeeker(false)));
+    refreshBtns.forEach(b => b.addEventListener('click', () => runSunSeeker(Boolean(state.user))));
     setStatus('Ready');
     setNation('Waiting for location');
     setConsensus('Sunny or almost sunny today');
