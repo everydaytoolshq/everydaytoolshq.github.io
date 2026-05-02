@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The Yarn Logic Pro - Advanced yarn yardage calculator with stitch geometry, texture multipliers, safety buffer & buttonhole spacing tool.">
+  <title>The Yarn Logic Pro | Advanced Knitting & Crochet Calculator</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #8B5CF6;
+      --primary-dark: #6D28D9;
+      --accent: #C4B5FD;
+      --bg: #f8f5ff;
+      --surface: #ffffff;
+      --text: #3F2A6B;
+      --muted: #6B5A8E;
+      --radius: 20px;
+      --radius-lg: 28px;
+    }
+
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .wrap { width: min(1280px, 100% - 32px); margin: 0 auto; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #f3e8ff 0%, #e0d4ff 100%);
+      padding: 60px 0 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.8rem, 6vw, 4.2rem);
+      font-weight: 800;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+    .hero h1 span { color: var(--primary); }
+    .hero p {
+      font-size: 1.25rem;
+      max-width: 620px;
+      margin: 0 auto 32px;
+      color: var(--muted);
+    }
+
+    .hero-image {
+      width: 100%;
+      max-width: 1340px;
+      height: auto;
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(139, 92, 246, 0.25);
+      margin: 30px auto;
+      display: block;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 32px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+    }
+    .btn-primary:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(139, 92, 246, 0.5); }
+
+    /* Cards */
+    .section { padding: 60px 0; }
+    .card {
+      background: white;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 10px 40px rgba(139, 92, 246, 0.12);
+      padding: 32px;
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.2rem;
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #E9D5FF;
+      border-radius: 12px;
+      font-size: 1rem;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .calculate-btn {
+      width: 100%;
+      padding: 18px;
+      font-size: 1.25rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-weight: 700;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    .results {
+      background: #f3e8ff;
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 24px;
+    }
+
+    .result-item {
+      background: white;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    /* Footer */
+    .siteFooter {
+      margin-top: 80px;
+      padding: 40px 0 30px;
+      border-top: 1px solid #ddd;
+      text-align: center;
+      font-size: 14px;
+      background-color: #f9fafb;
+    }
+    .footerBrand { font-family: 'Syne', sans-serif; font-weight: 700; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <h1>The Yarn <span>Logic Pro</span></h1>
+      <p>Advanced yardage calculator with stitch geometry, texture intelligence, safety buffer &amp; smart buttonhole spacing.</p>
+      
+      <img src="https://everydaytoolshq.github.io/theyarnlogicprohero.jpg" 
+           alt="The Yarn Logic Pro - Advanced Yarn Calculator" 
+           class="hero-image">
+    </div>
+  </section>
+
+  <div class="wrap">
+
+    <!-- Yardage Calculator -->
+    <section class="section">
+      <div class="card">
+        <h2>Yarn Yardage Calculator</h2>
+        
+        <form id="yarn-form">
+          <div style="display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+
+            <div>
+              <label>Unit System</label>
+              <select id="unit" required>
+                <option value="imperial">Imperial (Yards/Ounces)</option>
+                <option value="metric">Metric (Meters/Grams)</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Craft Type</label>
+              <select id="craft" required>
+                <option value="knitting">Knitting</option>
+                <option value="crochet">Crochet</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Project Type</label>
+              <select id="project" required></select>
+            </div>
+
+            <div>
+              <label>Size</label>
+              <select id="size" required></select>
+            </div>
+
+            <div>
+              <label>Stitch Texture</label>
+              <select id="texture" required>
+                <option value="baseline">Baseline (Stockinette)</option>
+                <option value="volume">Volume (Garter/Rib)</option>
+                <option value="structure">Structure (Cables)</option>
+                <option value="sculptural">Sculptural (Bobbles)</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Garment Ease</label>
+              <select id="ease" required>
+                <option value="fitted" selected>Fitted</option>
+                <option value="negative">Negative Ease</option>
+                <option value="loose">Loose</option>
+                <option value="oversized">Oversized</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Pattern Gauge (sts/4")</label>
+              <input type="number" id="pattern-gauge" value="20" required>
+            </div>
+
+            <div>
+              <label>Your Gauge (sts/4")</label>
+              <input type="number" id="user-gauge" value="20" required>
+            </div>
+
+            <div>
+              <label>Length per Skein</label>
+              <input type="number" id="length-per-ball" value="200" required>
+            </div>
+
+            <div>
+              <label>Extra Buffer (%)</label>
+              <input type="range" id="extra-buffer" min="0" max="25" value="10">
+              <span id="buffer-value">10%</span>
+            </div>
+          </div>
+
+          <button type="submit" class="calculate-btn">Calculate Yardage</button>
+        </form>
+
+        <div id="results-section" class="results" style="display:none;"></div>
+      </div>
+    </section>
+
+    <!-- Buttonhole Tool -->
+    <section class="section">
+      <div class="card">
+        <h2>Buttonhole Spacing Calculator</h2>
+        
+        <form id="bh-form">
+          <div style="display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+            <div>
+              <label>Total Stitches</label>
+              <input type="number" id="bh-total" value="60" required>
+            </div>
+            <div>
+              <label>Number of Buttons</label>
+              <input type="number" id="bh-buttons" value="6" required>
+            </div>
+            <div>
+              <label>Stitches per Buttonhole</label>
+              <input type="number" id="bh-size" value="3" required>
+            </div>
+          </div>
+          <button type="submit" class="calculate-btn">Calculate Spacing</button>
+        </form>
+
+        <div id="bh-results" style="display:none; margin-top:24px;"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="siteFooter">
+    <div class="wrap">
+      <div class="footerBrand">EverydayToolsHQ</div>
+      <div>
+        <a href="https://powerstationhq.com/privacy-policy/" target="_blank">Privacy Policy</a> | 
+        <a href="https://powerstationhq.com/terms-and-conditions/" target="_blank">Terms</a> | 
+        <a href="https://powerstationhq.com/affiliate-disclosure/" target="_blank">Affiliate Disclosure</a>
+      </div>
+      <div style="margin-top:12px;">
+        Powered by <a href="https://powerstationhq.com/" target="_blank">PowerstationHQ</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ==================== YARN CALCULATOR LOGIC ====================
+    const baseYardage = {
+      sweater: { s: 1200, m: 1400, l: 1600, xl: 1800, xxl: 2000, '3xl': 2200, '4xl': 2400, '5xl': 2600 },
+      cardigan: { s: 1400, m: 1600, l: 1800, xl: 2000, xxl: 2200, '3xl': 2400, '4xl': 2600, '5xl': 2800 },
+      blanket: { s: 3000, m: 3500, l: 4000, xl: 4500, xxl: 5000, '3xl': 5500, '4xl': 6000, '5xl': 6500 },
+      shawl: { s: 400, m: 500, l: 600, xl: 700, xxl: 800, '3xl': 900, '4xl': 1000, '5xl': 1100 },
+      baby_sweater: { newborn: 400, '0-3m': 450, '3-6m': 500, '6-12m': 550, toddler: 600 },
+      baby_cardigan: { newborn: 450, '0-3m': 500, '3-6m': 550, '6-12m': 600, toddler: 650 },
+      baby_blanket: { newborn: 1000, '0-3m': 1100, '3-6m': 1200, '6-12m': 1300, toddler: 1400 },
+      baby_hat: { newborn: 100, '0-3m': 120, '3-6m': 140, '6-12m': 160, toddler: 180 },
+      socks: { s: 300, m: 350, l: 400, xl: 450 },
+      hat: { s: 200, m: 250, l: 300, xl: 350 },
+      scarf: { s: 400, m: 500, l: 600, xl: 700 }
+    };
+
+    const sizeOptions = {
+      adult: ['s','m','l','xl','xxl','3xl','4xl','5xl'],
+      baby: ['newborn','0-3m','3-6m','6-12m','toddler'],
+      simple: ['s','m','l','xl']
+    };
+
+    const projectSizeType = {
+      sweater: 'adult', cardigan: 'adult', blanket: 'simple', shawl: 'simple',
+      baby_sweater: 'baby', baby_cardigan: 'baby', baby_blanket: 'baby',
+      baby_hat: 'baby', socks: 'simple', hat: 'simple', scarf: 'simple'
+    };
+
+    // Populate project & size
+    const projectSelect = document.getElementById('project');
+    const sizeSelect = document.getElementById('size');
+
+    Object.keys(baseYardage).forEach(proj => {
+      const opt = document.createElement('option');
+      opt.value = proj;
+      opt.textContent = proj.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+      projectSelect.appendChild(opt);
+    });
+
+    function updateSizes() {
+      const type = projectSizeType[projectSelect.value] || 'adult';
+      sizeSelect.innerHTML = '';
+      sizeOptions[type].forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s;
+        opt.textContent = s.toUpperCase();
+        sizeSelect.appendChild(opt);
+      });
+    }
+    projectSelect.addEventListener('change', updateSizes);
+    updateSizes();
+
+    // Buffer slider
+    document.getElementById('extra-buffer').addEventListener('input', function() {
+      document.getElementById('buffer-value').textContent = this.value + '%';
+    });
+
+    // Form submission
+    document.getElementById('yarn-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const unit = document.getElementById('unit').value;
+      const project = document.getElementById('project').value;
+      const size = document.getElementById('size').value;
+      const texture = document.getElementById('texture').value;
+      const ease = document.getElementById('ease').value;
+      const patternGauge = parseFloat(document.getElementById('pattern-gauge').value);
+      const userGauge = parseFloat(document.getElementById('user-gauge').value);
+      const extraBuffer = parseFloat(document.getElementById('extra-buffer').value) / 100;
+      const lengthPerBall = parseFloat(document.getElementById('length-per-ball').value);
+
+      let stitchTax = texture === 'volume' ? 1.1 : texture === 'structure' ? 1.25 : texture === 'sculptural' ? 1.45 : 1.0;
+      let easeFactor = ease === 'negative' ? 0.95 : ease === 'loose' ? 1.05 : ease === 'oversized' ? 1.15 : 1.0;
+      let gaugeFactor = (patternGauge / userGauge) ** 2;
+      let totalBuffer = 1.1 + extraBuffer;
+
+      let base = baseYardage[project][size] || 1200;
+      let totalYards = base * stitchTax * easeFactor * gaugeFactor * totalBuffer;
+
+      let totalLength = unit === 'metric' ? Math.round(totalYards * 0.9144) : Math.round(totalYards);
+      let unitText = unit === 'metric' ? 'meters' : 'yards';
+
+      const ballsNeeded = Math.ceil(totalLength / lengthPerBall);
+
+      document.getElementById('results-section').style.display = 'block';
+      document.getElementById('results-section').innerHTML = `
+        <h3>Your Estimate</h3>
+        <div class="result-item"><strong>Total Yarn Needed:</strong> ${totalLength} ${unitText}</div>
+        <div class="result-item"><strong>Balls/Skeins Required:</strong> ${ballsNeeded}</div>
+        <div class="result-item"><strong>Buffer Included:</strong> ${Math.round(extraBuffer*100)}% extra</div>
+      `;
+    });
+
+    // ==================== BUTTONHOLE TOOL ====================
+    document.getElementById('bh-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const total = parseInt(document.getElementById('bh-total').value);
+      const buttons = parseInt(document.getElementById('bh-buttons').value);
+      const holeSize = parseInt(document.getElementById('bh-size').value);
+
+      const gaps = buttons + 1;
+      const remaining = total - (buttons * holeSize);
+      const baseGap = Math.floor(remaining / gaps);
+      const extra = remaining % gaps;
+
+      let output = `<h3>Buttonhole Layout</h3><p>Base gap: ${baseGap} stitches (+${extra} extra stitches distributed)</p>`;
+      
+      document.getElementById('bh-results').innerHTML = output;
+      document.getElementById('bh-results').style.display = 'block';
+    });
+  </script>
+</body>
+</html>
