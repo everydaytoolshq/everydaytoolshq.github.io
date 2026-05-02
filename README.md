@@ -1,174 +1,26 @@
+# EverydayToolsHQ
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EverydayToolsHQ - Free Online Tools</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
-        
-        body {
-            font-family: 'Inter', system_ui, sans-serif;
-            background-color: #ffffff;
-            color: #1f2937;
-        }
-        
-        .logo-font {
-            font-family: 'Space Grotesk', sans-serif;
-        }
+Welcome to **EverydayToolsHQ**, a collection of free, useful tools designed to simplify various tasks in everyday life. Our mission is to provide simple, accessible, and high-quality utilities that help you get things done faster.
 
-        .tool-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 2px solid #e5e7eb;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-        
-        .tool-card:hover {
-            transform: translateY(-12px) scale(1.05);
-            border-color: #3b82f6;
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-        }
+## 🚀 Access the Tools
+You can browse and use the full collection of tools at:
+**[https://everydaytoolshq.github.io/](https://everydaytoolshq.github.io/)**
 
-        .tool-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
+---
 
-        .rubik-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 2rem;
-        }
-    </style>
-</head>
-<body>
+## 🛠 Project Overview
+The tools hosted here vary in function but are all built with the same goal: making everyday digital life a little easier. 
 
-    <!-- Hero Section -->
-    <div class="pt-8 pb-10 text-center">
-        <div class="max-w-4xl mx-auto px-6">
-            <img src="https://everydaytoolshq.github.io/edtlogo.jpg" 
-                 alt="EverydayToolsHQ Logo" 
-                 class="w-60 h-60 mx-auto mb-6 rounded-3xl shadow-xl">
+*   **Free to Use**: No accounts, no subscriptions, no installations.
+*   **Web-Based**: Runs entirely in your browser.
+*   **Lightweight**: Optimized for speed and simplicity.
 
-            <h1 class="logo-font text-6xl md:text-7xl font-bold tracking-tighter mb-4 text-gray-900">
-                EverydayToolsHQ
-            </h1>
-            
-            <p class="text-3xl md:text-4xl text-gray-600 font-light max-w-2xl mx-auto">
-                Free online tools for everyday decisions
-            </p>
-        </div>
-    </div>
+## ⚖️ Affiliate Disclosure
+To support the ongoing development, maintenance, and hosting of these free resources, some of our tool pages may contain **affiliate links**. 
 
-    <!-- Tools Section - Bigger & Closer -->
-    <div class="max-w-7xl mx-auto px-6 pb-24">
-        <div class="text-center -mt-4 mb-8">
-            <h2 class="logo-font text-6xl md:text-7xl font-bold tracking-tighter text-gray-900">
-                Our Tools
-            </h2>
-        </div>
+If you click on these links and make a purchase, we may earn a small commission at no extra cost to you. We only recommend products or services that we believe provide genuine value to our users.
 
-        <div class="rubik-grid">
-            
-            <a href="#" class="tool-card bg-white rounded-3xl overflow-hidden group">
-                <div class="h-64 bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
-                    <i class="fas fa-calculator text-8xl text-white"></i>
-                </div>
-                <div class="tool-content p-6">
-                    <h3 class="font-semibold text-2xl mb-3">BMI Calculator</h3>
-                    <p class="text-gray-600 flex-grow">Calculate your Body Mass Index instantly.</p>
-                    <div class="mt-auto pt-6 text-blue-600 font-medium group-hover:underline">Open Tool →</div>
-                </div>
-            </a>
-
-            <a href="#" class="tool-card bg-white rounded-3xl overflow-hidden group">
-                <div class="h-64 bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
-                    <i class="fas fa-key text-8xl text-white"></i>
-                </div>
-                <div class="tool-content p-6">
-                    <h3 class="font-semibold text-2xl mb-3">Password Generator</h3>
-                    <p class="text-gray-600 flex-grow">Generate strong and secure passwords.</p>
-                    <div class="mt-auto pt-6 text-blue-600 font-medium group-hover:underline">Open Tool →</div>
-                </div>
-            </a>
-
-            <a href="#" class="tool-card bg-white rounded-3xl overflow-hidden group">
-                <div class="h-64 bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center">
-                    <i class="fas fa-exchange-alt text-8xl text-white"></i>
-                </div>
-                <div class="tool-content p-6">
-                    <h3 class="font-semibold text-2xl mb-3">Unit Converter</h3>
-                    <p class="text-gray-600 flex-grow">Convert length, weight, temperature &amp; more.</p>
-                    <div class="mt-auto pt-6 text-blue-600 font-medium group-hover:underline">Open Tool →</div>
-                </div>
-            </a>
-
-            <a href="#" class="tool-card bg-white rounded-3xl overflow-hidden group">
-                <div class="h-64 bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
-                    <i class="fas fa-qrcode text-8xl text-white"></i>
-                </div>
-                <div class="tool-content p-6">
-                    <h3 class="font-semibold text-2xl mb-3">QR Code Generator</h3>
-                    <p class="text-gray-600 flex-grow">Create custom QR codes instantly.</p>
-                    <div class="mt-auto pt-6 text-blue-600 font-medium group-hover:underline">Open Tool →</div>
-                </div>
-            </a>
-
-            <a href="#" class="tool-card bg-white rounded-3xl overflow-hidden group">
-                <div class="h-64 bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center">
-                    <i class="fas fa-dollar-sign text-8xl text-white"></i>
-                </div>
-                <div class="tool-content p-6">
-                    <h3 class="font-semibold text-2xl mb-3">Loan Calculator</h3>
-                    <p class="text-gray-600 flex-grow">Calculate monthly payments and total interest.</p>
-                    <div class="mt-auto pt-6 text-blue-600 font-medium group-hover:underline">Open Tool →</div>
-                </div>
-            </a>
-
-            <a href="#" class="tool-card bg-white rounded-3xl overflow-hidden group">
-                <div class="h-64 bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center">
-                    <i class="fas fa-birthday-cake text-8xl text-white"></i>
-                </div>
-                <div class="tool-content p-6">
-                    <h3 class="font-semibold text-2xl mb-3">Age Calculator</h3>
-                    <p class="text-gray-600 flex-grow">Calculate exact age in years, months &amp; days.</p>
-                    <div class="mt-auto pt-6 text-blue-600 font-medium group-hover:underline">Open Tool →</div>
-                </div>
-            </a>
-
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer style="margin-top:80px;padding:40px 0 30px;border-top:1px solid #ddd;text-align:center;font-size:14px; background-color: #f9fafb;">
-        <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
-            <div style="margin-bottom:12px;">
-                <strong>EverydayToolsHQ</strong>
-            </div>
-
-            <div style="margin-bottom:12px;">
-                <a href="/" style="margin:0 10px; color:#374151; text-decoration:none; font-weight:500;">Home</a>
-                <a href="/about/" style="margin:0 10px; color:#374151; text-decoration:none;">About</a>
-            </div>
-
-            <div style="margin-bottom:16px;">
-                <a href="https://powerstationhq.com/privacy-policy/" target="_blank" style="color:#374151;text-decoration:none;">Privacy Policy</a> |
-                <a href="https://powerstationhq.com/terms-and-conditions/" target="_blank" style="color:#374151;text-decoration:none;">Terms</a> |
-                <a href="https://powerstationhq.com/affiliate-disclosure/" target="_blank" style="color:#374151;text-decoration:none;">Affiliate Disclosure</a>
-            </div>
-
-            <div style="color:#6b7280;">
-                Powered by 
-                <a href="https://powerstationhq.com/" target="_blank" style="color:#2563eb;font-weight:600;text-decoration:none;">PowerstationHQ</a>
-            </div>
-        </div>
-    </footer>
-
-</body>
-</html>
+## 📜 Terms of Service
+EverydayToolsHQ is an extension of the **PowerStationHQ** network. By using any tool provided in this repository or on our hosted site, you agree to the terms and conditions outlined on our primary platform.
+---
+*Built with ❤️ for a simpler everyday life.*
