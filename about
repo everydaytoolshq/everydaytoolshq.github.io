@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About EverydayToolsHQ</title>
+<meta name="description" content="EverydayToolsHQ is a collection of simple online tools for everyday decisions, planning, and discovery.">
+
+<style>
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 0;
+background: #f9f9f9;
+color: #333;
+}
+
+.container {
+max-width: 800px;
+margin: 40px auto;
+background: #fff;
+padding: 25px;
+border-radius: 10px;
+box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+h1, h2 {
+color: #222;
+}
+
+p {
+line-height: 1.6;
+}
+
+ul {
+padding-left: 20px;
+}
+
+footer {
+margin-top: 40px;
+padding-top: 20px;
+border-top: 1px solid #ddd;
+text-align: center;
+font-size: 14px;
+}
+
+a {
+color: #0073e6;
+text-decoration: none;
+margin: 0 6px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>About EverydayToolsHQ</h1>
+
+<p><strong>EverydayToolsHQ</strong> is a growing collection of simple, practical online tools designed to help you make everyday decisions faster and easier.</p>
+
+<p>From finding toys to checking sunlight times, our tools turn everyday questions into instant answers.</p>
+
+<h2>What We Do</h2>
+<ul>
+<li>Fast and simple online tools</li>
+<li>Designed for real-life decisions</li>
+<li>No complexity, just answers</li>
+</ul>
+
+<h2>Why We Exist</h2>
+<p>We built EverydayToolsHQ to remove friction from everyday decision-making by combining useful tools in one place.</p>
+
+<h2>Monetisation</h2>
+<p>Some pages may include affiliate links. We may earn a commission at no extra cost to you.</p>
+
+<h2>Network</h2>
+<p>
+This project is connected to
+<a href="https://powerstationhq.com/" target="_blank">PowerstationHQ</a>,
+where we publish guides and reviews.
+</p>
+
+<footer style="margin-top:60px;padding:20px 0;border-top:1px solid #ddd;text-align:center;font-size:14px;">
+
+<div style="margin-bottom:10px;">
+<strong>EverydayToolsHQ</strong>
+</div>
+
+<div style="margin-bottom:10px;">
+<a href="/" style="margin:0 8px;">Home</a>
+<a href="/about/" style="margin:0 8px;">About</a>
+</div>
+
+<div style="margin-bottom:10px;">
+<a href="https://powerstationhq.com/privacy-policy/" target="_blank">Privacy Policy</a> |
+<a href="https://powerstationhq.com/terms-and-conditions/" target="_blank">Terms</a> |
+<a href="https://powerstationhq.com/affiliate-disclosure/" target="_blank">Affiliate Disclosure</a>
+</div>
+
+<div style="margin-top:10px;">
+Powered by
+<a href="https://powerstationhq.com/" target="_blank"><strong>PowerstationHQ</strong></a>
+</div>
+
+</footer>
+</div>
+
+</body>
+</html>
