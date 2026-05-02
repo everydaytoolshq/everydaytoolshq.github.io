@@ -50,7 +50,7 @@
 <body>
 
     <!-- Hero Section -->
-    <div class="pt-8 pb-12 text-center">
+    <div class="pt-8 pb-10 text-center">
         <div class="max-w-4xl mx-auto px-6">
             <img src="https://everydaytoolshq.github.io/edtlogo.jpg" 
                  alt="EverydayToolsHQ Logo" 
@@ -66,10 +66,10 @@
         </div>
     </div>
 
-    <!-- Tools Section - Brought Up + Matching Style -->
+    <!-- Tools Section - Bigger & Closer -->
     <div class="max-w-7xl mx-auto px-6 pb-24">
-        <div class="text-center mb-10">
-            <h2 class="logo-font text-5xl md:text-6xl font-bold tracking-tighter text-gray-900">
+        <div class="text-center -mt-4 mb-8">
+            <h2 class="logo-font text-6xl md:text-7xl font-bold tracking-tighter text-gray-900">
                 Our Tools
             </h2>
         </div>
