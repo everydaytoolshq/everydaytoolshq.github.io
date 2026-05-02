@@ -911,15 +911,94 @@
     function sunnyScore(item){ const c=aggregateConsensus(item),cur=item?.current||{},slots=forecastWindow(item).map(s=>({...s,points:daySunnyPoints(s.day)})); let sc=0; sc+=c.positive*18;sc+=c.strong*8;sc+=c.totalPoints*4; if(!isNightMode(item)){if(cur.weather_code===0)sc+=12;else if(cur.weather_code===1)sc+=9;else if(cur.weather_code===2)sc+=6;sc-=Math.max(0,safeNumber(cur.cloud_cover,0)-20)*0.05;sc-=safeNumber(cur.precipitation,0)*20;} sc+=(slots[0]?.points||0)*22;sc+=(slots[1]?.points||0)*14;sc+=Math.min(12,safeNumber(slots[0]?.day?.sunshine_duration,0)/3600)*1.4;sc+=Math.min(12,safeNumber(slots[1]?.day?.sunshine_duration,0)/3600)*0.9;sc-=safeNumber(slots[0]?.day?.precipitation_sum,0)*3.1;sc-=safeNumber(slots[1]?.day?.precipitation_sum,0)*2.0; return sc; }
     function mapsLink(place){ const r=place.nation==='Ireland'?'Ireland':(place.nation+', UK'); return 'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(place.name+', '+r); }
     function googleWeatherLink(place){ return 'https://www.google.com/search?q='+encodeURIComponent(place.name+' weather'); }
-    function weatherParams(candidates, modelName){ return new URLSearchParams({latitude:candidates.map(p=>p.lat).join(','),longitude:candidates.map(p=>p.lon).join(','),current:'weather_code,temperature_2m,cloud_cover,precipitation,is_day',hourly:'weather_code,cloud_cover,precipitation,precipitation_probability,is_day',daily:'weather_code,temperature_2m_max,temperature_2m_min,sunshine_duration,precipitation_sum,precipitation_probability_max',forecast_days:'3',forecast_hours:'24',timezone:'Europe/London',models:modelName}); }
+    // Cache for weather responses within same session (5-min TTL)
+    const weatherCache = new Map();
+    function weatherCacheKey(modelName, candidates) {
+      const ts = Math.floor(Date.now() / 300000); // 5-min buckets
+      return modelName + '|' + ts + '|' + candidates.map(c=>c.lat+','+c.lon).join('|');
+    }
+
+    function weatherParams(candidates, modelName){
+      return new URLSearchParams({
+        latitude: candidates.map(p=>p.lat).join(','),
+        longitude: candidates.map(p=>p.lon).join(','),
+        current: 'weather_code,temperature_2m,cloud_cover,precipitation,is_day',
+        hourly: 'weather_code,cloud_cover,precipitation,is_day',
+        daily: 'weather_code,temperature_2m_max,temperature_2m_min,sunshine_duration,precipitation_sum,precipitation_probability_max',
+        forecast_days: '2',
+        forecast_hours: '8',
+        timezone: 'Europe/London',
+        models: modelName
+      });
+    }
+
     function normaliseWeatherEntry(entry, candidate){
       const cur=entry.current||{},hourly=entry.hourly||{},hourTimes=hourly.time||[],currentHour=String(cur.time||'').slice(0,13)+':00';
       let si=hourTimes.findIndex(t=>t>=currentHour);if(si<0)si=0;
-      const nearHours=Array.from({length:4},(_,i)=>({time:hourTimes[si+i],weather_code:hourly.weather_code?.[si+i],cloud_cover:hourly.cloud_cover?.[si+i],precipitation:hourly.precipitation?.[si+i],precipitation_probability:hourly.precipitation_probability?.[si+i],is_day:hourly.is_day?.[si+i]})).filter(h=>h.time);
-      return{name:candidate.name,nation:candidate.nation,lat:candidate.lat,lon:candidate.lon,current:cur,near_hours:nearHours,today:{weather_code:entry.daily?.weather_code?.[0],temp_max:entry.daily?.temperature_2m_max?.[0],temp_min:entry.daily?.temperature_2m_min?.[0],sunshine_duration:entry.daily?.sunshine_duration?.[0],precipitation_sum:entry.daily?.precipitation_sum?.[0],precipitation_probability_max:entry.daily?.precipitation_probability_max?.[0]},tomorrow:{weather_code:entry.daily?.weather_code?.[1],temp_max:entry.daily?.temperature_2m_max?.[1],temp_min:entry.daily?.temperature_2m_min?.[1],sunshine_duration:entry.daily?.sunshine_duration?.[1],precipitation_sum:entry.daily?.precipitation_sum?.[1],precipitation_probability_max:entry.daily?.precipitation_probability_max?.[1]},day_after:{weather_code:entry.daily?.weather_code?.[2],temp_max:entry.daily?.temperature_2m_max?.[2],temp_min:entry.daily?.temperature_2m_min?.[2],sunshine_duration:entry.daily?.sunshine_duration?.[2],precipitation_sum:entry.daily?.precipitation_sum?.[2],precipitation_probability_max:entry.daily?.precipitation_probability_max?.[2]}};
+      const nearHours=Array.from({length:4},(_,i)=>({time:hourTimes[si+i],weather_code:hourly.weather_code?.[si+i],cloud_cover:hourly.cloud_cover?.[si+i],precipitation:hourly.precipitation?.[si+i],is_day:hourly.is_day?.[si+i]})).filter(h=>h.time);
+      return{name:candidate.name,nation:candidate.nation,lat:candidate.lat,lon:candidate.lon,current:cur,near_hours:nearHours,today:{weather_code:entry.daily?.weather_code?.[0],temp_max:entry.daily?.temperature_2m_max?.[0],temp_min:entry.daily?.temperature_2m_min?.[0],sunshine_duration:entry.daily?.sunshine_duration?.[0],precipitation_sum:entry.daily?.precipitation_sum?.[0],precipitation_probability_max:entry.daily?.precipitation_probability_max?.[0]},tomorrow:{weather_code:entry.daily?.weather_code?.[1],temp_max:entry.daily?.temperature_2m_max?.[1],temp_min:entry.daily?.temperature_2m_min?.[1],sunshine_duration:entry.daily?.sunshine_duration?.[1],precipitation_sum:entry.daily?.precipitation_sum?.[1],precipitation_probability_max:entry.daily?.precipitation_probability_max?.[1]},day_after:{weather_code:entry.daily?.weather_code?.[0],temp_max:entry.daily?.temperature_2m_max?.[0],temp_min:entry.daily?.temperature_2m_min?.[0],sunshine_duration:entry.daily?.sunshine_duration?.[0],precipitation_sum:entry.daily?.precipitation_sum?.[0],precipitation_probability_max:entry.daily?.precipitation_probability_max?.[0]}};
     }
-    async function fetchWeatherModel(candidates,modelDef){ const r=await fetch(OPEN_METEO_URL+'?'+weatherParams(candidates,modelDef.model).toString(),{cache:'no-store'}); if(!r.ok)throw new Error(modelDef.label+' unavailable'); const data=await r.json(); const list=Array.isArray(data)?data:[data]; return list.map((e,i)=>normaliseWeatherEntry(e,candidates[i])); }
-    async function fetchAllWeatherSources(candidates){ const settled=await Promise.allSettled(WEATHER_MODELS.map(m=>fetchWeatherModel(candidates,m))); const merged=candidates.map(c=>({...c,sources:{}})); settled.forEach((r,mi)=>{ if(r.status!=='fulfilled')return; const key=WEATHER_MODELS[mi].key; r.value.forEach((e,i)=>{ if(merged[i])merged[i].sources[key]=e; }); }); return merged.map(item=>{ const p=item.sources.best||item.sources.ukmo||item.sources.ecmwf||{current:{},near_hours:[],today:{},tomorrow:{},day_after:{}}; return{...item,current:p.current||{},near_hours:p.near_hours||[],today:p.today||{},tomorrow:p.tomorrow||{},day_after:p.day_after||{}}; }); }
+
+    async function fetchWeatherModel(candidates, modelDef){
+      const cacheKey = weatherCacheKey(modelDef.model, candidates);
+      if(weatherCache.has(cacheKey)) return weatherCache.get(cacheKey);
+
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 8000); // 8s timeout per model
+      try {
+        const r = await fetch(OPEN_METEO_URL + '?' + weatherParams(candidates, modelDef.model).toString(), {
+          cache: 'default',
+          signal: controller.signal
+        });
+        clearTimeout(timer);
+        if(!r.ok) throw new Error(modelDef.label + ' unavailable');
+        const data = await r.json();
+        const list = Array.isArray(data) ? data : [data];
+        const result = list.map((e,i) => normaliseWeatherEntry(e, candidates[i]));
+        weatherCache.set(cacheKey, result);
+        return result;
+      } catch(e) {
+        clearTimeout(timer);
+        throw e;
+      }
+    }
+
+    function mergeSourcesIntoItems(candidates, modelKey, modelData, mergedArr) {
+      modelData.forEach((entry, i) => { if(mergedArr[i]) mergedArr[i].sources[modelKey] = entry; });
+    }
+
+    function finaliseItems(mergedArr) {
+      return mergedArr.map(item => {
+        const p = item.sources.best || item.sources.ukmo || item.sources.ecmwf || {current:{},near_hours:[],today:{},tomorrow:{},day_after:{}};
+        return {...item, current:p.current||{}, near_hours:p.near_hours||[], today:p.today||{}, tomorrow:p.tomorrow||{}, day_after:p.day_after||{}};
+      });
+    }
+
+    // Returns a promise that resolves with items using best_match only (fast),
+    // then refines with ukmo+ecmwf in the background calling onRefinement(items) when done.
+    async function fetchWeatherFast(candidates, onRefinement) {
+      const merged = candidates.map(c => ({...c, sources:{}}));
+
+      // --- FAST PASS: best_match only (single request, renders immediately) ---
+      const bestDef = WEATHER_MODELS.find(m => m.key === 'best');
+      const bestData = await fetchWeatherModel(candidates, bestDef);
+      mergeSourcesIntoItems(candidates, 'best', bestData, merged);
+      const fastItems = finaliseItems(merged.map(item => ({...item, sources:{...item.sources}})));
+
+      // Fire background refinement with ukmo + ecmwf (don't await)
+      Promise.allSettled(
+        WEATHER_MODELS.filter(m => m.key !== 'best').map(m => fetchWeatherModel(candidates, m))
+      ).then(settled => {
+        settled.forEach((r, idx) => {
+          const mDef = WEATHER_MODELS.filter(m => m.key !== 'best')[idx];
+          if(r.status === 'fulfilled') mergeSourcesIntoItems(candidates, mDef.key, r.value, merged);
+        });
+        onRefinement(finaliseItems(merged));
+      });
+
+      return fastItems;
+    }
+
     function fetchDriveData(user,items){ return items.map(item=>{ const ck=haversineKm(user.lat,user.lon,item.lat,item.lon),rf=ck<30?1.34:ck<120?1.26:ck<260?1.2:1.16,dk=ck*rf,av=dk<45?38:dk<140?52:61; return{...item,drive_km:dk,drive_minutes:(dk/av)*60,drive_estimated:true}; }); }
     function daySummaryHTML(label,day){ return`<div class="dayBox"><div class="dayLabel">${label}</div><div class="dayMain">${esc(dayLabel(day))}</div><p class="dayDetail">${esc(String(Math.round(day.temp_max??0)))}° max · ${esc(String(Math.round(day.temp_min??0)))}° min<br>${esc(toHours(day.sunshine_duration||0))} sun hrs · up to ${esc(String(Math.round(day.precipitation_probability_max??0)))}% rain</p></div>`; }
     function topCardHTML(item){ const ct=outlookLabel(item),slots=forecastWindow(item); return`<article class="topCard"><div class="topCardLeft"><div class="topHeader"><span class="rankBubble">1</span><div><h3 class="placeName">${esc(placeDisplayName(item))}</h3><p class="placeMeta">${esc(item.nation)} · ${esc(ct)} · within ${esc(formatMiles(item.drive_km))} drive</p></div></div><div class="scoreRow"><div class="miniBox"><p class="miniKicker">Drive distance</p><p class="miniValue">${esc(formatKm(item.drive_km))}</p><p class="miniSub">${esc(formatDrive(item.drive_km,item.drive_minutes,item.drive_estimated))}</p></div><div class="miniBox"><p class="miniKicker">${esc(primaryKicker(item))}</p><p class="miniValue">${esc(primaryValue(item))}</p><p class="miniSub">${esc(primarySub(item))}</p></div></div></div><div class="topCardRight"><div class="summaryBox"><strong>Closest sunny choice:</strong> ${esc(summaryIntro(item))}</div><div class="cardSplit">${daySummaryHTML(slots[0].label,slots[0].day)}${daySummaryHTML(slots[1].label,slots[1].day)}</div><div class="ctaRow"><a class="linkBtn primary" href="${mapsLink(item)}" target="_blank" rel="noopener">Open Directions ↗</a><a class="linkBtn secondary" href="${googleWeatherLink(item)}" target="_blank" rel="noopener">Check Google Weather</a></div></div></article>`; }
