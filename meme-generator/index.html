@@ -837,9 +837,8 @@ function showImageTab(dataUrl, instructions){
 }
 
 function showTaintOverlay(){
-  // Shouldn't happen anymore — kept as safety net
-  // Re-try export after a moment (proxy may still be loading)
-  alert("Export failed — please try again in a moment, or try a different template.");
+  // Proxy image still loading or both proxies failed
+  alert("The image is still loading for export. Please wait a moment and try again — or try a different template.");
 }
 
 document.getElementById("ios-close").addEventListener("click",function(){
@@ -890,22 +889,9 @@ function buildCar(cat){
     im.alt=img.label||img.name||"Template";
     im.loading="eager";
     im.onload=function(){div.classList.remove("thumb-loading");};
-    im.onerror=function(){
-      // If proxy fails for thumbnail, try direct (thumbnail is display-only, no taint risk here)
-      if(im.src.indexOf("corsproxy")>-1){
-        im.src = img.t||img.url;
-      } else {
-        div.style.display="none";
-      }
-    };
-    // Load API thumbs via proxy to keep them clean
-    if(isApi){
-      im.crossOrigin = "anonymous";
-      im.src = PROXY1 + encodeURIComponent(img.t||img.url);
-    } else {
-      im.crossOrigin = "anonymous";
-      im.src = img.t||img.url;
-    }
+    im.onerror=function(){div.style.display="none";};
+    // Thumbnails load directly — display only, no canvas draw
+    im.src = img.t||img.url;
     var lbl=document.createElement("div");
     lbl.className="thumb-lbl";
     lbl.textContent=img.label||img.name||"";
@@ -922,79 +908,74 @@ function buildCar(cat){
 }
 
 /* ── TEMPLATE IMAGE LOADING ──────────────────────────────
-   Strategy: load API images through a CORS proxy so the
-   browser treats them as same-origin → crossOrigin="anonymous"
-   works → canvas is NOT tainted → toDataURL works for export.
-   
-   Proxy 1: corsproxy.io (fast, reliable)
-   Proxy 2: api.allorigins.win (fallback)
-   Proxy 3: direct load without crossOrigin (canvas tainted,
-            but we re-fetch through proxy at export time)
+   Two-phase approach:
+   1. INSTANT: draw the already-loaded thumbnail DOM img onto
+      the canvas immediately so user sees the meme right away.
+   2. CLEAN: simultaneously load via CORS proxy in background.
+      When proxy load completes, swap to clean version so
+      export (download/copy/share) works without taint errors.
 ────────────────────────────────────────────────────────*/
 var PROXY1 = "https://corsproxy.io/?";
 var PROXY2 = "https://api.allorigins.win/raw?url=";
 
-function loadWithProxy(src, knownW, knownH, isApi, onSuccess, onFail){
-  // Try proxy 1
-  var img1 = new Image();
-  img1.crossOrigin = "anonymous";
-  img1.onload = function(){ onSuccess(img1); };
-  img1.onerror = function(){
-    // Try proxy 2
-    var img2 = new Image();
-    img2.crossOrigin = "anonymous";
-    img2.onload = function(){ onSuccess(img2); };
-    img2.onerror = function(){
-      // Last resort: direct load (canvas tainted but image shows)
-      var img3 = new Image();
-      img3.onload = function(){ onSuccess(img3); };
-      img3.onerror = onFail;
-      img3.src = src;
-    };
-    img2.src = PROXY2 + encodeURIComponent(src);
-  };
-  img1.src = PROXY1 + encodeURIComponent(src);
-}
-
 function useThumbAsBackground(domImg, fullSrc, imgW, imgH, isApi){
-  var knownW = imgW || (domImg && domImg.naturalWidth > 0 ? domImg.naturalWidth : 0) || 500;
-  var knownH = imgH || (domImg && domImg.naturalHeight > 0 ? domImg.naturalHeight : 0) || 500;
+  var knownW = imgW || 500;
+  var knownH = imgH || 500;
 
-  if(isApi){
-    // For API templates: always load via CORS proxy for clean canvas
-    loadWithProxy(fullSrc, knownW, knownH, isApi,
-      function(loaded){
-        loaded._imgW = knownW;
-        loaded._imgH = knownH;
-        loaded._isApi = true;
-        loaded._src = fullSrc; // store original for re-fetch if needed
-        bgImg = loaded;
-        draw();
-      },
-      function(){
-        alert("Could not load this template. Try another or upload your own image.");
-      }
-    );
-  } else {
-    // Static Unsplash templates: load with crossOrigin (they support CORS)
-    var i = new Image();
-    i.crossOrigin = "anonymous";
-    i.onload = function(){
-      i._imgW = knownW;
-      i._imgH = knownH;
-      i._isApi = false;
-      bgImg = i;
+  // Phase 1: draw the thumbnail DOM img immediately for instant feedback
+  if(domImg && domImg.complete){
+    // Read naturalWidth from already-loaded thumb (may be proxy-loaded, so it has dimensions)
+    var tw = domImg.naturalWidth || knownW;
+    var th = domImg.naturalHeight || knownH;
+    domImg._imgW = tw;
+    domImg._imgH = th;
+    domImg._isApi = !!isApi;
+    bgImg = domImg;
+    draw(); // show immediately
+  }
+
+  if(!isApi){
+    // Static templates: load with crossOrigin directly (Unsplash supports it)
+    var si = new Image();
+    si.crossOrigin = "anonymous";
+    si.onload = function(){
+      si._imgW = si.naturalWidth || knownW;
+      si._imgH = si.naturalHeight || knownH;
+      si._isApi = false;
+      bgImg = si;
       draw();
     };
-    i.onerror = function(){
-      // fallback without crossOrigin
-      var i2 = new Image();
-      i2.onload = function(){ i2._imgW=knownW; i2._imgH=knownH; i2._isApi=false; bgImg=i2; draw(); };
-      i2.onerror = function(){ alert("Could not load template."); };
-      i2.src = fullSrc;
-    };
-    i.src = fullSrc;
+    si.onerror = function(){}; // phase 1 already showing, silent fail
+    si.src = fullSrc;
+    return;
   }
+
+  // Phase 2 for API: load via proxy chain for clean (untainted) canvas
+  // This runs in background — when done, swaps bgImg to clean version
+  function tryProxy(proxyUrl, nextFn){
+    var pi = new Image();
+    pi.crossOrigin = "anonymous";
+    pi.onload = function(){
+      // Success — swap to clean version
+      pi._imgW = pi.naturalWidth || knownW;
+      pi._imgH = pi.naturalHeight || knownH;
+      pi._isApi = true;
+      bgImg = pi;
+      draw();
+    };
+    pi.onerror = nextFn || function(){};
+    pi.src = proxyUrl + encodeURIComponent(fullSrc);
+  }
+
+  // Try proxy 1, fallback to proxy 2, then give up (phase 1 still showing)
+  tryProxy(PROXY1, function(){
+    tryProxy(PROXY2, function(){
+      // Both proxies failed — phase 1 thumbnail is still shown.
+      // Canvas is tainted so mark it so export can warn gracefully.
+      if(bgImg) bgImg._tainted = true;
+    });
+  });
+
   if(typeof gtag==="function") gtag("event","meme_template");
 }
 
