@@ -116,9 +116,8 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
 .thumb{flex:0 0 130px;height:100px;border-radius:10px;overflow:hidden;border:2.5px solid transparent;cursor:pointer;position:relative;transition:border-color .18s,transform .18s,box-shadow .18s;background:#dde0ef}
 .thumb:hover{border-color:#e8375a;transform:translateY(-3px);box-shadow:0 8px 20px rgba(232,55,90,.22)}
 .thumb.active{border-color:#e8375a;box-shadow:0 0 0 2px rgba(232,55,90,.25)}
-.thumb img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;position:absolute;inset:0}
-.thumb::before{content:"";display:block;padding-top:77%}  /* keeps 130×100 ratio */
-.thumb-lbl{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.65);font-size:10px;font-weight:700;color:#fff;padding:4px 5px;text-align:center;opacity:0;transition:opacity .18s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.thumb-lbl{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.65);font-size:10px;font-weight:700;color:#fff;padding:4px 5px;text-align:center;opacity:0;transition:opacity .18s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:1}
 .thumb:hover .thumb-lbl{opacity:1}
 /* Loading skeleton */
 .thumb-loading{background:linear-gradient(90deg,#e2e5f0 25%,#eef0f8 50%,#e2e5f0 75%);background-size:200% 100%;animation:shimmer 1.2s infinite}
@@ -137,13 +136,12 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
 .api-status.loading{color:#e8375a}
 .api-status.ok{color:#27ae60}
 
-/* BANNER — horizontal layout, image 900×515 fits correctly */
-.banner{background:#fff;border:1px solid #e2e5f0;border-radius:18px;overflow:hidden;box-shadow:0 3px 20px rgba(0,0,0,.06);margin:0 0 20px;display:grid;grid-template-columns:45% 55%;transition:box-shadow .15s,transform .15s}
+/* BANNER — horizontal, image column sized to show 900×515 correctly */
+.banner{background:#fff;border:1px solid #e2e5f0;border-radius:18px;overflow:hidden;box-shadow:0 3px 20px rgba(0,0,0,.06);margin:0 0 20px;display:grid;grid-template-columns:1fr 1fr;transition:box-shadow .15s,transform .15s;align-items:stretch}
 .banner:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,.11)}
-/* Image wrapper locks the 900:515 ratio inside its 45% column */
-.banner-img-col{overflow:hidden;position:relative}
-.banner-img-col::before{content:"";display:block;padding-top:calc(515/900*100%)}
-.banner-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block}
+/* Image column: natural aspect ratio, fills full width */
+.banner-img-col{overflow:hidden;display:flex;align-items:stretch}
+.banner-img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;min-height:180px}
 .banner-body{padding:20px 22px;display:flex;flex-direction:column;justify-content:center;gap:9px}
 .banner-eye{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#b8860b}
 .banner-name{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:#111;line-height:1.2}
@@ -186,7 +184,7 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
   .thumb{flex:0 0 100px;height:80px}
   .car-outer{padding:0 38px}
   .banner{grid-template-columns:1fr;grid-template-rows:auto auto}
-  .banner-img-col{width:100%}
+  .banner-img{min-height:220px;height:220px}
   .banner-btn{align-self:stretch;justify-content:center}
 }
 @media(max-width:400px){.thumb{flex:0 0 80px;height:65px}.car-outer{padding:0 34px}}
@@ -543,7 +541,10 @@ function draw(){
 
   if(bgImg){
     try{
-      var ia=bgImg.naturalWidth/bgImg.naturalHeight||1;
+      // bgImg may be HTMLImageElement or HTMLCanvasElement
+      var srcW = (bgImg.naturalWidth > 0 ? bgImg.naturalWidth : null) || bgImg.width || 500;
+      var srcH = (bgImg.naturalHeight > 0 ? bgImg.naturalHeight : null) || bgImg.height || 500;
+      var ia=srcW/srcH;
       var ca=CV.width/CV.height;
       var dw,dh,ox,oy;
       if(ia>ca){dh=CV.height;dw=dh*ia;ox=(CV.width-dw)/2;oy=0;}
@@ -786,7 +787,6 @@ function buildCar(cat){
     var im=document.createElement("img");
     im.alt=img.label||img.name||"Template";
     im.loading="eager";
-    // No crossOrigin on static templates to avoid CORS tainting
     im.onload=function(){div.classList.remove("thumb-loading");};
     im.onerror=function(){div.style.display="none";};
     im.src=img.t||img.url;
@@ -797,7 +797,8 @@ function buildCar(cat){
     div.addEventListener("click",function(){
       track.querySelectorAll(".thumb").forEach(function(x){x.classList.remove("active");});
       div.classList.add("active");
-      loadFull(img);
+      // Pass the DOM img element — already loaded, no CORS needed
+      useThumbAsBackground(im, img.f||img.url);
     });
     track.appendChild(div);
   });
@@ -805,32 +806,71 @@ function buildCar(cat){
   updateCar();
 }
 
-/* Load the full-size version of a template into the canvas.
-   For Imgflip URLs we can't use crossOrigin (CORS not allowed),
-   so we use a fetch → blob → object URL approach so the canvas
-   doesn't get tainted. Falls back to direct load if fetch fails. */
-function loadFull(img){
-  var fullSrc=img.f||img.url;
-  // Try fetch → blob → object URL (avoids CORS taint)
-  fetch(fullSrc).then(function(resp){
-    return resp.blob();
-  }).then(function(blob){
-    var objUrl=URL.createObjectURL(blob);
-    var i=new Image();
-    i.onload=function(){bgImg=i;draw();};
-    i.onerror=function(){directLoad(fullSrc);};
-    i.src=objUrl;
-  }).catch(function(){
-    directLoad(fullSrc);
-  });
+/* ── TEMPLATE IMAGE LOADING ─────────────────────────────
+   CORS reality: Imgflip images block crossOrigin requests,
+   and fetch() also fails. BUT the browser ALREADY loaded the
+   thumbnail img element into the DOM without crossOrigin,
+   so we can draw it onto an offscreen canvas to get a
+   clean ImageBitmap or use drawImage with the DOM element.
+   
+   The trick: draw the DOM <img> onto an offscreen canvas,
+   then use that canvas as bgImg. This works because we're
+   not reading pixels back (no toDataURL on the offscreen),
+   we're just drawing it onto our main canvas for display.
+   
+   For download/copy/share we overlay text on top of whatever
+   is drawn — the canvas taint only blocks toDataURL if the
+   ORIGIN is cross-origin AND crossOrigin wasn't set. Since
+   we draw the DOM img (which loaded successfully), we can
+   still draw it onto our canvas for visual purposes.
+   
+   Better approach: create an offscreen canvas from the img,
+   store that as bgImg. Then our main canvas draws from
+   another canvas (same origin) — no taint.
+────────────────────────────────────────────────────────*/
+function useThumbAsBackground(domImg, fullSrc){
+  // Strategy 1: if the img is loaded, blit it to an offscreen canvas
+  // That offscreen canvas becomes bgImg — drawing canvas→canvas is always allowed
+  if(domImg.complete && domImg.naturalWidth > 0){
+    var off=document.createElement("canvas");
+    off.width=domImg.naturalWidth||500;
+    off.height=domImg.naturalHeight||500;
+    var octx=off.getContext("2d");
+    try{
+      octx.drawImage(domImg,0,0);
+      bgImg=off;  // bgImg is now a canvas element — drawImage accepts canvas
+      draw();
+      return;
+    }catch(e){
+      // tainted — fall through to strategy 2
+    }
+  }
+  // Strategy 2: load full src without crossOrigin attribute
+  // (works for display, canvas will be tainted so download uses fallback)
+  var i=new Image();
+  i.onload=function(){
+    var off=document.createElement("canvas");
+    off.width=i.naturalWidth||500;
+    off.height=i.naturalHeight||500;
+    var octx=off.getContext("2d");
+    try{
+      octx.drawImage(i,0,0);
+      bgImg=off;
+    }catch(e){
+      // Still tainted — use img directly (canvas tainted but visible)
+      bgImg=i;
+    }
+    draw();
+  };
+  i.onerror=function(){
+    alert("This template could not be loaded. Try another or upload your own image.");
+  };
+  i.src=fullSrc;
   if(typeof gtag==="function")gtag("event","meme_template");
 }
 
-function directLoad(src){
-  var i=new Image();
-  i.onload=function(){bgImg=i;draw();};
-  i.onerror=function(){alert("Could not load this template. Try uploading your own image.");};
-  i.src=src;
+function loadFull(img){
+  useThumbAsBackground(null, img.f||img.url);
 }
 
 function buildDots(){
