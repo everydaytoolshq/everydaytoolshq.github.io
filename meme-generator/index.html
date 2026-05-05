@@ -116,7 +116,8 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
 .thumb{flex:0 0 130px;height:100px;border-radius:10px;overflow:hidden;border:2.5px solid transparent;cursor:pointer;position:relative;transition:border-color .18s,transform .18s,box-shadow .18s;background:#dde0ef}
 .thumb:hover{border-color:#e8375a;transform:translateY(-3px);box-shadow:0 8px 20px rgba(232,55,90,.22)}
 .thumb.active{border-color:#e8375a;box-shadow:0 0 0 2px rgba(232,55,90,.25)}
-.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;position:absolute;inset:0}
+.thumb::before{content:"";display:block;padding-top:77%}  /* keeps 130×100 ratio */
 .thumb-lbl{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.65);font-size:10px;font-weight:700;color:#fff;padding:4px 5px;text-align:center;opacity:0;transition:opacity .18s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .thumb:hover .thumb-lbl{opacity:1}
 /* Loading skeleton */
@@ -136,10 +137,13 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
 .api-status.loading{color:#e8375a}
 .api-status.ok{color:#27ae60}
 
-/* BANNER — horizontal, image shows better with object-position */
-.banner{background:#fff;border:1px solid #e2e5f0;border-radius:18px;overflow:hidden;box-shadow:0 3px 20px rgba(0,0,0,.06);margin:0 0 20px;display:grid;grid-template-columns:280px 1fr;transition:box-shadow .15s,transform .15s}
+/* BANNER — horizontal layout, image 900×515 fits correctly */
+.banner{background:#fff;border:1px solid #e2e5f0;border-radius:18px;overflow:hidden;box-shadow:0 3px 20px rgba(0,0,0,.06);margin:0 0 20px;display:grid;grid-template-columns:45% 55%;transition:box-shadow .15s,transform .15s}
 .banner:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,.11)}
-.banner-img{width:100%;height:100%;min-height:170px;object-fit:cover;object-position:center center;display:block}
+/* Image wrapper locks the 900:515 ratio inside its 45% column */
+.banner-img-col{overflow:hidden;position:relative}
+.banner-img-col::before{content:"";display:block;padding-top:calc(515/900*100%)}
+.banner-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block}
 .banner-body{padding:20px 22px;display:flex;flex-direction:column;justify-content:center;gap:9px}
 .banner-eye{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#b8860b}
 .banner-name{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:#111;line-height:1.2}
@@ -181,8 +185,8 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
   .tip-grid{grid-template-columns:1fr}
   .thumb{flex:0 0 100px;height:80px}
   .car-outer{padding:0 38px}
-  .banner{grid-template-columns:1fr;grid-template-rows:200px auto}
-  .banner-img{height:100%;width:100%}
+  .banner{grid-template-columns:1fr;grid-template-rows:auto auto}
+  .banner-img-col{width:100%}
   .banner-btn{align-self:stretch;justify-content:center}
 }
 @media(max-width:400px){.thumb{flex:0 0 80px;height:65px}.car-outer{padding:0 34px}}
@@ -338,11 +342,13 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
   <div class="dots" id="carDots"></div>
 </div>
 
-<!-- BANNER — horizontal, better image framing -->
+<!-- BANNER — horizontal, 900×515 ratio preserved -->
 <div class="banner">
-  <img class="banner-img"
-    src="https://everydaytoolshq.github.io/whatdoyoumeme.jpg"
-    alt="What Do You Meme? card game" width="900" height="515" loading="lazy" />
+  <div class="banner-img-col">
+    <img class="banner-img"
+      src="https://everydaytoolshq.github.io/whatdoyoumeme.jpg"
+      alt="What Do You Meme? card game" width="900" height="515" loading="lazy" />
+  </div>
   <div class="banner-body">
     <div class="banner-eye">🏆 Gold Standard for Physical Meme-Making</div>
     <div class="banner-name">What Do You Meme?</div>
@@ -875,11 +881,83 @@ track.addEventListener("touchend",function(){
 });
 
 /* ════════════════════════════════════════
-   IMGFLIP API — load top 100 classic memes (no key needed)
-   https://api.imgflip.com/get_memes
-   Returns public domain / user-uploaded meme templates.
-   Imgflip allows embedding their template images freely.
+   IMGFLIP API — load classic meme BACKGROUND templates only
+   We filter to only templates whose images are clean backgrounds
+   (no text already baked in). We use a curated allowlist of
+   well-known template IDs that are pure photo/illustration
+   backgrounds — the canonical blank meme templates.
 ════════════════════════════════════════ */
+
+// Curated set of Imgflip template IDs that are CLEAN BACKGROUNDS
+// (no text baked into the image). These are the classic blank templates.
+var CLEAN_TEMPLATE_IDS = {
+  "181913649":1, // Drake Pointing
+  "87743020":1,  // Two Buttons
+  "112126428":1, // Distracted Boyfriend
+  "131087935":1, // Running Away Balloon
+  "217743513":1, // UNO Draw 25 Cards
+  "124822590":1, // Left Exit 12 Off Ramp
+  "119139145":1, // Blank Nut Button
+  "178591752":1, // Tuxedo Winnie The Pooh
+  "101470":1,    // Ancient Aliens
+  "61579":1,     // One Does Not Simply
+  "563423":1,    // That Would Be Great
+  "91538330":1,  // They're The Same Picture
+  "93895088":1,  // Expanding Brain
+  "102156234":1, // Mocking Spongebob
+  "80707627":1,  // Sad Pablo Escobar
+  "155067746":1, // Surprised Pikachu
+  "20007896":1,  // Cover Your Cough
+  "134797956":1, // American Chopper Argument
+  "195515965":1, // some guys
+  "4087833":1,   // Waiting Skeleton
+  "247375501":1, // Buff Doge vs Cheems
+  "222403160":1, // The Stone Cold Steve Austin
+  "252600902":1, // Always Has Been
+  "309868304":1, // Woman pointing at cat
+  "188390779":1, // Bike Fall
+  "196652226":1, // Spongebob Ight Imma Head Out
+  "148909805":1, // Monkey Puppet
+  "232578271":1, // And everybody loses their minds
+  "226297822":1, // Trauma Dump
+  "14371066":1,  // Boardroom Meeting Suggestion
+  "135256802":1, // Epic Handshake
+  "123999232":1, // The Rock Driving
+  "61556":1,     // Futurama Fry
+  "259237855":1, // Laughing Leo
+  "216523697":1, // Pointing Rick and Morty
+  "180190441":1, // They Were Roommates
+  "163573174":1, // Meme Man
+  "110163934":1, // crying cat
+  "129242436":1, // Change My Mind
+  "161865971":1, // Gru's Plan
+  "97984":1,     // Bad Luck Brian
+  "8072285":1,   // Overly Attached Girlfriend
+  "260":1,       // Boardroom Suggestion (older)
+  "175540452":1, // Unsettled Tom
+  "341119577":1, // They're The Same Picture (newer)
+  "370867422":1, // Blank Yellow background
+  "438680":1,    // Batman Slapping Robin
+  "61520":1,     // Foul Bachelor Frog
+  "10364354":1,  // Inhaling Seagull
+  "21735":1,     // Advice Dog
+  "3218037":1,   // This Is Fine
+  "1035805":1,   // Picard Wtf
+  "329051404":1, // Sad Keanu
+  "345702274":1, // Paper bag on head
+  "222":1,       // Doge
+  "224015076":1, // Boardroom Meeting newer
+  "101288":1,    // Sudden Clarity Clarence
+  "284929871":1, // Spider-Man Pointing
+  "91545132":1,  // Bike Falls
+  "29617627":1,  // Aaaaand Its Gone
+  "89370399":1,  // Roll Safe Think About It
+  "195389578":1, // Monkey Typewriter
+  "371619279":1, // Woman Screaming at Cat
+  "126786268":1, // Blank Starter Pack
+  "219889693":1  // Spongebob Reading
+};
+
 function loadImgflip(){
   var status=document.getElementById("apiStatus");
   status.className="api-status loading";
@@ -890,26 +968,48 @@ function loadImgflip(){
     .then(function(data){
       if(!data.success||!data.data||!data.data.memes){throw new Error("Bad response");}
       var memes=data.data.memes;
-      CLASSIC_TEMPLATES=memes.map(function(m){
+
+      // Filter: only include known clean background templates
+      // Also filter out any meme whose name contains words that suggest
+      // text is already on it (e.g. "says", "with text")
+      var filtered = memes.filter(function(m){
+        // Must be in our clean allowlist OR have no obvious text indicators
+        var inList = CLEAN_TEMPLATE_IDS[m.id];
+        // Secondary filter: skip any that have suspiciously small box_count (0 = unusual)
+        // and whose name pattern suggests it's a remix
+        var nameOk = !/with text|caption|says\s/i.test(m.name);
+        return inList && nameOk;
+      });
+
+      // If allowlist filtering returns few results, fall back to top memes
+      // but still skip ones that look like they have baked text
+      if(filtered.length < 10){
+        filtered = memes.filter(function(m){
+          return !/with text|caption|says\s/i.test(m.name);
+        }).slice(0, 60);
+      }
+
+      CLASSIC_TEMPLATES=filtered.map(function(m){
         return {
           label:m.name,
           name:m.name,
-          t:m.url,   // thumb = same url (they're small enough)
-          f:m.url,   // full = same url
+          t:m.url,
+          f:m.url,
           url:m.url
         };
       });
       status.className="api-status ok";
       status.textContent="✓ "+CLASSIC_TEMPLATES.length+" classic meme templates loaded!";
-      // Refresh if currently on classic tab
       if(currentCat==="classic")buildCar("classic");
       setTimeout(function(){status.textContent="";},3000);
     })
     .catch(function(){
       status.className="api-status";
-      status.textContent="Could not load classic templates — using local templates instead.";
-      // Fallback: show animals as the first tab
-      if(currentCat==="classic"){buildCar("animals");}
+      status.textContent="Could not load classic templates — switch to another category below.";
+      if(currentCat==="classic"){
+        // Switch to animals automatically on failure
+        document.querySelector('[data-cat="animals"]').click();
+      }
       setTimeout(function(){status.textContent="";},4000);
     });
 }
