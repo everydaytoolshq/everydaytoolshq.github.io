@@ -116,7 +116,9 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
 .thumb{flex:0 0 130px;height:100px;border-radius:10px;overflow:hidden;border:2.5px solid transparent;cursor:pointer;position:relative;transition:border-color .18s,transform .18s,box-shadow .18s;background:#dde0ef}
 .thumb:hover{border-color:#e8375a;transform:translateY(-3px);box-shadow:0 8px 20px rgba(232,55,90,.22)}
 .thumb.active{border-color:#e8375a;box-shadow:0 0 0 2px rgba(232,55,90,.25)}
-.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;display:block;background:#222}
+.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+/* API/classic meme templates: show full image, no crop */
+.thumb.api img{object-fit:contain;background:#111}
 .thumb-lbl{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.65);font-size:10px;font-weight:700;color:#fff;padding:4px 5px;text-align:center;opacity:0;transition:opacity .18s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:1}
 .thumb:hover .thumb-lbl{opacity:1}
 /* Loading skeleton */
@@ -546,15 +548,14 @@ function draw(){
       var ia = srcW / srcH;
       var ca = CV.width / CV.height;
       var dw, dh, ox, oy;
-      // CONTAIN: scale image to fit entirely inside canvas (no cropping)
-      if(ia > ca){
-        // image wider than canvas — fit to canvas width
-        dw = CV.width; dh = dw / ia;
-        ox = 0; oy = (CV.height - dh) / 2;
+      if(bgImg._isApi){
+        // CONTAIN — API/classic memes: show entire image, no cropping
+        if(ia > ca){ dw=CV.width; dh=dw/ia; ox=0; oy=(CV.height-dh)/2; }
+        else { dh=CV.height; dw=dh*ia; ox=(CV.width-dw)/2; oy=0; }
       } else {
-        // image taller than canvas — fit to canvas height
-        dh = CV.height; dw = dh * ia;
-        ox = (CV.width - dw) / 2; oy = 0;
+        // COVER — static embedded templates: fill canvas, crop edges
+        if(ia > ca){ dh=CV.height; dw=dh*ia; ox=(CV.width-dw)/2; oy=0; }
+        else { dw=CV.width; dh=dw/ia; ox=0; oy=(CV.height-dh)/2; }
       }
       CX.drawImage(bgImg, ox, oy, dw, dh);
     }catch(e){}
@@ -646,7 +647,10 @@ document.getElementById("imgUpload").addEventListener("change",function(e){
   var r=new FileReader();
   r.onload=function(ev){
     var img=new Image();
-    img.onload=function(){bgImg=img;draw();};
+    img.onload=function(){
+      img._isApi = false; // uploaded images use cover
+      bgImg=img;draw();
+    };
     img.src=ev.target.result;  // data URL — no CORS issue
   };
   r.readAsDataURL(f);
@@ -789,8 +793,9 @@ function buildCar(cat){
   }
 
   carItems.forEach(function(img){
+    var isApi = !!img.w; // API templates have pixel dimensions; static don't
     var div=document.createElement("div");
-    div.className="thumb thumb-loading";
+    div.className="thumb thumb-loading" + (isApi ? " api" : "");
     var im=document.createElement("img");
     im.alt=img.label||img.name||"Template";
     im.loading="eager";
@@ -804,8 +809,7 @@ function buildCar(cat){
     div.addEventListener("click",function(){
       track.querySelectorAll(".thumb").forEach(function(x){x.classList.remove("active");});
       div.classList.add("active");
-      // Pass the DOM img element AND the known API dimensions
-      useThumbAsBackground(im, img.f||img.url, img.w, img.h);
+      useThumbAsBackground(im, img.f||img.url, img.w, img.h, isApi);
     });
     track.appendChild(div);
   });
@@ -822,9 +826,7 @@ function buildCar(cat){
    and attach them to whatever we use as bgImg so draw() always
    has the correct aspect ratio, regardless of CORS.
 ────────────────────────────────────────────────────────*/
-function useThumbAsBackground(domImg, fullSrc, imgW, imgH){
-  // Try to blit the already-loaded DOM img to an offscreen canvas
-  // The offscreen canvas has explicit width/height = API dimensions
+function useThumbAsBackground(domImg, fullSrc, imgW, imgH, isApi){
   var knownW = imgW || (domImg && domImg.naturalWidth > 0 ? domImg.naturalWidth : 0) || 500;
   var knownH = imgH || (domImg && domImg.naturalHeight > 0 ? domImg.naturalHeight : 0) || 500;
 
@@ -835,24 +837,20 @@ function useThumbAsBackground(domImg, fullSrc, imgW, imgH){
     var octx = off.getContext("2d");
     try{
       octx.drawImage(domImg, 0, 0, knownW, knownH);
-      // Attach known dimensions so draw() can read them
       off._imgW = knownW;
       off._imgH = knownH;
+      off._isApi = !!isApi;
       bgImg = off;
       draw();
       return;
-    }catch(e){
-      // CORS taint on offscreen draw — fall through
-    }
+    }catch(e){}
   }
 
-  // Fallback: load image directly (no crossOrigin — works for display,
-  // canvas gets tainted but text overlay still renders visually)
   var i = new Image();
   i.onload = function(){
-    // Attach API dimensions directly to the img element
     i._imgW = knownW;
     i._imgH = knownH;
+    i._isApi = !!isApi;
     bgImg = i;
     draw();
   };
@@ -864,7 +862,7 @@ function useThumbAsBackground(domImg, fullSrc, imgW, imgH){
 }
 
 function loadFull(img){
-  useThumbAsBackground(null, img.f||img.url, img.w, img.h);
+  useThumbAsBackground(null, img.f||img.url, img.w, img.h, !!img.w);
 }
 
 function buildDots(){
