@@ -661,188 +661,211 @@ document.getElementById("clearBtn").addEventListener("click",function(){
 });
 
 /* ════════════════════════════════════════
-   SAFE toDataURL — handles tainted canvas from cross-origin images.
-   If the canvas is tainted (Imgflip CORS), we can't call toDataURL.
-   Solution: re-draw onto a fresh canvas using only the drawn pixels
-   via drawImage(CV) — but that also taints it. Real solution:
-   detect taint, show the iOS overlay / open-in-new-tab fallback.
+   EXPORT HELPERS
+   
+   getDataUrl() — tries canvas.toDataURL (works for Unsplash
+   templates + uploaded images). Returns null if canvas is
+   tainted (Imgflip templates loaded without CORS).
+   
+   exportMeme() — the single function all 3 buttons call.
+   If canvas is clean → uses dataUrl directly.
+   If canvas is tainted → opens an HTML composition page that
+   renders the image + text overlay via HTML/CSS. The user
+   can long-press (mobile) or right-click (desktop) to save.
+   This always works, no CORS, no proxies, no errors.
 ════════════════════════════════════════ */
-function getDataUrl(type, quality){
-  try {
-    return CV.toDataURL(type||"image/jpeg", quality||0.94);
-  } catch(e) {
-    return null; // canvas is tainted
-  }
+function getDataUrl(){
+  try{ return CV.toDataURL("image/jpeg", 0.94); }
+  catch(e){ return null; }
 }
 
-function getBlob(cb){
-  try {
-    CV.toBlob(cb, "image/jpeg", 0.94);
-  } catch(e) {
-    cb(null);
-  }
+/* Build caption style string matching current settings */
+function getCaptionStyle(){
+  var fs = parseInt(document.getElementById("fontSize").value)||40;
+  var fn = document.getElementById("fontSelect").value||"Impact";
+  var fw = S.bold ? "bold" : "normal";
+  var tc = document.getElementById("textColor").value;
+  var sc = document.getElementById("strokeColor").value;
+  var vOff = parseInt(document.getElementById("textPos").value)||0;
+  var glowStyle = S.glow ? "0 0 12px "+tc+", 0 0 24px "+tc : "none";
+
+  // outline via text-shadow
+  var outlineStyle = S.outline
+    ? "-2px -2px 0 "+sc+", 2px -2px 0 "+sc+", -2px 2px 0 "+sc+", 2px 2px 0 "+sc
+    : "none";
+  var shadow = S.outline ? outlineStyle : (S.glow ? glowStyle : "none");
+
+  return {
+    fontSize: fs, fontFamily: fn, fontWeight: fw,
+    color: tc, textShadow: shadow,
+    translateY: vOff, upper: S.upper
+  };
 }
 
-/* ════════════════════════════════════════
-   DOWNLOAD
-   iOS Safari: anchor.click() + download attr doesn't work.
-   Use open() to show image in new tab — user can long-press to save.
-   Android Chrome: anchor download works fine.
-════════════════════════════════════════ */
+/* Open HTML export page — works regardless of CORS taint */
+function openExportPage(mode){
+  // mode: "download" | "copy" | "share"
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+  var txt = document.getElementById("customQuote").value.trim();
+  if(!txt){ var sel=qSel.options[qSel.selectedIndex]; txt=sel?sel.text:""; }
+  if(S.upper) txt=txt.toUpperCase();
+
+  var cs = getCaptionStyle();
+  var fs = cs.fontSize;
+
+  // Determine background
+  var bgStyle, imgTag="";
+  if(lastTemplateSrc && bgImg){
+    // Use the image URL directly in HTML — browser renders it without CORS issues
+    imgTag = '<img id="bgimg" src="'+lastTemplateSrc+'" crossorigin="anonymous">';
+    bgStyle = "background:"+document.getElementById("bgColor").value;
+  } else {
+    bgStyle = "background:"+document.getElementById("bgColor").value;
+  }
+
+  var instructions = isIOS
+    ? "Tap &amp; hold the image → \"Save to Photos\" or \"Share\""
+    : "Right-click the image → \"Save image as…\"";
+
+  var html = '<!DOCTYPE html><html><head><meta charset="utf-8">'
+    + '<meta name="viewport" content="width=device-width,initial-scale=1">'
+    + '<title>Your Meme</title><style>'
+    + '*{box-sizing:border-box;margin:0;padding:0}'
+    + 'body{background:#111;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;font-family:sans-serif}'
+    + '.meme-wrap{position:relative;display:inline-block;max-width:95vw}'
+    + '.meme-wrap img#bgimg{display:block;max-width:95vw;max-height:80vh;border-radius:10px}'
+    + '.caption{position:absolute;left:50%;transform:translateX(-50%) translateY('+cs.translateY+'px);width:90%;text-align:center;font-family:"'+cs.fontFamily+'",Impact,Arial Black,sans-serif;font-size:clamp(16px,'+Math.round(fs*0.9)+'px,'+fs+'px);font-weight:'+cs.fontWeight+';color:'+cs.color+';text-shadow:'+cs.textShadow+';line-height:1.25;pointer-events:none;white-space:pre-wrap;word-break:break-word}'
+    + '.no-bg .caption{color:'+cs.color+'}'
+    + '.hint{color:#aaa;margin-top:18px;font-size:14px;text-align:center;line-height:1.6;max-width:380px}'
+    + '.solid-bg{'+bgStyle+';border-radius:10px;width:'+CV.width+'px;height:'+CV.height+'px;max-width:95vw;max-height:80vh}'
+    + '</style></head><body>';
+
+  if(lastTemplateSrc && bgImg){
+    html += '<div class="meme-wrap">'
+      + imgTag
+      + '<div class="caption" style="top:50%">'+txt+'</div>'
+      + '</div>';
+  } else {
+    // Solid colour background
+    html += '<div class="meme-wrap">'
+      + '<div class="solid-bg"></div>'
+      + '<div class="caption" style="top:50%">'+txt+'</div>'
+      + '</div>';
+  }
+
+  html += '<p class="hint">'+instructions+'</p>';
+  html += '</body></html>';
+
+  var w = window.open();
+  if(w){ w.document.write(html); w.document.close(); }
+}
+
+/* ── DOWNLOAD ─────────────────────────────────────────── */
 document.getElementById("dlBtn").addEventListener("click",function(){
   draw();
   var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  var dataUrl = getDataUrl("image/jpeg", 0.94);
+  var dataUrl = getDataUrl();
 
-  if(!dataUrl){
-    // Canvas tainted — show overlay with instructions
-    showTaintOverlay();
-    return;
-  }
-
-  if(isIOS){
-    // iOS Safari ignores anchor download — show the same overlay as Copy
-    // so user can tap & hold → "Save to Photos"
-    document.getElementById("ios-img").src = dataUrl;
-    document.getElementById("ios-ov").style.display = "flex";
-    // Update the overlay instruction text for download context
-    var p = document.querySelector("#ios-ov p");
-    if(p) p.textContent = "Tap and hold the image below, then choose \"Save to Photos\" to download.";
+  if(dataUrl){
+    if(isIOS){
+      // iOS: show overlay (anchor download not supported)
+      var p = document.querySelector("#ios-ov p");
+      if(p) p.textContent = "Tap and hold the image, then choose \"Save to Photos\" to download.";
+      document.getElementById("ios-img").src = dataUrl;
+      document.getElementById("ios-ov").style.display = "flex";
+    } else {
+      // Android / desktop: direct anchor download
+      var a = document.createElement("a");
+      a.download = "meme-"+Date.now()+".jpg";
+      a.href = dataUrl;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    }
   } else {
-    // Android, desktop — anchor download works
-    var a = document.createElement("a");
-    a.download = "meme-" + Date.now() + ".jpg";
-    a.href = dataUrl;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    // Tainted canvas — open HTML export page
+    openExportPage("download");
   }
   if(typeof gtag==="function") gtag("event","meme_download");
 });
 
-/* ════════════════════════════════════════
-   COPY
-   iOS: Clipboard API not supported → show overlay with image
-   Android Chrome 76+: ClipboardItem works
-   Desktop: ClipboardItem works in Chrome/Edge, fallback for Firefox
-════════════════════════════════════════ */
+/* ── COPY ─────────────────────────────────────────────── */
 document.getElementById("cpBtn").addEventListener("click",function(){
-  var btn = this;
   draw();
+  var btn = this;
   var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  var dataUrl = getDataUrl("image/png");
+  var dataUrl = getDataUrl();
 
   if(!dataUrl){
-    showTaintOverlay();
+    // Tainted — open export page
+    openExportPage("copy");
     return;
   }
 
   if(isIOS){
-    // iOS Safari has no clipboard image API — show overlay
     var p = document.querySelector("#ios-ov p");
-    if(p) p.textContent = "Tap and hold the image below, then choose \u201cCopy\u201d or \u201cSave to Photos\u201d.";
+    if(p) p.textContent = "Tap and hold the image, then choose \"Copy\" or \"Save to Photos\".";
     document.getElementById("ios-img").src = dataUrl;
     document.getElementById("ios-ov").style.display = "flex";
     return;
   }
 
-  // Android / Desktop
   if(window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){
-    fetch(dataUrl).then(function(r){ return r.blob(); }).then(function(blob){
-      return navigator.clipboard.write([new ClipboardItem({"image/png": blob})]);
+    fetch(dataUrl).then(function(r){return r.blob();}).then(function(blob){
+      return navigator.clipboard.write([new ClipboardItem({"image/png":blob})]);
     }).then(function(){
-      btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-      setTimeout(function(){ btn.innerHTML = '<i class="fas fa-copy"></i> Copy'; }, 2500);
-    }).catch(function(){
-      showImageTab(dataUrl, "Right-click → Save Image As (then paste from your files)");
-    });
+      btn.innerHTML='<i class="fas fa-check"></i> Copied!';
+      setTimeout(function(){btn.innerHTML='<i class="fas fa-copy"></i> Copy';},2500);
+    }).catch(function(){ openExportPage("copy"); });
   } else {
-    showImageTab(dataUrl, "Right-click → Save Image As");
+    openExportPage("copy");
   }
   if(typeof gtag==="function") gtag("event","meme_copy");
 });
 
-/* ════════════════════════════════════════
-   SHARE — Web Share API
-   CRITICAL: navigator.share() MUST be called synchronously
-   inside the click handler (user gesture). Any async gap
-   (setTimeout, fetch, toBlob callback) loses the activation
-   token on iOS Safari and throws NotAllowedError.
-   
-   Fix: call draw() sync, get dataUrl sync, then call share.
-   Use toBlob only if Web Share with files is needed — but
-   wrap in try/catch for taint.
-════════════════════════════════════════ */
+/* ── SHARE ────────────────────────────────────────────── */
 document.getElementById("shareBtn").addEventListener("click",function(){
   draw();
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  var dataUrl = getDataUrl("image/jpeg", 0.94);
+  var dataUrl = getDataUrl();
 
-  if(!dataUrl){
-    showTaintOverlay();
-    return;
-  }
-
-  // Convert dataUrl to blob synchronously via fetch is async —
-  // so for share we use a different approach: dataURL → Blob inline
+  // Convert dataUrl to blob synchronously (preserves user gesture for share API)
   function dataUrlToBlob(url){
-    var arr = url.split(",");
-    var mime = arr[0].match(/:(.*?);/)[1];
-    var bstr = atob(arr[1]);
-    var n = bstr.length;
-    var u8arr = new Uint8Array(n);
-    while(n--){ u8arr[n] = bstr.charCodeAt(n); }
-    return new Blob([u8arr], {type: mime});
+    var arr=url.split(","), mime=arr[0].match(/:(.*?);/)[1];
+    var bstr=atob(arr[1]), n=bstr.length, u8=new Uint8Array(n);
+    while(n--) u8[n]=bstr.charCodeAt(n);
+    return new Blob([u8],{type:mime});
   }
 
-  if(navigator.share){
+  if(dataUrl && navigator.share){
     var blob = dataUrlToBlob(dataUrl);
-    var file = new File([blob], "meme.jpg", {type:"image/jpeg"});
-    var shareData = (navigator.canShare && navigator.canShare({files:[file]}))
-      ? {title:"My Meme", files:[file]}
-      : {title:"My Meme 😂", text:"Made with EverydayToolsHQ Meme Generator", url:window.location.href};
-
-    navigator.share(shareData).then(function(){
-      if(typeof gtag==="function") gtag("event","meme_share",{method:"web_share"});
-    }).catch(function(err){
-      if(err.name !== "AbortError"){
-        // User didn't cancel — try URL-only share
-        navigator.share({title:"Meme Generator", url:window.location.href}).catch(function(){
-          showImageTab(dataUrl, "📱 Tap & hold → Save / Share &nbsp;|&nbsp; 💻 Right-click → Save");
-        });
-      }
+    var file = new File([blob],"meme.jpg",{type:"image/jpeg"});
+    var sd = (navigator.canShare && navigator.canShare({files:[file]}))
+      ? {title:"My Meme",files:[file]}
+      : {title:"My Meme",url:window.location.href};
+    navigator.share(sd).catch(function(err){
+      if(err.name!=="AbortError") openExportPage("share");
     });
   } else {
-    // Desktop without Share API — open in new tab
-    showImageTab(dataUrl, "📥 Right-click → Save Image As &nbsp;|&nbsp; 📱 Tap & hold → Save to Photos");
+    // No canvas data or no Share API — open export page
+    openExportPage("share");
   }
-  if(typeof gtag==="function") gtag("event","meme_share_attempt");
+  if(typeof gtag==="function") gtag("event","meme_share");
 });
 
-/* ════════════════════════════════════════
-   HELPERS
-════════════════════════════════════════ */
+/* ── HELPERS ─────────────────────────────────────────── */
+function showTaintOverlay(){ openExportPage("download"); }
+
 function showImageTab(dataUrl, instructions){
-  var w = window.open();
+  var w=window.open();
   if(w){
-    w.document.write('<!DOCTYPE html><html><head><title>Your Meme</title><style>');
-    w.document.write('body{margin:0;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-family:sans-serif;padding:20px;box-sizing:border-box}');
-    w.document.write('img{max-width:95vw;max-height:80vh;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,.6)}');
-    w.document.write('p{color:#bbb;margin-top:18px;font-size:15px;text-align:center;line-height:1.6}');
-    w.document.write('</style></head><body>');
-    w.document.write('<img src="'+dataUrl+'">');
-    w.document.write('<p>'+instructions+'</p>');
+    w.document.write('<html><head><title>Your Meme</title></head><body style="margin:0;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-family:sans-serif;padding:20px">');
+    w.document.write('<img src="'+dataUrl+'" style="max-width:95vw;max-height:80vh;border-radius:10px">');
+    w.document.write('<p style="color:#aaa;margin-top:16px;font-size:14px;text-align:center">'+instructions+'</p>');
     w.document.write('</body></html>');
   }
 }
 
-function showTaintOverlay(){
-  // Proxy image still loading or both proxies failed
-  alert("The image is still loading for export. Please wait a moment and try again — or try a different template.");
-}
-
 document.getElementById("ios-close").addEventListener("click",function(){
-  document.getElementById("ios-ov").style.display = "none";
+  document.getElementById("ios-ov").style.display="none";
 });
 
 /* ════════════════════════════════════════
@@ -907,74 +930,39 @@ function buildCar(cat){
   updateCar();
 }
 
-/* ── TEMPLATE IMAGE LOADING ──────────────────────────────
-   Two-phase approach:
-   1. INSTANT: draw the already-loaded thumbnail DOM img onto
-      the canvas immediately so user sees the meme right away.
-   2. CLEAN: simultaneously load via CORS proxy in background.
-      When proxy load completes, swap to clean version so
-      export (download/copy/share) works without taint errors.
-────────────────────────────────────────────────────────*/
-var PROXY1 = "https://corsproxy.io/?";
-var PROXY2 = "https://api.allorigins.win/raw?url=";
+/* ════════════════════════════════════════
+   TEMPLATE LOADING — simple, instant, no proxies.
+   Images load directly. Canvas may be tainted for Imgflip.
+   Export uses a separate HTML composition page that renders
+   image + text via HTML/CSS — no canvas taint issues.
+════════════════════════════════════════ */
+
+// Store last-used template src and caption for HTML export
+var lastTemplateSrc = null;
+var lastTemplateIsApi = false;
+
+function setAndDraw(img, knownW, knownH, isApi){
+  img._imgW = img.naturalWidth || knownW;
+  img._imgH = img.naturalHeight || knownH;
+  img._isApi = !!isApi;
+  bgImg = img;
+  draw();
+}
 
 function useThumbAsBackground(domImg, fullSrc, imgW, imgH, isApi){
   var knownW = imgW || 500;
   var knownH = imgH || 500;
 
-  // Phase 1: draw the thumbnail DOM img immediately for instant feedback
-  if(domImg && domImg.complete){
-    // Read naturalWidth from already-loaded thumb (may be proxy-loaded, so it has dimensions)
-    var tw = domImg.naturalWidth || knownW;
-    var th = domImg.naturalHeight || knownH;
-    domImg._imgW = tw;
-    domImg._imgH = th;
-    domImg._isApi = !!isApi;
-    bgImg = domImg;
-    draw(); // show immediately
-  }
+  // Store for HTML export
+  lastTemplateSrc = fullSrc;
+  lastTemplateIsApi = !!isApi;
 
-  if(!isApi){
-    // Static templates: load with crossOrigin directly (Unsplash supports it)
-    var si = new Image();
-    si.crossOrigin = "anonymous";
-    si.onload = function(){
-      si._imgW = si.naturalWidth || knownW;
-      si._imgH = si.naturalHeight || knownH;
-      si._isApi = false;
-      bgImg = si;
-      draw();
-    };
-    si.onerror = function(){}; // phase 1 already showing, silent fail
-    si.src = fullSrc;
-    return;
-  }
-
-  // Phase 2 for API: load via proxy chain for clean (untainted) canvas
-  // This runs in background — when done, swaps bgImg to clean version
-  function tryProxy(proxyUrl, nextFn){
-    var pi = new Image();
-    pi.crossOrigin = "anonymous";
-    pi.onload = function(){
-      // Success — swap to clean version
-      pi._imgW = pi.naturalWidth || knownW;
-      pi._imgH = pi.naturalHeight || knownH;
-      pi._isApi = true;
-      bgImg = pi;
-      draw();
-    };
-    pi.onerror = nextFn || function(){};
-    pi.src = proxyUrl + encodeURIComponent(fullSrc);
-  }
-
-  // Try proxy 1, fallback to proxy 2, then give up (phase 1 still showing)
-  tryProxy(PROXY1, function(){
-    tryProxy(PROXY2, function(){
-      // Both proxies failed — phase 1 thumbnail is still shown.
-      // Canvas is tainted so mark it so export can warn gracefully.
-      if(bgImg) bgImg._tainted = true;
-    });
-  });
+  // Load directly — fast, instant
+  var i = new Image();
+  if(!isApi) i.crossOrigin = "anonymous"; // Unsplash supports CORS
+  i.onload = function(){ setAndDraw(i, knownW, knownH, isApi); };
+  i.onerror = function(){ /* silent */ };
+  i.src = fullSrc;
 
   if(typeof gtag==="function") gtag("event","meme_template");
 }
