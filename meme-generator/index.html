@@ -12,7 +12,7 @@ gtag('config', 'G-CPZVP7JQ5C');
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Free Meme Generator — Make &amp; Share Memes Instantly</title>
-<meta name="description" content="The free online meme maker. Pick a background, type your caption, download or copy. Funny, relatable, romantic, motivational and 15+ more themes. No sign-up." />
+<meta name="description" content="Free online meme maker with 100+ classic templates. Pick a background, type your caption, download or share. Funny, relatable, romantic and 15+ themes. No sign-up." />
 <meta name="robots" content="index,follow" />
 <link rel="canonical" href="https://everydaytoolshq.github.io/meme-generator/" />
 <meta property="og:type" content="website" />
@@ -35,16 +35,16 @@ img{display:block;max-width:100%}
 .bc{padding:16px 0 0;font-size:12px;font-weight:600;color:#999}
 .bc a{color:#999}.bc a:hover{text-decoration:underline}
 
-/* HERO — shows full 1360×768 image, never crops height */
+/* HERO — full image, no crop */
 .hero{margin:12px 0 0;border-radius:18px;overflow:hidden;box-shadow:0 6px 28px rgba(0,0,0,.12)}
 .hero img{width:100%;height:auto;display:block}
 
 /* HEADER */
-.hdr{text-align:center;padding:28px 0 6px}
+.hdr{text-align:center;padding:26px 0 6px}
 .eyebrow{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#e8375a;background:rgba(232,55,90,.09);border:1px solid rgba(232,55,90,.25);padding:6px 16px;border-radius:999px;margin-bottom:12px}
 .hdr h1{font-family:"Fraunces",Georgia,serif;font-size:clamp(30px,7vw,62px);font-weight:900;line-height:.98;letter-spacing:-.02em;margin:0 0 12px;color:#111}
 .hdr h1 em{color:#e8375a;font-style:italic}
-.hdr p{font-size:15px;line-height:1.75;color:#666;max-width:540px;margin:0 auto 22px}
+.hdr p{font-size:15px;line-height:1.75;color:#666;max-width:540px;margin:0 auto 20px}
 
 /* CARD */
 .card{background:#fff;border:1px solid #e2e5f0;border-radius:18px;box-shadow:0 3px 20px rgba(0,0,0,.06);padding:22px;margin:0 0 20px}
@@ -52,25 +52,26 @@ img{display:block;max-width:100%}
 .card-title i{color:#e8375a}
 .card-title::after{content:"";flex:1;height:1px;background:#eee}
 
-/* FORM */
+/* FORM GRIDS */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
 .g1{margin-bottom:12px}
 .fld{display:flex;flex-direction:column;gap:4px}
-.fld>label,.lbl{font-size:11px;font-weight:700;color:#999;letter-spacing:.07em;text-transform:uppercase}
+.fld>label{font-size:11px;font-weight:700;color:#999;letter-spacing:.07em;text-transform:uppercase}
 
 select,input[type=text],input[type=file]{
   height:44px;border:1.5px solid #dde0ef;border-radius:10px;padding:0 12px;
   font-size:14px;font-family:inherit;color:#222;background:#f9faff;outline:none;
-  width:100%;-webkit-appearance:none;appearance:none;transition:border-color .15s,box-shadow .15s
+  width:100%;-webkit-appearance:none;appearance:none;
+  transition:border-color .15s,box-shadow .15s
 }
 select:focus,input[type=text]:focus{border-color:#e8375a;box-shadow:0 0 0 3px rgba(232,55,90,.11)}
 input[type=file]{padding:10px 12px;font-size:13px;cursor:pointer}
 
 /* RANGE */
-.rng-fld{display:flex;flex-direction:column;gap:4px}
-.rng-fld>label{font-size:11px;font-weight:700;color:#999;letter-spacing:.07em;text-transform:uppercase;display:flex;justify-content:space-between}
-.rng-fld>label span{color:#333;font-weight:700}
+.rng{display:flex;flex-direction:column;gap:4px}
+.rng>label{font-size:11px;font-weight:700;color:#999;letter-spacing:.07em;text-transform:uppercase;display:flex;justify-content:space-between}
+.rng>label span{color:#333;font-weight:700}
 input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;background:#dde0ef;border-radius:999px;outline:none;cursor:pointer;margin-top:4px}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#e8375a;cursor:pointer;box-shadow:0 2px 6px rgba(232,55,90,.35)}
 input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#e8375a;cursor:pointer;border:none}
@@ -83,22 +84,26 @@ input[type=color]{width:50px;height:42px;border:1.5px solid #dde0ef;border-radiu
 input[type=color]::-webkit-color-swatch-wrapper{padding:0}
 input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
 
-/* TOGGLE BTNS */
+/* TOGGLE BUTTONS */
 .tog-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
 .tbtn{display:flex;align-items:center;gap:6px;padding:8px 13px;border-radius:9px;border:1.5px solid #dde0ef;background:#f9faff;color:#777;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;min-height:40px;font-family:inherit}
 .tbtn:hover{border-color:#e8375a;color:#333}
 .tbtn.on{background:rgba(232,55,90,.09);border-color:#e8375a;color:#e8375a}
 
-/* CANVAS AREA */
+/* CANVAS */
 .canvas-area{text-align:center;margin:0 0 20px}
 #memeCanvas{border:2px solid #dde0ef;border-radius:12px;max-width:100%;display:block;margin:0 auto 14px;box-shadow:0 6px 28px rgba(0,0,0,.13)}
-.act-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
-.btn-dl{display:flex;align-items:center;gap:8px;padding:12px 26px;border-radius:11px;border:none;background:#27ae60;color:#fff;font-size:16px;font-family:"Fraunces",serif;font-weight:700;cursor:pointer;box-shadow:0 5px 18px rgba(39,174,96,.28);transition:transform .12s,box-shadow .12s;min-height:48px}
-.btn-dl:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(39,174,96,.36)}
-.btn-cp{display:flex;align-items:center;gap:8px;padding:12px 26px;border-radius:11px;border:none;background:#0088ff;color:#fff;font-size:16px;font-family:"Fraunces",serif;font-weight:700;cursor:pointer;box-shadow:0 5px 18px rgba(0,136,255,.26);transition:transform .12s,box-shadow .12s;min-height:48px}
-.btn-cp:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,136,255,.34)}
 
-/* TEMPLATES */
+/* ACTION BUTTONS */
+.act-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.btn-dl{display:flex;align-items:center;gap:7px;padding:12px 22px;border-radius:11px;border:none;background:#27ae60;color:#fff;font-size:15px;font-family:"Fraunces",serif;font-weight:700;cursor:pointer;box-shadow:0 5px 18px rgba(39,174,96,.28);transition:transform .12s,box-shadow .12s;min-height:46px}
+.btn-dl:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(39,174,96,.36)}
+.btn-cp{display:flex;align-items:center;gap:7px;padding:12px 22px;border-radius:11px;border:none;background:#0088ff;color:#fff;font-size:15px;font-family:"Fraunces",serif;font-weight:700;cursor:pointer;box-shadow:0 5px 18px rgba(0,136,255,.26);transition:transform .12s,box-shadow .12s;min-height:46px}
+.btn-cp:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,136,255,.34)}
+.btn-sh{display:flex;align-items:center;gap:7px;padding:12px 22px;border-radius:11px;border:none;background:linear-gradient(135deg,#8b5cf6,#6366f1);color:#fff;font-size:15px;font-family:"Fraunces",serif;font-weight:700;cursor:pointer;box-shadow:0 5px 18px rgba(99,102,241,.28);transition:transform .12s,box-shadow .12s;min-height:46px}
+.btn-sh:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(99,102,241,.36)}
+
+/* TABS for templates */
 .tab-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
 .tab{padding:7px 13px;border-radius:8px;border:1.5px solid #dde0ef;background:#f9faff;color:#777;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;font-family:inherit}
 .tab.on{background:#e8375a;border-color:#e8375a;color:#fff}
@@ -108,28 +113,34 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
 .car-outer{position:relative;overflow:hidden;padding:0 42px}
 .car-track{display:flex;gap:10px;padding:4px 0;transition:transform .3s ease;will-change:transform;user-select:none}
 
-/* Each thumb — fixed size, never hidden */
-.thumb{flex:0 0 130px;height:100px;border-radius:10px;overflow:hidden;border:2.5px solid transparent;cursor:pointer;position:relative;transition:border-color .18s,transform .18s,box-shadow .18s;background:#e2e5f0}
+.thumb{flex:0 0 130px;height:100px;border-radius:10px;overflow:hidden;border:2.5px solid transparent;cursor:pointer;position:relative;transition:border-color .18s,transform .18s,box-shadow .18s;background:#dde0ef}
 .thumb:hover{border-color:#e8375a;transform:translateY(-3px);box-shadow:0 8px 20px rgba(232,55,90,.22)}
 .thumb.active{border-color:#e8375a;box-shadow:0 0 0 2px rgba(232,55,90,.25)}
 .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.thumb-lbl{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.65);font-size:10px;font-weight:700;color:#fff;padding:4px 5px;text-align:center;opacity:0;transition:opacity .18s}
+.thumb-lbl{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.65);font-size:10px;font-weight:700;color:#fff;padding:4px 5px;text-align:center;opacity:0;transition:opacity .18s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .thumb:hover .thumb-lbl{opacity:1}
+/* Loading skeleton */
+.thumb-loading{background:linear-gradient(90deg,#e2e5f0 25%,#eef0f8 50%,#e2e5f0 75%);background-size:200% 100%;animation:shimmer 1.2s infinite}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
 .car-btn{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:36px;height:36px;border-radius:9px;border:1.5px solid #dde0ef;background:#fff;color:#333;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;box-shadow:0 2px 8px rgba(0,0,0,.09);font-family:inherit}
 .car-btn:hover{background:#e8375a;border-color:#e8375a;color:#fff}
-.car-btn:disabled{opacity:.35;cursor:default}
+.car-btn:disabled{opacity:.3;cursor:default;pointer-events:none}
 .car-btn.p{left:0}.car-btn.n{right:0}
-.dots{display:flex;justify-content:center;gap:6px;margin-top:12px}
+.dots{display:flex;justify-content:center;gap:6px;margin-top:12px;flex-wrap:wrap}
 .dot{width:8px;height:8px;border-radius:50%;background:#ddd;cursor:pointer;transition:all .2s}
 .dot.on{background:#e8375a;transform:scale(1.3)}
 
-/* BANNER — 900×515 ratio, fits width perfectly */
-.banner{background:#fff;border:1px solid #e2e5f0;border-radius:18px;overflow:hidden;box-shadow:0 3px 20px rgba(0,0,0,.06);margin:0 0 20px;display:flex;flex-direction:column;transition:box-shadow .15s,transform .15s}
+/* Imgflip status */
+.api-status{font-size:12px;color:#aaa;text-align:center;padding:8px 0 4px;min-height:28px}
+.api-status.loading{color:#e8375a}
+.api-status.ok{color:#27ae60}
+
+/* BANNER — horizontal, image shows better with object-position */
+.banner{background:#fff;border:1px solid #e2e5f0;border-radius:18px;overflow:hidden;box-shadow:0 3px 20px rgba(0,0,0,.06);margin:0 0 20px;display:grid;grid-template-columns:280px 1fr;transition:box-shadow .15s,transform .15s}
 .banner:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,.11)}
-.banner-img-wrap{width:100%;aspect-ratio:900/515;overflow:hidden}
-.banner-img-wrap img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
-.banner-body{padding:18px 20px;display:flex;flex-direction:column;gap:8px}
+.banner-img{width:100%;height:100%;min-height:170px;object-fit:cover;object-position:center center;display:block}
+.banner-body{padding:20px 22px;display:flex;flex-direction:column;justify-content:center;gap:9px}
 .banner-eye{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#b8860b}
 .banner-name{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:#111;line-height:1.2}
 .banner-desc{font-size:13px;color:#666;line-height:1.6;margin:0}
@@ -137,15 +148,15 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
 .banner-btn:hover{transform:translateY(-1px)}
 .banner-disc{font-size:11px;color:#bbb;line-height:1.5}
 
-/* IOS OVERLAY */
+/* iOS OVERLAY */
 #ios-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:16px}
-#ios-ov p{font-size:16px;color:#fff;text-align:center;padding:0 20px}
+#ios-ov p{font-size:15px;color:#fff;text-align:center;padding:0 20px}
 #ios-img{max-width:90vw;border-radius:12px;border:2px solid #444}
 #ios-close{background:#333;color:#fff;border:1px solid #555;padding:10px 22px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:700;font-family:inherit}
 
 /* TIPS */
 .tips{background:#fff;border:1px solid #e2e5f0;border-radius:18px;padding:22px;margin:0 0 20px}
-.tips h2{font-family:"Fraunces",serif;font-size:21px;font-weight:700;color:#111;margin:0 0 14px}
+.tips h2{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:#111;margin:0 0 14px}
 .tip-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .tip{background:#f9faff;border:1px solid #e2e5f0;border-radius:11px;padding:13px;display:flex;gap:10px}
 .tip-ico{font-size:20px;line-height:1;flex-shrink:0}
@@ -170,8 +181,11 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
   .tip-grid{grid-template-columns:1fr}
   .thumb{flex:0 0 100px;height:80px}
   .car-outer{padding:0 38px}
+  .banner{grid-template-columns:1fr;grid-template-rows:200px auto}
+  .banner-img{height:100%;width:100%}
+  .banner-btn{align-self:stretch;justify-content:center}
 }
-@media(max-width:400px){.thumb{flex:0 0 80px;height:65px}.car-outer{padding:0 36px}}
+@media(max-width:400px){.thumb{flex:0 0 80px;height:65px}.car-outer{padding:0 34px}}
 </style>
 </head>
 <body>
@@ -179,7 +193,7 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
 
 <nav class="bc"><a href="https://everydaytoolshq.github.io/">Home</a> › Meme Generator</nav>
 
-<!-- HERO: width=100%, height=auto so nothing is cropped -->
+<!-- HERO — full 1360×768 ratio, no crop -->
 <div class="hero">
   <img src="https://everydaytoolshq.github.io/memegeneratorhero.jpg"
        alt="Free Meme Generator — make and share memes instantly"
@@ -189,7 +203,7 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
 <div class="hdr">
   <span class="eyebrow">😂 Free · No Sign-Up · Instant Download</span>
   <h1>Make a <em>Meme</em><br>in Seconds</h1>
-  <p>Pick a template, write your caption, download or copy. Funny, relatable, romantic, sarcastic and 12 more themes — no account ever.</p>
+  <p>Pick a template, write your caption, download or share. Classic meme templates loaded live from the internet. No account ever.</p>
 </div>
 
 <!-- ═══════════ BUILDER ═══════════ -->
@@ -243,11 +257,11 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
         <option value="Comic Sans MS">Comic Sans 😂</option>
       </select>
     </div>
-    <div class="rng-fld">
+    <div class="rng">
       <label>Font Size <span id="fsVal">40</span>px</label>
       <input type="range" id="fontSize" min="16" max="80" value="40" />
     </div>
-    <div class="rng-fld">
+    <div class="rng">
       <label>Text Position <span id="tpVal">0</span></label>
       <input type="range" id="textPos" min="-160" max="160" value="0" />
     </div>
@@ -258,7 +272,7 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
     <div class="clr-fld"><label>Outline</label><input type="color" id="strokeColor" value="#000000" /></div>
     <div class="clr-fld"><label>BG</label><input type="color" id="bgColor" value="#000000" /></div>
     <div class="clr-fld" id="capBgClrWrap" style="display:none"><label>Cap BG</label><input type="color" id="capBgColor" value="#000000" /></div>
-    <div class="rng-fld" id="capOpWrap" style="display:none;min-width:160px">
+    <div class="rng" id="capOpWrap" style="display:none;min-width:160px">
       <label>Cap BG Opacity <span id="opVal">70</span>%</label>
       <input type="range" id="capOpacity" min="10" max="95" value="70" />
     </div>
@@ -288,14 +302,15 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
 <div class="canvas-area">
   <canvas id="memeCanvas"></canvas>
   <div class="act-row">
-    <button class="btn-dl" id="dlBtn"><i class="fas fa-download"></i> Download Meme</button>
-    <button class="btn-cp" id="cpBtn"><i class="fas fa-copy"></i> Copy to Clipboard</button>
+    <button class="btn-dl" id="dlBtn"><i class="fas fa-download"></i> Download</button>
+    <button class="btn-cp" id="cpBtn"><i class="fas fa-copy"></i> Copy</button>
+    <button class="btn-sh" id="shareBtn"><i class="fas fa-share-alt"></i> Share</button>
   </div>
 </div>
 
-<!-- IOS OVERLAY -->
+<!-- iOS OVERLAY -->
 <div id="ios-ov">
-  <p>Tap and hold the image below, then choose "Save to Photos" or "Copy"</p>
+  <p>Tap and hold the image below,<br>then choose "Save to Photos" or "Copy"</p>
   <img id="ios-img" alt="meme" />
   <button id="ios-close">✕ Close</button>
 </div>
@@ -303,14 +318,18 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
 <!-- ═══════════ TEMPLATES ═══════════ -->
 <div class="card">
   <div class="card-title"><i class="fas fa-images"></i> Background Templates — click any to use it</div>
+
   <div class="tab-row" id="tabRow">
-    <button class="tab on" data-cat="all">All</button>
+    <button class="tab on" data-cat="classic">🔥 Classic Memes</button>
     <button class="tab" data-cat="energy">⚡ Action</button>
     <button class="tab" data-cat="nature">🌿 Nature</button>
     <button class="tab" data-cat="romantic">❤️ Romance</button>
     <button class="tab" data-cat="coffee">☕ Cozy</button>
     <button class="tab" data-cat="animals">🐶 Animals</button>
   </div>
+
+  <div class="api-status" id="apiStatus"></div>
+
   <div class="car-outer">
     <button class="car-btn p" id="carPrev"><i class="fas fa-chevron-left"></i></button>
     <div class="car-track" id="carTrack"></div>
@@ -319,16 +338,15 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
   <div class="dots" id="carDots"></div>
 </div>
 
-<!-- BANNER — full width, correct ratio 900×515 -->
+<!-- BANNER — horizontal, better image framing -->
 <div class="banner">
-  <div class="banner-img-wrap">
-    <img src="https://everydaytoolshq.github.io/whatdoyoumeme.jpg"
-         alt="What Do You Meme? card game" width="900" height="515" loading="lazy" />
-  </div>
+  <img class="banner-img"
+    src="https://everydaytoolshq.github.io/whatdoyoumeme.jpg"
+    alt="What Do You Meme? card game" width="900" height="515" loading="lazy" />
   <div class="banner-body">
     <div class="banner-eye">🏆 Gold Standard for Physical Meme-Making</div>
     <div class="banner-name">What Do You Meme?</div>
-    <p class="banner-desc">The hilarious party card game for meme lovers. Match the funniest caption to a photo card — the crowd decides the winner. A must-have for anyone who lives online.</p>
+    <p class="banner-desc">The hilarious party card game for meme lovers. Match the funniest caption to a photo card — the crowd decides the winner. Perfect for anyone who lives online.</p>
     <a class="banner-btn" href="https://amzn.to/4w9OANr" target="_blank" rel="sponsored noopener noreferrer">Shop on Amazon →</a>
     <div class="banner-disc">Affiliate Disclosure: we may earn a commission if you purchase through our links at no extra cost to you.</div>
   </div>
@@ -339,10 +357,10 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
   <h2>💡 Tips for a Great Meme</h2>
   <div class="tip-grid">
     <div class="tip"><div class="tip-ico">📏</div><div><div class="tip-t">Keep it short</div><div class="tip-d">Best captions are 3–10 words. If you need to explain it, it's not a meme.</div></div></div>
-    <div class="tip"><div class="tip-ico">🔡</div><div><div class="tip-t">CAPS for impact</div><div class="tip-d">Toggle UPPERCASE for the classic look. Impact + all caps = maximum meme energy.</div></div></div>
-    <div class="tip"><div class="tip-ico">🖼️</div><div><div class="tip-t">Upload anything</div><div class="tip-d">Upload a screenshot, selfie, or any photo from your camera roll as background.</div></div></div>
-    <div class="tip"><div class="tip-ico">🎨</div><div><div class="tip-t">Contrast is king</div><div class="tip-d">White text + black outline reads on any background. The Outline toggle is your best friend.</div></div></div>
-    <div class="tip"><div class="tip-ico">📱</div><div><div class="tip-t">Send anywhere</div><div class="tip-d">Download as JPG, then share to WhatsApp, Instagram, X, Discord — anywhere.</div></div></div>
+    <div class="tip"><div class="tip-ico">🔡</div><div><div class="tip-t">CAPS for impact</div><div class="tip-d">Toggle UPPERCASE + Impact font for the classic meme look.</div></div></div>
+    <div class="tip"><div class="tip-ico">🖼️</div><div><div class="tip-t">Upload anything</div><div class="tip-d">Upload a screenshot, selfie, or any photo from your camera roll.</div></div></div>
+    <div class="tip"><div class="tip-ico">🎨</div><div><div class="tip-t">Contrast is king</div><div class="tip-d">White text + black outline reads on any background. Outline is on by default.</div></div></div>
+    <div class="tip"><div class="tip-ico">📱</div><div><div class="tip-t">Share button</div><div class="tip-d">Tap Share to send directly to WhatsApp, Instagram, iMessage and more.</div></div></div>
     <div class="tip"><div class="tip-ico">📐</div><div><div class="tip-t">Move your text</div><div class="tip-d">Use the Text Position slider to place captions at the top, middle, or bottom.</div></div></div>
   </div>
 </div>
@@ -363,9 +381,9 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
 </footer>
 
 <script>
-/* ════════════════════════════
+/* ════════════════════════════════════════
    THEMES
-════════════════════════════ */
+════════════════════════════════════════ */
 var THEMES = {
   funny:["I don't always make memes. But when I do, I make them badly.","My brain has too many tabs open.","404: Motivation not found.","I'm not lazy, I'm on energy-saving mode.","Technically, I'm not wrong.","Plot twist: I'm the problem.","This is fine. Everything is fine.","Sleep? I don't know her.","That's a problem for future me.","My patience is loading… please wait.","When in doubt, meme it out.","Me: I'll be productive today. Also me:"],
   relatable:["When the weekend goes by faster than the work week.","Me: I'll start tomorrow. Also me, tomorrow: I'll start tomorrow.","Walking past the fridge hoping food appeared.","Pretending to look busy when someone walks past.","That moment when you forget why you walked into a room.","Opening the fridge for the 47th time today.","Me vs the anxiety that hits at 3am.","Checking my phone for a notification I don't have.","The specific pain of a wet sock.","Staying up late for absolutely no reason.","Said 'I'm 5 minutes away' from my house.","Spent 3 hours choosing what to watch. Watched nothing."],
@@ -385,101 +403,82 @@ var THEMES = {
   redemption:["My villain era? Over. My glow-up era? Loading.","I've been through worse. This is just a Tuesday.","Fell down seven times, got up eight.","The comeback is being built quietly.","What almost broke me built me instead.","My redemption arc is in its final season.","Not who I was. Better.","The setback was the setup.","Watch me recover from this at an unreasonable speed.","They counted me out. I used it as fuel.","Rewritten, renewed, rebuilt. Watch closely.","The plot twist nobody saw coming: me, thriving."]
 };
 
-/* ════════════════════════════
-   ALL 60+ TEMPLATES (original + extras)
-════════════════════════════ */
-var TEMPLATES = [
-  // PowerStation custom
-  {cat:"energy",label:"PowerMeme 1",t:"https://powerstationhq.com/wp-content/uploads/2025/06/powermeme-template.jpg",f:"https://powerstationhq.com/wp-content/uploads/2025/06/powermeme-template.jpg"},
-  {cat:"energy",label:"PowerMeme 2",t:"https://powerstationhq.com/wp-content/uploads/2025/06/powermeme-template1.jpg",f:"https://powerstationhq.com/wp-content/uploads/2025/06/powermeme-template1.jpg"},
+/* ════════════════════════════════════════
+   STATIC UNSPLASH TEMPLATES (no PowerStation)
+════════════════════════════════════════ */
+var STATIC_TEMPLATES = [
   // Energy / Action
   {cat:"energy",label:"Lightning",t:"https://images.unsplash.com/photo-1548475390-f6908921aaf8?w=300&q=70",f:"https://images.unsplash.com/photo-1548475390-f6908921aaf8?w=800&q=80"},
   {cat:"energy",label:"Fire",t:"https://images.unsplash.com/photo-1513758173941-bfbd2e4166f5?w=300&q=70",f:"https://images.unsplash.com/photo-1513758173941-bfbd2e4166f5?w=800&q=80"},
   {cat:"energy",label:"Electric",t:"https://images.unsplash.com/photo-1647028864576-76097b867d8a?w=300&q=70",f:"https://images.unsplash.com/photo-1647028864576-76097b867d8a?w=800&q=80"},
-  {cat:"energy",label:"Neon Abstract",t:"https://images.unsplash.com/photo-1741447251529-2ed90e331088?w=300&q=70",f:"https://images.unsplash.com/photo-1741447251529-2ed90e331088?w=800&q=80"},
-  {cat:"energy",label:"Solar Flare",t:"https://images.unsplash.com/photo-1586201854063-e17317340369?w=300&q=70",f:"https://images.unsplash.com/photo-1586201854063-e17317340369?w=800&q=80"},
   {cat:"energy",label:"Storm",t:"https://images.unsplash.com/photo-1498673394965-85cb14905c89?w=300&q=70",f:"https://images.unsplash.com/photo-1498673394965-85cb14905c89?w=800&q=80"},
-  {cat:"energy",label:"Laser",t:"https://images.unsplash.com/photo-1672152825656-6747b9bd2377?w=300&q=70",f:"https://images.unsplash.com/photo-1672152825656-6747b9bd2377?w=800&q=80"},
   {cat:"energy",label:"Cityscape",t:"https://images.unsplash.com/photo-1524226108234-3cccbbbfa86d?w=300&q=70",f:"https://images.unsplash.com/photo-1524226108234-3cccbbbfa86d?w=800&q=80"},
-  {cat:"energy",label:"Sparks",t:"https://images.unsplash.com/photo-1525490829609-d166ddb58678?w=300&q=70",f:"https://images.unsplash.com/photo-1525490829609-d166ddb58678?w=800&q=80"},
   {cat:"energy",label:"Neon City",t:"https://images.unsplash.com/photo-1563761141-38f17aad6d44?w=300&q=70",f:"https://images.unsplash.com/photo-1563761141-38f17aad6d44?w=800&q=80"},
+  {cat:"energy",label:"Sparks",t:"https://images.unsplash.com/photo-1525490829609-d166ddb58678?w=300&q=70",f:"https://images.unsplash.com/photo-1525490829609-d166ddb58678?w=800&q=80"},
   {cat:"energy",label:"Fire Sparks",t:"https://images.unsplash.com/photo-1631830729777-b89d676ef54f?w=300&q=70",f:"https://images.unsplash.com/photo-1631830729777-b89d676ef54f?w=800&q=80"},
   {cat:"energy",label:"Light Show",t:"https://images.unsplash.com/photo-1638866408990-1b5e583394d8?w=300&q=70",f:"https://images.unsplash.com/photo-1638866408990-1b5e583394d8?w=800&q=80"},
   {cat:"energy",label:"Sunset Sky",t:"https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=300&q=70",f:"https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=800&q=80"},
   {cat:"energy",label:"Headphones",t:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=70",f:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80"},
-  {cat:"energy",label:"Binoculars",t:"https://images.unsplash.com/photo-1443916568596-df5a58c445e9?w=300&q=70",f:"https://images.unsplash.com/photo-1443916568596-df5a58c445e9?w=800&q=80"},
+  {cat:"energy",label:"Laser",t:"https://images.unsplash.com/photo-1672152825656-6747b9bd2377?w=300&q=70",f:"https://images.unsplash.com/photo-1672152825656-6747b9bd2377?w=800&q=80"},
+  {cat:"energy",label:"Neon Abstract",t:"https://images.unsplash.com/photo-1741447251529-2ed90e331088?w=300&q=70",f:"https://images.unsplash.com/photo-1741447251529-2ed90e331088?w=800&q=80"},
+  {cat:"energy",label:"Solar Flare",t:"https://images.unsplash.com/photo-1586201854063-e17317340369?w=300&q=70",f:"https://images.unsplash.com/photo-1586201854063-e17317340369?w=800&q=80"},
   // Nature
   {cat:"nature",label:"Lake View",t:"https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=300&q=70",f:"https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&q=80"},
-  {cat:"nature",label:"Colourful Sky",t:"https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&q=70",f:"https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=800&q=80"},
-  {cat:"nature",label:"Foggy Road",t:"https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=300&q=70",f:"https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=800&q=80"},
-  {cat:"nature",label:"Vineyard",t:"https://images.unsplash.com/photo-1429087969512-1e85aab2683d?w=300&q=70",f:"https://images.unsplash.com/photo-1429087969512-1e85aab2683d?w=800&q=80"},
-  {cat:"nature",label:"Aerial Coast",t:"https://images.unsplash.com/photo-1501854140801-50d01698950b?w=300&q=70",f:"https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&q=80"},
-  {cat:"nature",label:"Wild Nature",t:"https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=300&q=70",f:"https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=800&q=80"},
-  {cat:"nature",label:"Panorama",t:"https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=300&q=70",f:"https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=80"},
   {cat:"nature",label:"Mountains",t:"https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=300&q=70",f:"https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80"},
+  {cat:"nature",label:"Forest",t:"https://images.unsplash.com/photo-1511497584788-876760111969?w=300&q=70",f:"https://images.unsplash.com/photo-1511497584788-876760111969?w=800&q=80"},
+  {cat:"nature",label:"Ocean",t:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300&q=70",f:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80"},
   {cat:"nature",label:"Waterfall",t:"https://images.unsplash.com/photo-1490730141103-6cac27aaab94?w=300&q=70",f:"https://images.unsplash.com/photo-1490730141103-6cac27aaab94?w=800&q=80"},
   {cat:"nature",label:"Wildflowers",t:"https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=300&q=70",f:"https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=800&q=80"},
-  {cat:"nature",label:"Misty Forest",t:"https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=300&q=70",f:"https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=800&q=80"},
-  {cat:"nature",label:"Forest",t:"https://images.unsplash.com/photo-1511497584788-876760111969?w=300&q=70",f:"https://images.unsplash.com/photo-1511497584788-876760111969?w=800&q=80"},
+  {cat:"nature",label:"Aurora",t:"https://images.unsplash.com/photo-1519681393784-d120267933ba?w=300&q=70",f:"https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80"},
   {cat:"nature",label:"Desert",t:"https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=300&q=70",f:"https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=800&q=80"},
+  {cat:"nature",label:"Misty Forest",t:"https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=300&q=70",f:"https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=800&q=80"},
+  {cat:"nature",label:"Foggy Road",t:"https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=300&q=70",f:"https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=800&q=80"},
+  {cat:"nature",label:"Wild Nature",t:"https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=300&q=70",f:"https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=800&q=80"},
   {cat:"nature",label:"Valley",t:"https://images.unsplash.com/photo-1474631245212-32dc3c8310c6?w=300&q=70",f:"https://images.unsplash.com/photo-1474631245212-32dc3c8310c6?w=800&q=80"},
   // Romantic
   {cat:"romantic",label:"Couple Walk",t:"https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=300&q=70",f:"https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800&q=80"},
   {cat:"romantic",label:"Hearts",t:"https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=300&q=70",f:"https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=800&q=80"},
-  {cat:"romantic",label:"Intimacy",t:"https://images.unsplash.com/photo-1494774157365-9e04c6720e47?w=300&q=70",f:"https://images.unsplash.com/photo-1494774157365-9e04c6720e47?w=800&q=80"},
-  {cat:"romantic",label:"Wildflower Love",t:"https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?w=300&q=70",f:"https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?w=800&q=80"},
   {cat:"romantic",label:"Rose",t:"https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=300&q=70",f:"https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=800&q=80"},
-  {cat:"romantic",label:"Aurora",t:"https://images.unsplash.com/photo-1519681393784-d120267933ba?w=300&q=70",f:"https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80"},
   {cat:"romantic",label:"Night Sky",t:"https://images.unsplash.com/photo-1520333789090-1afc82db536a?w=300&q=70",f:"https://images.unsplash.com/photo-1520333789090-1afc82db536a?w=800&q=80"},
-  {cat:"romantic",label:"Sunset Pier",t:"https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=300&q=70",f:"https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=800&q=80"},
-  {cat:"romantic",label:"Ocean",t:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300&q=70",f:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80"},
-  {cat:"romantic",label:"Portrait",t:"https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=300&q=70",f:"https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&q=80"},
-  {cat:"romantic",label:"Travel",t:"https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=300&q=70",f:"https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=800&q=80"},
-  {cat:"romantic",label:"City Lights",t:"https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=300&q=70",f:"https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=800&q=80"},
-  {cat:"romantic",label:"Running",t:"https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=300&q=70",f:"https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=800&q=80"},
+  {cat:"romantic",label:"Ocean Sunset",t:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300&q=70",f:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80"},
   {cat:"romantic",label:"Bokeh",t:"https://images.unsplash.com/photo-1525353297422-7504381dce2d?w=300&q=70",f:"https://images.unsplash.com/photo-1525353297422-7504381dce2d?w=800&q=80"},
+  {cat:"romantic",label:"City Lights",t:"https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=300&q=70",f:"https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=800&q=80"},
   {cat:"romantic",label:"Night Lights",t:"https://images.unsplash.com/photo-1515871204537-49a5fe66a31f?w=300&q=70",f:"https://images.unsplash.com/photo-1515871204537-49a5fe66a31f?w=800&q=80"},
-  // Coffee / Cozy
+  // Coffee
   {cat:"coffee",label:"Morning Coffee",t:"https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=300&q=70",f:"https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=800&q=80"},
   {cat:"coffee",label:"Latte Art",t:"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300&q=70",f:"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80"},
   {cat:"coffee",label:"Espresso",t:"https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=300&q=70",f:"https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&q=80"},
-  {cat:"coffee",label:"Coffee Shop",t:"https://images.unsplash.com/photo-1595574444306-e235cef5ea37?w=300&q=70",f:"https://images.unsplash.com/photo-1595574444306-e235cef5ea37?w=800&q=80"},
   {cat:"coffee",label:"Iced Coffee",t:"https://images.unsplash.com/photo-1578504654620-e66ad8bb1c25?w=300&q=70",f:"https://images.unsplash.com/photo-1578504654620-e66ad8bb1c25?w=800&q=80"},
   {cat:"coffee",label:"Café Table",t:"https://images.unsplash.com/photo-1589009649715-641c60b982ae?w=300&q=70",f:"https://images.unsplash.com/photo-1589009649715-641c60b982ae?w=800&q=80"},
-  {cat:"coffee",label:"Morning Mood",t:"https://images.unsplash.com/photo-1494314671902-399b18174975?w=300&q=70",f:"https://images.unsplash.com/photo-1494314671902-399b18174975?w=800&q=80"},
   {cat:"coffee",label:"Books & Tea",t:"https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=300&q=70",f:"https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=800&q=80"},
   {cat:"coffee",label:"Cozy Read",t:"https://images.unsplash.com/photo-1444157545135-c045be691b05?w=300&q=70",f:"https://images.unsplash.com/photo-1444157545135-c045be691b05?w=800&q=80"},
   {cat:"coffee",label:"Café Vibes",t:"https://images.unsplash.com/photo-1506619216599-9d16d0903dfd?w=300&q=70",f:"https://images.unsplash.com/photo-1506619216599-9d16d0903dfd?w=800&q=80"},
-  // Animals / People
-  {cat:"animals",label:"Screaming",t:"https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=300&q=70",f:"https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=800&q=80"},
+  // Animals
   {cat:"animals",label:"Pug Life",t:"https://images.unsplash.com/photo-1583321500900-82807e458f3c?w=300&q=70",f:"https://images.unsplash.com/photo-1583321500900-82807e458f3c?w=800&q=80"},
-  {cat:"animals",label:"Dog Sitting",t:"https://images.unsplash.com/photo-1582203775364-6ce6139cfecf?w=300&q=70",f:"https://images.unsplash.com/photo-1582203775364-6ce6139cfecf?w=800&q=80"},
   {cat:"animals",label:"Serious Dog",t:"https://images.unsplash.com/photo-1527856263669-12c3a0af2aa6?w=300&q=70",f:"https://images.unsplash.com/photo-1527856263669-12c3a0af2aa6?w=800&q=80"},
   {cat:"animals",label:"Cute Cat",t:"https://images.unsplash.com/photo-1495366691023-cc4eadcc2d7e?w=300&q=70",f:"https://images.unsplash.com/photo-1495366691023-cc4eadcc2d7e?w=800&q=80"},
   {cat:"animals",label:"Golden Dog",t:"https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?w=300&q=70",f:"https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?w=800&q=80"},
   {cat:"animals",label:"Shocked Dog",t:"https://images.unsplash.com/photo-1517849845537-4d257902454a?w=300&q=70",f:"https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&q=80"},
-  {cat:"animals",label:"Cat Stare",t:"https://images.unsplash.com/photo-1517423568366-8b83523034fd?w=300&q=70",f:"https://images.unsplash.com/photo-1517423568366-8b83523034fd?w=800&q=80"},
-  {cat:"animals",label:"Painting Dog",t:"https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=300&q=70",f:"https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&q=80"},
+  {cat:"animals",label:"Cat Judge",t:"https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=300&q=70",f:"https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=800&q=80"},
+  {cat:"animals",label:"Puppy Eyes",t:"https://images.unsplash.com/photo-1507146426996-ef05306b995a?w=300&q=70",f:"https://images.unsplash.com/photo-1507146426996-ef05306b995a?w=800&q=80"},
+  {cat:"animals",label:"Grumpy Cat",t:"https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=300&q=70",f:"https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=800&q=80"},
   {cat:"animals",label:"Fox",t:"https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=300&q=70",f:"https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=800&q=80"},
   {cat:"animals",label:"Dog Smile",t:"https://images.unsplash.com/photo-1510771463146-e89e6e86560e?w=300&q=70",f:"https://images.unsplash.com/photo-1510771463146-e89e6e86560e?w=800&q=80"},
-  {cat:"animals",label:"Puppy Eyes",t:"https://images.unsplash.com/photo-1507146426996-ef05306b995a?w=300&q=70",f:"https://images.unsplash.com/photo-1507146426996-ef05306b995a?w=800&q=80"},
-  {cat:"animals",label:"Cat Judge",t:"https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=300&q=70",f:"https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=800&q=80"},
-  {cat:"animals",label:"Cat Lying",t:"https://images.unsplash.com/photo-1518288774672-b94e808873ff?w=300&q=70",f:"https://images.unsplash.com/photo-1518288774672-b94e808873ff?w=800&q=80"},
-  {cat:"animals",label:"Dog Portrait",t:"https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?w=300&q=70",f:"https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?w=800&q=80"},
-  {cat:"animals",label:"Husky",t:"https://images.unsplash.com/photo-1519052537078-e6302a4968d4?w=300&q=70",f:"https://images.unsplash.com/photo-1519052537078-e6302a4968d4?w=800&q=80"},
-  {cat:"animals",label:"Mother Dog",t:"https://images.unsplash.com/photo-1516728918023-0fd81a3a149c?w=300&q=70",f:"https://images.unsplash.com/photo-1516728918023-0fd81a3a149c?w=800&q=80"},
-  {cat:"animals",label:"Group Travel",t:"https://images.unsplash.com/photo-1591194570502-c801051a2937?w=300&q=70",f:"https://images.unsplash.com/photo-1591194570502-c801051a2937?w=800&q=80"},
-  {cat:"animals",label:"Family",t:"https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=300&q=70",f:"https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&q=80"},
-  {cat:"animals",label:"Beach Group",t:"https://images.unsplash.com/photo-1516728778615-2d590ea1855e?w=300&q=70",f:"https://images.unsplash.com/photo-1516728778615-2d590ea1855e?w=800&q=80"},
-  {cat:"animals",label:"Dog Jump",t:"https://images.unsplash.com/photo-1521651201144-634f700b36ef?w=300&q=70",f:"https://images.unsplash.com/photo-1521651201144-634f700b36ef?w=800&q=80"},
-  {cat:"animals",label:"Grumpy Cat",t:"https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=300&q=70",f:"https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=800&q=80"},
   {cat:"animals",label:"Cat Portrait",t:"https://images.unsplash.com/photo-1632724064613-462a9b0cc2bc?w=300&q=70",f:"https://images.unsplash.com/photo-1632724064613-462a9b0cc2bc?w=800&q=80"},
-  {cat:"animals",label:"Tiger",t:"https://images.unsplash.com/photo-1539073117231-a9a7a4a46fe1?w=300&q=70",f:"https://images.unsplash.com/photo-1539073117231-a9a7a4a46fe1?w=800&q=80"}
+  {cat:"animals",label:"Husky",t:"https://images.unsplash.com/photo-1519052537078-e6302a4968d4?w=300&q=70",f:"https://images.unsplash.com/photo-1519052537078-e6302a4968d4?w=800&q=80"},
+  {cat:"animals",label:"Tiger",t:"https://images.unsplash.com/photo-1539073117231-a9a7a4a46fe1?w=300&q=70",f:"https://images.unsplash.com/photo-1539073117231-a9a7a4a46fe1?w=800&q=80"},
+  {cat:"animals",label:"Dog Portrait",t:"https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?w=300&q=70",f:"https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?w=800&q=80"},
+  {cat:"animals",label:"Painting Dog",t:"https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=300&q=70",f:"https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&q=80"},
+  {cat:"animals",label:"Family",t:"https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=300&q=70",f:"https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&q=80"},
+  {cat:"animals",label:"Beach Group",t:"https://images.unsplash.com/photo-1516728778615-2d590ea1855e?w=300&q=70",f:"https://images.unsplash.com/photo-1516728778615-2d590ea1855e?w=800&q=80"}
 ];
 
-/* ════════════════════════════
-   CANVAS
-════════════════════════════ */
+// Classic meme templates loaded from Imgflip API
+var CLASSIC_TEMPLATES = [];
+
+/* ════════════════════════════════════════
+   CANVAS SETUP
+════════════════════════════════════════ */
 var CV = document.getElementById("memeCanvas");
 var CX = CV.getContext("2d");
 var bgImg = null;
@@ -493,14 +492,14 @@ function sizeCanvas(){
 sizeCanvas();
 window.addEventListener("resize",function(){sizeCanvas();draw();updateCar();buildDots();});
 
-/* ════════════════════════════
+/* ════════════════════════════════════════
    STATE
-════════════════════════════ */
+════════════════════════════════════════ */
 var S={bold:true,outline:true,glow:false,capBg:false,upper:false};
 
-/* ════════════════════════════
-   QUOTES — populate immediately
-════════════════════════════ */
+/* ════════════════════════════════════════
+   QUOTES
+════════════════════════════════════════ */
 var qSel=document.getElementById("quoteSelect");
 var thSel=document.getElementById("themeSelect");
 
@@ -514,15 +513,17 @@ function fillQuotes(th){
   }
 }
 thSel.addEventListener("change",function(){fillQuotes(thSel.value);draw();});
-fillQuotes("funny"); // populate before first draw
+fillQuotes("funny");
 
-/* ════════════════════════════
-   DRAW — the fixed version
-════════════════════════════ */
+/* ════════════════════════════════════════
+   DRAW
+════════════════════════════════════════ */
 function draw(){
   var txt=document.getElementById("customQuote").value.trim();
-  if(!txt) txt=qSel.options[qSel.selectedIndex]?qSel.options[qSel.selectedIndex].text:"";
-  if(!txt) txt="Type your caption above!";
+  if(!txt){
+    var sel=qSel.options[qSel.selectedIndex];
+    txt=sel?sel.text:"Add your caption above!";
+  }
   if(S.upper) txt=txt.toUpperCase();
 
   var fs=parseInt(document.getElementById("fontSize").value)||40;
@@ -531,37 +532,31 @@ function draw(){
   var vOff=parseInt(document.getElementById("textPos").value)||0;
 
   CX.clearRect(0,0,CV.width,CV.height);
-
-  // Background color
   CX.fillStyle=document.getElementById("bgColor").value;
   CX.fillRect(0,0,CV.width,CV.height);
 
-  // Background image
   if(bgImg){
     try{
-      var ia=bgImg.width/bgImg.height;
+      var ia=bgImg.naturalWidth/bgImg.naturalHeight||1;
       var ca=CV.width/CV.height;
       var dw,dh,ox,oy;
       if(ia>ca){dh=CV.height;dw=dh*ia;ox=(CV.width-dw)/2;oy=0;}
       else{dw=CV.width;dh=dw/ia;ox=0;oy=(CV.height-dh)/2;}
       CX.drawImage(bgImg,ox,oy,dw,dh);
-    }catch(e){bgImg=null;}
+    }catch(e){}
   }
 
-  // Font
   var fontStr=fw+" "+fs+"px \""+fn+"\"";
   CX.font=fontStr;
   CX.textAlign="center";
   CX.textBaseline="middle";
 
-  // Wrap text
   var maxW=CV.width*0.88;
   var lh=fs*1.3;
-  var lines=wrapTxt(txt,maxW,fs,fn,fw);
+  var lines=wrapTxt(txt,maxW);
   var totH=lines.length*lh;
   var midY=(CV.height/2)+vOff;
 
-  // Caption background
   if(S.capBg){
     var mw=0;
     for(var i=0;i<lines.length;i++){var w=CX.measureText(lines[i]).width;if(w>mw)mw=w;}
@@ -569,11 +564,10 @@ function draw(){
     CX.save();
     CX.globalAlpha=parseInt(document.getElementById("capOpacity").value)/100;
     CX.fillStyle=document.getElementById("capBgColor").value;
-    CX.fillRect(CV.width/2-mw/2-pad, midY-totH/2-pad/2, mw+pad*2, totH+pad);
+    CX.fillRect(CV.width/2-mw/2-pad,midY-totH/2-pad/2,mw+pad*2,totH+pad);
     CX.restore();
   }
 
-  // Text
   CX.save();
   if(S.glow){CX.shadowBlur=24;CX.shadowColor=document.getElementById("textColor").value;}
   for(var j=0;j<lines.length;j++){
@@ -590,43 +584,38 @@ function draw(){
   CX.restore();
 }
 
-function wrapTxt(txt,maxW,fs,fn,fw){
-  // Re-measure with correct font
-  CX.font=fw+" "+fs+"px \""+fn+"\"";
+function wrapTxt(txt,maxW){
+  CX.font=(S.bold?"bold":"normal")+" "+(parseInt(document.getElementById("fontSize").value)||40)+"px \""+(document.getElementById("fontSelect").value||"Impact")+"\"";
   var words=txt.split(" ");
   var lines=[],cur=words[0]||"";
   for(var i=1;i<words.length;i++){
     var test=cur+" "+words[i];
-    if(CX.measureText(test).width<=maxW){cur=test;}
+    if(CX.measureText(test).width<=maxW)cur=test;
     else{lines.push(cur);cur=words[i];}
   }
   lines.push(cur);
   return lines;
 }
 
-/* ════════════════════════════
-   CONTROLS WIRING
-════════════════════════════ */
+/* ════════════════════════════════════════
+   CONTROLS
+════════════════════════════════════════ */
 document.getElementById("customQuote").addEventListener("input",draw);
 qSel.addEventListener("change",function(){document.getElementById("customQuote").value="";draw();});
 
 ["fontSelect","textColor","strokeColor","bgColor","capBgColor","capOpacity","fontSize","textPos"].forEach(function(id){
-  var el=document.getElementById(id);
-  if(!el)return;
+  var el=document.getElementById(id);if(!el)return;
   el.addEventListener("input",function(){
-    if(id==="fontSize") document.getElementById("fsVal").textContent=el.value;
-    if(id==="textPos")  document.getElementById("tpVal").textContent=el.value;
-    if(id==="capOpacity") document.getElementById("opVal").textContent=el.value;
+    if(id==="fontSize")document.getElementById("fsVal").textContent=el.value;
+    if(id==="textPos")document.getElementById("tpVal").textContent=el.value;
+    if(id==="capOpacity")document.getElementById("opVal").textContent=el.value;
     draw();
   });
 });
 
-function togBtn(btnId,key,cb){
-  document.getElementById(btnId).addEventListener("click",function(){
-    S[key]=!S[key];
-    this.classList.toggle("on",S[key]);
-    if(cb)cb(S[key]);
-    draw();
+function togBtn(id,key,cb){
+  document.getElementById(id).addEventListener("click",function(){
+    S[key]=!S[key];this.classList.toggle("on",S[key]);if(cb)cb(S[key]);draw();
   });
 }
 togBtn("boldBtn","bold");
@@ -638,30 +627,25 @@ togBtn("capBgBtn","capBg",function(on){
   document.getElementById("capOpWrap").style.display=on?"flex":"none";
 });
 
-// Upload image — use FileReader (no CORS issues)
 document.getElementById("imgUpload").addEventListener("change",function(e){
   var f=e.target.files[0];if(!f)return;
   var r=new FileReader();
   r.onload=function(ev){
     var img=new Image();
     img.onload=function(){bgImg=img;draw();};
-    img.onerror=function(){alert("Could not load image.");};
-    img.src=ev.target.result;
+    img.src=ev.target.result;  // data URL — no CORS issue
   };
   r.readAsDataURL(f);
 });
 
 document.getElementById("clearBtn").addEventListener("click",function(){
-  bgImg=null;
-  document.getElementById("imgUpload").value="";
-  draw();
+  bgImg=null;document.getElementById("imgUpload").value="";draw();
 });
 
-/* ════════════════════════════
-   DOWNLOAD & COPY
-════════════════════════════ */
+/* ════════════════════════════════════════
+   DOWNLOAD
+════════════════════════════════════════ */
 document.getElementById("dlBtn").addEventListener("click",function(){
-  // Re-draw to ensure clean render
   draw();
   setTimeout(function(){
     var a=document.createElement("a");
@@ -672,11 +656,14 @@ document.getElementById("dlBtn").addEventListener("click",function(){
   },150);
 });
 
+/* ════════════════════════════════════════
+   COPY
+════════════════════════════════════════ */
 document.getElementById("cpBtn").addEventListener("click",function(){
   var btn=this;
-  var isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
   draw();
   setTimeout(function(){
+    var isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
     var dataUrl=CV.toDataURL("image/png");
     if(isIOS){
       document.getElementById("ios-img").src=dataUrl;
@@ -688,69 +675,123 @@ document.getElementById("cpBtn").addEventListener("click",function(){
         return navigator.clipboard.write([new ClipboardItem({"image/png":blob})]);
       }).then(function(){
         btn.innerHTML='<i class="fas fa-check"></i> Copied!';
-        setTimeout(function(){btn.innerHTML='<i class="fas fa-copy"></i> Copy to Clipboard';},2500);
-      }).catch(function(){openInNew(dataUrl);});
-    }else{openInNew(dataUrl);}
+        setTimeout(function(){btn.innerHTML='<i class="fas fa-copy"></i> Copy';},2500);
+      }).catch(function(){openNew(dataUrl);});
+    }else{openNew(dataUrl);}
     if(typeof gtag==="function")gtag("event","meme_copy");
   },150);
 });
 
-function openInNew(dataUrl){
+/* ════════════════════════════════════════
+   SHARE — Web Share API (mobile + modern desktop)
+════════════════════════════════════════ */
+document.getElementById("shareBtn").addEventListener("click",function(){
+  draw();
+  setTimeout(function(){
+    CV.toBlob(function(blob){
+      var file=new File([blob],"meme.jpg",{type:"image/jpeg"});
+      // Check if Web Share API with files is supported
+      if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+        navigator.share({
+          title:"Check out my meme!",
+          text:"Made with EverydayToolsHQ Meme Generator",
+          files:[file]
+        }).then(function(){
+          if(typeof gtag==="function")gtag("event","meme_share",{method:"web_share_api"});
+        }).catch(function(err){
+          if(err.name!=="AbortError")fallbackShare();
+        });
+      } else if(navigator.share){
+        // Share API without files (some older mobile)
+        navigator.share({
+          title:"Check out my meme!",
+          text:"Made with EverydayToolsHQ Meme Generator 😂",
+          url:window.location.href
+        }).catch(function(){fallbackShare();});
+      } else {
+        fallbackShare();
+      }
+    },"image/jpeg",0.94);
+  },150);
+});
+
+function fallbackShare(){
+  // Open meme in new tab so user can long-press save/share on mobile
+  // or right-click save on desktop
+  draw();
+  var dataUrl=CV.toDataURL("image/jpeg",0.94);
   var w=window.open();
-  if(w){w.document.write('<img src="'+dataUrl+'" style="max-width:100%;display:block;margin:20px auto">');
-  w.document.write('<p style="text-align:center;font-family:sans-serif;color:#555">Right-click the image → Save or Copy</p>');}
+  if(w){
+    w.document.write('<html><head><title>Your Meme</title><style>body{margin:0;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-family:sans-serif}</style></head><body>');
+    w.document.write('<img src="'+dataUrl+'" style="max-width:95vw;max-height:85vh;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,.5)">');
+    w.document.write('<p style="color:#aaa;margin-top:16px;font-size:14px">📥 Right-click → Save Image As &nbsp;|&nbsp; 📱 Mobile: tap & hold → Save / Share</p>');
+    w.document.write('</body></html>');
+  }
 }
 
 document.getElementById("ios-close").addEventListener("click",function(){
   document.getElementById("ios-ov").style.display="none";
 });
 
-/* ════════════════════════════
-   CAROUSEL & TEMPLATES
-════════════════════════════ */
-var carSlide=0;
-var carItems=[];
+function openNew(dataUrl){
+  var w=window.open();
+  if(w){w.document.write('<img src="'+dataUrl+'" style="max-width:100%;display:block;margin:20px auto"><p style="text-align:center;font-family:sans-serif;color:#666">Right-click → Save Image As</p>');}
+}
+
+/* ════════════════════════════════════════
+   CAROUSEL ENGINE
+════════════════════════════════════════ */
+var carSlide=0,carItems=[];
 var track=document.getElementById("carTrack");
 var dotsEl=document.getElementById("carDots");
 var prevB=document.getElementById("carPrev");
 var nextB=document.getElementById("carNext");
+var currentCat="classic";
 
-function ipp(){
-  var w=window.innerWidth;
-  if(w<=480)return 2;if(w<=640)return 3;if(w<=800)return 4;return 5;
-}
-function thumbW(){
-  var el=track.querySelector(".thumb");
-  return el?(el.offsetWidth+10):140;
-}
+function ipp(){var w=window.innerWidth;if(w<=480)return 2;if(w<=640)return 3;if(w<=800)return 4;return 5;}
+function thumbW(){var el=track.querySelector(".thumb");return el?(el.offsetWidth+10):140;}
 
 function buildCar(cat){
+  currentCat=cat;
   carSlide=0;
-  carItems=(cat==="all")?TEMPLATES.slice():TEMPLATES.filter(function(t){return t.cat===cat;});
+  var list=[];
+  if(cat==="classic"){
+    list=CLASSIC_TEMPLATES.length?CLASSIC_TEMPLATES:[];
+  }else{
+    list=STATIC_TEMPLATES.filter(function(t){return t.cat===cat;});
+  }
+  carItems=list;
   track.innerHTML="";
+
+  if(!carItems.length){
+    if(cat==="classic"&&!CLASSIC_TEMPLATES.length){
+      // Still loading
+      track.innerHTML='<div style="padding:20px;color:#aaa;font-size:13px;white-space:nowrap">Loading classic memes…</div>';
+    }else{
+      track.innerHTML='<div style="padding:20px;color:#aaa;font-size:13px">No templates in this category.</div>';
+    }
+    dotsEl.innerHTML="";
+    return;
+  }
+
   carItems.forEach(function(img){
     var div=document.createElement("div");
-    div.className="thumb";
+    div.className="thumb thumb-loading";
     var im=document.createElement("img");
-    // Use eager loading so images actually appear
+    im.alt=img.label||img.name||"Template";
     im.loading="eager";
-    im.alt=img.label;
-    // Set crossOrigin BEFORE src
-    im.crossOrigin="anonymous";
-    im.src=img.t;
-    im.onerror=function(){
-      // fallback: remove crossOrigin and retry
-      im.removeAttribute("crossorigin");
-      im.src=img.t+"?"+(Date.now());
-    };
+    // No crossOrigin on static templates to avoid CORS tainting
+    im.onload=function(){div.classList.remove("thumb-loading");};
+    im.onerror=function(){div.style.display="none";};
+    im.src=img.t||img.url;
     var lbl=document.createElement("div");
     lbl.className="thumb-lbl";
-    lbl.textContent=img.label;
+    lbl.textContent=img.label||img.name||"";
     div.appendChild(im);div.appendChild(lbl);
     div.addEventListener("click",function(){
       track.querySelectorAll(".thumb").forEach(function(x){x.classList.remove("active");});
       div.classList.add("active");
-      applyTemplate(img.f,im);
+      loadFull(img);
     });
     track.appendChild(div);
   });
@@ -758,30 +799,32 @@ function buildCar(cat){
   updateCar();
 }
 
-function applyTemplate(fullSrc,thumbEl){
-  // Strategy 1: if thumb already loaded, use it directly to avoid CORS
-  if(thumbEl&&thumbEl.complete&&thumbEl.naturalWidth>0){
-    // Use a canvas to copy thumb pixels, then load full res
-    // Actually just load full URL directly via FileReader approach via fetch
-  }
-  // Load full res image
-  var img=new Image();
-  img.crossOrigin="anonymous";
-  img.onload=function(){bgImg=img;draw();};
-  img.onerror=function(){
-    // Try without crossOrigin
-    var img2=new Image();
-    img2.onload=function(){bgImg=img2;draw();};
-    img2.onerror=function(){
-      // Last resort: try to use thumb via canvas
-      if(thumbEl&&thumbEl.complete&&thumbEl.naturalWidth>0){
-        bgImg=thumbEl;draw();
-      }
-    };
-    img2.src=fullSrc;
-  };
-  img.src=fullSrc;
+/* Load the full-size version of a template into the canvas.
+   For Imgflip URLs we can't use crossOrigin (CORS not allowed),
+   so we use a fetch → blob → object URL approach so the canvas
+   doesn't get tainted. Falls back to direct load if fetch fails. */
+function loadFull(img){
+  var fullSrc=img.f||img.url;
+  // Try fetch → blob → object URL (avoids CORS taint)
+  fetch(fullSrc).then(function(resp){
+    return resp.blob();
+  }).then(function(blob){
+    var objUrl=URL.createObjectURL(blob);
+    var i=new Image();
+    i.onload=function(){bgImg=i;draw();};
+    i.onerror=function(){directLoad(fullSrc);};
+    i.src=objUrl;
+  }).catch(function(){
+    directLoad(fullSrc);
+  });
   if(typeof gtag==="function")gtag("event","meme_template");
+}
+
+function directLoad(src){
+  var i=new Image();
+  i.onload=function(){bgImg=i;draw();};
+  i.onerror=function(){alert("Could not load this template. Try uploading your own image.");};
+  i.src=src;
 }
 
 function buildDots(){
@@ -796,6 +839,7 @@ function buildDots(){
     })(i);
   }
 }
+
 function updateCar(){
   var tw=thumbW(),s=ipp();
   var max=Math.max(0,Math.ceil(carItems.length/s)-1);
@@ -805,10 +849,10 @@ function updateCar(){
   prevB.disabled=(carSlide===0);
   nextB.disabled=(carSlide>=max);
 }
+
 prevB.addEventListener("click",function(){if(carSlide>0){carSlide--;updateCar();}});
 nextB.addEventListener("click",function(){var max=Math.max(0,Math.ceil(carItems.length/ipp())-1);if(carSlide<max){carSlide++;updateCar();}});
 
-// Tab buttons
 document.getElementById("tabRow").querySelectorAll(".tab").forEach(function(btn){
   btn.addEventListener("click",function(){
     document.querySelectorAll("#tabRow .tab").forEach(function(b){b.classList.remove("on");});
@@ -830,20 +874,61 @@ track.addEventListener("touchend",function(){
   updateCar();
 });
 
-// Mobile tap — prevent double zoom
+/* ════════════════════════════════════════
+   IMGFLIP API — load top 100 classic memes (no key needed)
+   https://api.imgflip.com/get_memes
+   Returns public domain / user-uploaded meme templates.
+   Imgflip allows embedding their template images freely.
+════════════════════════════════════════ */
+function loadImgflip(){
+  var status=document.getElementById("apiStatus");
+  status.className="api-status loading";
+  status.textContent="Loading classic meme templates…";
+
+  fetch("https://api.imgflip.com/get_memes")
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(!data.success||!data.data||!data.data.memes){throw new Error("Bad response");}
+      var memes=data.data.memes;
+      CLASSIC_TEMPLATES=memes.map(function(m){
+        return {
+          label:m.name,
+          name:m.name,
+          t:m.url,   // thumb = same url (they're small enough)
+          f:m.url,   // full = same url
+          url:m.url
+        };
+      });
+      status.className="api-status ok";
+      status.textContent="✓ "+CLASSIC_TEMPLATES.length+" classic meme templates loaded!";
+      // Refresh if currently on classic tab
+      if(currentCat==="classic")buildCar("classic");
+      setTimeout(function(){status.textContent="";},3000);
+    })
+    .catch(function(){
+      status.className="api-status";
+      status.textContent="Could not load classic templates — using local templates instead.";
+      // Fallback: show animals as the first tab
+      if(currentCat==="classic"){buildCar("animals");}
+      setTimeout(function(){status.textContent="";},4000);
+    });
+}
+
+/* ════════════════════════════════════════
+   MOBILE BUTTON — prevent double-tap zoom
+════════════════════════════════════════ */
 document.querySelectorAll("button").forEach(function(b){
   b.addEventListener("touchstart",function(e){e.preventDefault();b.click();},{passive:false});
 });
 
-/* ════════════════════════════
-   INIT — order matters
-════════════════════════════ */
-// 1. Size canvas
+/* ════════════════════════════════════════
+   INIT
+════════════════════════════════════════ */
 sizeCanvas();
-// 2. Build carousel (eager loading)
-buildCar("all");
-// 3. Draw initial canvas with default text
-draw();
+fillQuotes("funny");
+buildCar("classic");   // show carousel immediately (will show loading state)
+loadImgflip();         // fetch from API in background
+draw();                // initial canvas render
 </script>
 </body>
 </html>
