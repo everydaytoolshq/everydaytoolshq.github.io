@@ -11,329 +11,193 @@ gtag('config', 'G-CPZVP7JQ5C');
 </script>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Free Meme Generator — Make & Share Memes Instantly</title>
-<meta name="description" content="The free online meme maker. Pick a background, type your caption, download or copy. Funny, relatable, romantic, motivational and 15+ more themes. No sign-up needed." />
-<meta name="robots" content="index,follow,max-image-preview:large" />
+<title>Free Meme Generator — Make &amp; Share Memes Instantly</title>
+<meta name="description" content="The free online meme maker. Pick a background, type your caption, download or copy. Funny, relatable, romantic, motivational and 15+ more themes. No sign-up." />
+<meta name="robots" content="index,follow" />
 <link rel="canonical" href="https://everydaytoolshq.github.io/meme-generator/" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://everydaytoolshq.github.io/meme-generator/" />
-<meta property="og:title" content="Free Meme Generator — Make & Share Memes Instantly" />
-<meta property="og:description" content="Pick a template, write your caption, download in one click." />
+<meta property="og:title" content="Free Meme Generator — Make &amp; Share Memes Instantly" />
 <meta property="og:image" content="https://everydaytoolshq.github.io/memegeneratorhero.jpg" />
-<meta property="og:site_name" content="EverydayToolsHQ" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:image" content="https://everydaytoolshq.github.io/memegeneratorhero.jpg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=DM+Sans:wght@400;600;700&display=swap');
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: "DM Sans", system-ui, sans-serif;
-  background: #f7f8fc;
-  color: #1a1a2e;
-  -webkit-text-size-adjust: 100%;
-  touch-action: manipulation;
-}
-a { color: inherit; text-decoration: none; }
-img { display: block; max-width: 100%; }
-.wrap { max-width: 900px; margin: 0 auto; padding: 0 18px; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"DM Sans",system-ui,sans-serif;background:#f4f6fb;color:#1a1a2e;-webkit-text-size-adjust:100%;touch-action:manipulation}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px}
 
 /* BREADCRUMB */
-.breadcrumb { padding: 18px 0 0; font-size: 12px; font-weight: 600; color: #888; }
-.breadcrumb a { color: #888; }
-.breadcrumb a:hover { text-decoration: underline; }
+.bc{padding:16px 0 0;font-size:12px;font-weight:600;color:#999}
+.bc a{color:#999}.bc a:hover{text-decoration:underline}
 
-/* HERO — fully visible, correct 1360×768 ratio */
-.heroImg {
-  margin: 14px 0 0;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 8px 30px rgba(0,0,0,.13);
-}
-.heroImg img {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1360 / 768;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-}
+/* HERO — shows full 1360×768 image, never crops height */
+.hero{margin:12px 0 0;border-radius:18px;overflow:hidden;box-shadow:0 6px 28px rgba(0,0,0,.12)}
+.hero img{width:100%;height:auto;display:block}
 
 /* HEADER */
-.pageHeader { text-align: center; padding: 30px 0 8px; }
-.eyebrow {
-  display: inline-block; font-size: 11px; font-weight: 700;
-  letter-spacing: .14em; text-transform: uppercase;
-  color: #e8375a; background: rgba(232,55,90,.08);
-  border: 1px solid rgba(232,55,90,.22);
-  padding: 6px 16px; border-radius: 999px; margin-bottom: 14px;
-}
-h1 {
-  font-family: "Fraunces", Georgia, serif;
-  font-size: clamp(32px, 7vw, 64px); font-weight: 900;
-  line-height: 1; letter-spacing: -.02em; margin: 0 0 14px; color: #111;
-}
-h1 span { color: #e8375a; font-style: italic; }
-.intro { font-size: 15px; line-height: 1.8; color: #666; max-width: 560px; margin: 0 auto 26px; }
+.hdr{text-align:center;padding:28px 0 6px}
+.eyebrow{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#e8375a;background:rgba(232,55,90,.09);border:1px solid rgba(232,55,90,.25);padding:6px 16px;border-radius:999px;margin-bottom:12px}
+.hdr h1{font-family:"Fraunces",Georgia,serif;font-size:clamp(30px,7vw,62px);font-weight:900;line-height:.98;letter-spacing:-.02em;margin:0 0 12px;color:#111}
+.hdr h1 em{color:#e8375a;font-style:italic}
+.hdr p{font-size:15px;line-height:1.75;color:#666;max-width:540px;margin:0 auto 22px}
 
-/* CARDS */
-.card {
-  background: #fff; border: 1px solid #e5e7f0; border-radius: 20px;
-  box-shadow: 0 4px 24px rgba(0,0,0,.07); padding: 24px; margin: 0 0 22px;
-}
-.cardTitle {
-  font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-  color: #999; margin: 0 0 18px; display: flex; align-items: center; gap: 8px;
-}
-.cardTitle i { color: #e8375a; }
-.cardTitle::after { content: ""; flex: 1; height: 1px; background: #eee; }
+/* CARD */
+.card{background:#fff;border:1px solid #e2e5f0;border-radius:18px;box-shadow:0 3px 20px rgba(0,0,0,.06);padding:22px;margin:0 0 20px}
+.card-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#aaa;margin:0 0 16px;display:flex;align-items:center;gap:8px}
+.card-title i{color:#e8375a}
+.card-title::after{content:"";flex:1;height:1px;background:#eee}
 
-/* FORM GRIDS */
-.fg2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-.fg3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-.fg1 { margin-bottom: 14px; }
-.field { display: flex; flex-direction: column; gap: 5px; }
-.field > label { font-size: 11px; font-weight: 700; color: #888; letter-spacing: .07em; text-transform: uppercase; }
+/* FORM */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+.g1{margin-bottom:12px}
+.fld{display:flex;flex-direction:column;gap:4px}
+.fld>label,.lbl{font-size:11px;font-weight:700;color:#999;letter-spacing:.07em;text-transform:uppercase}
 
-select, input[type="text"], input[type="file"] {
-  height: 44px; border: 1.5px solid #e0e3ef; border-radius: 10px;
-  padding: 0 12px; font-size: 14px; font-family: inherit;
-  color: #222; background: #f9faff; outline: none; width: 100%;
-  transition: border-color .15s, box-shadow .15s;
-  -webkit-appearance: none; appearance: none;
+select,input[type=text],input[type=file]{
+  height:44px;border:1.5px solid #dde0ef;border-radius:10px;padding:0 12px;
+  font-size:14px;font-family:inherit;color:#222;background:#f9faff;outline:none;
+  width:100%;-webkit-appearance:none;appearance:none;transition:border-color .15s,box-shadow .15s
 }
-select:focus, input[type="text"]:focus {
-  border-color: #e8375a; box-shadow: 0 0 0 3px rgba(232,55,90,.12);
-}
-input[type="file"] { padding: 10px 12px; font-size: 13px; cursor: pointer; }
+select:focus,input[type=text]:focus{border-color:#e8375a;box-shadow:0 0 0 3px rgba(232,55,90,.11)}
+input[type=file]{padding:10px 12px;font-size:13px;cursor:pointer}
 
-/* SLIDERS */
-.sliderField { display: flex; flex-direction: column; gap: 5px; }
-.sliderField > label {
-  font-size: 11px; font-weight: 700; color: #888;
-  letter-spacing: .07em; text-transform: uppercase;
-  display: flex; justify-content: space-between;
-}
-.sliderField > label span { color: #333; font-weight: 700; }
-input[type="range"] {
-  -webkit-appearance: none; appearance: none;
-  width: 100%; height: 5px;
-  background: #e0e3ef; border-radius: 999px; outline: none; cursor: pointer;
-}
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 18px; height: 18px;
-  border-radius: 50%; background: #e8375a; cursor: pointer;
-  box-shadow: 0 2px 6px rgba(232,55,90,.35);
-}
-input[type="range"]::-moz-range-thumb {
-  width: 18px; height: 18px; border-radius: 50%;
-  background: #e8375a; cursor: pointer; border: none;
-}
+/* RANGE */
+.rng-fld{display:flex;flex-direction:column;gap:4px}
+.rng-fld>label{font-size:11px;font-weight:700;color:#999;letter-spacing:.07em;text-transform:uppercase;display:flex;justify-content:space-between}
+.rng-fld>label span{color:#333;font-weight:700}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;background:#dde0ef;border-radius:999px;outline:none;cursor:pointer;margin-top:4px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#e8375a;cursor:pointer;box-shadow:0 2px 6px rgba(232,55,90,.35)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#e8375a;cursor:pointer;border:none}
 
 /* COLORS */
-.colorRow { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 14px; }
-.colorField { display: flex; flex-direction: column; gap: 4px; align-items: center; }
-.colorField label { font-size: 10px; font-weight: 700; color: #888; letter-spacing: .06em; text-transform: uppercase; }
-input[type="color"] {
-  width: 50px; height: 42px; border: 1.5px solid #e0e3ef; border-radius: 10px;
-  background: #f9faff; cursor: pointer; padding: 4px; -webkit-appearance: none;
-}
-input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-input[type="color"]::-webkit-color-swatch { border-radius: 6px; border: none; }
+.clr-row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:12px}
+.clr-fld{display:flex;flex-direction:column;gap:4px;align-items:center}
+.clr-fld label{font-size:10px;font-weight:700;color:#999;letter-spacing:.06em;text-transform:uppercase}
+input[type=color]{width:50px;height:42px;border:1.5px solid #dde0ef;border-radius:10px;background:#f9faff;cursor:pointer;padding:4px;-webkit-appearance:none}
+input[type=color]::-webkit-color-swatch-wrapper{padding:0}
+input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
 
-/* TOGGLE BUTTONS */
-.toggleRow { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-.tBtn {
-  display: flex; align-items: center; gap: 6px; padding: 9px 14px;
-  border-radius: 10px; border: 1.5px solid #e0e3ef; background: #f9faff;
-  color: #666; font-size: 13px; font-weight: 600; cursor: pointer;
-  transition: all .15s; min-height: 40px; font-family: inherit;
-}
-.tBtn:hover { border-color: #e8375a; color: #333; }
-.tBtn.on { background: rgba(232,55,90,.08); border-color: #e8375a; color: #e8375a; }
-.tBtn i { font-size: 13px; }
+/* TOGGLE BTNS */
+.tog-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.tbtn{display:flex;align-items:center;gap:6px;padding:8px 13px;border-radius:9px;border:1.5px solid #dde0ef;background:#f9faff;color:#777;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;min-height:40px;font-family:inherit}
+.tbtn:hover{border-color:#e8375a;color:#333}
+.tbtn.on{background:rgba(232,55,90,.09);border-color:#e8375a;color:#e8375a}
 
-/* CANVAS */
-.canvasArea { text-align: center; margin: 0 0 22px; }
-#memeCanvas {
-  border: 2px solid #e0e3ef; border-radius: 14px; max-width: 100%;
-  display: block; margin: 0 auto 16px; background: #000;
-  box-shadow: 0 8px 32px rgba(0,0,0,.15);
-}
-.actionRow { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-.btnGreen {
-  display: flex; align-items: center; gap: 8px; padding: 13px 28px;
-  border-radius: 12px; border: none; background: #27ae60; color: #fff;
-  font-size: 17px; font-family: "Fraunces", serif; font-weight: 700;
-  cursor: pointer; box-shadow: 0 6px 20px rgba(39,174,96,.30);
-  transition: transform .12s, box-shadow .12s; min-height: 50px;
-}
-.btnGreen:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(39,174,96,.38); }
-.btnBlue {
-  display: flex; align-items: center; gap: 8px; padding: 13px 28px;
-  border-radius: 12px; border: none; background: #0088ff; color: #fff;
-  font-size: 17px; font-family: "Fraunces", serif; font-weight: 700;
-  cursor: pointer; box-shadow: 0 6px 20px rgba(0,136,255,.28);
-  transition: transform .12s, box-shadow .12s; min-height: 50px;
-}
-.btnBlue:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,136,255,.36); }
+/* CANVAS AREA */
+.canvas-area{text-align:center;margin:0 0 20px}
+#memeCanvas{border:2px solid #dde0ef;border-radius:12px;max-width:100%;display:block;margin:0 auto 14px;box-shadow:0 6px 28px rgba(0,0,0,.13)}
+.act-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.btn-dl{display:flex;align-items:center;gap:8px;padding:12px 26px;border-radius:11px;border:none;background:#27ae60;color:#fff;font-size:16px;font-family:"Fraunces",serif;font-weight:700;cursor:pointer;box-shadow:0 5px 18px rgba(39,174,96,.28);transition:transform .12s,box-shadow .12s;min-height:48px}
+.btn-dl:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(39,174,96,.36)}
+.btn-cp{display:flex;align-items:center;gap:8px;padding:12px 26px;border-radius:11px;border:none;background:#0088ff;color:#fff;font-size:16px;font-family:"Fraunces",serif;font-weight:700;cursor:pointer;box-shadow:0 5px 18px rgba(0,136,255,.26);transition:transform .12s,box-shadow .12s;min-height:48px}
+.btn-cp:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,136,255,.34)}
 
 /* TEMPLATES */
-.tabRow { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
-.tabBtn {
-  padding: 7px 14px; border-radius: 8px; border: 1.5px solid #e0e3ef;
-  background: #f9faff; color: #777; font-size: 12px; font-weight: 700;
-  cursor: pointer; transition: all .15s; font-family: inherit;
-}
-.tabBtn.active { background: #e8375a; border-color: #e8375a; color: #fff; }
-.tabBtn:hover:not(.active) { border-color: #e8375a; color: #e8375a; }
+.tab-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.tab{padding:7px 13px;border-radius:8px;border:1.5px solid #dde0ef;background:#f9faff;color:#777;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;font-family:inherit}
+.tab.on{background:#e8375a;border-color:#e8375a;color:#fff}
+.tab:hover:not(.on){border-color:#e8375a;color:#e8375a}
 
-.carouselWrap { position: relative; overflow: hidden; padding: 0 44px; }
-.tGrid {
-  display: flex; transition: transform .3s ease-out;
-  will-change: transform; user-select: none; gap: 10px; padding: 4px 0;
-}
-.tItem {
-  flex-shrink: 0; width: 130px; height: 100px; border-radius: 10px;
-  overflow: hidden; border: 2.5px solid transparent; cursor: pointer;
-  transition: all .2s; position: relative;
-}
-.tItem:hover { border-color: #e8375a; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(232,55,90,.25); }
-.tItem.sel { border-color: #e8375a; }
-.tItem img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.tLbl {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  background: rgba(0,0,0,.68); font-size: 10px; font-weight: 700;
-  color: #fff; padding: 4px 6px; text-align: center;
-  opacity: 0; transition: opacity .2s;
-}
-.tItem:hover .tLbl { opacity: 1; }
-.cBtn {
-  position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
-  width: 38px; height: 38px; border-radius: 10px; border: 1.5px solid #e0e3ef;
-  background: #fff; color: #333; font-size: 15px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all .15s; box-shadow: 0 2px 8px rgba(0,0,0,.10); font-family: inherit;
-}
-.cBtn:hover { background: #e8375a; border-color: #e8375a; color: #fff; }
-.cBtn.prev { left: 0; }
-.cBtn.next { right: 0; }
-.cDots { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
-.dot { width: 8px; height: 8px; border-radius: 50%; background: #ddd; cursor: pointer; transition: all .2s; }
-.dot.active { background: #e8375a; transform: scale(1.3); }
+/* CAROUSEL */
+.car-outer{position:relative;overflow:hidden;padding:0 42px}
+.car-track{display:flex;gap:10px;padding:4px 0;transition:transform .3s ease;will-change:transform;user-select:none}
 
-/* BANNER — correct 900×515 ratio */
-.bannerCard {
-  background: #fff; border: 1px solid #e5e7f0; border-radius: 20px;
-  overflow: hidden; display: grid; grid-template-columns: 280px 1fr;
-  box-shadow: 0 4px 24px rgba(0,0,0,.07); margin: 0 0 22px;
-  transition: transform .14s, box-shadow .14s;
-}
-.bannerCard:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(0,0,0,.12); }
-.bannerImg {
-  width: 100%; height: 100%; min-height: 160px;
-  object-fit: cover; object-position: center; display: block;
-}
-.bannerBody { padding: 20px 22px; display: flex; flex-direction: column; justify-content: center; gap: 10px; }
-.bannerEye { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #c8960a; }
-.bannerName { font-family: "Fraunces", serif; font-size: 20px; font-weight: 700; color: #111; line-height: 1.2; }
-.bannerDesc { font-size: 13px; color: #666; line-height: 1.6; }
-.bannerBtn {
-  display: inline-flex; align-items: center; gap: 6px; padding: 11px 20px;
-  border-radius: 10px; border: none; background: linear-gradient(135deg, #f5c518, #e6a800);
-  color: #1a0f00; font-size: 14px; font-weight: 800; cursor: pointer;
-  transition: transform .12s; align-self: flex-start; font-family: inherit;
-}
-.bannerBtn:hover { transform: translateY(-1px); }
-.bannerDisclosure { font-size: 11px; color: #aaa; line-height: 1.5; }
+/* Each thumb — fixed size, never hidden */
+.thumb{flex:0 0 130px;height:100px;border-radius:10px;overflow:hidden;border:2.5px solid transparent;cursor:pointer;position:relative;transition:border-color .18s,transform .18s,box-shadow .18s;background:#e2e5f0}
+.thumb:hover{border-color:#e8375a;transform:translateY(-3px);box-shadow:0 8px 20px rgba(232,55,90,.22)}
+.thumb.active{border-color:#e8375a;box-shadow:0 0 0 2px rgba(232,55,90,.25)}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb-lbl{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.65);font-size:10px;font-weight:700;color:#fff;padding:4px 5px;text-align:center;opacity:0;transition:opacity .18s}
+.thumb:hover .thumb-lbl{opacity:1}
+
+.car-btn{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:36px;height:36px;border-radius:9px;border:1.5px solid #dde0ef;background:#fff;color:#333;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;box-shadow:0 2px 8px rgba(0,0,0,.09);font-family:inherit}
+.car-btn:hover{background:#e8375a;border-color:#e8375a;color:#fff}
+.car-btn:disabled{opacity:.35;cursor:default}
+.car-btn.p{left:0}.car-btn.n{right:0}
+.dots{display:flex;justify-content:center;gap:6px;margin-top:12px}
+.dot{width:8px;height:8px;border-radius:50%;background:#ddd;cursor:pointer;transition:all .2s}
+.dot.on{background:#e8375a;transform:scale(1.3)}
+
+/* BANNER — 900×515 ratio, fits width perfectly */
+.banner{background:#fff;border:1px solid #e2e5f0;border-radius:18px;overflow:hidden;box-shadow:0 3px 20px rgba(0,0,0,.06);margin:0 0 20px;display:flex;flex-direction:column;transition:box-shadow .15s,transform .15s}
+.banner:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,.11)}
+.banner-img-wrap{width:100%;aspect-ratio:900/515;overflow:hidden}
+.banner-img-wrap img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.banner-body{padding:18px 20px;display:flex;flex-direction:column;gap:8px}
+.banner-eye{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#b8860b}
+.banner-name{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:#111;line-height:1.2}
+.banner-desc{font-size:13px;color:#666;line-height:1.6;margin:0}
+.banner-btn{display:inline-flex;align-items:center;gap:6px;padding:11px 20px;border-radius:10px;border:none;background:linear-gradient(135deg,#f5c518,#e6a800);color:#1a0f00;font-size:14px;font-weight:800;cursor:pointer;transition:transform .12s;align-self:flex-start;font-family:inherit}
+.banner-btn:hover{transform:translateY(-1px)}
+.banner-disc{font-size:11px;color:#bbb;line-height:1.5}
 
 /* IOS OVERLAY */
-#iosCopyContainer {
-  display: none; position: fixed; inset: 0; background: rgba(0,0,0,.92);
-  z-index: 9999; align-items: center; justify-content: center;
-  flex-direction: column; gap: 16px;
-}
-#iosCopyContainer p { font-size: 16px; color: #fff; text-align: center; padding: 0 20px; }
-#iosCopyImage { max-width: 90vw; border-radius: 12px; border: 2px solid #444; }
-#iosCopyClose {
-  background: #333; color: #fff; border: 1px solid #555;
-  padding: 10px 22px; border-radius: 10px; cursor: pointer;
-  font-size: 14px; font-weight: 700; font-family: inherit;
-}
+#ios-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+#ios-ov p{font-size:16px;color:#fff;text-align:center;padding:0 20px}
+#ios-img{max-width:90vw;border-radius:12px;border:2px solid #444}
+#ios-close{background:#333;color:#fff;border:1px solid #555;padding:10px 22px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:700;font-family:inherit}
 
 /* TIPS */
-.infoCard {
-  background: #fff; border: 1px solid #e5e7f0; border-radius: 20px;
-  padding: 24px; margin: 0 0 22px;
-}
-.infoCard h2 { font-family: "Fraunces", serif; font-size: 22px; font-weight: 700; color: #111; margin: 0 0 16px; }
-.tipGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.tipCard {
-  background: #f9faff; border: 1px solid #e5e7f0; border-radius: 12px;
-  padding: 14px; display: flex; gap: 10px; align-items: flex-start;
-}
-.tipIcon { font-size: 20px; line-height: 1; flex-shrink: 0; }
-.tipTitle { font-size: 13px; font-weight: 700; color: #222; margin-bottom: 3px; }
-.tipDesc { font-size: 12px; color: #777; line-height: 1.6; }
+.tips{background:#fff;border:1px solid #e2e5f0;border-radius:18px;padding:22px;margin:0 0 20px}
+.tips h2{font-family:"Fraunces",serif;font-size:21px;font-weight:700;color:#111;margin:0 0 14px}
+.tip-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tip{background:#f9faff;border:1px solid #e2e5f0;border-radius:11px;padding:13px;display:flex;gap:10px}
+.tip-ico{font-size:20px;line-height:1;flex-shrink:0}
+.tip-t{font-size:13px;font-weight:700;color:#222;margin-bottom:3px}
+.tip-d{font-size:12px;color:#777;line-height:1.6}
 
 /* FOOTER */
-.siteFooter {
-  margin-top: 60px; padding: 40px 0 30px;
-  border-top: 1px solid #ddd; text-align: center;
-  font-size: 14px; background: #f9fafb;
-}
-.footerInner { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-.footerBrand { font-family: "Fraunces", serif; font-weight: 700; margin-bottom: 12px; font-size: 16px; color: #1e140a; }
-.footerLinks { margin-bottom: 12px; }
-.footerLinks a { margin: 0 10px; color: #374151; text-decoration: none; font-weight: 600; }
-.footerLinks a:hover { text-decoration: underline; }
-.footerLegal { margin-bottom: 16px; }
-.footerLegal a { color: #374151; text-decoration: none; }
-.footerLegal a:hover { text-decoration: underline; }
-.footerPowered { color: #6b7280; }
-.footerPowered a { color: #2563eb; font-weight: 700; text-decoration: none; }
+.footer{margin-top:56px;padding:38px 0 28px;border-top:1px solid #ddd;text-align:center;font-size:14px;background:#f9fafb}
+.f-inner{max-width:1200px;margin:0 auto;padding:0 20px}
+.f-brand{font-family:"Fraunces",serif;font-weight:700;font-size:16px;color:#1e140a;margin-bottom:10px}
+.f-links{margin-bottom:10px}
+.f-links a{margin:0 10px;color:#374151;font-weight:600}
+.f-links a:hover{text-decoration:underline}
+.f-legal{margin-bottom:14px}
+.f-legal a{color:#374151}.f-legal a:hover{text-decoration:underline}
+.f-pow{color:#6b7280}
+.f-pow a{color:#2563eb;font-weight:700}
 
 /* RESPONSIVE */
-@media (max-width: 680px) {
-  .fg2, .fg3 { grid-template-columns: 1fr; }
-  .bannerCard { grid-template-columns: 1fr; }
-  .bannerImg { height: clamp(180px, 50vw, 260px); }
-  .bannerBtn { align-self: stretch; justify-content: center; }
-  .tipGrid { grid-template-columns: 1fr; }
-  .tItem { width: 100px; height: 80px; }
-  .carouselWrap { padding: 0 40px; }
+@media(max-width:680px){
+  .g2,.g3{grid-template-columns:1fr}
+  .tip-grid{grid-template-columns:1fr}
+  .thumb{flex:0 0 100px;height:80px}
+  .car-outer{padding:0 38px}
 }
-@media (max-width: 400px) { .tItem { width: 80px; height: 65px; } }
+@media(max-width:400px){.thumb{flex:0 0 80px;height:65px}.car-outer{padding:0 36px}}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-<nav class="breadcrumb"><a href="https://everydaytoolshq.github.io/">Home</a> › Meme Generator</nav>
+<nav class="bc"><a href="https://everydaytoolshq.github.io/">Home</a> › Meme Generator</nav>
 
-<!-- HERO — fully visible at 1360×768 ratio -->
-<div class="heroImg">
+<!-- HERO: width=100%, height=auto so nothing is cropped -->
+<div class="hero">
   <img src="https://everydaytoolshq.github.io/memegeneratorhero.jpg"
-    alt="Free Meme Generator — make and share memes instantly"
-    width="1360" height="768" loading="eager" fetchpriority="high" />
+       alt="Free Meme Generator — make and share memes instantly"
+       width="1360" height="768" fetchpriority="high" />
 </div>
 
-<header class="pageHeader">
+<div class="hdr">
   <span class="eyebrow">😂 Free · No Sign-Up · Instant Download</span>
-  <h1>Make a <span>Meme</span><br>in Seconds</h1>
-  <p class="intro">Pick a template, write your caption, download or copy. Funny, relatable, romantic, sarcastic and 12 more themes — no sign-up ever.</p>
-</header>
+  <h1>Make a <em>Meme</em><br>in Seconds</h1>
+  <p>Pick a template, write your caption, download or copy. Funny, relatable, romantic, sarcastic and 12 more themes — no account ever.</p>
+</div>
 
-<!-- ══ BUILDER ═══════════════════════════════════════════════ -->
+<!-- ═══════════ BUILDER ═══════════ -->
 <div class="card">
-  <div class="cardTitle"><i class="fas fa-sliders-h"></i> Meme Controls</div>
+  <div class="card-title"><i class="fas fa-sliders-h"></i> Meme Controls</div>
 
-  <div class="fg2">
-    <div class="field">
+  <div class="g2">
+    <div class="fld">
       <label>Theme / Mood</label>
       <select id="themeSelect">
         <option value="funny">😂 Funny</option>
@@ -354,21 +218,21 @@ input[type="color"]::-webkit-color-swatch { border-radius: 6px; border: none; }
         <option value="redemption">🔥 Comeback</option>
       </select>
     </div>
-    <div class="field">
+    <div class="fld">
       <label>Caption Starter</label>
       <select id="quoteSelect"></select>
     </div>
   </div>
 
-  <div class="fg1">
-    <div class="field">
+  <div class="g1">
+    <div class="fld">
       <label>Your Custom Caption (overrides starter above)</label>
       <input type="text" id="customQuote" placeholder="Type your own caption here…" />
     </div>
   </div>
 
-  <div class="fg3">
-    <div class="field">
+  <div class="g3">
+    <div class="fld">
       <label>Font</label>
       <select id="fontSelect">
         <option value="Impact">Impact (Classic Meme)</option>
@@ -379,831 +243,607 @@ input[type="color"]::-webkit-color-swatch { border-radius: 6px; border: none; }
         <option value="Comic Sans MS">Comic Sans 😂</option>
       </select>
     </div>
-    <div class="sliderField">
-      <label>Font Size <span id="fontSizeVal">40</span>px</label>
+    <div class="rng-fld">
+      <label>Font Size <span id="fsVal">40</span>px</label>
       <input type="range" id="fontSize" min="16" max="80" value="40" />
     </div>
-    <div class="sliderField">
-      <label>Text Position <span id="textPosVal">0</span></label>
-      <input type="range" id="textPosition" min="-160" max="160" value="0" />
+    <div class="rng-fld">
+      <label>Text Position <span id="tpVal">0</span></label>
+      <input type="range" id="textPos" min="-160" max="160" value="0" />
     </div>
   </div>
 
-  <div style="margin-bottom:14px;">
-    <div class="colorRow">
-      <div class="colorField"><label>Text</label><input type="color" id="textColor" value="#ffffff" /></div>
-      <div class="colorField"><label>Outline</label><input type="color" id="strokeColor" value="#000000" /></div>
-      <div class="colorField"><label>BG Fill</label><input type="color" id="bgColor" value="#000000" /></div>
-      <div class="colorField" id="captBgColorWrap" style="display:none;"><label>Caption BG</label><input type="color" id="textBgColor" value="#000000" /></div>
-    </div>
-    <div class="sliderField" id="captBgOpacWrap" style="display:none;max-width:260px;margin-top:10px;">
-      <label>Caption BG Opacity <span id="bgOpacVal">70</span>%</label>
-      <input type="range" id="textBgOpacity" min="10" max="95" value="70" />
+  <div class="clr-row">
+    <div class="clr-fld"><label>Text</label><input type="color" id="textColor" value="#ffffff" /></div>
+    <div class="clr-fld"><label>Outline</label><input type="color" id="strokeColor" value="#000000" /></div>
+    <div class="clr-fld"><label>BG</label><input type="color" id="bgColor" value="#000000" /></div>
+    <div class="clr-fld" id="capBgClrWrap" style="display:none"><label>Cap BG</label><input type="color" id="capBgColor" value="#000000" /></div>
+    <div class="rng-fld" id="capOpWrap" style="display:none;min-width:160px">
+      <label>Cap BG Opacity <span id="opVal">70</span>%</label>
+      <input type="range" id="capOpacity" min="10" max="95" value="70" />
     </div>
   </div>
 
-  <div class="toggleRow">
-    <button class="tBtn on" id="boldToggle"><i class="fas fa-bold"></i> Bold</button>
-    <button class="tBtn on" id="outlineToggle"><i class="fas fa-border-style"></i> Outline</button>
-    <button class="tBtn" id="glowToggle"><i class="fas fa-lightbulb"></i> Glow</button>
-    <button class="tBtn" id="textBgToggle"><i class="fas fa-highlighter"></i> Caption BG</button>
-    <button class="tBtn" id="upperToggle"><i class="fas fa-text-height"></i> UPPERCASE</button>
+  <div class="tog-row">
+    <button class="tbtn on" id="boldBtn"><i class="fas fa-bold"></i> Bold</button>
+    <button class="tbtn on" id="outlineBtn"><i class="fas fa-border-style"></i> Outline</button>
+    <button class="tbtn" id="glowBtn"><i class="fas fa-lightbulb"></i> Glow</button>
+    <button class="tbtn" id="capBgBtn"><i class="fas fa-highlighter"></i> Caption BG</button>
+    <button class="tbtn" id="upperBtn"><i class="fas fa-text-height"></i> UPPERCASE</button>
   </div>
 
-  <div class="fg2" style="margin-bottom:0;">
-    <div class="field">
+  <div class="g2" style="margin-bottom:0">
+    <div class="fld">
       <label>Upload Your Own Image</label>
-      <input type="file" id="bgImageUpload" accept="image/*" />
+      <input type="file" id="imgUpload" accept="image/*" />
     </div>
-    <div class="field" style="justify-content:flex-end;">
-      <label style="visibility:hidden">.</label>
-      <button class="tBtn" id="clearBgBtn" style="height:44px;border-radius:10px;justify-content:center;"><i class="fas fa-trash"></i> Clear Image</button>
+    <div class="fld" style="justify-content:flex-end">
+      <label style="visibility:hidden">x</label>
+      <button class="tbtn" id="clearBtn" style="height:44px;border-radius:10px;justify-content:center"><i class="fas fa-trash"></i> Clear Image</button>
     </div>
   </div>
 </div>
 
 <!-- CANVAS -->
-<div class="canvasArea">
+<div class="canvas-area">
   <canvas id="memeCanvas"></canvas>
-  <div class="actionRow">
-    <button class="btnGreen" id="downloadBtn"><i class="fas fa-download"></i> Download Meme</button>
-    <button class="btnBlue" id="copyBtn"><i class="fas fa-copy"></i> Copy to Clipboard</button>
+  <div class="act-row">
+    <button class="btn-dl" id="dlBtn"><i class="fas fa-download"></i> Download Meme</button>
+    <button class="btn-cp" id="cpBtn"><i class="fas fa-copy"></i> Copy to Clipboard</button>
   </div>
 </div>
 
 <!-- IOS OVERLAY -->
-<div id="iosCopyContainer">
+<div id="ios-ov">
   <p>Tap and hold the image below, then choose "Save to Photos" or "Copy"</p>
-  <img id="iosCopyImage" alt="Your meme" />
-  <button id="iosCopyClose">✕ Close</button>
+  <img id="ios-img" alt="meme" />
+  <button id="ios-close">✕ Close</button>
 </div>
 
-<!-- ══ TEMPLATES ═════════════════════════════════════════════ -->
+<!-- ═══════════ TEMPLATES ═══════════ -->
 <div class="card">
-  <div class="cardTitle"><i class="fas fa-images"></i> Background Templates — click any to apply</div>
-  <div class="tabRow" id="tabRow">
-    <button class="tabBtn active" data-cat="all">All</button>
-    <button class="tabBtn" data-cat="energy">⚡ Action</button>
-    <button class="tabBtn" data-cat="nature">🌿 Nature</button>
-    <button class="tabBtn" data-cat="romantic">❤️ Romance</button>
-    <button class="tabBtn" data-cat="coffee">☕ Cozy</button>
-    <button class="tabBtn" data-cat="animals">🐶 Animals</button>
+  <div class="card-title"><i class="fas fa-images"></i> Background Templates — click any to use it</div>
+  <div class="tab-row" id="tabRow">
+    <button class="tab on" data-cat="all">All</button>
+    <button class="tab" data-cat="energy">⚡ Action</button>
+    <button class="tab" data-cat="nature">🌿 Nature</button>
+    <button class="tab" data-cat="romantic">❤️ Romance</button>
+    <button class="tab" data-cat="coffee">☕ Cozy</button>
+    <button class="tab" data-cat="animals">🐶 Animals</button>
   </div>
-  <div class="carouselWrap">
-    <button class="cBtn prev" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
-    <div class="tGrid" id="tGrid"></div>
-    <button class="cBtn next" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+  <div class="car-outer">
+    <button class="car-btn p" id="carPrev"><i class="fas fa-chevron-left"></i></button>
+    <div class="car-track" id="carTrack"></div>
+    <button class="car-btn n" id="carNext"><i class="fas fa-chevron-right"></i></button>
   </div>
-  <div class="cDots" id="cDots"></div>
+  <div class="dots" id="carDots"></div>
 </div>
 
-<!-- ══ BANNER ════════════════════════════════════════════════ -->
-<div class="bannerCard">
-  <img class="bannerImg"
-    src="https://everydaytoolshq.github.io/whatdoyoumeme.jpg"
-    alt="What Do You Meme? — the card game"
-    width="900" height="515" loading="lazy" />
-  <div class="bannerBody">
-    <div class="bannerEye">🏆 The Gold Standard for Physical Meme-Making</div>
-    <div class="bannerName">What Do You Meme?</div>
-    <p class="bannerDesc">The hilarious card game for meme lovers. Pick the funniest caption for the photo card — the crowd decides who wins. The ultimate party game for anyone who lives online.</p>
-    <a class="bannerBtn" href="https://amzn.to/4w9OANr" target="_blank" rel="sponsored noopener noreferrer">Shop on Amazon →</a>
-    <div class="bannerDisclosure">Affiliate Disclosure: we may earn a commission if you purchase through our links at no extra cost to you.</div>
+<!-- BANNER — full width, correct ratio 900×515 -->
+<div class="banner">
+  <div class="banner-img-wrap">
+    <img src="https://everydaytoolshq.github.io/whatdoyoumeme.jpg"
+         alt="What Do You Meme? card game" width="900" height="515" loading="lazy" />
+  </div>
+  <div class="banner-body">
+    <div class="banner-eye">🏆 Gold Standard for Physical Meme-Making</div>
+    <div class="banner-name">What Do You Meme?</div>
+    <p class="banner-desc">The hilarious party card game for meme lovers. Match the funniest caption to a photo card — the crowd decides the winner. A must-have for anyone who lives online.</p>
+    <a class="banner-btn" href="https://amzn.to/4w9OANr" target="_blank" rel="sponsored noopener noreferrer">Shop on Amazon →</a>
+    <div class="banner-disc">Affiliate Disclosure: we may earn a commission if you purchase through our links at no extra cost to you.</div>
   </div>
 </div>
 
 <!-- TIPS -->
-<div class="infoCard">
+<div class="tips">
   <h2>💡 Tips for a Great Meme</h2>
-  <div class="tipGrid">
-    <div class="tipCard"><div class="tipIcon">📏</div><div><div class="tipTitle">Keep it short</div><div class="tipDesc">Best captions are 3–10 words. If you need to explain it, it's not a meme.</div></div></div>
-    <div class="tipCard"><div class="tipIcon">🔡</div><div><div class="tipTitle">CAPS for impact</div><div class="tipDesc">Toggle UPPERCASE for the classic look. Impact + all caps = maximum meme energy.</div></div></div>
-    <div class="tipCard"><div class="tipIcon">🖼️</div><div><div class="tipTitle">Upload anything</div><div class="tipDesc">Upload a screenshot, selfie, or any photo from your camera roll as the background.</div></div></div>
-    <div class="tipCard"><div class="tipIcon">🎨</div><div><div class="tipTitle">Contrast is king</div><div class="tipDesc">White text + black outline reads on any background. Outline toggle is your best friend.</div></div></div>
-    <div class="tipCard"><div class="tipIcon">📱</div><div><div class="tipTitle">Send anywhere</div><div class="tipDesc">Download as JPG then share to WhatsApp, Instagram, X, Discord — anywhere.</div></div></div>
-    <div class="tipCard"><div class="tipIcon">📐</div><div><div class="tipTitle">Move your text</div><div class="tipDesc">Use the Text Position slider to push your caption to the top, middle, or bottom.</div></div></div>
+  <div class="tip-grid">
+    <div class="tip"><div class="tip-ico">📏</div><div><div class="tip-t">Keep it short</div><div class="tip-d">Best captions are 3–10 words. If you need to explain it, it's not a meme.</div></div></div>
+    <div class="tip"><div class="tip-ico">🔡</div><div><div class="tip-t">CAPS for impact</div><div class="tip-d">Toggle UPPERCASE for the classic look. Impact + all caps = maximum meme energy.</div></div></div>
+    <div class="tip"><div class="tip-ico">🖼️</div><div><div class="tip-t">Upload anything</div><div class="tip-d">Upload a screenshot, selfie, or any photo from your camera roll as background.</div></div></div>
+    <div class="tip"><div class="tip-ico">🎨</div><div><div class="tip-t">Contrast is king</div><div class="tip-d">White text + black outline reads on any background. The Outline toggle is your best friend.</div></div></div>
+    <div class="tip"><div class="tip-ico">📱</div><div><div class="tip-t">Send anywhere</div><div class="tip-d">Download as JPG, then share to WhatsApp, Instagram, X, Discord — anywhere.</div></div></div>
+    <div class="tip"><div class="tip-ico">📐</div><div><div class="tip-t">Move your text</div><div class="tip-d">Use the Text Position slider to place captions at the top, middle, or bottom.</div></div></div>
   </div>
 </div>
 
 </div><!-- /wrap -->
 
-<footer class="siteFooter">
-  <div class="footerInner">
-    <div class="footerBrand">EverydayToolsHQ</div>
-    <div class="footerLinks"><a href="/">Home</a><a href="/about/">About</a></div>
-    <div class="footerLegal">
+<footer class="footer">
+  <div class="f-inner">
+    <div class="f-brand">EverydayToolsHQ</div>
+    <div class="f-links"><a href="/">Home</a><a href="/about/">About</a></div>
+    <div class="f-legal">
       <a href="https://powerstationhq.com/privacy-policy/" target="_blank">Privacy Policy</a> |
       <a href="https://powerstationhq.com/terms-and-conditions/" target="_blank">Terms</a> |
       <a href="https://powerstationhq.com/affiliate-disclosure/" target="_blank">Affiliate Disclosure</a>
     </div>
-    <div class="footerPowered">Powered by <a href="https://powerstationhq.com/" target="_blank">PowerstationHQ</a></div>
+    <div class="f-pow">Powered by <a href="https://powerstationhq.com/" target="_blank">PowerstationHQ</a></div>
   </div>
 </footer>
 
 <script>
-/* ═══════════════════════════════════════════════════════════
+/* ════════════════════════════
    THEMES
-═══════════════════════════════════════════════════════════ */
-var themes = {
-  funny: [
-    "I don't always make memes. But when I do, I make them badly.",
-    "My brain has too many tabs open.",
-    "404: Motivation not found.",
-    "I'm not lazy, I'm on energy-saving mode.",
-    "Technically, I'm not wrong.",
-    "Plot twist: I'm the problem.",
-    "This is fine. Everything is fine.",
-    "Sleep? I don't know her.",
-    "That's a problem for future me.",
-    "My patience is loading… please wait.",
-    "When in doubt, meme it out.",
-    "Me: I'll be productive today. Also me:"
-  ],
-  relatable: [
-    "When the weekend goes by faster than the work week.",
-    "Me: I'll start tomorrow. Also me, tomorrow: I'll start tomorrow.",
-    "Walking past the fridge hoping food appeared.",
-    "Pretending to look busy when someone walks past.",
-    "That moment when you forget why you walked into a room.",
-    "Opening the fridge for the 47th time today.",
-    "Me vs the anxiety that hits at 3am.",
-    "Checking my phone for a notification I don't have.",
-    "The specific pain of a wet sock.",
-    "Staying up late for absolutely no reason.",
-    "Said 'I'm 5 minutes away' from my house.",
-    "Spent 3 hours choosing what to watch. Watched nothing."
-  ],
-  sarcastic: [
-    "Oh wow. How absolutely fascinating.",
-    "I'm not being sarcastic. I definitely mean that.",
-    "Sure, let me drop everything for your emergency.",
-    "Of course. Because I clearly have nothing else to do.",
-    "Wow, what a time to be alive.",
-    "Great idea. Truly inspired. Revolutionary.",
-    "Thanks for that completely unsolicited opinion.",
-    "No, no — tell me more about your expert opinion.",
-    "I live for feedback I didn't ask for.",
-    "That's… a choice. Bold one.",
-    "Sure, sure. Very reasonable. Totally makes sense.",
-    "I love being told what I already know. Refreshing."
-  ],
-  monday: [
-    "Monday: it arrived again. Unwanted.",
-    "My face before coffee on a Monday.",
-    "Ah yes, Monday. My old nemesis.",
-    "Monday energy: 2%. Send help.",
-    "The only good thing about Monday is that it ends.",
-    "Me, pretending to function on a Monday.",
-    "Monday should be illegal.",
-    "Not me being absolutely feral before 9am.",
-    "Five Mondays in a row? I call it a work week.",
-    "Woke up. It was Monday. That's the complaint.",
-    "If Monday had a face, I'd unfollow it.",
-    "How is it Monday again already."
-  ],
-  food: [
-    "I only have two moods: eating and thinking about eating.",
-    "Pizza is my love language.",
-    "The fridge is judging me. I can feel it.",
-    "Technically it's cooking if you use a microwave.",
-    "My diet starts… tomorrow.",
-    "One more slice never hurt anyone. Except me. Twice.",
-    "Food is my emotional support system.",
-    "Cooking for one: opening a bag of crisps.",
-    "I would never betray anyone. Except for good food.",
-    "Butter makes everything better. This is science.",
-    "Diet starts after this last bite. Same as I said last bite.",
-    "My personality type: always finds room for dessert."
-  ],
-  animals: [
-    "This is my dog. He knows what he did.",
-    "My cat judging me for my life choices.",
-    "The face of someone who knocked things off tables on purpose.",
-    "Dog sees a squirrel. Immediate crisis.",
-    "My spirit animal is a raccoon who has given up.",
-    "My cat helps me work by sitting on my laptop.",
-    "If I fits, I sits. Ancient wisdom.",
-    "The look when they know it's bath time.",
-    "Cats: your bed is my bed. My bed is also my bed.",
-    "Dog brain: walk? WALK? W A L K?!",
-    "That cat-at-3am energy we all secretly relate to.",
-    "They said they're fine. They are not fine."
-  ],
-  motivational: [
-    "You didn't come this far to only come this far.",
-    "Start before you're ready.",
-    "The version of you from a year ago would be proud.",
-    "Your only competition is yesterday's you.",
-    "Done is better than perfect.",
-    "The comeback is always stronger than the setback.",
-    "Small steps still move you forward.",
-    "You've survived 100% of your bad days so far.",
-    "Be better than yesterday. That's the whole plan.",
-    "Discipline is freedom.",
-    "Nobody is coming to save you. Be your own hero.",
-    "It's not about being the best. It's about being better."
-  ],
-  friendship: [
-    "A good friend helps you move. A great friend helps you move a body.",
-    "The friend who checks on you without you asking.",
-    "We don't grow apart. We just get busy. But we're still us.",
-    "Found: my person. Status: keeping them forever.",
-    "Best friend: someone who laughs at the same weird things.",
-    "The group chat that's silent until everyone texts at once.",
-    "Real friends tell you when you have spinach in your teeth.",
-    "Years of friendship, still absolutely feral together.",
-    "Thanks for being the friend I can send unhinged memes to.",
-    "Our friendship is a safe space for chaos.",
-    "Low maintenance, high loyalty. That's us.",
-    "We're not old friends. We're friends who got old together."
-  ],
-  romantic: [
-    "I like you more than I like my comfort zone.",
-    "You're the only notification I actually want.",
-    "I thought I was a lone wolf. Then I met you.",
-    "Loving you is my most consistent habit.",
-    "You're the plot twist I didn't see coming.",
-    "Home isn't a place. It's wherever you are.",
-    "I still get butterflies. Every single time.",
-    "You make ordinary days feel worth writing home about.",
-    "You are proof that good things happen.",
-    "My brain: logic. My heart: you.",
-    "Low key obsessed. High key obsessed.",
-    "Didn't choose the soft life. The soft life chose you."
-  ],
-  success: [
-    "They said it couldn't be done. I took that personally.",
-    "Celebrate every win. Especially the small ones.",
-    "The secret? I just didn't stop.",
-    "Nobody believed in me first. Now I don't need them to.",
-    "Silently becoming exactly what they doubted.",
-    "The journey was messy. The destination is worth it.",
-    "I didn't change. I upgraded.",
-    "Built different. Not by accident.",
-    "Success looks like what they called boring.",
-    "Watch who claps when you win.",
-    "Work in private. Succeed in public.",
-    "Quiet moves. Loud results."
-  ],
-  energy: [
-    "Feel the power. Share the energy.",
-    "Plug into your potential.",
-    "My vibe speaks voltage.",
-    "Charge up, rise up!",
-    "Unleash your inner spark.",
-    "Wattage is my language.",
-    "Electrify your dreams.",
-    "Power flows where focus goes.",
-    "Ignite the fire within.",
-    "Surge forward with strength.",
-    "Voltage high. Doubts low.",
-    "No off switch. No excuses."
-  ],
-  inspirational: [
-    "The life you want is on the other side of fear.",
-    "You are not behind. You are on your own timeline.",
-    "What you do today can improve all your tomorrows.",
-    "Be the person you needed when you were younger.",
-    "Bloom where you are planted.",
-    "Every expert was once a beginner.",
-    "Your story isn't over yet.",
-    "Be a voice, not an echo.",
-    "The smallest light shines brightest in the dark.",
-    "You are allowed to be both a masterpiece and a work in progress.",
-    "Grow through what you go through.",
-    "The world needs what only you can give."
-  ],
-  nature: [
-    "Nature doesn't hurry, yet everything gets done.",
-    "The mountains are calling. My couch is closer though.",
-    "Go outside. Touch grass. Come back better.",
-    "Sunsets: nature's free therapy.",
-    "In a world of noise, find your quiet.",
-    "The ocean doesn't apologise for its waves.",
-    "Even the tallest tree started as a seed.",
-    "Be like water. Adapt. Flow. Persist.",
-    "Every storm runs out of rain.",
-    "Wild and free. Or at least working on it.",
-    "Find me where the wifi is weak and the views are strong.",
-    "Nature doesn't judge. That's why I like it."
-  ],
-  work: [
-    "I put the pro in procrastination.",
-    "Another day, another meeting that could've been an email.",
-    "I survived another Monday. Give me a medal.",
-    "If stress burned calories, I'd be a supermodel.",
-    "Out of office forever, please.",
-    "The grind never stops, which is concerning.",
-    "Just five more minutes… six hours later.",
-    "Work harder? Or work smarter? Why not neither.",
-    "I'm not avoiding work. I'm building context.",
-    "Inbox: 0. Mental load: immeasurable.",
-    "Currently in my 'pretending to be productive' era.",
-    "My calendar says busy. My soul says otherwise."
-  ],
-  happiness: [
-    "Choose joy. It costs nothing.",
-    "The little things? The little things are everything.",
-    "Permission granted: enjoy today.",
-    "Laugh at the chaos. Especially your own.",
-    "Good vibes and no plans — peak happiness.",
-    "Spread joy like it's the last good meme.",
-    "Your smile is someone's favourite thing.",
-    "Happiness is a Tuesday decision.",
-    "Find the magic in ordinary days.",
-    "Grateful for small things. There are so many of them.",
-    "Today is a good day to have a good day.",
-    "Joy is not found. It's chosen."
-  ],
-  redemption: [
-    "My villain era? Over. My glow-up era? Loading.",
-    "I've been through worse. This is just a Tuesday.",
-    "Fell down seven times, got up eight.",
-    "The comeback is being built quietly.",
-    "What almost broke me built me instead.",
-    "My redemption arc is in its final season.",
-    "Not who I was. Better.",
-    "The setback was the setup.",
-    "Watch me recover from this at an unreasonable speed.",
-    "They counted me out. I used it as fuel.",
-    "Rewritten, renewed, rebuilt. Watch closely.",
-    "The plot twist nobody saw coming: me, thriving."
-  ]
+════════════════════════════ */
+var THEMES = {
+  funny:["I don't always make memes. But when I do, I make them badly.","My brain has too many tabs open.","404: Motivation not found.","I'm not lazy, I'm on energy-saving mode.","Technically, I'm not wrong.","Plot twist: I'm the problem.","This is fine. Everything is fine.","Sleep? I don't know her.","That's a problem for future me.","My patience is loading… please wait.","When in doubt, meme it out.","Me: I'll be productive today. Also me:"],
+  relatable:["When the weekend goes by faster than the work week.","Me: I'll start tomorrow. Also me, tomorrow: I'll start tomorrow.","Walking past the fridge hoping food appeared.","Pretending to look busy when someone walks past.","That moment when you forget why you walked into a room.","Opening the fridge for the 47th time today.","Me vs the anxiety that hits at 3am.","Checking my phone for a notification I don't have.","The specific pain of a wet sock.","Staying up late for absolutely no reason.","Said 'I'm 5 minutes away' from my house.","Spent 3 hours choosing what to watch. Watched nothing."],
+  sarcastic:["Oh wow. How absolutely fascinating.","I'm not being sarcastic. I definitely mean that.","Sure, let me drop everything for your emergency.","Of course. Because I clearly have nothing else to do.","Wow, what a time to be alive.","Great idea. Truly inspired. Revolutionary.","Thanks for that completely unsolicited opinion.","No, no — tell me more about your expert opinion.","I live for feedback I didn't ask for.","That's… a choice. Bold one.","Sure, sure. Very reasonable. Totally makes sense.","I love being told what I already know. Refreshing."],
+  monday:["Monday: it arrived again. Unwanted.","My face before coffee on a Monday.","Ah yes, Monday. My old nemesis.","Monday energy: 2%. Send help.","The only good thing about Monday is that it ends.","Me, pretending to function on a Monday.","Monday should be illegal.","Not me being absolutely feral before 9am.","Five Mondays in a row? I call it a work week.","Woke up. It was Monday. That's the complaint.","If Monday had a face, I'd unfollow it.","How is it Monday again already."],
+  food:["I only have two moods: eating and thinking about eating.","Pizza is my love language.","The fridge is judging me. I can feel it.","Technically it's cooking if you use a microwave.","My diet starts… tomorrow.","One more slice never hurt anyone. Except me. Twice.","Food is my emotional support system.","Cooking for one: opening a bag of crisps.","I would never betray anyone. Except for good food.","Butter makes everything better. This is science.","Diet starts after this last bite. Same as I said last bite.","My personality type: always finds room for dessert."],
+  animals:["This is my dog. He knows what he did.","My cat judging me for my life choices.","The face of someone who knocked things off tables on purpose.","Dog sees a squirrel. Immediate crisis.","My spirit animal is a raccoon who has given up.","My cat helps me work by sitting on my laptop.","If I fits, I sits. Ancient wisdom.","The look when they know it's bath time.","Cats: your bed is my bed. My bed is also my bed.","Dog brain: walk? WALK? W A L K?!","That cat-at-3am energy we all secretly relate to.","They said they're fine. They are not fine."],
+  motivational:["You didn't come this far to only come this far.","Start before you're ready.","The version of you from a year ago would be proud.","Your only competition is yesterday's you.","Done is better than perfect.","The comeback is always stronger than the setback.","Small steps still move you forward.","You've survived 100% of your bad days so far.","Be better than yesterday. That's the whole plan.","Discipline is freedom.","Nobody is coming to save you. Be your own hero.","It's not about being the best. It's about being better."],
+  friendship:["A good friend helps you move. A great friend helps you move a body.","The friend who checks on you without you asking.","We don't grow apart. We just get busy. But we're still us.","Found: my person. Status: keeping them forever.","Best friend: someone who laughs at the same weird things.","The group chat that's silent until everyone texts at once.","Real friends tell you when you have spinach in your teeth.","Years of friendship, still absolutely feral together.","Thanks for being the friend I can send unhinged memes to.","Our friendship is a safe space for chaos.","Low maintenance, high loyalty. That's us.","We're not old friends. We're friends who got old together."],
+  romantic:["I like you more than I like my comfort zone.","You're the only notification I actually want.","I thought I was a lone wolf. Then I met you.","Loving you is my most consistent habit.","You're the plot twist I didn't see coming.","Home isn't a place. It's wherever you are.","I still get butterflies. Every single time.","You make ordinary days feel worth writing home about.","You are proof that good things happen.","My brain: logic. My heart: you.","Low key obsessed. High key obsessed.","Didn't choose the soft life. The soft life chose you."],
+  success:["They said it couldn't be done. I took that personally.","Celebrate every win. Especially the small ones.","The secret? I just didn't stop.","Nobody believed in me first. Now I don't need them to.","Silently becoming exactly what they doubted.","The journey was messy. The destination is worth it.","I didn't change. I upgraded.","Built different. Not by accident.","Success looks like what they called boring.","Watch who claps when you win.","Work in private. Succeed in public.","Quiet moves. Loud results."],
+  energy:["Feel the power. Share the energy.","Plug into your potential.","My vibe speaks voltage.","Charge up, rise up!","Unleash your inner spark.","Wattage is my language.","Electrify your dreams.","Power flows where focus goes.","Ignite the fire within.","Surge forward with strength.","Voltage high. Doubts low.","No off switch. No excuses."],
+  inspirational:["The life you want is on the other side of fear.","You are not behind. You are on your own timeline.","What you do today can improve all your tomorrows.","Be the person you needed when you were younger.","Bloom where you are planted.","Every expert was once a beginner.","Your story isn't over yet.","Be a voice, not an echo.","The smallest light shines brightest in the dark.","You are allowed to be both a masterpiece and a work in progress.","Grow through what you go through.","The world needs what only you can give."],
+  nature:["Nature doesn't hurry, yet everything gets done.","The mountains are calling. My couch is closer though.","Go outside. Touch grass. Come back better.","Sunsets: nature's free therapy.","In a world of noise, find your quiet.","The ocean doesn't apologise for its waves.","Even the tallest tree started as a seed.","Be like water. Adapt. Flow. Persist.","Every storm runs out of rain.","Wild and free. Or at least working on it.","Find me where the wifi is weak and the views are strong.","Nature doesn't judge. That's why I like it."],
+  work:["I put the pro in procrastination.","Another day, another meeting that could've been an email.","I survived another Monday. Give me a medal.","If stress burned calories, I'd be a supermodel.","Out of office forever, please.","The grind never stops, which is concerning.","Just five more minutes… six hours later.","Work harder? Or work smarter? Why not neither.","I'm not avoiding work. I'm building context.","Inbox: 0. Mental load: immeasurable.","Currently in my 'pretending to be productive' era.","My calendar says busy. My soul says otherwise."],
+  happiness:["Choose joy. It costs nothing.","The little things? The little things are everything.","Permission granted: enjoy today.","Laugh at the chaos. Especially your own.","Good vibes and no plans — peak happiness.","Spread joy like it's the last good meme.","Your smile is someone's favourite thing.","Happiness is a Tuesday decision.","Find the magic in ordinary days.","Grateful for small things. There are so many of them.","Today is a good day to have a good day.","Joy is not found. It's chosen."],
+  redemption:["My villain era? Over. My glow-up era? Loading.","I've been through worse. This is just a Tuesday.","Fell down seven times, got up eight.","The comeback is being built quietly.","What almost broke me built me instead.","My redemption arc is in its final season.","Not who I was. Better.","The setback was the setup.","Watch me recover from this at an unreasonable speed.","They counted me out. I used it as fuel.","Rewritten, renewed, rebuilt. Watch closely.","The plot twist nobody saw coming: me, thriving."]
 };
 
-/* ═══════════════════════════════════════════════════════════
-   ALL TEMPLATES — original 60 from the provided code + extras
-═══════════════════════════════════════════════════════════ */
+/* ════════════════════════════
+   ALL 60+ TEMPLATES (original + extras)
+════════════════════════════ */
 var TEMPLATES = [
   // PowerStation custom
-  {cat:"energy",label:"PowerMeme 1",t:"https://powerstationhq.com/wp-content/uploads/2025/06/powermeme-template.jpg?w=200&q=60",f:"https://powerstationhq.com/wp-content/uploads/2025/06/powermeme-template.jpg?w=600&q=80"},
-  {cat:"energy",label:"PowerMeme 2",t:"https://powerstationhq.com/wp-content/uploads/2025/06/powermeme-template1.jpg?w=200&q=60",f:"https://powerstationhq.com/wp-content/uploads/2025/06/powermeme-template1.jpg?w=600&q=80"},
-  // Energy/Action
-  {cat:"energy",label:"Lightning",t:"https://images.unsplash.com/photo-1548475390-f6908921aaf8?w=200&q=60",f:"https://images.unsplash.com/photo-1548475390-f6908921aaf8?w=800&q=80"},
-  {cat:"energy",label:"Fire",t:"https://images.unsplash.com/photo-1513758173941-bfbd2e4166f5?w=200&q=60",f:"https://images.unsplash.com/photo-1513758173941-bfbd2e4166f5?w=800&q=80"},
-  {cat:"energy",label:"Electric",t:"https://images.unsplash.com/photo-1647028864576-76097b867d8a?w=200&q=60",f:"https://images.unsplash.com/photo-1647028864576-76097b867d8a?w=800&q=80"},
-  {cat:"energy",label:"Neon Abstract",t:"https://images.unsplash.com/photo-1741447251529-2ed90e331088?w=200&q=60",f:"https://images.unsplash.com/photo-1741447251529-2ed90e331088?w=800&q=80"},
-  {cat:"energy",label:"Solar Flare",t:"https://images.unsplash.com/photo-1586201854063-e17317340369?w=200&q=60",f:"https://images.unsplash.com/photo-1586201854063-e17317340369?w=800&q=80"},
-  {cat:"energy",label:"Storm",t:"https://images.unsplash.com/photo-1498673394965-85cb14905c89?w=200&q=60",f:"https://images.unsplash.com/photo-1498673394965-85cb14905c89?w=800&q=80"},
-  {cat:"energy",label:"Laser",t:"https://images.unsplash.com/photo-1672152825656-6747b9bd2377?w=200&q=60",f:"https://images.unsplash.com/photo-1672152825656-6747b9bd2377?w=800&q=80"},
-  {cat:"energy",label:"Cityscape",t:"https://images.unsplash.com/photo-1524226108234-3cccbbbfa86d?w=200&q=60",f:"https://images.unsplash.com/photo-1524226108234-3cccbbbfa86d?w=800&q=80"},
-  {cat:"energy",label:"Sparks",t:"https://images.unsplash.com/photo-1525490829609-d166ddb58678?w=200&q=60",f:"https://images.unsplash.com/photo-1525490829609-d166ddb58678?w=800&q=80"},
-  {cat:"energy",label:"Neon City",t:"https://images.unsplash.com/photo-1563761141-38f17aad6d44?w=200&q=60",f:"https://images.unsplash.com/photo-1563761141-38f17aad6d44?w=800&q=80"},
-  {cat:"energy",label:"Fire Sparks",t:"https://images.unsplash.com/photo-1631830729777-b89d676ef54f?w=200&q=60",f:"https://images.unsplash.com/photo-1631830729777-b89d676ef54f?w=800&q=80"},
-  {cat:"energy",label:"Light Show",t:"https://images.unsplash.com/photo-1638866408990-1b5e583394d8?w=200&q=60",f:"https://images.unsplash.com/photo-1638866408990-1b5e583394d8?w=800&q=80"},
-  {cat:"energy",label:"Sunset Sky",t:"https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=200&q=60",f:"https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=800&q=80"},
-  {cat:"energy",label:"Headphones",t:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&q=60",f:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80"},
-  {cat:"energy",label:"Binoculars",t:"https://images.unsplash.com/photo-1443916568596-df5a58c445e9?w=200&q=60",f:"https://images.unsplash.com/photo-1443916568596-df5a58c445e9?w=800&q=80"},
+  {cat:"energy",label:"PowerMeme 1",t:"https://powerstationhq.com/wp-content/uploads/2025/06/powermeme-template.jpg",f:"https://powerstationhq.com/wp-content/uploads/2025/06/powermeme-template.jpg"},
+  {cat:"energy",label:"PowerMeme 2",t:"https://powerstationhq.com/wp-content/uploads/2025/06/powermeme-template1.jpg",f:"https://powerstationhq.com/wp-content/uploads/2025/06/powermeme-template1.jpg"},
+  // Energy / Action
+  {cat:"energy",label:"Lightning",t:"https://images.unsplash.com/photo-1548475390-f6908921aaf8?w=300&q=70",f:"https://images.unsplash.com/photo-1548475390-f6908921aaf8?w=800&q=80"},
+  {cat:"energy",label:"Fire",t:"https://images.unsplash.com/photo-1513758173941-bfbd2e4166f5?w=300&q=70",f:"https://images.unsplash.com/photo-1513758173941-bfbd2e4166f5?w=800&q=80"},
+  {cat:"energy",label:"Electric",t:"https://images.unsplash.com/photo-1647028864576-76097b867d8a?w=300&q=70",f:"https://images.unsplash.com/photo-1647028864576-76097b867d8a?w=800&q=80"},
+  {cat:"energy",label:"Neon Abstract",t:"https://images.unsplash.com/photo-1741447251529-2ed90e331088?w=300&q=70",f:"https://images.unsplash.com/photo-1741447251529-2ed90e331088?w=800&q=80"},
+  {cat:"energy",label:"Solar Flare",t:"https://images.unsplash.com/photo-1586201854063-e17317340369?w=300&q=70",f:"https://images.unsplash.com/photo-1586201854063-e17317340369?w=800&q=80"},
+  {cat:"energy",label:"Storm",t:"https://images.unsplash.com/photo-1498673394965-85cb14905c89?w=300&q=70",f:"https://images.unsplash.com/photo-1498673394965-85cb14905c89?w=800&q=80"},
+  {cat:"energy",label:"Laser",t:"https://images.unsplash.com/photo-1672152825656-6747b9bd2377?w=300&q=70",f:"https://images.unsplash.com/photo-1672152825656-6747b9bd2377?w=800&q=80"},
+  {cat:"energy",label:"Cityscape",t:"https://images.unsplash.com/photo-1524226108234-3cccbbbfa86d?w=300&q=70",f:"https://images.unsplash.com/photo-1524226108234-3cccbbbfa86d?w=800&q=80"},
+  {cat:"energy",label:"Sparks",t:"https://images.unsplash.com/photo-1525490829609-d166ddb58678?w=300&q=70",f:"https://images.unsplash.com/photo-1525490829609-d166ddb58678?w=800&q=80"},
+  {cat:"energy",label:"Neon City",t:"https://images.unsplash.com/photo-1563761141-38f17aad6d44?w=300&q=70",f:"https://images.unsplash.com/photo-1563761141-38f17aad6d44?w=800&q=80"},
+  {cat:"energy",label:"Fire Sparks",t:"https://images.unsplash.com/photo-1631830729777-b89d676ef54f?w=300&q=70",f:"https://images.unsplash.com/photo-1631830729777-b89d676ef54f?w=800&q=80"},
+  {cat:"energy",label:"Light Show",t:"https://images.unsplash.com/photo-1638866408990-1b5e583394d8?w=300&q=70",f:"https://images.unsplash.com/photo-1638866408990-1b5e583394d8?w=800&q=80"},
+  {cat:"energy",label:"Sunset Sky",t:"https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=300&q=70",f:"https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=800&q=80"},
+  {cat:"energy",label:"Headphones",t:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=70",f:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80"},
+  {cat:"energy",label:"Binoculars",t:"https://images.unsplash.com/photo-1443916568596-df5a58c445e9?w=300&q=70",f:"https://images.unsplash.com/photo-1443916568596-df5a58c445e9?w=800&q=80"},
   // Nature
-  {cat:"nature",label:"Lake View",t:"https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=200&q=60",f:"https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&q=80"},
-  {cat:"nature",label:"Colourful Sky",t:"https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=200&q=60",f:"https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=800&q=80"},
-  {cat:"nature",label:"Foggy Road",t:"https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=200&q=60",f:"https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=800&q=80"},
-  {cat:"nature",label:"Vineyard",t:"https://images.unsplash.com/photo-1429087969512-1e85aab2683d?w=200&q=60",f:"https://images.unsplash.com/photo-1429087969512-1e85aab2683d?w=800&q=80"},
-  {cat:"nature",label:"Aerial Coast",t:"https://images.unsplash.com/photo-1501854140801-50d01698950b?w=200&q=60",f:"https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&q=80"},
-  {cat:"nature",label:"Wild Nature",t:"https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=200&q=60",f:"https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=800&q=80"},
-  {cat:"nature",label:"Panorama",t:"https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=200&q=60",f:"https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=80"},
-  {cat:"nature",label:"Mountains",t:"https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=200&q=60",f:"https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80"},
-  {cat:"nature",label:"Waterfall",t:"https://images.unsplash.com/photo-1490730141103-6cac27aaab94?w=200&q=60",f:"https://images.unsplash.com/photo-1490730141103-6cac27aaab94?w=800&q=80"},
-  {cat:"nature",label:"Wildflowers",t:"https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=200&q=60",f:"https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=800&q=80"},
-  {cat:"nature",label:"Misty Forest",t:"https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=200&q=60",f:"https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=800&q=80"},
-  {cat:"nature",label:"Forest",t:"https://images.unsplash.com/photo-1511497584788-876760111969?w=200&q=60",f:"https://images.unsplash.com/photo-1511497584788-876760111969?w=800&q=80"},
-  {cat:"nature",label:"Desert",t:"https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=200&q=60",f:"https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=800&q=80"},
-  {cat:"nature",label:"Valley",t:"https://images.unsplash.com/photo-1474631245212-32dc3c8310c6?w=200&q=60",f:"https://images.unsplash.com/photo-1474631245212-32dc3c8310c6?w=800&q=80"},
+  {cat:"nature",label:"Lake View",t:"https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=300&q=70",f:"https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&q=80"},
+  {cat:"nature",label:"Colourful Sky",t:"https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&q=70",f:"https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=800&q=80"},
+  {cat:"nature",label:"Foggy Road",t:"https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=300&q=70",f:"https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=800&q=80"},
+  {cat:"nature",label:"Vineyard",t:"https://images.unsplash.com/photo-1429087969512-1e85aab2683d?w=300&q=70",f:"https://images.unsplash.com/photo-1429087969512-1e85aab2683d?w=800&q=80"},
+  {cat:"nature",label:"Aerial Coast",t:"https://images.unsplash.com/photo-1501854140801-50d01698950b?w=300&q=70",f:"https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&q=80"},
+  {cat:"nature",label:"Wild Nature",t:"https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=300&q=70",f:"https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=800&q=80"},
+  {cat:"nature",label:"Panorama",t:"https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=300&q=70",f:"https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=80"},
+  {cat:"nature",label:"Mountains",t:"https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=300&q=70",f:"https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80"},
+  {cat:"nature",label:"Waterfall",t:"https://images.unsplash.com/photo-1490730141103-6cac27aaab94?w=300&q=70",f:"https://images.unsplash.com/photo-1490730141103-6cac27aaab94?w=800&q=80"},
+  {cat:"nature",label:"Wildflowers",t:"https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=300&q=70",f:"https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=800&q=80"},
+  {cat:"nature",label:"Misty Forest",t:"https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=300&q=70",f:"https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=800&q=80"},
+  {cat:"nature",label:"Forest",t:"https://images.unsplash.com/photo-1511497584788-876760111969?w=300&q=70",f:"https://images.unsplash.com/photo-1511497584788-876760111969?w=800&q=80"},
+  {cat:"nature",label:"Desert",t:"https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=300&q=70",f:"https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=800&q=80"},
+  {cat:"nature",label:"Valley",t:"https://images.unsplash.com/photo-1474631245212-32dc3c8310c6?w=300&q=70",f:"https://images.unsplash.com/photo-1474631245212-32dc3c8310c6?w=800&q=80"},
   // Romantic
-  {cat:"romantic",label:"Couple Walk",t:"https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=200&q=60",f:"https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800&q=80"},
-  {cat:"romantic",label:"Hearts",t:"https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=200&q=60",f:"https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=800&q=80"},
-  {cat:"romantic",label:"Intimacy",t:"https://images.unsplash.com/photo-1494774157365-9e04c6720e47?w=200&q=60",f:"https://images.unsplash.com/photo-1494774157365-9e04c6720e47?w=800&q=80"},
-  {cat:"romantic",label:"Wildflower Love",t:"https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?w=200&q=60",f:"https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?w=800&q=80"},
-  {cat:"romantic",label:"Rose",t:"https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=200&q=60",f:"https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=800&q=80"},
-  {cat:"romantic",label:"Aurora",t:"https://images.unsplash.com/photo-1519681393784-d120267933ba?w=200&q=60",f:"https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80"},
-  {cat:"romantic",label:"Night Sky",t:"https://images.unsplash.com/photo-1520333789090-1afc82db536a?w=200&q=60",f:"https://images.unsplash.com/photo-1520333789090-1afc82db536a?w=800&q=80"},
-  {cat:"romantic",label:"Sunset Pier",t:"https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=200&q=60",f:"https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=800&q=80"},
-  {cat:"romantic",label:"Ocean",t:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=200&q=60",f:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80"},
-  {cat:"romantic",label:"Portrait",t:"https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=200&q=60",f:"https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&q=80"},
-  {cat:"romantic",label:"Travel Together",t:"https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=200&q=60",f:"https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=800&q=80"},
-  {cat:"romantic",label:"City Lights",t:"https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=200&q=60",f:"https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=800&q=80"},
-  {cat:"romantic",label:"Running",t:"https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=200&q=60",f:"https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=800&q=80"},
-  {cat:"romantic",label:"Bokeh",t:"https://images.unsplash.com/photo-1525353297422-7504381dce2d?w=200&q=60",f:"https://images.unsplash.com/photo-1525353297422-7504381dce2d?w=800&q=80"},
-  {cat:"romantic",label:"Night Lights",t:"https://images.unsplash.com/photo-1515871204537-49a5fe66a31f?w=200&q=60",f:"https://images.unsplash.com/photo-1515871204537-49a5fe66a31f?w=800&q=80"},
-  // Coffee/Cozy
-  {cat:"coffee",label:"Morning Coffee",t:"https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=200&q=60",f:"https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=800&q=80"},
-  {cat:"coffee",label:"Latte Art",t:"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=200&q=60",f:"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80"},
-  {cat:"coffee",label:"Espresso",t:"https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&q=60",f:"https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&q=80"},
-  {cat:"coffee",label:"Coffee Shop",t:"https://images.unsplash.com/photo-1595574444306-e235cef5ea37?w=200&q=60",f:"https://images.unsplash.com/photo-1595574444306-e235cef5ea37?w=800&q=80"},
-  {cat:"coffee",label:"Iced Coffee",t:"https://images.unsplash.com/photo-1578504654620-e66ad8bb1c25?w=200&q=60",f:"https://images.unsplash.com/photo-1578504654620-e66ad8bb1c25?w=800&q=80"},
-  {cat:"coffee",label:"Café Table",t:"https://images.unsplash.com/photo-1589009649715-641c60b982ae?w=200&q=60",f:"https://images.unsplash.com/photo-1589009649715-641c60b982ae?w=800&q=80"},
-  {cat:"coffee",label:"Morning Mood",t:"https://images.unsplash.com/photo-1494314671902-399b18174975?w=200&q=60",f:"https://images.unsplash.com/photo-1494314671902-399b18174975?w=800&q=80"},
-  {cat:"coffee",label:"Books & Tea",t:"https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=200&q=60",f:"https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=800&q=80"},
-  {cat:"coffee",label:"Cozy Read",t:"https://images.unsplash.com/photo-1444157545135-c045be691b05?w=200&q=60",f:"https://images.unsplash.com/photo-1444157545135-c045be691b05?w=800&q=80"},
-  {cat:"coffee",label:"Café Vibes",t:"https://images.unsplash.com/photo-1506619216599-9d16d0903dfd?w=200&q=60",f:"https://images.unsplash.com/photo-1506619216599-9d16d0903dfd?w=800&q=80"},
-  // Animals/People
-  {cat:"animals",label:"Screaming",t:"https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=200&q=60",f:"https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=800&q=80"},
-  {cat:"animals",label:"Pug Life",t:"https://images.unsplash.com/photo-1583321500900-82807e458f3c?w=200&q=60",f:"https://images.unsplash.com/photo-1583321500900-82807e458f3c?w=800&q=80"},
-  {cat:"animals",label:"Dog Sitting",t:"https://images.unsplash.com/photo-1582203775364-6ce6139cfecf?w=200&q=60",f:"https://images.unsplash.com/photo-1582203775364-6ce6139cfecf?w=800&q=80"},
-  {cat:"animals",label:"Serious Dog",t:"https://images.unsplash.com/photo-1527856263669-12c3a0af2aa6?w=200&q=60",f:"https://images.unsplash.com/photo-1527856263669-12c3a0af2aa6?w=800&q=80"},
-  {cat:"animals",label:"Cute Cat",t:"https://images.unsplash.com/photo-1495366691023-cc4eadcc2d7e?w=200&q=60",f:"https://images.unsplash.com/photo-1495366691023-cc4eadcc2d7e?w=800&q=80"},
-  {cat:"animals",label:"Golden Dog",t:"https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?w=200&q=60",f:"https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?w=800&q=80"},
-  {cat:"animals",label:"Shocked Dog",t:"https://images.unsplash.com/photo-1517849845537-4d257902454a?w=200&q=60",f:"https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&q=80"},
-  {cat:"animals",label:"Cat Stare",t:"https://images.unsplash.com/photo-1517423568366-8b83523034fd?w=200&q=60",f:"https://images.unsplash.com/photo-1517423568366-8b83523034fd?w=800&q=80"},
-  {cat:"animals",label:"Painting Dog",t:"https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=200&q=60",f:"https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&q=80"},
-  {cat:"animals",label:"Fox",t:"https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=200&q=60",f:"https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=800&q=80"},
-  {cat:"animals",label:"Dog Smile",t:"https://images.unsplash.com/photo-1510771463146-e89e6e86560e?w=200&q=60",f:"https://images.unsplash.com/photo-1510771463146-e89e6e86560e?w=800&q=80"},
-  {cat:"animals",label:"Puppy Eyes",t:"https://images.unsplash.com/photo-1507146426996-ef05306b995a?w=200&q=60",f:"https://images.unsplash.com/photo-1507146426996-ef05306b995a?w=800&q=80"},
-  {cat:"animals",label:"Cat Judge",t:"https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=200&q=60",f:"https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=800&q=80"},
-  {cat:"animals",label:"Cat Lying",t:"https://images.unsplash.com/photo-1518288774672-b94e808873ff?w=200&q=60",f:"https://images.unsplash.com/photo-1518288774672-b94e808873ff?w=800&q=80"},
-  {cat:"animals",label:"Dog Portrait",t:"https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?w=200&q=60",f:"https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?w=800&q=80"},
-  {cat:"animals",label:"Husky",t:"https://images.unsplash.com/photo-1519052537078-e6302a4968d4?w=200&q=60",f:"https://images.unsplash.com/photo-1519052537078-e6302a4968d4?w=800&q=80"},
-  {cat:"animals",label:"Mother Dog",t:"https://images.unsplash.com/photo-1516728918023-0fd81a3a149c?w=200&q=60",f:"https://images.unsplash.com/photo-1516728918023-0fd81a3a149c?w=800&q=80"},
-  {cat:"animals",label:"Group Travel",t:"https://images.unsplash.com/photo-1591194570502-c801051a2937?w=200&q=60",f:"https://images.unsplash.com/photo-1591194570502-c801051a2937?w=800&q=80"},
-  {cat:"animals",label:"Family",t:"https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=200&q=60",f:"https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&q=80"},
-  {cat:"animals",label:"Beach Group",t:"https://images.unsplash.com/photo-1516728778615-2d590ea1855e?w=200&q=60",f:"https://images.unsplash.com/photo-1516728778615-2d590ea1855e?w=800&q=80"},
-  {cat:"animals",label:"Dog Jump",t:"https://images.unsplash.com/photo-1521651201144-634f700b36ef?w=200&q=60",f:"https://images.unsplash.com/photo-1521651201144-634f700b36ef?w=800&q=80"},
-  {cat:"animals",label:"Grumpy Cat",t:"https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=200&q=60",f:"https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=800&q=80"},
-  {cat:"animals",label:"Cat Portrait",t:"https://images.unsplash.com/photo-1632724064613-462a9b0cc2bc?w=200&q=60",f:"https://images.unsplash.com/photo-1632724064613-462a9b0cc2bc?w=800&q=80"},
-  {cat:"animals",label:"Tiger",t:"https://images.unsplash.com/photo-1539073117231-a9a7a4a46fe1?w=200&q=60",f:"https://images.unsplash.com/photo-1539073117231-a9a7a4a46fe1?w=800&q=80"}
+  {cat:"romantic",label:"Couple Walk",t:"https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=300&q=70",f:"https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800&q=80"},
+  {cat:"romantic",label:"Hearts",t:"https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=300&q=70",f:"https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=800&q=80"},
+  {cat:"romantic",label:"Intimacy",t:"https://images.unsplash.com/photo-1494774157365-9e04c6720e47?w=300&q=70",f:"https://images.unsplash.com/photo-1494774157365-9e04c6720e47?w=800&q=80"},
+  {cat:"romantic",label:"Wildflower Love",t:"https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?w=300&q=70",f:"https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?w=800&q=80"},
+  {cat:"romantic",label:"Rose",t:"https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=300&q=70",f:"https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=800&q=80"},
+  {cat:"romantic",label:"Aurora",t:"https://images.unsplash.com/photo-1519681393784-d120267933ba?w=300&q=70",f:"https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80"},
+  {cat:"romantic",label:"Night Sky",t:"https://images.unsplash.com/photo-1520333789090-1afc82db536a?w=300&q=70",f:"https://images.unsplash.com/photo-1520333789090-1afc82db536a?w=800&q=80"},
+  {cat:"romantic",label:"Sunset Pier",t:"https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=300&q=70",f:"https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=800&q=80"},
+  {cat:"romantic",label:"Ocean",t:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300&q=70",f:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80"},
+  {cat:"romantic",label:"Portrait",t:"https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=300&q=70",f:"https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&q=80"},
+  {cat:"romantic",label:"Travel",t:"https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=300&q=70",f:"https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=800&q=80"},
+  {cat:"romantic",label:"City Lights",t:"https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=300&q=70",f:"https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=800&q=80"},
+  {cat:"romantic",label:"Running",t:"https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=300&q=70",f:"https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=800&q=80"},
+  {cat:"romantic",label:"Bokeh",t:"https://images.unsplash.com/photo-1525353297422-7504381dce2d?w=300&q=70",f:"https://images.unsplash.com/photo-1525353297422-7504381dce2d?w=800&q=80"},
+  {cat:"romantic",label:"Night Lights",t:"https://images.unsplash.com/photo-1515871204537-49a5fe66a31f?w=300&q=70",f:"https://images.unsplash.com/photo-1515871204537-49a5fe66a31f?w=800&q=80"},
+  // Coffee / Cozy
+  {cat:"coffee",label:"Morning Coffee",t:"https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=300&q=70",f:"https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=800&q=80"},
+  {cat:"coffee",label:"Latte Art",t:"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300&q=70",f:"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80"},
+  {cat:"coffee",label:"Espresso",t:"https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=300&q=70",f:"https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&q=80"},
+  {cat:"coffee",label:"Coffee Shop",t:"https://images.unsplash.com/photo-1595574444306-e235cef5ea37?w=300&q=70",f:"https://images.unsplash.com/photo-1595574444306-e235cef5ea37?w=800&q=80"},
+  {cat:"coffee",label:"Iced Coffee",t:"https://images.unsplash.com/photo-1578504654620-e66ad8bb1c25?w=300&q=70",f:"https://images.unsplash.com/photo-1578504654620-e66ad8bb1c25?w=800&q=80"},
+  {cat:"coffee",label:"Café Table",t:"https://images.unsplash.com/photo-1589009649715-641c60b982ae?w=300&q=70",f:"https://images.unsplash.com/photo-1589009649715-641c60b982ae?w=800&q=80"},
+  {cat:"coffee",label:"Morning Mood",t:"https://images.unsplash.com/photo-1494314671902-399b18174975?w=300&q=70",f:"https://images.unsplash.com/photo-1494314671902-399b18174975?w=800&q=80"},
+  {cat:"coffee",label:"Books & Tea",t:"https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=300&q=70",f:"https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=800&q=80"},
+  {cat:"coffee",label:"Cozy Read",t:"https://images.unsplash.com/photo-1444157545135-c045be691b05?w=300&q=70",f:"https://images.unsplash.com/photo-1444157545135-c045be691b05?w=800&q=80"},
+  {cat:"coffee",label:"Café Vibes",t:"https://images.unsplash.com/photo-1506619216599-9d16d0903dfd?w=300&q=70",f:"https://images.unsplash.com/photo-1506619216599-9d16d0903dfd?w=800&q=80"},
+  // Animals / People
+  {cat:"animals",label:"Screaming",t:"https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=300&q=70",f:"https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=800&q=80"},
+  {cat:"animals",label:"Pug Life",t:"https://images.unsplash.com/photo-1583321500900-82807e458f3c?w=300&q=70",f:"https://images.unsplash.com/photo-1583321500900-82807e458f3c?w=800&q=80"},
+  {cat:"animals",label:"Dog Sitting",t:"https://images.unsplash.com/photo-1582203775364-6ce6139cfecf?w=300&q=70",f:"https://images.unsplash.com/photo-1582203775364-6ce6139cfecf?w=800&q=80"},
+  {cat:"animals",label:"Serious Dog",t:"https://images.unsplash.com/photo-1527856263669-12c3a0af2aa6?w=300&q=70",f:"https://images.unsplash.com/photo-1527856263669-12c3a0af2aa6?w=800&q=80"},
+  {cat:"animals",label:"Cute Cat",t:"https://images.unsplash.com/photo-1495366691023-cc4eadcc2d7e?w=300&q=70",f:"https://images.unsplash.com/photo-1495366691023-cc4eadcc2d7e?w=800&q=80"},
+  {cat:"animals",label:"Golden Dog",t:"https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?w=300&q=70",f:"https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?w=800&q=80"},
+  {cat:"animals",label:"Shocked Dog",t:"https://images.unsplash.com/photo-1517849845537-4d257902454a?w=300&q=70",f:"https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&q=80"},
+  {cat:"animals",label:"Cat Stare",t:"https://images.unsplash.com/photo-1517423568366-8b83523034fd?w=300&q=70",f:"https://images.unsplash.com/photo-1517423568366-8b83523034fd?w=800&q=80"},
+  {cat:"animals",label:"Painting Dog",t:"https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=300&q=70",f:"https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&q=80"},
+  {cat:"animals",label:"Fox",t:"https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=300&q=70",f:"https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=800&q=80"},
+  {cat:"animals",label:"Dog Smile",t:"https://images.unsplash.com/photo-1510771463146-e89e6e86560e?w=300&q=70",f:"https://images.unsplash.com/photo-1510771463146-e89e6e86560e?w=800&q=80"},
+  {cat:"animals",label:"Puppy Eyes",t:"https://images.unsplash.com/photo-1507146426996-ef05306b995a?w=300&q=70",f:"https://images.unsplash.com/photo-1507146426996-ef05306b995a?w=800&q=80"},
+  {cat:"animals",label:"Cat Judge",t:"https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=300&q=70",f:"https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=800&q=80"},
+  {cat:"animals",label:"Cat Lying",t:"https://images.unsplash.com/photo-1518288774672-b94e808873ff?w=300&q=70",f:"https://images.unsplash.com/photo-1518288774672-b94e808873ff?w=800&q=80"},
+  {cat:"animals",label:"Dog Portrait",t:"https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?w=300&q=70",f:"https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?w=800&q=80"},
+  {cat:"animals",label:"Husky",t:"https://images.unsplash.com/photo-1519052537078-e6302a4968d4?w=300&q=70",f:"https://images.unsplash.com/photo-1519052537078-e6302a4968d4?w=800&q=80"},
+  {cat:"animals",label:"Mother Dog",t:"https://images.unsplash.com/photo-1516728918023-0fd81a3a149c?w=300&q=70",f:"https://images.unsplash.com/photo-1516728918023-0fd81a3a149c?w=800&q=80"},
+  {cat:"animals",label:"Group Travel",t:"https://images.unsplash.com/photo-1591194570502-c801051a2937?w=300&q=70",f:"https://images.unsplash.com/photo-1591194570502-c801051a2937?w=800&q=80"},
+  {cat:"animals",label:"Family",t:"https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=300&q=70",f:"https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&q=80"},
+  {cat:"animals",label:"Beach Group",t:"https://images.unsplash.com/photo-1516728778615-2d590ea1855e?w=300&q=70",f:"https://images.unsplash.com/photo-1516728778615-2d590ea1855e?w=800&q=80"},
+  {cat:"animals",label:"Dog Jump",t:"https://images.unsplash.com/photo-1521651201144-634f700b36ef?w=300&q=70",f:"https://images.unsplash.com/photo-1521651201144-634f700b36ef?w=800&q=80"},
+  {cat:"animals",label:"Grumpy Cat",t:"https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=300&q=70",f:"https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=800&q=80"},
+  {cat:"animals",label:"Cat Portrait",t:"https://images.unsplash.com/photo-1632724064613-462a9b0cc2bc?w=300&q=70",f:"https://images.unsplash.com/photo-1632724064613-462a9b0cc2bc?w=800&q=80"},
+  {cat:"animals",label:"Tiger",t:"https://images.unsplash.com/photo-1539073117231-a9a7a4a46fe1?w=300&q=70",f:"https://images.unsplash.com/photo-1539073117231-a9a7a4a46fe1?w=800&q=80"}
 ];
 
-/* ═══════════════════════════════════════════════════════════
-   CANVAS SETUP
-═══════════════════════════════════════════════════════════ */
-var canvas = document.getElementById("memeCanvas");
-var ctx = canvas.getContext("2d");
+/* ════════════════════════════
+   CANVAS
+════════════════════════════ */
+var CV = document.getElementById("memeCanvas");
+var CX = CV.getContext("2d");
+var bgImg = null;
 
-function setCanvasSize() {
+function sizeCanvas(){
   var w = window.innerWidth;
-  if (w <= 400) { canvas.width = 300; canvas.height = 225; }
-  else if (w <= 600) { canvas.width = 400; canvas.height = 300; }
-  else { canvas.width = 600; canvas.height = 400; }
-  drawMeme();
+  if(w<=400){CV.width=300;CV.height=225;}
+  else if(w<=620){CV.width=400;CV.height=300;}
+  else{CV.width=600;CV.height=400;}
 }
-setCanvasSize();
-window.addEventListener("resize", function() { setCanvasSize(); updateCarousel(); initDots(); });
+sizeCanvas();
+window.addEventListener("resize",function(){sizeCanvas();draw();updateCar();buildDots();});
 
-/* ═══════════════════════════════════════════════════════════
+/* ════════════════════════════
    STATE
-═══════════════════════════════════════════════════════════ */
-var isBold = true, isOutline = true, glowOn = false, textBgOn = false, isUpper = false;
-var bgImage = null;
+════════════════════════════ */
+var S={bold:true,outline:true,glow:false,capBg:false,upper:false};
 
-/* ═══════════════════════════════════════════════════════════
-   QUOTES
-═══════════════════════════════════════════════════════════ */
-var qSel = document.getElementById("quoteSelect");
-var thSel = document.getElementById("themeSelect");
+/* ════════════════════════════
+   QUOTES — populate immediately
+════════════════════════════ */
+var qSel=document.getElementById("quoteSelect");
+var thSel=document.getElementById("themeSelect");
 
-function initQuotes(th) {
-  qSel.innerHTML = "";
-  var list = themes[th] || themes.funny;
-  for (var i = 0; i < list.length; i++) {
-    var o = document.createElement("option");
-    o.textContent = list[i];
+function fillQuotes(th){
+  qSel.innerHTML="";
+  var arr=THEMES[th]||THEMES.funny;
+  for(var i=0;i<arr.length;i++){
+    var o=document.createElement("option");
+    o.textContent=arr[i];
     qSel.appendChild(o);
   }
-  drawMeme();
 }
-thSel.addEventListener("change", function() { initQuotes(thSel.value); });
-initQuotes("funny");
+thSel.addEventListener("change",function(){fillQuotes(thSel.value);draw();});
+fillQuotes("funny"); // populate before first draw
 
-/* ═══════════════════════════════════════════════════════════
-   DRAW
-═══════════════════════════════════════════════════════════ */
-function drawMeme() {
-  var customVal = document.getElementById("customQuote").value.trim();
-  var text = customVal !== "" ? customVal : qSel.value;
-  if (!text) return;
-  if (isUpper) text = text.toUpperCase();
+/* ════════════════════════════
+   DRAW — the fixed version
+════════════════════════════ */
+function draw(){
+  var txt=document.getElementById("customQuote").value.trim();
+  if(!txt) txt=qSel.options[qSel.selectedIndex]?qSel.options[qSel.selectedIndex].text:"";
+  if(!txt) txt="Type your caption above!";
+  if(S.upper) txt=txt.toUpperCase();
 
-  var fs = parseInt(document.getElementById("fontSize").value);
-  var fn = document.getElementById("fontSelect").value;
-  var fw = isBold ? "bold" : "normal";
-  var va = parseInt(document.getElementById("textPosition").value);
+  var fs=parseInt(document.getElementById("fontSize").value)||40;
+  var fn=document.getElementById("fontSelect").value||"Impact";
+  var fw=S.bold?"bold":"normal";
+  var vOff=parseInt(document.getElementById("textPos").value)||0;
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = document.getElementById("bgColor").value;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  CX.clearRect(0,0,CV.width,CV.height);
 
-  if (bgImage) {
-    var ia = bgImage.width / bgImage.height;
-    var ca = canvas.width / canvas.height;
-    var dw, dh, ox, oy;
-    if (ia > ca) { dh = canvas.height; dw = dh * ia; ox = (canvas.width - dw) / 2; oy = 0; }
-    else { dw = canvas.width; dh = dw / ia; ox = 0; oy = (canvas.height - dh) / 2; }
-    ctx.drawImage(bgImage, ox, oy, dw, dh);
+  // Background color
+  CX.fillStyle=document.getElementById("bgColor").value;
+  CX.fillRect(0,0,CV.width,CV.height);
+
+  // Background image
+  if(bgImg){
+    try{
+      var ia=bgImg.width/bgImg.height;
+      var ca=CV.width/CV.height;
+      var dw,dh,ox,oy;
+      if(ia>ca){dh=CV.height;dw=dh*ia;ox=(CV.width-dw)/2;oy=0;}
+      else{dw=CV.width;dh=dw/ia;ox=0;oy=(CV.height-dh)/2;}
+      CX.drawImage(bgImg,ox,oy,dw,dh);
+    }catch(e){bgImg=null;}
   }
 
-  ctx.font = fw + " " + fs + "px \"" + fn + "\"";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
+  // Font
+  var fontStr=fw+" "+fs+"px \""+fn+"\"";
+  CX.font=fontStr;
+  CX.textAlign="center";
+  CX.textBaseline="middle";
 
-  var maxW = canvas.width * 0.88;
-  var lh = fs * 1.28;
-  var lines = wrapText(ctx, text, maxW);
-  var totH = lines.length * lh;
-  var tY = (canvas.height / 2) + va;
+  // Wrap text
+  var maxW=CV.width*0.88;
+  var lh=fs*1.3;
+  var lines=wrapTxt(txt,maxW,fs,fn,fw);
+  var totH=lines.length*lh;
+  var midY=(CV.height/2)+vOff;
 
-  if (textBgOn) {
-    var mlw = 0;
-    for (var i = 0; i < lines.length; i++) {
-      var mw = ctx.measureText(lines[i]).width;
-      if (mw > mlw) mlw = mw;
+  // Caption background
+  if(S.capBg){
+    var mw=0;
+    for(var i=0;i<lines.length;i++){var w=CX.measureText(lines[i]).width;if(w>mw)mw=w;}
+    var pad=14;
+    CX.save();
+    CX.globalAlpha=parseInt(document.getElementById("capOpacity").value)/100;
+    CX.fillStyle=document.getElementById("capBgColor").value;
+    CX.fillRect(CV.width/2-mw/2-pad, midY-totH/2-pad/2, mw+pad*2, totH+pad);
+    CX.restore();
+  }
+
+  // Text
+  CX.save();
+  if(S.glow){CX.shadowBlur=24;CX.shadowColor=document.getElementById("textColor").value;}
+  for(var j=0;j<lines.length;j++){
+    var ly=midY-(totH/2)+(j*lh)+lh/2;
+    if(S.outline){
+      CX.strokeStyle=document.getElementById("strokeColor").value;
+      CX.lineWidth=Math.max(2,fs*0.07);
+      CX.lineJoin="round";
+      CX.strokeText(lines[j],CV.width/2,ly);
     }
-    var pad = 14;
-    ctx.save();
-    ctx.globalAlpha = parseInt(document.getElementById("textBgOpacity").value) / 100;
-    ctx.fillStyle = document.getElementById("textBgColor").value;
-    ctx.fillRect(canvas.width / 2 - mlw / 2 - pad, tY - totH / 2 - pad / 2, mlw + pad * 2, totH + pad);
-    ctx.restore();
+    CX.fillStyle=document.getElementById("textColor").value;
+    CX.fillText(lines[j],CV.width/2,ly);
   }
-
-  ctx.save();
-  if (glowOn) { ctx.shadowBlur = 22; ctx.shadowColor = document.getElementById("textColor").value; }
-  for (var j = 0; j < lines.length; j++) {
-    var ly = tY - (totH / 2) + (j * lh) + lh / 2;
-    if (isOutline) {
-      ctx.strokeStyle = document.getElementById("strokeColor").value;
-      ctx.lineWidth = Math.max(2, fs * 0.065);
-      ctx.lineJoin = "round";
-      ctx.strokeText(lines[j], canvas.width / 2, ly);
-    }
-    ctx.fillStyle = document.getElementById("textColor").value;
-    ctx.fillText(lines[j], canvas.width / 2, ly);
-  }
-  ctx.restore();
+  CX.restore();
 }
 
-function wrapText(ctx, text, maxW) {
-  var words = text.split(" ");
-  var lines = [];
-  var cur = words[0] || "";
-  for (var i = 1; i < words.length; i++) {
-    var test = cur + " " + words[i];
-    if (ctx.measureText(test).width <= maxW) { cur = test; }
-    else { lines.push(cur); cur = words[i]; }
+function wrapTxt(txt,maxW,fs,fn,fw){
+  // Re-measure with correct font
+  CX.font=fw+" "+fs+"px \""+fn+"\"";
+  var words=txt.split(" ");
+  var lines=[],cur=words[0]||"";
+  for(var i=1;i<words.length;i++){
+    var test=cur+" "+words[i];
+    if(CX.measureText(test).width<=maxW){cur=test;}
+    else{lines.push(cur);cur=words[i];}
   }
   lines.push(cur);
   return lines;
 }
 
-/* ═══════════════════════════════════════════════════════════
-   CONTROLS
-═══════════════════════════════════════════════════════════ */
-document.getElementById("customQuote").addEventListener("input", drawMeme);
-qSel.addEventListener("change", function() {
-  document.getElementById("customQuote").value = "";
-  drawMeme();
+/* ════════════════════════════
+   CONTROLS WIRING
+════════════════════════════ */
+document.getElementById("customQuote").addEventListener("input",draw);
+qSel.addEventListener("change",function(){document.getElementById("customQuote").value="";draw();});
+
+["fontSelect","textColor","strokeColor","bgColor","capBgColor","capOpacity","fontSize","textPos"].forEach(function(id){
+  var el=document.getElementById(id);
+  if(!el)return;
+  el.addEventListener("input",function(){
+    if(id==="fontSize") document.getElementById("fsVal").textContent=el.value;
+    if(id==="textPos")  document.getElementById("tpVal").textContent=el.value;
+    if(id==="capOpacity") document.getElementById("opVal").textContent=el.value;
+    draw();
+  });
 });
 
-var inputIds = ["fontSelect","textColor","strokeColor","bgColor","textBgColor","textBgOpacity","fontSize","textPosition"];
-for (var k = 0; k < inputIds.length; k++) {
-  (function(id) {
-    var el = document.getElementById(id);
-    if (!el) return;
-    el.addEventListener("input", function() {
-      if (id === "fontSize") document.getElementById("fontSizeVal").textContent = el.value;
-      if (id === "textPosition") document.getElementById("textPosVal").textContent = el.value;
-      if (id === "textBgOpacity") document.getElementById("bgOpacVal").textContent = el.value;
-      drawMeme();
-    });
-  })(inputIds[k]);
+function togBtn(btnId,key,cb){
+  document.getElementById(btnId).addEventListener("click",function(){
+    S[key]=!S[key];
+    this.classList.toggle("on",S[key]);
+    if(cb)cb(S[key]);
+    draw();
+  });
 }
-
-document.getElementById("boldToggle").addEventListener("click", function() {
-  isBold = !isBold;
-  this.classList.toggle("on", isBold);
-  drawMeme();
-});
-document.getElementById("outlineToggle").addEventListener("click", function() {
-  isOutline = !isOutline;
-  this.classList.toggle("on", isOutline);
-  drawMeme();
-});
-document.getElementById("glowToggle").addEventListener("click", function() {
-  glowOn = !glowOn;
-  this.classList.toggle("on", glowOn);
-  drawMeme();
-});
-document.getElementById("textBgToggle").addEventListener("click", function() {
-  textBgOn = !textBgOn;
-  this.classList.toggle("on", textBgOn);
-  document.getElementById("captBgColorWrap").style.display = textBgOn ? "flex" : "none";
-  document.getElementById("captBgOpacWrap").style.display = textBgOn ? "block" : "none";
-  drawMeme();
-});
-document.getElementById("upperToggle").addEventListener("click", function() {
-  isUpper = !isUpper;
-  this.classList.toggle("on", isUpper);
-  drawMeme();
+togBtn("boldBtn","bold");
+togBtn("outlineBtn","outline");
+togBtn("glowBtn","glow");
+togBtn("upperBtn","upper");
+togBtn("capBgBtn","capBg",function(on){
+  document.getElementById("capBgClrWrap").style.display=on?"flex":"none";
+  document.getElementById("capOpWrap").style.display=on?"flex":"none";
 });
 
-document.getElementById("bgImageUpload").addEventListener("change", function(e) {
-  var file = e.target.files[0];
-  if (!file) return;
-  var r = new FileReader();
-  r.onload = function(ev) {
-    var img = new Image();
-    img.onload = function() { bgImage = img; drawMeme(); };
-    img.src = ev.target.result;
+// Upload image — use FileReader (no CORS issues)
+document.getElementById("imgUpload").addEventListener("change",function(e){
+  var f=e.target.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(ev){
+    var img=new Image();
+    img.onload=function(){bgImg=img;draw();};
+    img.onerror=function(){alert("Could not load image.");};
+    img.src=ev.target.result;
   };
-  r.readAsDataURL(file);
-});
-document.getElementById("clearBgBtn").addEventListener("click", function() {
-  bgImage = null;
-  document.getElementById("bgImageUpload").value = "";
-  drawMeme();
+  r.readAsDataURL(f);
 });
 
-/* ═══════════════════════════════════════════════════════════
+document.getElementById("clearBtn").addEventListener("click",function(){
+  bgImg=null;
+  document.getElementById("imgUpload").value="";
+  draw();
+});
+
+/* ════════════════════════════
    DOWNLOAD & COPY
-═══════════════════════════════════════════════════════════ */
-document.getElementById("downloadBtn").addEventListener("click", function() {
-  setTimeout(function() {
-    var a = document.createElement("a");
-    a.download = "meme-" + Date.now() + ".jpg";
-    a.href = canvas.toDataURL("image/jpeg", 0.93);
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    if (typeof gtag === "function") gtag("event", "meme_download");
-  }, 100);
+════════════════════════════ */
+document.getElementById("dlBtn").addEventListener("click",function(){
+  // Re-draw to ensure clean render
+  draw();
+  setTimeout(function(){
+    var a=document.createElement("a");
+    a.download="meme-"+Date.now()+".jpg";
+    a.href=CV.toDataURL("image/jpeg",0.94);
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    if(typeof gtag==="function")gtag("event","meme_download");
+  },150);
 });
 
-document.getElementById("copyBtn").addEventListener("click", function() {
-  var dataUrl = canvas.toDataURL("image/png");
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  var btn = this;
-  if (isIOS) {
-    document.getElementById("iosCopyImage").src = dataUrl;
-    document.getElementById("iosCopyContainer").style.display = "flex";
-    return;
-  }
-  if (typeof ClipboardItem !== "undefined" && navigator.clipboard && navigator.clipboard.write) {
-    fetch(dataUrl).then(function(r) { return r.blob(); }).then(function(blob) {
-      return navigator.clipboard.write([new ClipboardItem({"image/png": blob})]);
-    }).then(function() {
-      btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-      setTimeout(function() { btn.innerHTML = '<i class="fas fa-copy"></i> Copy to Clipboard'; }, 2200);
-    }).catch(function() {
-      var win = window.open(); if (win) win.document.write('<img src="' + dataUrl + '" style="max-width:100%">');
+document.getElementById("cpBtn").addEventListener("click",function(){
+  var btn=this;
+  var isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
+  draw();
+  setTimeout(function(){
+    var dataUrl=CV.toDataURL("image/png");
+    if(isIOS){
+      document.getElementById("ios-img").src=dataUrl;
+      document.getElementById("ios-ov").style.display="flex";
+      return;
+    }
+    if(window.ClipboardItem&&navigator.clipboard&&navigator.clipboard.write){
+      fetch(dataUrl).then(function(r){return r.blob();}).then(function(blob){
+        return navigator.clipboard.write([new ClipboardItem({"image/png":blob})]);
+      }).then(function(){
+        btn.innerHTML='<i class="fas fa-check"></i> Copied!';
+        setTimeout(function(){btn.innerHTML='<i class="fas fa-copy"></i> Copy to Clipboard';},2500);
+      }).catch(function(){openInNew(dataUrl);});
+    }else{openInNew(dataUrl);}
+    if(typeof gtag==="function")gtag("event","meme_copy");
+  },150);
+});
+
+function openInNew(dataUrl){
+  var w=window.open();
+  if(w){w.document.write('<img src="'+dataUrl+'" style="max-width:100%;display:block;margin:20px auto">');
+  w.document.write('<p style="text-align:center;font-family:sans-serif;color:#555">Right-click the image → Save or Copy</p>');}
+}
+
+document.getElementById("ios-close").addEventListener("click",function(){
+  document.getElementById("ios-ov").style.display="none";
+});
+
+/* ════════════════════════════
+   CAROUSEL & TEMPLATES
+════════════════════════════ */
+var carSlide=0;
+var carItems=[];
+var track=document.getElementById("carTrack");
+var dotsEl=document.getElementById("carDots");
+var prevB=document.getElementById("carPrev");
+var nextB=document.getElementById("carNext");
+
+function ipp(){
+  var w=window.innerWidth;
+  if(w<=480)return 2;if(w<=640)return 3;if(w<=800)return 4;return 5;
+}
+function thumbW(){
+  var el=track.querySelector(".thumb");
+  return el?(el.offsetWidth+10):140;
+}
+
+function buildCar(cat){
+  carSlide=0;
+  carItems=(cat==="all")?TEMPLATES.slice():TEMPLATES.filter(function(t){return t.cat===cat;});
+  track.innerHTML="";
+  carItems.forEach(function(img){
+    var div=document.createElement("div");
+    div.className="thumb";
+    var im=document.createElement("img");
+    // Use eager loading so images actually appear
+    im.loading="eager";
+    im.alt=img.label;
+    // Set crossOrigin BEFORE src
+    im.crossOrigin="anonymous";
+    im.src=img.t;
+    im.onerror=function(){
+      // fallback: remove crossOrigin and retry
+      im.removeAttribute("crossorigin");
+      im.src=img.t+"?"+(Date.now());
+    };
+    var lbl=document.createElement("div");
+    lbl.className="thumb-lbl";
+    lbl.textContent=img.label;
+    div.appendChild(im);div.appendChild(lbl);
+    div.addEventListener("click",function(){
+      track.querySelectorAll(".thumb").forEach(function(x){x.classList.remove("active");});
+      div.classList.add("active");
+      applyTemplate(img.f,im);
     });
-  } else {
-    var win = window.open(); if (win) win.document.write('<img src="' + dataUrl + '" style="max-width:100%">');
+    track.appendChild(div);
+  });
+  buildDots();
+  updateCar();
+}
+
+function applyTemplate(fullSrc,thumbEl){
+  // Strategy 1: if thumb already loaded, use it directly to avoid CORS
+  if(thumbEl&&thumbEl.complete&&thumbEl.naturalWidth>0){
+    // Use a canvas to copy thumb pixels, then load full res
+    // Actually just load full URL directly via FileReader approach via fetch
   }
-  if (typeof gtag === "function") gtag("event", "meme_copy");
-});
-
-document.getElementById("iosCopyClose").addEventListener("click", function() {
-  document.getElementById("iosCopyContainer").style.display = "none";
-});
-
-/* ═══════════════════════════════════════════════════════════
-   TEMPLATES & CAROUSEL
-═══════════════════════════════════════════════════════════ */
-var currentSlide = 0;
-var filteredTpls = [];
-var tGrid = document.getElementById("tGrid");
-var dotsEl = document.getElementById("cDots");
-var prevBtn = document.getElementById("prevBtn");
-var nextBtn = document.getElementById("nextBtn");
-
-function itemsPerPage() {
-  var w = window.innerWidth;
-  if (w <= 480) return 2;
-  if (w <= 680) return 3;
-  if (w <= 800) return 4;
-  return 5;
-}
-
-function itemWidth() {
-  var items = tGrid.querySelectorAll(".tItem");
-  if (!items.length) return 140;
-  return items[0].offsetWidth + 10;
-}
-
-function renderTemplates(cat) {
-  currentSlide = 0;
-  filteredTpls = (cat === "all") ? TEMPLATES.slice() : TEMPLATES.filter(function(t) { return t.cat === cat; });
-  tGrid.innerHTML = "";
-  for (var i = 0; i < filteredTpls.length; i++) {
-    (function(img) {
-      var item = document.createElement("div");
-      item.className = "tItem";
-      var ie = document.createElement("img");
-      ie.alt = img.label;
-      ie.loading = "lazy";
-      ie.src = img.t;
-      ie.onerror = function() { item.style.display = "none"; };
-      var lb = document.createElement("div");
-      lb.className = "tLbl";
-      lb.textContent = img.label;
-      item.appendChild(ie);
-      item.appendChild(lb);
-      item.addEventListener("click", function() {
-        var all = tGrid.querySelectorAll(".tItem");
-        for (var j = 0; j < all.length; j++) all[j].classList.remove("sel");
-        item.classList.add("sel");
-        loadTemplate(img.f);
-      });
-      tGrid.appendChild(item);
-    })(filteredTpls[i]);
-  }
-  initDots();
-  updateCarousel();
-}
-
-function loadTemplate(src) {
-  var img = new Image();
-  img.crossOrigin = "anonymous";
-  img.onload = function() { bgImage = img; drawMeme(); };
-  img.onerror = function() {
-    // retry without crossOrigin if CORS fails
-    var img2 = new Image();
-    img2.onload = function() { bgImage = img2; drawMeme(); };
-    img2.src = src;
+  // Load full res image
+  var img=new Image();
+  img.crossOrigin="anonymous";
+  img.onload=function(){bgImg=img;draw();};
+  img.onerror=function(){
+    // Try without crossOrigin
+    var img2=new Image();
+    img2.onload=function(){bgImg=img2;draw();};
+    img2.onerror=function(){
+      // Last resort: try to use thumb via canvas
+      if(thumbEl&&thumbEl.complete&&thumbEl.naturalWidth>0){
+        bgImg=thumbEl;draw();
+      }
+    };
+    img2.src=fullSrc;
   };
-  img.src = src;
-  if (typeof gtag === "function") gtag("event", "meme_template_select");
+  img.src=fullSrc;
+  if(typeof gtag==="function")gtag("event","meme_template");
 }
 
-function initDots() {
-  var ipp = itemsPerPage();
-  var count = Math.ceil(filteredTpls.length / ipp);
-  dotsEl.innerHTML = "";
-  for (var i = 0; i < count; i++) {
-    (function(idx) {
-      var d = document.createElement("div");
-      d.className = "dot" + (idx === 0 ? " active" : "");
-      d.addEventListener("click", function() { goToSlide(idx); });
+function buildDots(){
+  var n=Math.ceil(carItems.length/ipp());
+  dotsEl.innerHTML="";
+  for(var i=0;i<n;i++){
+    (function(idx){
+      var d=document.createElement("div");
+      d.className="dot"+(idx===0?" on":"");
+      d.addEventListener("click",function(){carSlide=idx;updateCar();});
       dotsEl.appendChild(d);
     })(i);
   }
 }
-
-function updateCarousel() {
-  var ipp = itemsPerPage();
-  var iw = itemWidth();
-  var offset = currentSlide * ipp * iw;
-  tGrid.style.transform = "translateX(-" + offset + "px)";
-  var dots = dotsEl.querySelectorAll(".dot");
-  for (var i = 0; i < dots.length; i++) {
-    dots[i].classList.toggle("active", i === currentSlide);
-  }
-  var maxSlide = Math.max(0, Math.ceil(filteredTpls.length / ipp) - 1);
-  prevBtn.disabled = (currentSlide === 0);
-  nextBtn.disabled = (currentSlide >= maxSlide);
+function updateCar(){
+  var tw=thumbW(),s=ipp();
+  var max=Math.max(0,Math.ceil(carItems.length/s)-1);
+  if(carSlide>max)carSlide=max;
+  track.style.transform="translateX(-"+(carSlide*s*tw)+"px)";
+  dotsEl.querySelectorAll(".dot").forEach(function(d,i){d.classList.toggle("on",i===carSlide);});
+  prevB.disabled=(carSlide===0);
+  nextB.disabled=(carSlide>=max);
 }
+prevB.addEventListener("click",function(){if(carSlide>0){carSlide--;updateCar();}});
+nextB.addEventListener("click",function(){var max=Math.max(0,Math.ceil(carItems.length/ipp())-1);if(carSlide<max){carSlide++;updateCar();}});
 
-function goToSlide(i) { currentSlide = i; updateCarousel(); }
-
-prevBtn.addEventListener("click", function() {
-  if (currentSlide > 0) { currentSlide--; updateCarousel(); }
+// Tab buttons
+document.getElementById("tabRow").querySelectorAll(".tab").forEach(function(btn){
+  btn.addEventListener("click",function(){
+    document.querySelectorAll("#tabRow .tab").forEach(function(b){b.classList.remove("on");});
+    btn.classList.add("on");
+    buildCar(btn.getAttribute("data-cat"));
+  });
 });
-nextBtn.addEventListener("click", function() {
-  var max = Math.max(0, Math.ceil(filteredTpls.length / itemsPerPage()) - 1);
-  if (currentSlide < max) { currentSlide++; updateCarousel(); }
-});
-
-// Tab filters
-var tabs = document.querySelectorAll(".tabBtn");
-for (var ti = 0; ti < tabs.length; ti++) {
-  (function(btn) {
-    btn.addEventListener("click", function() {
-      for (var j = 0; j < tabs.length; j++) tabs[j].classList.remove("active");
-      btn.classList.add("active");
-      renderTemplates(btn.getAttribute("data-cat"));
-    });
-  })(tabs[ti]);
-}
 
 // Touch swipe
-var tsX = 0, tvX = 0, ttX = 0;
-tGrid.addEventListener("touchstart", function(e) {
-  tsX = e.touches[0].clientX; tvX = 0; ttX = Date.now();
-  tGrid.style.transition = "none";
-}, {passive: true});
-tGrid.addEventListener("touchmove", function(e) {
-  var dx = e.touches[0].clientX - tsX;
-  var dt = Date.now() - ttX;
-  if (dt > 0) tvX = dx / dt;
-  tsX = e.touches[0].clientX; ttX = Date.now();
-}, {passive: true});
-tGrid.addEventListener("touchend", function() {
-  tGrid.style.transition = "transform .3s ease-out";
-  var ipp = itemsPerPage(), iw = itemWidth();
-  var tgt = currentSlide - Math.round((tvX * 100) / (iw * ipp));
-  var max = Math.max(0, Math.ceil(filteredTpls.length / ipp) - 1);
-  tgt = Math.max(0, Math.min(tgt, max));
-  currentSlide = tgt; updateCarousel();
+var tx0=0,tv0=0,tt0=0;
+track.addEventListener("touchstart",function(e){tx0=e.touches[0].clientX;tv0=0;tt0=Date.now();track.style.transition="none";},{passive:true});
+track.addEventListener("touchmove",function(e){var dx=e.touches[0].clientX-tx0;var dt=Date.now()-tt0;if(dt>0)tv0=dx/dt;tx0=e.touches[0].clientX;tt0=Date.now();},{passive:true});
+track.addEventListener("touchend",function(){
+  track.style.transition="transform .3s ease";
+  var s=ipp(),tw=thumbW();
+  var tgt=carSlide-Math.round((tv0*100)/(tw*s));
+  var max=Math.max(0,Math.ceil(carItems.length/s)-1);
+  carSlide=Math.max(0,Math.min(tgt,max));
+  updateCar();
 });
 
-// Mobile: prevent double-tap zoom on buttons
-var allBtns = document.querySelectorAll("button");
-for (var bi = 0; bi < allBtns.length; bi++) {
-  allBtns[bi].addEventListener("touchstart", function(e) {
-    e.preventDefault(); this.click();
-  }, {passive: false});
-}
+// Mobile tap — prevent double zoom
+document.querySelectorAll("button").forEach(function(b){
+  b.addEventListener("touchstart",function(e){e.preventDefault();b.click();},{passive:false});
+});
 
-/* ── INIT ── */
-renderTemplates("all");
-drawMeme();
+/* ════════════════════════════
+   INIT — order matters
+════════════════════════════ */
+// 1. Size canvas
+sizeCanvas();
+// 2. Build carousel (eager loading)
+buildCar("all");
+// 3. Draw initial canvas with default text
+draw();
 </script>
 </body>
 </html>
