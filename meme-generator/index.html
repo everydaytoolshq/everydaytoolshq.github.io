@@ -541,15 +541,17 @@ function draw(){
 
   if(bgImg){
     try{
-      // bgImg may be HTMLImageElement or HTMLCanvasElement
-      var srcW = (bgImg.naturalWidth > 0 ? bgImg.naturalWidth : null) || bgImg.width || 500;
-      var srcH = (bgImg.naturalHeight > 0 ? bgImg.naturalHeight : null) || bgImg.height || 500;
-      var ia=srcW/srcH;
-      var ca=CV.width/CV.height;
+      // _imgW/_imgH = API-provided true dimensions (always correct)
+      // naturalWidth/height = works for same-origin images
+      // width/height = canvas element dimensions
+      var srcW = bgImg._imgW || (bgImg.naturalWidth > 0 ? bgImg.naturalWidth : 0) || bgImg.width || 500;
+      var srcH = bgImg._imgH || (bgImg.naturalHeight > 0 ? bgImg.naturalHeight : 0) || bgImg.height || 500;
+      var ia = srcW / srcH;
+      var ca = CV.width / CV.height;
       var dw,dh,ox,oy;
-      if(ia>ca){dh=CV.height;dw=dh*ia;ox=(CV.width-dw)/2;oy=0;}
-      else{dw=CV.width;dh=dw/ia;ox=0;oy=(CV.height-dh)/2;}
-      CX.drawImage(bgImg,ox,oy,dw,dh);
+      if(ia > ca){dh=CV.height; dw=dh*ia; ox=(CV.width-dw)/2; oy=0;}
+      else{dw=CV.width; dh=dw/ia; ox=0; oy=(CV.height-dh)/2;}
+      CX.drawImage(bgImg, ox, oy, dw, dh);
     }catch(e){}
   }
 
@@ -797,8 +799,8 @@ function buildCar(cat){
     div.addEventListener("click",function(){
       track.querySelectorAll(".thumb").forEach(function(x){x.classList.remove("active");});
       div.classList.add("active");
-      // Pass the DOM img element — already loaded, no CORS needed
-      useThumbAsBackground(im, img.f||img.url);
+      // Pass the DOM img element AND the known API dimensions
+      useThumbAsBackground(im, img.f||img.url, img.w, img.h);
     });
     track.appendChild(div);
   });
@@ -806,71 +808,58 @@ function buildCar(cat){
   updateCar();
 }
 
-/* ── TEMPLATE IMAGE LOADING ─────────────────────────────
-   CORS reality: Imgflip images block crossOrigin requests,
-   and fetch() also fails. BUT the browser ALREADY loaded the
-   thumbnail img element into the DOM without crossOrigin,
-   so we can draw it onto an offscreen canvas to get a
-   clean ImageBitmap or use drawImage with the DOM element.
-   
-   The trick: draw the DOM <img> onto an offscreen canvas,
-   then use that canvas as bgImg. This works because we're
-   not reading pixels back (no toDataURL on the offscreen),
-   we're just drawing it onto our main canvas for display.
-   
-   For download/copy/share we overlay text on top of whatever
-   is drawn — the canvas taint only blocks toDataURL if the
-   ORIGIN is cross-origin AND crossOrigin wasn't set. Since
-   we draw the DOM img (which loaded successfully), we can
-   still draw it onto our canvas for visual purposes.
-   
-   Better approach: create an offscreen canvas from the img,
-   store that as bgImg. Then our main canvas draws from
-   another canvas (same origin) — no taint.
+/* ── TEMPLATE IMAGE LOADING ──────────────────────────────
+   The problem: Imgflip blocks crossOrigin, so naturalWidth=0
+   after load, making aspect ratio NaN → image drawn 0×0.
+
+   The solution: the Imgflip API returns the true pixel width
+   and height for every template. We store these (imgW, imgH)
+   and attach them to whatever we use as bgImg so draw() always
+   has the correct aspect ratio, regardless of CORS.
 ────────────────────────────────────────────────────────*/
-function useThumbAsBackground(domImg, fullSrc){
-  // Strategy 1: if the img is loaded, blit it to an offscreen canvas
-  // That offscreen canvas becomes bgImg — drawing canvas→canvas is always allowed
-  if(domImg.complete && domImg.naturalWidth > 0){
-    var off=document.createElement("canvas");
-    off.width=domImg.naturalWidth||500;
-    off.height=domImg.naturalHeight||500;
-    var octx=off.getContext("2d");
+function useThumbAsBackground(domImg, fullSrc, imgW, imgH){
+  // Try to blit the already-loaded DOM img to an offscreen canvas
+  // The offscreen canvas has explicit width/height = API dimensions
+  var knownW = imgW || (domImg && domImg.naturalWidth > 0 ? domImg.naturalWidth : 0) || 500;
+  var knownH = imgH || (domImg && domImg.naturalHeight > 0 ? domImg.naturalHeight : 0) || 500;
+
+  if(domImg && domImg.complete && domImg.naturalWidth > 0){
+    var off = document.createElement("canvas");
+    off.width = knownW;
+    off.height = knownH;
+    var octx = off.getContext("2d");
     try{
-      octx.drawImage(domImg,0,0);
-      bgImg=off;  // bgImg is now a canvas element — drawImage accepts canvas
+      octx.drawImage(domImg, 0, 0, knownW, knownH);
+      // Attach known dimensions so draw() can read them
+      off._imgW = knownW;
+      off._imgH = knownH;
+      bgImg = off;
       draw();
       return;
     }catch(e){
-      // tainted — fall through to strategy 2
+      // CORS taint on offscreen draw — fall through
     }
   }
-  // Strategy 2: load full src without crossOrigin attribute
-  // (works for display, canvas will be tainted so download uses fallback)
-  var i=new Image();
-  i.onload=function(){
-    var off=document.createElement("canvas");
-    off.width=i.naturalWidth||500;
-    off.height=i.naturalHeight||500;
-    var octx=off.getContext("2d");
-    try{
-      octx.drawImage(i,0,0);
-      bgImg=off;
-    }catch(e){
-      // Still tainted — use img directly (canvas tainted but visible)
-      bgImg=i;
-    }
+
+  // Fallback: load image directly (no crossOrigin — works for display,
+  // canvas gets tainted but text overlay still renders visually)
+  var i = new Image();
+  i.onload = function(){
+    // Attach API dimensions directly to the img element
+    i._imgW = knownW;
+    i._imgH = knownH;
+    bgImg = i;
     draw();
   };
-  i.onerror=function(){
-    alert("This template could not be loaded. Try another or upload your own image.");
+  i.onerror = function(){
+    alert("Could not load this template. Try another or upload your own image.");
   };
-  i.src=fullSrc;
-  if(typeof gtag==="function")gtag("event","meme_template");
+  i.src = fullSrc;
+  if(typeof gtag==="function") gtag("event","meme_template");
 }
 
 function loadFull(img){
-  useThumbAsBackground(null, img.f||img.url);
+  useThumbAsBackground(null, img.f||img.url, img.w, img.h);
 }
 
 function buildDots(){
@@ -1035,7 +1024,9 @@ function loadImgflip(){
           name:m.name,
           t:m.url,
           f:m.url,
-          url:m.url
+          url:m.url,
+          w:m.width||500,   // API provides actual pixel width
+          h:m.height||500   // API provides actual pixel height
         };
       });
       status.className="api-status ok";
