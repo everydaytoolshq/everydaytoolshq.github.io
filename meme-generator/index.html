@@ -312,10 +312,15 @@ input[type=color]::-webkit-color-swatch{border-radius:6px;border:none}
   </div>
 </div>
 
-<!-- iOS OVERLAY -->
+<!-- iOS OVERLAY — used for download, copy and tainted templates -->
 <div id="ios-ov">
-  <p>Tap and hold the image below,<br>then choose "Save to Photos" or "Copy"</p>
-  <img id="ios-img" alt="meme" />
+  <p id="ios-msg">Tap and hold the image below, then choose "Save to Photos" or "Copy"</p>
+  <img id="ios-img" alt="meme" style="display:none" />
+  <!-- For tainted/Imgflip templates: HTML composite shown here -->
+  <div id="ios-composite" style="display:none;position:relative;max-width:90vw">
+    <img id="ios-bg" alt="meme background" style="max-width:90vw;max-height:65vh;border-radius:10px;display:block" />
+    <div id="ios-caption" style="position:absolute;left:50%;transform:translateX(-50%);width:90%;text-align:center;pointer-events:none;line-height:1.25;word-break:break-word"></div>
+  </div>
   <button id="ios-close">✕ Close</button>
 </div>
 
@@ -661,208 +666,141 @@ document.getElementById("clearBtn").addEventListener("click",function(){
 });
 
 /* ════════════════════════════════════════
-   EXPORT HELPERS
-   
-   getDataUrl() — tries canvas.toDataURL (works for Unsplash
-   templates + uploaded images). Returns null if canvas is
-   tainted (Imgflip templates loaded without CORS).
-   
-   exportMeme() — the single function all 3 buttons call.
-   If canvas is clean → uses dataUrl directly.
-   If canvas is tainted → opens an HTML composition page that
-   renders the image + text overlay via HTML/CSS. The user
-   can long-press (mobile) or right-click (desktop) to save.
-   This always works, no CORS, no proxies, no errors.
+   EXPORT — iOS-safe, no window.open on iOS
 ════════════════════════════════════════ */
+var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
 function getDataUrl(){
-  try{ return CV.toDataURL("image/jpeg", 0.94); }
+  try{ return CV.toDataURL("image/jpeg",0.94); }
   catch(e){ return null; }
 }
 
-/* Build caption style string matching current settings */
 function getCaptionStyle(){
-  var fs = parseInt(document.getElementById("fontSize").value)||40;
-  var fn = document.getElementById("fontSelect").value||"Impact";
-  var fw = S.bold ? "bold" : "normal";
-  var tc = document.getElementById("textColor").value;
-  var sc = document.getElementById("strokeColor").value;
-  var vOff = parseInt(document.getElementById("textPos").value)||0;
-  var glowStyle = S.glow ? "0 0 12px "+tc+", 0 0 24px "+tc : "none";
-
-  // outline via text-shadow
-  var outlineStyle = S.outline
-    ? "-2px -2px 0 "+sc+", 2px -2px 0 "+sc+", -2px 2px 0 "+sc+", 2px 2px 0 "+sc
-    : "none";
-  var shadow = S.outline ? outlineStyle : (S.glow ? glowStyle : "none");
-
-  return {
-    fontSize: fs, fontFamily: fn, fontWeight: fw,
-    color: tc, textShadow: shadow,
-    translateY: vOff, upper: S.upper
-  };
+  var fs=parseInt(document.getElementById("fontSize").value)||40;
+  var fn=document.getElementById("fontSelect").value||"Impact";
+  var fw=S.bold?"bold":"normal";
+  var tc=document.getElementById("textColor").value;
+  var sc=document.getElementById("strokeColor").value;
+  var vOff=parseInt(document.getElementById("textPos").value)||0;
+  var ol="-2px -2px 0 "+sc+",2px -2px 0 "+sc+",-2px 2px 0 "+sc+",2px 2px 0 "+sc;
+  var gl="0 0 12px "+tc+",0 0 24px "+tc;
+  var sh=S.outline?ol:(S.glow?gl:"none");
+  return {fontSize:fs,fontFamily:fn,fontWeight:fw,color:tc,textShadow:sh,translateY:vOff};
 }
 
-/* Open HTML export page — works regardless of CORS taint */
-function openExportPage(mode){
-  // mode: "download" | "copy" | "share"
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-  var txt = document.getElementById("customQuote").value.trim();
-  if(!txt){ var sel=qSel.options[qSel.selectedIndex]; txt=sel?sel.text:""; }
-  if(S.upper) txt=txt.toUpperCase();
-
-  var cs = getCaptionStyle();
-  var fs = cs.fontSize;
-
-  // Determine background
-  var bgStyle, imgTag="";
-  if(lastTemplateSrc && bgImg){
-    // Use the image URL directly in HTML — browser renders it without CORS issues
-    imgTag = '<img id="bgimg" src="'+lastTemplateSrc+'" crossorigin="anonymous">';
-    bgStyle = "background:"+document.getElementById("bgColor").value;
-  } else {
-    bgStyle = "background:"+document.getElementById("bgColor").value;
-  }
-
-  var instructions = isIOS
-    ? "Tap &amp; hold the image → \"Save to Photos\" or \"Share\""
-    : "Right-click the image → \"Save image as…\"";
-
-  var html = '<!DOCTYPE html><html><head><meta charset="utf-8">'
-    + '<meta name="viewport" content="width=device-width,initial-scale=1">'
-    + '<title>Your Meme</title><style>'
-    + '*{box-sizing:border-box;margin:0;padding:0}'
-    + 'body{background:#111;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;font-family:sans-serif}'
-    + '.meme-wrap{position:relative;display:inline-block;max-width:95vw}'
-    + '.meme-wrap img#bgimg{display:block;max-width:95vw;max-height:80vh;border-radius:10px}'
-    + '.caption{position:absolute;left:50%;transform:translateX(-50%) translateY('+cs.translateY+'px);width:90%;text-align:center;font-family:"'+cs.fontFamily+'",Impact,Arial Black,sans-serif;font-size:clamp(16px,'+Math.round(fs*0.9)+'px,'+fs+'px);font-weight:'+cs.fontWeight+';color:'+cs.color+';text-shadow:'+cs.textShadow+';line-height:1.25;pointer-events:none;white-space:pre-wrap;word-break:break-word}'
-    + '.no-bg .caption{color:'+cs.color+'}'
-    + '.hint{color:#aaa;margin-top:18px;font-size:14px;text-align:center;line-height:1.6;max-width:380px}'
-    + '.solid-bg{'+bgStyle+';border-radius:10px;width:'+CV.width+'px;height:'+CV.height+'px;max-width:95vw;max-height:80vh}'
-    + '</style></head><body>';
-
-  if(lastTemplateSrc && bgImg){
-    html += '<div class="meme-wrap">'
-      + imgTag
-      + '<div class="caption" style="top:50%">'+txt+'</div>'
-      + '</div>';
-  } else {
-    // Solid colour background
-    html += '<div class="meme-wrap">'
-      + '<div class="solid-bg"></div>'
-      + '<div class="caption" style="top:50%">'+txt+'</div>'
-      + '</div>';
-  }
-
-  html += '<p class="hint">'+instructions+'</p>';
-  html += '</body></html>';
-
-  var w = window.open();
-  if(w){ w.document.write(html); w.document.close(); }
+function getCapText(){
+  var t=document.getElementById("customQuote").value.trim();
+  if(!t){var s=qSel.options[qSel.selectedIndex];t=s?s.text:"";}
+  return S.upper?t.toUpperCase():t;
 }
 
-/* ── DOWNLOAD ─────────────────────────────────────────── */
+/* Show iOS overlay — canvas dataUrl path */
+function iosShowCanvas(dataUrl, msg){
+  document.getElementById("ios-msg").textContent = msg;
+  document.getElementById("ios-img").src = dataUrl;
+  document.getElementById("ios-img").style.display = "block";
+  document.getElementById("ios-composite").style.display = "none";
+  document.getElementById("ios-ov").style.display = "flex";
+}
+
+/* Show iOS overlay — HTML composite path (tainted canvas) */
+function iosShowComposite(msg){
+  var cs=getCaptionStyle(), txt=getCapText();
+  var bgEl=document.getElementById("ios-bg");
+  if(lastTemplateSrc){ bgEl.src=lastTemplateSrc; bgEl.style.display="block"; }
+  else { bgEl.style.display="none"; }
+  var cap=document.getElementById("ios-caption");
+  cap.textContent=txt;
+  cap.style.cssText="position:absolute;left:50%;width:90%;text-align:center;pointer-events:none;line-height:1.25;word-break:break-word;"
+    +"font-family:'"+cs.fontFamily+"',Impact,sans-serif;"
+    +"font-size:"+Math.round(cs.fontSize*0.85)+"px;"
+    +"font-weight:"+cs.fontWeight+";"
+    +"color:"+cs.color+";"
+    +"text-shadow:"+cs.textShadow+";"
+    +"top:50%;transform:translateX(-50%) translateY(calc(-50% + "+cs.translateY+"px));";
+  document.getElementById("ios-msg").textContent = msg;
+  document.getElementById("ios-img").style.display = "none";
+  document.getElementById("ios-composite").style.display = "block";
+  document.getElementById("ios-ov").style.display = "flex";
+}
+
+/* Non-iOS: open new tab with HTML composite */
+function openExportPage(){
+  var cs=getCaptionStyle(), txt=getCapText();
+  var w=window.open(); if(!w) return;
+  var h='<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your Meme</title><style>'
+   +'*{box-sizing:border-box;margin:0;padding:0}body{background:#111;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}'
+   +'.w{position:relative;display:inline-block;max-width:95vw}.w img{display:block;max-width:95vw;max-height:80vh;border-radius:10px}'
+   +'.c{position:absolute;top:50%;left:50%;transform:translate(-50%,calc(-50% + '+cs.translateY+'px));width:90%;text-align:center;'
+   +'font-family:"'+cs.fontFamily+'",Impact,sans-serif;font-size:'+cs.fontSize+'px;font-weight:'+cs.fontWeight+';color:'+cs.color+';text-shadow:'+cs.textShadow+';line-height:1.25;word-break:break-word;pointer-events:none}'
+   +'p{color:#aaa;margin-top:16px;font-size:14px;text-align:center}'
+   +'</style></head><body><div class="w">';
+  if(lastTemplateSrc) h+='<img src="'+lastTemplateSrc+'">';
+  h+='<div class="c">'+txt+'</div></div><p>Right-click → Save image as…</p></body></html>';
+  w.document.write(h); w.document.close();
+}
+
+function dataUrlToBlob(url){
+  var arr=url.split(","),mime=arr[0].match(/:(.*?);/)[1];
+  var b=atob(arr[1]),n=b.length,u=new Uint8Array(n);
+  while(n--) u[n]=b.charCodeAt(n);
+  return new Blob([u],{type:mime});
+}
+
+/* ── DOWNLOAD ── */
 document.getElementById("dlBtn").addEventListener("click",function(){
   draw();
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  var dataUrl = getDataUrl();
-
-  if(dataUrl){
-    if(isIOS){
-      // iOS: show overlay (anchor download not supported)
-      var p = document.querySelector("#ios-ov p");
-      if(p) p.textContent = "Tap and hold the image, then choose \"Save to Photos\" to download.";
-      document.getElementById("ios-img").src = dataUrl;
-      document.getElementById("ios-ov").style.display = "flex";
-    } else {
-      // Android / desktop: direct anchor download
-      var a = document.createElement("a");
-      a.download = "meme-"+Date.now()+".jpg";
-      a.href = dataUrl;
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    }
-  } else {
-    // Tainted canvas — open HTML export page
-    openExportPage("download");
-  }
+  var dataUrl=getDataUrl();
+  if(isIOS){
+    if(dataUrl) iosShowCanvas(dataUrl,'Tap and hold the image, then choose "Save to Photos".');
+    else iosShowComposite('Tap and hold the image, then choose "Save to Photos".');
+  } else if(dataUrl){
+    var a=document.createElement("a");a.download="meme-"+Date.now()+".jpg";a.href=dataUrl;
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+  } else { openExportPage(); }
   if(typeof gtag==="function") gtag("event","meme_download");
 });
 
-/* ── COPY ─────────────────────────────────────────────── */
+/* ── COPY ── */
 document.getElementById("cpBtn").addEventListener("click",function(){
   draw();
-  var btn = this;
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  var dataUrl = getDataUrl();
-
-  if(!dataUrl){
-    // Tainted — open export page
-    openExportPage("copy");
-    return;
-  }
-
+  var btn=this, dataUrl=getDataUrl();
   if(isIOS){
-    var p = document.querySelector("#ios-ov p");
-    if(p) p.textContent = "Tap and hold the image, then choose \"Copy\" or \"Save to Photos\".";
-    document.getElementById("ios-img").src = dataUrl;
-    document.getElementById("ios-ov").style.display = "flex";
+    if(dataUrl) iosShowCanvas(dataUrl,'Tap and hold the image, then choose "Copy" or "Save to Photos".');
+    else iosShowComposite('Tap and hold the image, then choose "Save to Photos".');
     return;
   }
-
-  if(window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){
-    fetch(dataUrl).then(function(r){return r.blob();}).then(function(blob){
-      return navigator.clipboard.write([new ClipboardItem({"image/png":blob})]);
+  if(dataUrl && window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){
+    fetch(dataUrl).then(function(r){return r.blob();}).then(function(b){
+      return navigator.clipboard.write([new ClipboardItem({"image/png":b})]);
     }).then(function(){
       btn.innerHTML='<i class="fas fa-check"></i> Copied!';
       setTimeout(function(){btn.innerHTML='<i class="fas fa-copy"></i> Copy';},2500);
-    }).catch(function(){ openExportPage("copy"); });
-  } else {
-    openExportPage("copy");
-  }
+    }).catch(function(){ if(dataUrl) openExportPage(); });
+  } else { openExportPage(); }
   if(typeof gtag==="function") gtag("event","meme_copy");
 });
 
-/* ── SHARE ────────────────────────────────────────────── */
+/* ── SHARE ── */
 document.getElementById("shareBtn").addEventListener("click",function(){
   draw();
-  var dataUrl = getDataUrl();
-
-  // Convert dataUrl to blob synchronously (preserves user gesture for share API)
-  function dataUrlToBlob(url){
-    var arr=url.split(","), mime=arr[0].match(/:(.*?);/)[1];
-    var bstr=atob(arr[1]), n=bstr.length, u8=new Uint8Array(n);
-    while(n--) u8[n]=bstr.charCodeAt(n);
-    return new Blob([u8],{type:mime});
-  }
-
-  if(dataUrl && navigator.share){
-    var blob = dataUrlToBlob(dataUrl);
-    var file = new File([blob],"meme.jpg",{type:"image/jpeg"});
-    var sd = (navigator.canShare && navigator.canShare({files:[file]}))
-      ? {title:"My Meme",files:[file]}
-      : {title:"My Meme",url:window.location.href};
+  var dataUrl=getDataUrl();
+  if(navigator.share && dataUrl){
+    var file=new File([dataUrlToBlob(dataUrl)],"meme.jpg",{type:"image/jpeg"});
+    var sd=(navigator.canShare&&navigator.canShare({files:[file]}))
+      ?{title:"My Meme",files:[file]}:{title:"My Meme",url:window.location.href};
     navigator.share(sd).catch(function(err){
-      if(err.name!=="AbortError") openExportPage("share");
+      if(err.name!=="AbortError"){
+        if(isIOS) iosShowCanvas(dataUrl,'Tap and hold the image, then choose "Share".');
+        else openExportPage();
+      }
     });
-  } else {
-    // No canvas data or no Share API — open export page
-    openExportPage("share");
-  }
+  } else if(isIOS){
+    if(dataUrl) iosShowCanvas(dataUrl,'Tap and hold the image, then choose "Share".');
+    else iosShowComposite('Tap and hold the image, then choose "Save to Photos".');
+  } else { openExportPage(); }
   if(typeof gtag==="function") gtag("event","meme_share");
 });
-
-/* ── HELPERS ─────────────────────────────────────────── */
-function showTaintOverlay(){ openExportPage("download"); }
-
-function showImageTab(dataUrl, instructions){
-  var w=window.open();
-  if(w){
-    w.document.write('<html><head><title>Your Meme</title></head><body style="margin:0;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-family:sans-serif;padding:20px">');
-    w.document.write('<img src="'+dataUrl+'" style="max-width:95vw;max-height:80vh;border-radius:10px">');
-    w.document.write('<p style="color:#aaa;margin-top:16px;font-size:14px;text-align:center">'+instructions+'</p>');
-    w.document.write('</body></html>');
-  }
-}
 
 document.getElementById("ios-close").addEventListener("click",function(){
   document.getElementById("ios-ov").style.display="none";
