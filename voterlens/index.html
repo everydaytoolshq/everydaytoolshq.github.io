@@ -372,6 +372,9 @@ select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.10);}
 <div id="gt_container" style="display:none;visibility:hidden;position:absolute;"></div>
 <div class="wrap">
 <nav class="breadcrumb"><a href="https://everydaytoolshq.github.io/" data-i18n="home">Home</a> › VoterLens</nav>
+<div style="background:#fff8e1;border-bottom:1px solid #ffe082;padding:9px 20px;text-align:center;font-size:11px;color:#5d4037;line-height:1.65;">
+  <strong>ℹ️ Informational tool only — not affiliated with any party or organisation.</strong> All information is sourced from public APIs, news reporting and official records. Verify independently before voting. <span style="text-decoration:underline;cursor:pointer;font-weight:700;" onclick="document.querySelector('.howCard').scrollIntoView({behavior:'smooth'});">Full disclaimer ↓</span>
+</div>
 
 <div class="heroImg">
   <img src="https://everydaytoolshq.github.io/voterlenshero.jpg" alt="VoterLens" width="1088" height="752" loading="eager" fetchpriority="high"/>
@@ -557,7 +560,7 @@ select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.10);}
     </div>
     <div class="aiTile" data-ai="grok" data-url="https://grok.com" onclick="toggleAI(this)">
       <div class="aiTileTop"><div class="aiLogo">⚫</div><div><div class="aiName">Grok</div><div class="aiModel">Grok 3 · xAI</div></div><div class="aiCheck" id="ck-grok"></div></div>
-      <div class="aiTileDesc" data-i18n="aiGrok">Strong on current events and scandals.</div>
+      <div class="aiTileDesc" data-i18n="aiGrok">Strong on current events and controversies.</div>
     </div>
     <div class="aiTile" data-ai="perplexity" data-url="https://www.perplexity.ai" onclick="toggleAI(this)">
       <div class="aiTileTop"><div class="aiLogo">🔮</div><div><div class="aiName">Perplexity</div><div class="aiModel">Pro · Perplexity AI</div></div><div class="aiCheck" id="ck-perplexity"></div></div>
@@ -654,7 +657,7 @@ select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.10);}
 
   <h3>📡 The Data Stack (All Official, All Free)</h3>
   <p><strong>World Bank Open Data API</strong> — verified GDP, unemployment, inflation, government debt, healthcare spend, education spend, inequality (GINI), poverty rates and CO₂. Used as a <em>hard ceiling</em> to test whether policies are mathematically possible given the country's actual fiscal position.</p>
-  <p><strong>WHO Global Health Observatory</strong> — Universal Health Coverage index scores. <strong>Wikidata SPARQL</strong> — live party list, ideology, leadership and seats per country, updated in near-real-time. <strong>Wikipedia REST API</strong> — party history in the user's language. <strong>Curated Knowledge Base</strong> — for major parties (UK, US, Australia, Ireland, Germany, Italy, France, Canada, India, Spain, South Africa, Brazil, New Zealand): real manifesto commitments, IFS/OBR/Deutsche Bank analyses, verified fact-checks, documented scandals with citations, and promise vs delivery records.</p>
+  <p><strong>WHO Global Health Observatory</strong> — Universal Health Coverage index scores. <strong>Wikidata SPARQL</strong> — live party list, ideology, leadership and seats per country, updated in near-real-time. <strong>Wikipedia REST API</strong> — party history in the user's language. <strong>Curated Knowledge Base</strong> — for major parties (UK, US, Australia, Ireland, Germany, Italy, France, Canada, India, Spain, South Africa, Brazil, New Zealand): real manifesto commitments, IFS/OBR/Deutsche Bank analyses, verified fact-checks, documented controversies with cited sources, and promise vs delivery records.</p>
 
   <h3>🏗️ What Each Dossier Section Measures</h3>
   <p><strong>Key Campaign Pillars</strong> — the manifesto promises for the next election, explained plainly and tested against the data. <strong>Accountability Pulse</strong> — four scores (fact-check, historical risk, budget feasibility, civil rights) based on documented evidence, not opinion. <strong>Demographic Overview</strong> — what their policies specifically mean for women, children, elderly, disabled people and minorities. <strong>Immigration Reality Check</strong> — the actual difference between illegal and legal migration, what migrants do economically, and what removal would mean in practice. <strong>Veil-Remover</strong> — for each topic: the slogan, the blueprint, the hidden price, feasibility against real GDP/debt data, income-bracket impacts, and named historical precedents. <strong>Country Status</strong> — 20-year governance record, metric trends over time, and cross-party priorities based on what the data says any responsible government should be working on.</p>
@@ -667,6 +670,15 @@ select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.10);}
     <span class="pill">📖 Wikipedia REST</span><span class="pill">🏥 WHO GHO API</span>
     <span class="pill">🔓 Zero API Keys</span><span class="pill">⚖️ Strictly Neutral</span>
     <span class="pill">🌍 44 Countries</span><span class="pill">🤖 8 AI Integrations</span>
+  </div>
+
+  <h3>⚖️ Important Disclaimer — Please Read</h3>
+  <div style="background:#f8f9fa;border-left:4px solid #6c757d;border-radius:0 10px 10px 0;padding:16px 18px;margin-top:10px;font-size:12px;line-height:1.85;color:#444;">
+    <p style="margin:0 0 10px;"><strong>VoterLens is an independent informational tool only.</strong> It is not affiliated with, endorsed by, or connected to any political party, government body, media organisation, or campaign group.</p>
+    <p style="margin:0 0 10px;"><strong>Sources &amp; Accuracy:</strong> Information in VoterLens comes from multiple sources including: public APIs (World Bank, WHO, Wikidata, Wikipedia), curated editorial content based on publicly available reporting, and AI-assisted analysis. All sources are cited where provided. However, <strong>VoterLens cannot guarantee the completeness, currency or accuracy of all information.</strong> Data may be outdated, incomplete or subject to interpretation. Some analysis — particularly pulse scores for parties without a full curated profile — is <em>estimated</em> based on spectrum position and available data, and is clearly labelled as such.</p>
+    <p style="margin:0 0 10px;"><strong>Controversies &amp; Documented Record:</strong> Information in the Controversies section is drawn from publicly reported events covered by established news organisations and official sources (parliamentary records, court documents, regulatory findings). All entries include a cited source. VoterLens does not make original allegations — it summarises what has already been publicly reported and officially documented. Where a matter is alleged rather than proven, this is noted. The absence of a controversy entry does not mean a party has no controversies — it may simply mean that party does not yet have a full curated profile in VoterLens.</p>
+    <p style="margin:0 0 10px;"><strong>Not Political Advice:</strong> VoterLens does not tell you how to vote. It provides structured, evidence-based information to help you make your own informed decision. <strong>Always verify information using primary and independent sources before making any voting decision.</strong> Different people may interpret the same facts differently, and political choices involve values that data alone cannot resolve.</p>
+    <p style="margin:0;"><strong>No Liability:</strong> VoterLens and its operators accept no responsibility for decisions made based on this tool. Use of this tool constitutes acceptance that it is provided for informational purposes only, on an as-is basis, with no warranty of accuracy or completeness. Information is drawn from publicly available sources and is provided as-is.</p>
   </div>
 </div>
 
@@ -707,14 +719,14 @@ const TRANSLATIONS = {
     boosterBadge:"AI Power Boost — Optional",boosterTitle:"🤖 Go Deeper With Your Own AI",
     boosterSub:"Already logged into ChatGPT, Gemini, Claude or another AI? Tick it below. VoterLens will build a perfect prompt so you get an even richer analysis using your full account tier.",
     aiChatGPT:"Best for structured analysis. Most widely used.",aiGemini:"Excellent at economic fact-checking. Pulls live data.",
-    aiClaude:"Best for nuanced political and historical analysis.",aiGrok:"Strong on current events and scandals.",
+    aiClaude:"Best for nuanced political and historical analysis.",aiGrok:"Strong on current events and controversies.",
     aiPerp:"Searches live web. Great for latest news.",aiCopilot:"Free GPT-4o. Works without login.",
     aiDeepseek:"Strong reasoning. Free tier available.",aiMistral:"European AI. Strong on EU politics.",
     boosterReady:"✅ Ready:",boosterNone:"Select an AI above to generate a deep-dive prompt.",
     howTitle:"How VoterLens Works",
     howP1:'VoterLens fetches <strong>live official data first</strong>, builds a complete knowledge dossier from its curated party database, then layers real economic figures from the World Bank and WHO on top.',
     howH2:"The Data Stack",howH3:"The AI Power Boost",
-    howP2:'<strong>Wikidata SPARQL</strong> → live party list per country. <strong>Wikipedia</strong> → party history. <strong>World Bank API</strong> (free, no key) → 17 economic indicators. <strong>WHO GHO API</strong> → Universal Health Coverage. <strong>Curated knowledge base</strong> → real manifesto data, scandals, promise records.',
+    howP2:'<strong>Wikidata SPARQL</strong> → live party list per country. <strong>Wikipedia</strong> → party history. <strong>World Bank API</strong> (free, no key) → 17 economic indicators. <strong>WHO GHO API</strong> → Universal Health Coverage. <strong>Curated knowledge base</strong> → real manifesto data, controversies, promise records.',
     howP3:'Tick any AI you\'re already logged into — ChatGPT, Gemini, Claude, Grok, DeepSeek, Perplexity, Copilot, or Mistral. VoterLens builds a perfectly structured prompt. One click opens your AI, one paste gives a deeper analysis.',
     inPower:"IN POWER",dossierTitle:"📋 Party Dossier",
     secSummary:"📋 Executive Summary",secPulse:"📡 Accountability Pulse",
@@ -759,14 +771,14 @@ const TRANSLATIONS = {
     boosterBadge:"Potenziamento AI — Opzionale",boosterTitle:"🤖 Approfondisci con la Tua AI",
     boosterSub:"Sei già loggato in ChatGPT, Gemini, Claude o un'altra AI? Selezionala qui sotto. VoterLens costruirà un prompt perfetto per un'analisi ancora più dettagliata.",
     aiChatGPT:"Ottimo per analisi strutturate. Il più usato.",aiGemini:"Eccellente nel fact-checking economico.",
-    aiClaude:"Migliore per analisi politica e storica.",aiGrok:"Forte su eventi attuali e scandali.",
+    aiClaude:"Migliore per analisi politica e storica.",aiGrok:"Forte su eventi attuali e controversie.",
     aiPerp:"Cerca sul web in tempo reale. Ottimo per notizie recenti.",aiCopilot:"GPT-4o gratuito. Funziona senza login.",
     aiDeepseek:"Ragionamento avanzato. Livello gratuito disponibile.",aiMistral:"AI europea. Ottima sulla politica UE.",
     boosterReady:"✅ Pronto:",boosterNone:"Seleziona un'AI sopra per generare un prompt approfondito.",
     howTitle:"Come Funziona VoterLens",
     howP1:'VoterLens recupera prima <strong>dati ufficiali in tempo reale</strong>, costruisce un dossier completo dal suo database di partiti curato, poi aggiunge i dati economici reali dalla Banca Mondiale e dall\'OMS.',
     howH2:"Le Fonti Dati",howH3:"Il Potenziamento AI",
-    howP2:'<strong>Wikidata SPARQL</strong> → lista partiti per paese. <strong>Wikipedia</strong> → storia del partito. <strong>Banca Mondiale API</strong> → 17 indicatori economici. <strong>OMS GHO API</strong> → copertura sanitaria. <strong>Database curato</strong> → dati reali da manifesti, scandali, promesse.',
+    howP2:'<strong>Wikidata SPARQL</strong> → lista partiti per paese. <strong>Wikipedia</strong> → storia del partito. <strong>Banca Mondiale API</strong> → 17 indicatori economici. <strong>OMS GHO API</strong> → copertura sanitaria. <strong>Database curato</strong> → dati reali da manifesti, controversie, promesse.',
     howP3:'Seleziona qualsiasi AI in cui sei già loggato — ChatGPT, Gemini, Claude, Grok, DeepSeek, Perplexity, Copilot o Mistral. VoterLens costruisce un prompt strutturato. Un clic apre la tua AI, un incolla ti dà un\'analisi più profonda.',
     inPower:"AL GOVERNO",dossierTitle:"📋 Dossier del Partito",
     secSummary:"📋 Sommario Esecutivo",secPulse:"📡 Polso di Responsabilità",
@@ -811,14 +823,14 @@ const TRANSLATIONS = {
     boosterBadge:"Boost IA — Optionnel",boosterTitle:"🤖 Approfondissez avec Votre IA",
     boosterSub:"Déjà connecté à ChatGPT, Gemini, Claude ou une autre IA ? Cochez-la ci-dessous pour obtenir une analyse encore plus riche.",
     aiChatGPT:"Meilleur pour l'analyse structurée.",aiGemini:"Excellent pour la vérification économique.",
-    aiClaude:"Meilleur pour l'analyse politique et historique.",aiGrok:"Fort sur l'actualité et les scandales.",
+    aiClaude:"Meilleur pour l'analyse politique et historique.",aiGrok:"Fort sur l'actualité et les controverses.",
     aiPerp:"Recherche web en direct. Idéal pour les dernières nouvelles.",aiCopilot:"GPT-4o gratuit. Fonctionne sans connexion.",
     aiDeepseek:"Raisonnement avancé. Niveau gratuit disponible.",aiMistral:"IA européenne. Forte sur la politique UE.",
     boosterReady:"✅ Prêt :",boosterNone:"Sélectionnez une IA ci-dessus pour générer un prompt approfondi.",
     howTitle:"Comment VoterLens Fonctionne",
     howP1:'VoterLens récupère d\'abord des <strong>données officielles en direct</strong>, construit un dossier complet à partir de sa base de données curée, puis ajoute des chiffres économiques réels de la Banque Mondiale et de l\'OMS.',
     howH2:"Les Sources de Données",howH3:"Le Boost IA",
-    howP2:'<strong>Wikidata SPARQL</strong> → liste des partis. <strong>Wikipedia</strong> → historique. <strong>API Banque Mondiale</strong> → 17 indicateurs économiques. <strong>API OMS GHO</strong> → couverture santé. <strong>Base de données curée</strong> → données réelles des manifestes, scandales, promesses.',
+    howP2:'<strong>Wikidata SPARQL</strong> → liste des partis. <strong>Wikipedia</strong> → historique. <strong>API Banque Mondiale</strong> → 17 indicateurs économiques. <strong>API OMS GHO</strong> → couverture santé. <strong>Base de données curée</strong> → données réelles des manifestes, controverses, promesses.',
     howP3:'Cochez toute IA à laquelle vous êtes déjà connecté. VoterLens construit un prompt parfait. Un clic ouvre votre IA, un collage vous donne une analyse plus profonde.',
     inPower:"AU POUVOIR",dossierTitle:"📋 Dossier du Parti",
     secSummary:"📋 Résumé Exécutif",secPulse:"📡 Pouls de Responsabilité",
@@ -911,7 +923,7 @@ const TRANSLATIONS = {
     boosterBadge:"Impulso IA — Opcional",boosterTitle:"🤖 Profundiza con Tu IA",
     boosterSub:"¿Ya tienes sesión en ChatGPT, Gemini, Claude u otra IA? Márcala abajo para obtener un análisis aún más rico.",
     aiChatGPT:"Mejor para análisis estructurado.",aiGemini:"Excelente para verificación económica.",
-    aiClaude:"Mejor para análisis político e histórico.",aiGrok:"Fuerte en eventos actuales y escándalos.",
+    aiClaude:"Mejor para análisis político e histórico.",aiGrok:"Fuerte en eventos actuales y controversias.",
     aiPerp:"Busca en web en tiempo real.",aiCopilot:"GPT-4o gratuito. Funciona sin sesión.",
     aiDeepseek:"Razonamiento avanzado. Nivel gratuito disponible.",aiMistral:"IA europea. Fuerte en política UE.",
     boosterReady:"✅ Listo:",boosterNone:"Selecciona una IA arriba para generar un prompt de análisis profundo.",
@@ -1183,7 +1195,7 @@ const LANG_DEFAULT={GB:'en',US:'en',IT:'it',FR:'fr',DE:'de',ES:'es',PT:'pt',PL:'
 
 /* ================================================================
    RICH PARTY KNOWLEDGE BASE
-   Real data: manifestos, IFS analysis, fact-checks, leaders, scandals
+   Real data: manifestos, IFS analysis, fact-checks, leaders, controversies
 ================================================================ */
 const PARTY_KB = {
   /* ── UK ── */
@@ -1325,7 +1337,7 @@ const PARTY_KB = {
     promisesKept:["Delivered 5 MEPs to European Parliament (before Brexit)","Contributed to Brexit referendum result","Gained 5 MPs in 2024 general election — historic result for a new party"],
     promisesBroken:["£90bn tax cuts (abandoned Nov 2025 by Farage)","'Real change in 100 days' — party has no government power","Zero illegal crossings — crossings continued post-2024 election"],
     falseOrMisleading:["'£17bn for healthcare' — IFS: none goes to NHS itself","'Boriswave cost £234bn' — figure disputed, unverified methodology","'We can eliminate NHS waiting lists in 2 years' — IFS: 'near impossible'","'Mass immigration is the cause of the housing crisis' — primarily a supply failure"],
-    scandals:[
+    controversies:[
     {year:2025,title:"£5m personal gift from crypto billionaire Harborne — Parliamentary Standards probe",detail:"Farage received a £5 million personal gift from Thailand-based crypto billionaire Christopher Harborne (12% stake in Tether stablecoin) weeks before announcing his 2024 election candidacy. Farage said the money was for 'security for life'. Harborne has given over £22 million to Farage's parties over 7 years — funding two-thirds of all Reform income. Conservatives and Labour referred Farage to the Parliamentary Standards Commissioner for potentially breaking Commons rules by not declaring the gift as a new MP. The UK government imposed a moratorium on crypto donations to parties citing foreign influence risks.",source:"Guardian April 2025; Parliamentary Standards Commissioner referral; Coindesk April 2025"},
     {year:2024,title:"£9m single donation — largest ever to UK party from living person",detail:"Harborne donated £9 million to Reform UK in 2024 — the largest single political donation ever made by a living person to a British party. BitMEX co-founder Ben Delo separately gave £4 million. Reform's entire funding comes from a handful of ultra-wealthy donors, directly contradicting its 'anti-establishment' and 'people's party' branding.",source:"Electoral Commission donation returns 2024; The Guardian reporting"},
     {year:2024,title:"£90bn manifesto — Farage abandoned his own costings within weeks",detail:"Reform's 2024 manifesto contained a £90bn tax cut package. The IFS described it as a 'fiscal black hole' with no credible funding. Farage publicly distanced himself from his own party's costings within weeks of launch, calling them 'aspirational'. The manifesto was scored as economically impossible by every major independent economic body.",source:"IFS GE2024 analysis; Farage BBC interview June 2024"},
@@ -1376,7 +1388,7 @@ const PARTY_KB = {
     {type:"authoritarianism",severity:"high",title:"Freedom House downgrade: 'Free' to 'Partly Free'",detail:"Freedom House downgraded India from 'Free' to 'Partly Free' in 2021 and has maintained that classification since. Key concerns: attacks on press freedom, use of sedition laws against journalists and activists, undermining of judicial independence.",evidence:"Freedom House: India 2024 — Score 66/100 'Partly Free'"},
     {type:"racism",severity:"high",title:"Citizenship Amendment Act — religious discrimination",detail:"The CAA (2019) explicitly grants faster citizenship to Hindu, Sikh, Buddhist, Jain, Parsi and Christian refugees from three Muslim-majority countries — but explicitly excludes Muslim refugees. It is the first time Indian citizenship law explicitly excludes a religious group. The Act has been condemned by the UN and multiple human rights organizations as discriminatory.",evidence:"CAA Section 2(1)(b): explicit religious exemption for Muslims; UN High Commissioner for Human Rights statement 2020"},
     ],
-    scandals:[
+    controversies:[
     {year:2024,title:"Electoral Bonds — Supreme Court strikes down anonymous funding",detail:"India's Supreme Court unanimously declared the Electoral Bond scheme unconstitutional, violating citizens' right to information. BJP had received ₹6,060 crore (60% of all bonds). Multiple companies donated after receiving government contracts or regulatory relief. SBI initially refused to disclose donor names.",source:"Supreme Court of India judgment, 15 February 2024"},
     {year:2024,title:"Adani Group — Hindenburg Report allegations",detail:"US short-seller Hindenburg Research alleged that the Adani Group — whose chairman Gautam Adani has close ties to Modi — engaged in stock manipulation, accounting fraud and money laundering through offshore entities. Adani Group denied the allegations. A Supreme Court committee found no conclusive evidence but noted regulatory gaps. The controversy wiped $150 billion from Adani's market cap.",source:"Hindenburg Research, January 2023; Supreme Court Committee Report, 2024"},
     {year:2023,title:"Manipur ethnic violence — government inaction",detail:"Ethnic violence between Meitei and Kuki communities in Manipur killed 250+ people and displaced 60,000 from May 2023. A video of two women being paraded naked by a mob went viral in July 2023. PM Modi did not visit Manipur for months. Opposition accused the government of covering up the scale of the violence.",source:"Ministry of Home Affairs; Human Rights Watch, 2023"},
@@ -1392,7 +1404,7 @@ const PARTY_KB = {
     governing:false,
     scores:{trust:4,feasibility:5,transparency:4,civilRights:5},
     tldr:"The Conservatives suffered their worst defeat since 1906 in July 2024, losing 252 seats. Under Kemi Badenoch they are rebuilding from opposition. Their 14 years in government left a legacy of record net migration (900,000 at peak), NHS crisis, and £2.6 trillion national debt despite austerity.",
-    summary:"The Conservative Party, under new leader Kemi Badenoch (elected November 2024), is rebuilding after their catastrophic 2024 general election loss — their worst result since 1906. During 14 years in government (2010-2024) under 5 prime ministers, the Conservatives promised to cut net migration to 'tens of thousands' at every election and ended with net migration at a record 900,000. They promised to 'level up' the North — internal analysis showed limited progress. They promised sound finances — national debt rose from 65% to 100%+ of GDP. The NHS waiting list rose from 3 million to 7.5 million. Multiple prime ministers (Cameron, May, Johnson, Truss, Sunak) and a long list of scandals including Partygate, the Post Office Horizon scandal (400+ wrongful prosecutions), the PPE VIP lane (£8.7bn of contracts awarded without competition), and the Lucy Letby hospital cover-up inquiry revelations. Under Badenoch, the party is attempting to define a new direction — socially conservative, economically liberal — but has not yet produced a detailed alternative policy programme.",
+    summary:"The Conservative Party, under new leader Kemi Badenoch (elected November 2024), is rebuilding after their catastrophic 2024 general election loss — their worst result since 1906. During 14 years in government (2010-2024) under 5 prime ministers, the Conservatives promised to cut net migration to 'tens of thousands' at every election and ended with net migration at a record 900,000. They promised to 'level up' the North — internal analysis showed limited progress. They promised sound finances — national debt rose from 65% to 100%+ of GDP. The NHS waiting list rose from 3 million to 7.5 million. Multiple prime ministers (Cameron, May, Johnson, Truss, Sunak) and a long list of controversies including Partygate, the Post Office Horizon scandal (400+ wrongful prosecutions), the PPE VIP lane (£8.7bn of contracts awarded without competition), and the Lucy Letby hospital cover-up inquiry revelations. Under Badenoch, the party is attempting to define a new direction — socially conservative, economically liberal — but has not yet produced a detailed alternative policy programme.",
     pulse:{factCheck:{score:35,note:"Net migration promise broken every election for 14 years. 'Tens of thousands' became 900,000. Boris Johnson claimed Brexit would 'get it done' — it didn't on multiple metrics. Partygate denials later proven false. Rwanda scheme: £290m spent, 0 people sent."},historicalRisk:{score:38,note:"Mainstream conservative party with democratic credentials. However Truss episode showed willingness to try ideologically-driven economics with disregard for evidence. Brexit has parallels to economic isolationism movements. Partygate weakened democratic norms."},budgetFeasibility:{score:48,note:"In power 14 years: made pledges they didn't fund (40 new hospitals — only 8 progressing). Austerity reduced deficits but created infrastructure debt of £650bn. Truss budget was financially reckless. Sunak more orthodox but inherited disorder."},civilRights:{score:58,note:"Rwanda Act passed — first legislation designed to disapply ECHR in domestic law. Judicial review restrictions. But ECHR membership maintained overall. Equality Act maintained. Some concerns about protest restrictions (Public Order Act 2023)."}},
     topics:{
       immigration:{slogan:"Stop the boats. Reduce net migration to tens of thousands.",blueprint:"Rwanda scheme (£290m, 0 people sent, scheme abandoned). Illegal Migration Act. Stricter visa rules. Student visa restrictions. Net migration promise (never met).",hiddenPrice:"14 years of promises, 0 delivery. Net migration rose from 270,000 (2010) to 900,000 (2023). Rwanda spent £290m with zero deportations. Student visa restrictions damaged UK universities and research sector.",hpc:"danger",tl:"r",feasibility:"false",feasDetail:"The Conservatives governed for 14 years with the explicit promise to cut net migration to 'tens of thousands'. It reached a record 900,000. The Rwanda scheme cost £290m and sent 0 people.",impactPoor:"Record migration drove up rents and housing costs. But also kept NHS and social care staffed. Mixed record.",impactMid:"NHS maintained by migration they promised to cut. Housing crisis worsened.",impactRich:"No direct impact. Wealthy households insulated.",histParallel:"📜 Conservatives' own 14-year record: promising to cut migration every election since 2010. Never delivered. Net migration 3x higher at end of tenure than start."},
@@ -1408,14 +1420,14 @@ const PARTY_KB = {
     promisesKept:["Brexit delivered (in form if not all substance)","COVID furlough scheme protected millions of jobs","HS2 phase 1 started (later cancelled to Birmingham)","Marriage (Same-Sex Couples) Act 2013 under Cameron"],
     promisesBroken:["Net migration to 'tens of thousands' (every election, never achieved)","40 new hospitals (only 8 proceeding)","Levelling Up (limited measurable progress)","Triple lock pension maintained but real terms value eroded","Rwanda scheme (£290m, 0 deportations)"],
     falseOrMisleading:["'Record investment in the NHS' — real terms spending cuts in some years","'Stopping the boats' — crossings continued throughout their tenure","'Sound money' — national debt doubled under their tenure"],
-    scandals:[
+    controversies:[
     {year:2021,title:"Partygate — illegal gatherings in No.10 during lockdown",detail:"Multiple parties held at 10 Downing Street while the public faced strict COVID restrictions. Boris Johnson received a Fixed Penalty Notice — the first sitting PM convicted of breaking the law he set. Sue Gray Report (2022) documented 16 events including a 'wine time Fridays' culture. Johnson resigned July 2022.",source:"Metropolitan Police 2022; Sue Gray Report May 2022"},
     {year:2021,title:"PPE VIP lane — £4bn awarded without competition",detail:"A 'high priority lane' gave preferential access to companies referred by MPs, peers and political contacts. £4 billion awarded without competitive tender. Good Law Project won judicial reviews. At least one minister resigned.",source:"National Audit Office 2020; Good Law Project v DHSC 2022"},
     {year:1999,title:"Post Office Horizon — 700+ wrongful prosecutions (1999-2015)",detail:"Post Office prosecuted 700+ sub-postmasters using Fujitsu's faulty Horizon system. Convictions being overturned via legislation (2024 Act). Former CEO Paula Vennells returned CBE. Scandal unfolded entirely under Conservative and previous governments, but response was inadequate for years.",source:"Court of Appeal; Post Office (Horizon System) Offences Act 2024"},
     {year:2022,title:"Liz Truss mini-budget — market crisis in 6 weeks",detail:"£45bn in unfunded tax cuts announced September 2022 triggered a gilt market crisis, pound near-parity with dollar and mortgage rate spike. Bank of England emergency intervention to prevent pension fund collapse. All measures reversed in 6 weeks. PM Truss resigned after 45 days.",source:"OBR Fiscal Risk Report 2023; Bank of England Emergency Intervention"},
   ],
   wallet:{poor:{monthly:-95,note:"Austerity cuts to local services, benefits, and public health cost the poorest households an estimated £95/month in reduced services (IPPR). Food bank use grew 1,300% under their tenure."},mid:{monthly:-40,note:"Stagnant real wages, higher mortgage costs (especially 2022-2024 post-Truss), deteriorating schools and NHS. IFS estimates average household £1,100 worse off in real terms vs 2008."},caveats:"Conservative government 2010-2024 retrospective. Current opposition has not yet published costed alternative policies."},
-    audioSummary:"The Conservatives governed Britain for 14 years and left the country with a 7.5 million NHS waiting list, record net migration despite repeated promises to cut it, public services worn to breaking point, and national debt more than doubled. Under Kemi Badenoch they're now rebuilding in opposition. Their record shows a pattern of promising one thing and delivering another — especially on immigration and the economy. Multiple scandals including Partygate, the PPE VIP lane and the Post Office Horizon scandal define their later years. Any assessment of Conservative promises must weigh them against this track record of non-delivery.",
+    audioSummary:"The Conservatives governed Britain for 14 years and left the country with a 7.5 million NHS waiting list, record net migration despite repeated promises to cut it, public services worn to breaking point, and national debt more than doubled. Under Kemi Badenoch they're now rebuilding in opposition. Their record shows a pattern of promising one thing and delivering another — especially on immigration and the economy. Multiple controversies including Partygate, the PPE VIP lane and the Post Office Horizon scandal define their later years. Any assessment of Conservative promises must weigh them against this track record of non-delivery.",
   },
 
   /* ── ITALY — Fratelli d'Italia ── */
@@ -1450,7 +1462,7 @@ const PARTY_KB = {
     promisesKept:["NATO and EU commitments maintained (despite pre-election euroscepticism)","Ukraine support maintained","Flat tax self-employed threshold raised","Albanian deal (attempted — courts struck it down)","Coalition stability maintained for first 2 years"],
     promisesBroken:["Albania deal: courts declared it illegal — no successful offshore processing","Flat tax extension to employees: not implemented (cost too high)","Quota 41 pension reform: delayed indefinitely (cost €10bn+)","Growth target: Italy grew 0.9% in 2024, below EU average","Bridge: costs escalated, environmental concerns, no construction start"],
     falseOrMisleading:["Italy's economy growing faster than EU (true 2022, false by 2024)","Albania deal is legal (two Italian courts and the CJEU disagreed)","Flat tax helps working families (primary benefit to self-employed high earners)","SSN is well-funded (spend is 6.2% GDP vs 7.7% EU average)"],
-    scandals:[
+    controversies:[
     {year:2025,title:"Meloni under criminal investigation — freed ICC-wanted Libyan torturer",detail:"PM Giorgia Meloni was placed under criminal investigation by Rome's chief prosecutor in January 2025 for 'aiding and abetting a crime and misuse of public funds.' The charge arose after her government released and flew home Osama Almasri Njeem — a Libyan police officer wanted by the International Criminal Court for alleged crimes against humanity including murder, torture and rape. The ICC had not been consulted. Meloni announced the probe herself in a video, calling it politically motivated.",source:"Al Jazeera January 28, 2025; Meloni video statement; ICC demand for explanation"},
     {year:2024,title:"Banca Intesa Sanpaolo snooping scandal — 3,500+ accounts illegally accessed",detail:"A bank clerk at Italy's largest bank (Banca Intesa Sanpaolo) illegally accessed 3,500+ accounts including those of Meloni, her sister Arianna (FdI party coordinator), Defence Minister Crosetto and other senior FdI figures. The clerk claimed to be motivated by 'curiosity'. Meloni said the snooping was a politically-motivated plot against her government — investigators found no evidence to support this claim.",source:"Bloomberg October 2024; Al Jazeera October 2024"},
     {year:2024,title:"Culture Minister Sangiuliano — affair with influencer he appointed as government advisor",detail:"Culture Minister Gennaro Sangiuliano admitted to an affair with social media influencer Maria Rosaria Boccia, whom he had nominated for a senior government advisory role. Boccia then began releasing evidence via Instagram suggesting she had attended government events improperly. Sangiuliano resigned in September 2024. Meloni initially rejected his resignation offer.",source:"Euronews September 2024; RAI interview Sangiuliano September 2024"},
@@ -1489,7 +1501,7 @@ const PARTY_KB = {
     promisesKept:["Raised migration as a political issue (achieved prominence)","Prevented CDU from governing without them in some state parliaments"],
     promisesBroken:["Any actual policy delivery (party has been in opposition only)"],
     falseOrMisleading:["'Remigration' of German citizens is constitutional — Basic Law Art. 16 explicitly prohibits it","Euro exit is achievable — no legal mechanism exists","'Climate change is natural' — contradicts 99.9% scientific consensus"],
-    scandals:[
+    controversies:[
     {year:2024,title:"Potsdam meeting — deportation of millions including German citizens planned",detail:"AfD members attended a meeting in Potsdam (November 2023) where 'remigration' was discussed — including forced deportation of millions of people, including German citizens with migration backgrounds, to Africa. The Correctiv investigative journalism outlet published the full report in January 2024. It triggered Germany's largest street protests since reunification — over 1 million people across multiple cities in a single weekend. AfD leaders denied knowledge despite confirmed members' presence.",source:"Correctiv investigative report January 2024; protest attendance data January 2024"},
     {year:2024,title:"BfV classifies AfD as 'proven extremist organisation' — highest threat level",detail:"Germany's domestic intelligence service (Bundesverfassungsschutz / BfV) formally classified the AfD as a 'proven extremist organisation' in 2024 — the highest possible classification. Multiple AfD members have been convicted under §86a StGB (use of Nazi symbols) and §130 StGB (incitement). The Constitutional Court is assessing whether the AfD can be banned outright.",source:"BfV Annual Report 2024; Federal Constitutional Court proceedings"},
     {year:2024,title:"Maximilian Krah — defended the SS, suspended from own party",detail:"AfD's lead candidate for the 2024 European Parliament elections, Maximilian Krah, said in an interview that not every SS member was 'automatically a criminal'. He was suspended from the AfD's European Parliament group (ID group) by Marine Le Pen. His own party banned him from all EU campaign appearances. Russian financing links were investigated. The episode exposed the extremist fringe at the top of the party.",source:"Krah interview Italian media April 2024; ID group suspension May 2024"},
@@ -1839,7 +1851,7 @@ function renderDossier(party, cfg, topics, wb, who){
   function feasCls(f){return {yes:'f-yes',maybe:'f-maybe',no:'f-no',false:'f-false'}[f]||'f-maybe';}
   function feasTxt(f){return {yes:t('feasYes'),maybe:t('feasMaybe'),no:t('feasNo'),false:t('feasFalse')}[f]||t('feasMaybe');}
   function tlCls(tl){return {g:'tl-g',y:'tl-y',r:'tl-r'}[tl]||'tl-y';}
-  function wIcon(type){return {racism:'⛔',authoritarianism:'🚨',historical_parallel:'📜',math_impossible:'🧮',broken_promise:'💔',false_promise:'💔',dog_whistle:'📢',scandal:'🔎'}[type]||'⚠️';}
+  function wIcon(type){return {racism:'⛔',authoritarianism:'🚨',historical_parallel:'📜',math_impossible:'🧮',broken_promise:'💔',false_promise:'💔',dog_whistle:'📢',scandal:'🔎',controversy:'🔎'}[type]||'⚠️';}
   function wCls(type,sev){return (type==='racism'||type==='authoritarianism'||sev==='high')?'danger':type==='math_impossible'?'purple':'warn';}
 
   let h='';
@@ -1936,7 +1948,7 @@ function renderDossier(party, cfg, topics, wb, who){
     h+=`<div class="dSec"><div class="dHead">${t('secPulse')}</div>
       <div class="dSub" style="margin-bottom:8px;">${t('pulseSub')}</div>
       <div style="background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);border-radius:10px;padding:9px 13px;font-size:10px;color:var(--amber);margin-bottom:12px;">
-        ⚠️ <strong>Estimated scores</strong> — ${esc(party.n)} is not in our Tier 1 database. Scores are generated from spectrum position and governing record. For detailed analysis, use the AI Boost below.
+        ⚠️ <strong>Estimated scores</strong> — ${esc(party.n)} does not have a full curated profile yet. Scores are estimated from spectrum position and governing record. For detailed analysis, use the AI Boost below.
       </div>
       <div class="gaugeGrid">
       <div class="gauge">
@@ -2043,10 +2055,10 @@ function renderDossier(party, cfg, topics, wb, who){
   }
 
   /*  /* -- S6b: SCANDALS & CONTROVERSIES -- */
-  if(kb?.scandals?.length){
-    h+=`<div class="dSec"><div class="dHead">🗂️ Scandals & Controversies</div>
-      <div class="dSub">Documented controversies with evidence — voters deserve the full record</div>`;
-    kb.scandals.forEach(sc=>{
+  if(kb?.controversies?.length){
+    h+=`<div class="dSec"><div class="dHead">🗂️ Controversies & Documented Record</div>
+      <div class="dSub">Based on publicly reported events and official sources. Sources cited where available.</div>`;
+    kb.controversies.forEach(sc=>{
       h+=`<div style="background:#fff8f0;border-left:3px solid #f59e0b;border-radius:0 10px 10px 0;padding:11px 14px;margin-bottom:8px;display:flex;gap:11px;align-items:flex-start;">
         <div style="font-size:18px;line-height:1;flex-shrink:0;">⚠️</div>
         <div style="flex:1;">
@@ -2056,7 +2068,15 @@ function renderDossier(party, cfg, topics, wb, who){
         </div>
       </div>`;
     });
+    h+=`<div style="font-size:10px;color:var(--muted);margin-top:8px;font-style:italic;padding:0 4px;">For the most recent controversies and updates, use the AI Power Boost below.</div>`;
     h+=`</div>`;
+  } else {
+    // Non-KB party: simple honest message, no jargon
+    h+=`<div class="dSec"><div class="dHead">🗂️ Controversies & Documented Record</div>
+      <div style="background:#f8f9fa;border-radius:12px;padding:14px 16px;font-size:12px;color:var(--muted);line-height:1.75;text-align:center;">
+        No documented controversies found for <strong>${esc(party.n)}</strong>.<br>
+        <span style="font-size:11px;opacity:.8;">For a more complete analysis on controversies please use the <strong>AI Power Boost</strong> below.</span>
+      </div></div>`;
   }
 
   /* ── S7: PROMISE TRACKER ── */
@@ -2296,7 +2316,7 @@ PARTY_KB["Republican Party"]={
     {title:"US 1930 Smoot-Hawley Tariff",period:"1930",similarity:82,description:"Congress passed sweeping tariffs to 'protect American jobs.' Trading partners retaliated, global trade collapsed 66% in 3 years, and the tariffs deepened the Great Depression. Trump's 2025 tariffs of 10-145% are the highest since Smoot-Hawley. The IMF, World Bank and every major economic institution has issued warnings identical to those given in 1930."},
     {title:"Hungary Democratic Backsliding",period:"2010–present",similarity:68,description:"Viktor Orbán won elections then converted civil service to political appointments (identical to Schedule F), restricted press, undermined courts and removed institutional independence. EU now classifies Hungary as a hybrid regime. The playbook — win democratic elections, concentrate power, subordinate courts, restrict press — is documented and deliberate."},
   ],
-  scandals:[
+  controversies:[
     {year:2025,title:"Mar-a-Lago pay-to-play — $1m dinner, $5m one-on-one meeting with President",detail:"Trump charged $1 million per person to dine with him at Mar-a-Lago and $5 million for one-on-one meetings. After attending a Mar-a-Lago dinner, Jeff Bezos agreed to pay $40 million to license a Melania documentary. Trump accepted a $400 million luxury Boeing 747 from Qatar (which hosts Hamas and the Taliban). NYT estimated Trump's crypto ventures added $7.1 billion to the Trump family net worth by July 2025.",source:"Wired March 2025; New Republic March 2025; Washington Week PBS May 2025; NYT July 2025"},
     {year:2025,title:"$TRUMP memecoin — $320m in trading fees, crypto pardons",detail:"Trump launched $TRUMP memecoin days before inauguration — Trump entities made over $320m in trading fees by July 2025. Chinese crypto billionaire Justin Sun (under SEC fraud investigation) bought $Trump and attended a private Trump dinner. Trump pardoned Binance founder CZ Zhao, convicted of enabling child abuse, drug trafficking and terrorism financing — Zhao had invested heavily in Trump crypto.",source:"Issue One Corruption Chronicles January 2026; House Oversight Democrats report 2026; NYT April 2025"},
     {year:2025,title:"17 Inspectors General fired on Day 5 — anti-corruption watchdogs purged",detail:"On January 25, 2025, Trump fired 17 Inspectors General in a late-night purge — the largest single removal of federal oversight officials in US history. IGs are the independent watchdogs investigating fraud and abuse. Their removal cleared the way for unmonitored executive branch spending.",source:"White House communications January 25, 2025; Senate bipartisan condemnation"},
@@ -2311,7 +2331,7 @@ PARTY_KB["Republican Party"]={
   promisesKept:["Withdrew from Paris Climate Agreement (Day 1)","Withdrew from WHO","Tax cuts (2017 TCJA passed)","Three Supreme Court appointments (Gorsuch, Kavanaugh, Barrett)","Abraham Accords (Middle East normalisation) — first term","Tariffs on China implemented","January 6 pardons issued"],
   promisesBroken:["Mexico will pay for the wall (paid ~0)","Replace ACA with something better (no replacement ever produced)","Eliminate national debt in 8 years (added $8 trillion first term)","Drain the swamp (most convicted associates of any administration)","End opioid epidemic (deaths tripled 2017-2021)","Infrastructure week (never happened in 4 years)"],
   falseOrMisleading:["Immigrants commit more crime than citizens (FBI data shows opposite)","Tariffs are paid by foreign countries (paid by US importers/consumers)","2020 election was stolen (confirmed false by 60+ courts, Republican officials)","Biggest tax cut in history (Reagan's was larger as % of GDP)","China paying tariffs (US consumers pay via higher prices)"],
-  scandals:[
+  controversies:[
     {year:2024,title:"Trump 34 Felony Convictions",detail:"Donald Trump became the first US president convicted of felony crimes — 34 counts of falsifying business records related to hush money payments to Stormy Daniels. Sentenced to an unconditional discharge in January 2025 but the convictions stand. Convictions are being appealed.",source:"Manhattan District Court, May 2024"},
     {year:2025,title:"DOGE — Unelected access to federal systems",detail:"Elon Musk's DOGE (Department of Government Efficiency) — an unelected, unaccountable body — was given access to Treasury payment systems, Social Security data, and federal personnel records. Multiple courts issued injunctions. Inspector General offices were mass-fired to reduce oversight.",source:"Federal courts, 2025 — multiple DOGE injunctions"},
     {year:2025,title:"Electoral bond / dark money regime",detail:"The 2024 Trump campaign received record dark money — $1.3 billion from undisclosed sources via Super PACs. The Citizens United framework allows unlimited, sometimes anonymous corporate spending on elections.",source:"FEC filings, OpenSecrets 2024"},
@@ -2346,7 +2366,7 @@ PARTY_KB["Democratic Party"]={
     foreignpolicy:{slogan:"Rebuild alliances. Multilateralism. Defend democracy worldwide.",blueprint:"Rejoin Paris Agreement. Restore WHO funding. Support Ukraine. Maintain NATO. Rebuild State Department. Democracy promotion. China: competition not confrontation.",hiddenPrice:"Ukraine support: $175bn committed, politically controversial. Democracy promotion inconsistent — allies with authoritarian governments retained (Saudi Arabia). State Department rebuilding after gutting takes years. China policy 'competition not confrontation' is a strategy, not a solution — China's influence growing regardless.",hpc:"warn",tl:"g",feasibility:"yes",feasDetail:"NATO strengthened under Biden: Finland and Sweden joined. Ukraine held Russian advances. Multilateral institutions rebuilt credibility. China policy: tougher on trade (maintained many Trump tariffs) while keeping diplomatic channels open.",impactPoor:"Stable alliances reduce defence costs through burden-sharing. Ukraine support prevents broader conflict.",impactMid:"Trade stability from maintained alliances benefits export-dependent industries.",impactRich:"Global trade stability benefits business. Geopolitical certainty allows long-term investment.",histParallel:"📜 Marshall Plan 1948: $13bn (equivalent to $150bn today) invested in European recovery — generated $40bn in trade, rebuilt allies, prevented Soviet expansion. Model for multilateral investment producing outsized returns."},
     housing:{slogan:"Build more housing. End homelessness. Make homes affordable.",blueprint:"Housing vouchers expansion. Zoning reform incentives. $150bn housing investment (not passed). First-generation homebuyer credits. Remove exclusionary zoning barriers.",hiddenPrice:"US needs 3.8 million more homes. Democrats' approach (vouchers + investment) is better than Republicans' (deregulation only) but insufficient at scale. Zoning reform requires state/local action — federal government has limited direct power. Housing vouchers don't build homes — they compete for existing stock.",hpc:"warn",tl:"g",feasibility:"maybe",feasDetail:"Biden housing plan: $150bn blocked in Senate. What was achieved: some zoning reform incentives in Infrastructure Bill. Homelessness fell 11% under Biden (2022 data). Housing affordability crisis worsened 2020-2024 as interest rates rose.",impactPoor:"Housing vouchers critical for lowest-income renters. Homeless services funding maintained.",impactMid:"First-time buyer credits help median households enter market. Zoning reform could lower prices in expensive markets.",impactRich:"Property owners benefit from continued price appreciation. Development incentives.",histParallel:"📜 US post-WWII GI Bill housing: government-backed mortgages built suburbs and created middle class. Federal housing investment at scale is historically the mechanism that solved housing shortages."},
     crime:{slogan:"Smart on crime. Community investment. Police reform.",blueprint:"George Floyd Justice in Policing Act (passed House, blocked in Senate). Community violence intervention programmes. Mental health crisis response. Reduce mandatory minimums.",hiddenPrice:"Policing Act blocked in Senate — no major reform achieved. Crime spike in 2020-2021 was used against Democrats. 'Defund the police' (a fringe position misattributed to all Democrats) became a political liability. Community investment programmes have evidence behind them but take years to show results.",hpc:"warn",tl:"g",feasibility:"maybe",feasDetail:"Crime rose 2020-2021 (COVID disruption + George Floyd protests) then fell 2022-2023 to near-historic lows. Democrats were blamed for the rise despite the falls under their policies. Community investment in violence interruption has strong evidence.",impactPoor:"Crime disproportionately victimises low-income communities. Police reform and community investment both directly relevant.",impactMid:"Public safety is a cross-class concern. Crime reduction benefits all.",impactRich:"Private security insulates wealthy. Police reform primarily affects communities they don't live in.",histParallel:"📜 US 1990s: crime fell dramatically under Clinton 1994 Crime Bill (mandatory minimums) AND under community investment programmes simultaneously — hard to attribute causally. Evidence now suggests community investment is more cost-effective than incarceration."},
-    corruption:{slogan:"Get dark money out of politics. No corruption. Ethics reform.",blueprint:"DISCLOSE Act (dark money transparency — blocked in Senate). Ethics reforms. Inspector general independence. Campaign finance reform.",hiddenPrice:"DISCLOSE Act blocked by filibuster. Supreme Court's Citizens United decision (2010) can only be reversed by Court or amendment. Dark money flows to both parties — Democrats have billionaire donors too. Ethics reforms passed in executive branch but Congressional ethics remain weak.",hpc:"warn",tl:"g",feasibility:"maybe",feasDetail:"Biden administration: no major personal corruption scandals (unlike Trump administration). Ethics frameworks restored. But structural corruption (dark money, revolving door) unchanged. Biden's son Hunter Biden conviction was real and acknowledged.",impactPoor:"Corruption in government contracting costs all taxpayers but harms government service quality most for those dependent on it.",impactMid:"Transparency in campaign finance allows voters to make informed decisions.",impactRich:"Dark money system primarily benefits wealthy donors' policy influence.",histParallel:"📜 US Watergate 1974: Nixon corruption forced resignation — showed no one is above the law. Post-Watergate reforms (FECA, Ethics acts) temporarily improved accountability but have eroded since Citizens United."},
+    corruption:{slogan:"Get dark money out of politics. No corruption. Ethics reform.",blueprint:"DISCLOSE Act (dark money transparency — blocked in Senate). Ethics reforms. Inspector general independence. Campaign finance reform.",hiddenPrice:"DISCLOSE Act blocked by filibuster. Supreme Court's Citizens United decision (2010) can only be reversed by Court or amendment. Dark money flows to both parties — Democrats have billionaire donors too. Ethics reforms passed in executive branch but Congressional ethics remain weak.",hpc:"warn",tl:"g",feasibility:"maybe",feasDetail:"Biden administration: no major personal corruption controversies (unlike Trump administration). Ethics frameworks restored. But structural corruption (dark money, revolving door) unchanged. Biden's son Hunter Biden conviction was real and acknowledged.",impactPoor:"Corruption in government contracting costs all taxpayers but harms government service quality most for those dependent on it.",impactMid:"Transparency in campaign finance allows voters to make informed decisions.",impactRich:"Dark money system primarily benefits wealthy donors' policy influence.",histParallel:"📜 US Watergate 1974: Nixon corruption forced resignation — showed no one is above the law. Post-Watergate reforms (FECA, Ethics acts) temporarily improved accountability but have eroded since Citizens United."},
   },
   historyMirror:[
     {title:"FDR New Deal",period:"1933–1938",similarity:52,description:"The Democratic Party's greatest transformation: massive government investment in infrastructure, social safety net, banking regulation and labour rights. Ended the Great Depression and created the American middle class. Biden's IRA and infrastructure investment drew explicit comparisons — similar scale of ambition, different political context."},
@@ -2359,7 +2379,7 @@ PARTY_KB["Democratic Party"]={
   promisesKept:["IRA: $369bn climate investment — largest in world history","Infrastructure Act: $1.2 trillion for roads, bridges, broadband","NATO strengthened: Finland and Sweden joined","Ukraine support: held Russian advances","Drug price negotiation: 10 drugs now negotiable by Medicare","Rejoined Paris Agreement (2021)","Child poverty hit historic low in 2021 (before credit expired)"],
   promisesBroken:["Student loan forgiveness: courts blocked, partially delivered","Universal pre-K: Manchin blocked","Child Tax Credit extension: Manchin blocked","Border security: record crossings in 2023","Voting rights legislation: filibuster blocked","Police reform: Senate blocked"],
   falseOrMisleading:["IRA will reduce inflation (primary effect was investment, not price reduction)","'We've done more than any administration' — overstated on some metrics","Border security claims before 2023 crisis — understated the problem"],
-    scandals:[
+    controversies:[
     {year:2024,title:"Biden cognitive decline — concealed from primary voters",detail:"President Biden's significant cognitive decline was known to his inner circle many months before his June 2024 debate exposed it publicly. Aides shielded him from unscripted situations. Biden insisted he would run, then withdrew in July 2024 under party pressure — denying Democrats the chance to run a primary earlier. His late withdrawal left Kamala Harris with minimal time to campaign.",source:"New York Times reporting July 2024; Biden withdrawal letter July 2024"},
     {year:2024,title:"Hunter Biden — conviction then sweeping pardon",detail:"Hunter Biden was convicted on federal gun charges (June 2024) then pleaded guilty to tax charges. President Biden, who had pledged not to pardon his son, issued a sweeping pardon in December 2024 covering offences from 2014-2024. Described by critics across the aisle as a hypocritical abuse of the pardon power and damaging to rule-of-law credibility.",source:"Federal court verdict June 2024; Presidential pardon statement December 2024"},
     {year:2024,title:"Border management failure — 2.5m crossings in FY2023",detail:"FY2023 saw a record 2.475 million migrant encounters. The administration promoted a bipartisan Senate border bill then allowed it to collapse after Trump lobbied Republicans against it. Biden bore responsibility for both the crisis and the failed legislative response. Border disorder was a primary factor in the 2024 election loss.",source:"CBP FY2023 annual statistics; Senate border bill vote February 2024"},
@@ -2401,7 +2421,7 @@ PARTY_KB["Australian Labor Party"]={
   promisesKept:["Budget surplus achieved (first in 15 years)","Minimum wage rises: +5.75% and +8.6% over two years","Fee-free TAFE implemented","Climate: 43% target legislated","Rewiring the Nation ($20bn) commenced","Relations with China restored — trade embargo lifted, saving $20bn/year in exports","Paid parental leave extended to 26 weeks"],
   promisesBroken:["Power bills -$275 by 2025 (rose before falling)","Housing affordability — crisis deepened","1.2m homes target — on track to miss","Voice referendum lost"],
   falseOrMisleading:["Power bill reduction promise — based on optimistic modelling","1.2 million homes 'on track' — independent analysts say target will be missed by 40%"],
-  scandals:[
+  controversies:[
     {year:2023,title:"Robodebt Royal Commission — inherited crisis",detail:"While robodebt was a Coalition programme, Labor's Royal Commission (2023) found the scheme unlawful and harmed 550,000 people. Labor has paid $1.8bn in settlements and referred several former ministers to law enforcement.",source:"Royal Commission into the Robodebt Scheme, 2023"},
     {year:2023,title:"Voice Referendum loss — strategic failure",detail:"The Voice to Parliament referendum (October 2023) was defeated 60-40%. The campaign was widely criticised for poor strategy, insufficient community engagement and failure to address concerns. $450m spent on the referendum.",source:"AEC Referendum Result, October 2023"},
     {year:2024,title:"Immigration processing backlog crisis",detail:"Labor's record net migration of 630,000 in 2022-23 contributed to a housing and services crisis. Processing delays left 100,000+ visa applications unresolved. The government was criticised for allowing migration to run far above sustainable infrastructure capacity.",source:"ABS Migration Data 2023; Senate Estimates 2024"},
@@ -2439,7 +2459,7 @@ PARTY_KB["Liberal Party"]={
   promisesKept:["Stage 3 tax cuts legislated","JobKeeper: $90bn wage subsidy saved 700,000 jobs during COVID","AUKUS: nuclear submarine agreement with US/UK","Strong economic management: AAA credit rating maintained","Offshore processing continuation"],
   promisesBroken:["Budget surplus (never achieved in 9 years — structural deficit maintained)","Climate targets (7 different policies in 9 years, none met)","Affordable housing (prices doubled during their tenure)","Energy price reduction ('reduce bills by $550' — bills rose)"],
   falseOrMisleading:["Robo-debt was legal (Royal Commission found it was not)","Sports grants were merit-based (Auditor-General found they were not)","Labor's climate policies will destroy the economy (no evidence — economy has performed during IRA-style transitions elsewhere)"],
-  scandals:[
+  controversies:[
     {year:2023,title:"Robodebt — Royal Commission finds unlawful, Morrison knew",detail:"The Royal Commission into Robodebt (2023) found the scheme was unlawful, caused immense harm to 550,000 Australians, and that senior ministers including Scott Morrison were aware of legal doubts. Former minister Stuart Robert and others were referred to law enforcement. Government paid $1.8bn in settlements.",source:"Royal Commission into the Robodebt Scheme, Final Report July 2023"},
     {year:2020,title:"Sports Rorts — $100m electorally allocated grants",detail:"The Community Sport Infrastructure Grant programme allocated $100m in grants based on electoral advantage rather than merit. The Australian National Audit Office found the process was not merit-based. Minister Bridget McKenzie resigned. The program was administered from the minister's office bypassing the assessment panel.",source:"ANAO Audit Report No. 23 2019-20; McKenzie resignation February 2020"},
     {year:2021,title:"Scott Morrison — secret ministries crisis",detail:"It emerged in August 2022 that former PM Scott Morrison had secretly appointed himself to five additional ministerial portfolios during COVID without Cabinet or parliamentary knowledge. An independent inquiry (Bell Review) found this was 'fundamentally undermining' of the Westminster system. Morrison was censured by Parliament — the first PM to be censured since 1978.",source:"Bell Review November 2022; Parliamentary censure motion February 2023"},
@@ -2477,7 +2497,7 @@ PARTY_KB["Fianna Fáil"]={
   promisesKept:["Full employment maintained (unemployment 4.3%)","Housing construction increased (33,000 in 2023)","GP visit card expanded","Sovereign wealth fund (Future Ireland Fund) established","Ukraine refugees accepted and integrated"],
   promisesBroken:["Housing crisis solved (prices and homelessness still rising)","Sláintecare implementation (7 years behind schedule)","Rental price controls (rents rising in RPZs)"],
   falseOrMisleading:["Ireland has highest GDP per capita — true but distorted by MNC profit-shifting","Housing for All is working — homelessness at record high","The housing market is improving — average Dublin house price hit €430,000 in 2024 (record)"],
-  scandals:[
+  controversies:[
     {year:2008,title:"Celtic Tiger collapse — deregulation caused Ireland's worst financial crisis",detail:"Fianna Fáil's 14-year government (1997-2011) presided over the property bubble and light-touch bank regulation that caused Ireland's worst financial crisis. The EU/IMF bailout cost €67.5bn. Unemployment hit 15%. Anglo Irish Bank tapes revealed executives mocking the bailout. FF lost 58 seats in 2011 — their worst result since 1927.",source:"Nyberg Commission Report 2011; Honohan Report 2010; Anglo Irish Bank tapes published 2013"},
     {year:2024,title:"Housing crisis — repeated broken promises over a decade",detail:"FF has promised to 'fix housing' in every election since 2016 while in government. Homelessness reached a record 14,622 in January 2024 including 4,259 children. Average Dublin house price hit €450,000 (2024) — record high. Social housing waiting lists: 58,000+ households. The party has been in government for most of the crisis.",source:"Housing Agency Q4 2024; Daft.ie report Q4 2024; Dublin City Council waiting list data"},
     {year:2023,title:"Asylum seeker accommodation crisis — tent cities and procurement failures",detail:"The government's handling of asylum seeker accommodation led to tent cities in Dublin, emergency hostels and procurement of accommodation at inflated costs. The Office of the Comptroller and Auditor General found significant irregularities in emergency accommodation contracts worth €500m+. Violence at planned accommodation sites raised planning and communication failures.",source:"Comptroller and Auditor General Report 2024; IPAS accommodation data"},
@@ -2504,7 +2524,7 @@ PARTY_KB["Fine Gael"]={
   promisesKept:["Marriage equality referendum facilitated (2015)","Abortion referendum facilitated (2018)","Economic recovery from 2008 crash","Budget surpluses maintained","Corporation tax defended (minimum 15% accepted)"],
   promisesBroken:["Housing crisis resolved (worse than when they entered government)","Healthcare universal (Sláintecare 7 years behind)","Rental costs controlled (Dublin rents EU's highest)"],
   falseOrMisleading:["Housing targets being met (homelessness still record high)","Sláintecare is on track (it is not)"],
-  scandals:[
+  controversies:[
     {year:2024,title:"Leo Varadkar — confidential document leak, Garda investigation",detail:"Former Taoiseach Leo Varadkar shared a confidential government document with his friend Dr. Maitiú Ó Tuathail, then president of a GP organisation, during GP contract negotiations in 2019. Gardaí investigated. File sent to DPP — no prosecution. Varadkar resigned as Taoiseach and FG leader in March 2024 unexpectedly, citing the document controversy among factors.",source:"Garda investigation 2023; DPP decision not to prosecute 2024; Varadkar resignation statement March 2024"},
     {year:2022,title:"Children's Hospital — cost explodes from €600m to €2.4bn+",detail:"The new National Children's Hospital, whose planning began under FG, saw costs explode from an initial estimate of €600m to over €2.4 billion — the most expensive hospital per bed in the world. A Dáil inquiry found significant governance failures in cost oversight and project management. The hospital is not expected to be fully operational until 2025-26.",source:"National Children's Hospital review; Dáil PAC hearings 2024"},
     {year:2021,title:"COVID test contracts — €157m to company without lab",detail:"During COVID, a contract worth €157m for COVID testing was awarded to Rennova Health — a company that did not have a functioning laboratory in Ireland. The contract was later terminated. The Comptroller and Auditor General found the procurement process was flawed.",source:"Comptroller and Auditor General Report 2021"},
@@ -2543,11 +2563,11 @@ PARTY_KB["Sinn Féin"]={
   promisesKept:["Northern Ireland: power-sharing (when functioning)","Opposition accountability: successfully pressured government on housing","Raised housing as central political issue when FF/FG dismissed it","Palestinian recognition: Ireland recognised Palestine as state 2024"],
   promisesBroken:["Unable to enter government (blocked by FF/FG)","Northern Ireland: power-sharing suspended multiple times"],
   falseOrMisleading:["100,000 homes in 5 years is fully deliverable — construction capacity doesn't currently exist","Government is deliberately creating housing crisis — more structural than deliberate"],
-    scandals:[
+    controversies:[
     {year:2023,title:"IRA historical association — ongoing accountability questions",detail:"Despite transformation since the Good Friday Agreement, some serving Sinn Féin politicians have historical IRA associations that remain contested. The party has not fully acknowledged all IRA atrocities. Victims groups continue to seek accountability for specific murders where party members were allegedly involved.",source:"Victims' Commission Northern Ireland; various court proceedings"},
     {year:2024,title:"Leader Mary Lou McDonald — Dáil expenses controversy",detail:"Mary Lou McDonald faced criticism over the level of expenses claimed by SF TDs from the Dáil during a period when the party was campaigning on cost-of-living issues. The controversy was minor but highlighted a 'do as I say' optics problem.",source:"Dáil expenses returns 2024; Irish media reporting"},
   ],
-  scandals:[
+  controversies:[
     {year:2024,title:"IRA historical association — continuing accountability",detail:"Despite full democratic commitment since the Good Friday Agreement, some SF politicians have historical IRA associations. Victims groups seek accountability for specific murders where party members were allegedly involved. The party has not fully acknowledged all IRA atrocities 1969-2005.",source:"Victims' Commission Northern Ireland; court proceedings"},
     {year:2023,title:"Stormont power-sharing — repeatedly suspended",detail:"The Northern Ireland Assembly has been suspended for most of the past 7 years. Most recently from January 2022 to February 2024 (over Northern Ireland Protocol). SF as largest party governs when functioning but institutional instability harms public services.",source:"Northern Ireland Office 2024; Assembly records"},
   ],
@@ -2567,12 +2587,12 @@ PARTY_KB["Liberal Party"]={
     housing:{slogan:"Build, baby, build. 4 million homes in 7 years. Affordable for all.",blueprint:"4 million homes in 7 years. Remove GST on new rental construction. Federal lands for housing. Streamline approvals. Remove barriers to prefab/modular construction.",hiddenPrice:"Canada currently builds 240,000 homes/year. Target requires 570,000+/year — 2.4× current rate. Construction workforce capacity is insufficient — would require massive immigration of construction workers (contradictory to some Liberal positions). Federal government has limited direct housing power — most planning is provincial and municipal.",hpc:"warn",tl:"y",feasibility:"maybe",feasDetail:"Most ambitious housing target in Canadian history. Construction capacity, zoning reform (provincial not federal), and financing gaps all need addressing. Some analysts consider the target achievable if provinces cooperate — others see it as aspirational.",impactPoor:"Social housing construction most critical — target includes affordable component.",impactMid:"Increased supply should reduce prices in medium term — first-time buyers most affected.",impactRich:"Property values may moderate with increased supply.",histParallel:"📜 Canada post-WWII housing (1945-1975): CMHC funded construction of social housing at scale — over 200,000 public units. Subsequent decades saw these run down and not replaced. The housing crisis is a 30-year legacy of underinvestment."},
     economy:{slogan:"Stand up to Trump. Build Canadian strength. Buy Canadian.",blueprint:"Counter-tariff on US goods (CAD 155bn announced). Buy Canadian preference in federal procurement. Industrial strategy for critical minerals. Carbon pricing maintained (modified). National defence investment.",hiddenPrice:"Canada-US trade is CAD $900bn/year — the most integrated bilateral trade relationship in the world. Tariff war causes pain on both sides. Canadian retaliation affects consumers (higher prices). Decoupling from US market is structurally very difficult. National defence: Canada is at 1.37% GDP vs NATO 2% target — needs CAD $14bn/year increase.",hpc:"warn",tl:"g",feasibility:"yes",feasDetail:"Canada's economic position is difficult but real options exist: diversify trade (EU CETA), develop critical minerals sector, invest in defence. Carney's credibility gives Canada more international standing than Trudeau had at end. Carbon pricing is economically sound but politically toxic — rebate makes it net positive for 80% of households.",impactPoor:"Tariff retaliation raises some consumer prices. Carbon rebate offsets carbon tax for low-income households (they receive more than they pay).",impactMid:"Tariff uncertainty hits trade-dependent businesses. Housing affordability is the primary middle-class concern.",impactRich:"Critical minerals investment creates opportunities. Tariff volatility affects business planning.",histParallel:"📜 Canada-US FTA 1988: Mulroney government bet on integration — transformed Canada's economy positively. Trump's tariff challenge is the biggest test of this relationship since. Carney's response (stand firm, diversify) is the correct strategic response but will cause short-term pain."},
   },
-  historyMirror:[{title:"Trudeau Era",period:"2015–2025",similarity:78,description:"Justin Trudeau's 10 years: strong start (reconciliation, climate, LGBTQ+ rights), then scandals (SNC-Lavalin, blackface photos), COVID response (strong), and final years of declining poll numbers as housing and cost-of-living crises mounted. Carney inherits both the achievements and the voter fatigue."}],
+  historyMirror:[{title:"Trudeau Era",period:"2015–2025",similarity:78,description:"Justin Trudeau's 10 years: strong start (reconciliation, climate, LGBTQ+ rights), then controversies (SNC-Lavalin, blackface photos), COVID response (strong), and final years of declining poll numbers as housing and cost-of-living crises mounted. Carney inherits both the achievements and the voter fatigue."}],
   warnings:[{type:"broken_promise",severity:"medium",title:"Housing targets chronically unmet",detail:"Liberals have promised housing targets at every election — never met. The 1.5m homes target (Trudeau 2021) was missed. The new 4m target is 2.4× current building rates. Pattern of ambitious promises and underdelivery on housing undermines credibility.",evidence:"CMHC 2024: Canada needs 3.5 million homes by 2030 — on track to deliver 2.3 million at current rates"}],
   promisesKept:["Legalised cannabis 2018","Carbon pricing implemented (economically sound)","LGBTQ+ rights maintained and expanded","COVID response (CERB: 8.9 million Canadians supported)","UNDRIP legislation passed","CETA (EU trade deal) deepened"],
   promisesBroken:["Electoral reform (promised, never delivered)","First Nations clean water (promised 2015 — 28 communities still under boil-water advisory in 2024)","Housing affordability (worsened significantly)","Balanced budget (never achieved)"],
   falseOrMisleading:["4 million homes in 7 years is achievable — most analysts say 2.4× current rate is unrealistic","Carbon tax is a money grab — 80% of households receive more in rebate than they pay"],
-  scandals:[
+  controversies:[
     {year:2023,title:"SNC-Lavalin affair — political interference in prosecution",detail:"Former AG Jody Wilson-Raybould revealed that senior Trudeau officials pressured her to intervene in the criminal prosecution of SNC-Lavalin, a Quebec engineering firm with Liberal donor connections. The affair led to multiple resignations including Wilson-Raybould herself and Treasury Secretary Jane Philpott. Trudeau denied wrongdoing. Ethics Commissioner found he violated the Conflict of Interest Act.",source:"Ethics Commissioner report August 2019; Wilson-Raybould testimony"},
     {year:2021,title:"Trudeau blackface — multiple incidents revealed",detail:"Multiple photographs and video emerged showing Justin Trudeau in blackface at various points in his life — including as recently as 2001 when he was a teacher. Trudeau apologised repeatedly saying he 'should have known better'. The incidents contradicted his progressive branding on race and inclusion.",source:"TIME magazine investigation September 2019; Trudeau apology"},
     {year:2024,title:"ArriveCan app — $54m for an app estimated at $80,000",detail:"The ArriveCan contact-tracing app developed during COVID ultimately cost $54 million — compared to an initial estimate of $80,000. An RCMP investigation found evidence of fraud and breach of trust by government contractors. The Auditor General called it 'an appalling example of mismanagement of public money.'",source:"Auditor General of Canada report February 2024; RCMP investigation"},
@@ -2600,7 +2620,7 @@ PARTY_KB["Conservative Party"]={
   promisesKept:["Consistent opposition — held Liberals to account","Raised housing as primary political issue","Blocked carbon tax increase politically"],
   promisesBroken:["Not in government — promises untested"],
   falseOrMisleading:["Carbon tax costs most families money (PBO says 80% are better off with rebate)","Gatekeepers are the primary cause of housing crisis (financing, labour, materials are equally important)","Bitcoin is an inflation hedge (highly volatile asset, fell 80% in 2022)"],
-    scandals:[
+    controversies:[
     {year:2024,title:"Poilievre and crypto — promoted Bitcoin as inflation hedge",detail:"Poilievre promoted Bitcoin as a means for Canadians to 'opt out of inflation' during the 2021-22 period. Bitcoin subsequently fell 80% from its peak in 2022. His credibility on economic management — one of his core claims — was damaged by the advice.",source:"Poilievre videos and tweets 2021-22; Bitcoin price data 2022"},
     {year:2024,title:"False 'just visiting' smear and retracted claims",detail:"The Conservative campaign repeatedly made claims about Liberal opponents that were rated 'false' or 'misleading' by fact-checkers. Poilievre has made demonstrably incorrect claims about crime statistics, carbon tax costs and government spending that were retracted or corrected.",source:"PolitiFact Canada; CTV News fact-checks 2024"},
     {year:2021,title:"O'Toole — reversed positions on gun control and carbon tax",detail:"Previous Conservative leader Erin O'Toole reversed his positions on gun control and the carbon tax within months of the 2021 election, was then removed by his own caucus in February 2022. The episode revealed the Conservative party's difficulty holding a consistent policy line.",source:"Conservative caucus vote February 2022; O'Toole policy reversals documented"},
@@ -2638,7 +2658,7 @@ PARTY_KB["BJP"]={
   promisesKept:["GDP growth 6-8% maintained","Infrastructure: national highway network doubled","Digital India: UPI digital payments (14bn transactions/month)","Poverty reduction: 415m lifted out of extreme poverty (World Bank)","PM housing: 40m rural homes built","COVID vaccination: 2.2 billion doses administered"],
   promisesBroken:["Doubling farmer incomes by 2022 (not achieved)","$5 trillion economy by 2024 (achieved 2025 at $3.8 trillion, target missed)","15 lakh (₹1.5m) in every bank account from black money repatriation (never delivered)","Employment generation: youth unemployment 45%"],
   falseOrMisleading:["2 crore jobs per year created (net job creation has been significantly lower)","Demonetisation destroyed black money (black money largely returned to banking system)","GDP growth is entirely BJP achievement (structural reforms since 1991 contributed significantly)"],
-    scandals:[
+    controversies:[
     {year:2024,title:"Electoral Bonds — Supreme Court unanimously declares unconstitutional",detail:"India's Supreme Court unanimously struck down the Electoral Bond scheme in February 2024, ruling it violated citizens' right to information. Disclosed data showed BJP received ₹6,060 crore (60% of all bonds). Multiple donors received regulatory benefits after donating. SBI initially refused to disclose names, was ordered to by the Court.",source:"Supreme Court of India: SBI v Association for Democratic Reforms, 15 February 2024"},
     {year:2024,title:"Adani Group — Hindenburg allegations, $150bn market cap loss",detail:"US short-seller Hindenburg Research alleged Adani Group — whose chairman has close Modi ties — engaged in stock manipulation and offshore fraud. Adani Group denied all allegations. A Supreme Court committee found no conclusive evidence but noted regulatory gaps. The controversy wiped $150 billion from Adani's market cap at peak.",source:"Hindenburg Research January 2023; Supreme Court Expert Committee Report January 2024"},
     {year:2023,title:"Manipur violence — 250+ killed, government criticised for slow response",detail:"Ethnic violence between Meitei and Kuki communities in Manipur killed 250+ people and displaced 60,000 from May 2023. A video of two women paraded naked by a mob went viral in July 2023. PM Modi did not visit Manipur for months. The government was accused of minimising the scale and allowing violence to continue.",source:"National Human Rights Commission; Human Rights Watch report 2023"},
@@ -4340,6 +4360,29 @@ Monthly ${cur} estimate for:
 SECTION 12 — SOURCE VAULT
 List all sources, data points and references used in this analysis.
 
+SECTION 13 — CONTROVERSIES & DOCUMENTED RECORD
+Search for and report on the following for \${partyName} and its senior members:
+
+A) RECENT CONTROVERSIES (last 2 years):
+• Any ongoing investigations, legal proceedings or official inquiries involving the party or its leaders
+• Parliamentary or congressional disciplinary actions
+• Financial irregularities, donations controversies or conflicts of interest
+• Policy failures that led to formal censure or inquiry
+• Statements or actions that triggered formal complaints or investigations
+
+B) HISTORICAL CONTROVERSIES (last 10 years):
+• Major documented controversies with outcomes (court verdicts, official findings, resignations)
+• Broken promises or manifesto commitments that were reversed after election
+• Controversies involving senior members (name them specifically)
+
+C) CURRENT LEADERSHIP CONTROVERSIES:
+• Any open questions about the current leader and their conduct
+• Any controversies specific to key cabinet/shadow cabinet members
+
+For each controversy: give the name, year, what happened, and what the documented outcome was.
+Cite sources. Distinguish between alleged and proven. Be neutral and factual.
+If no major controversies exist, say so clearly.
+
 ================================================================
 IMPORTANT: Be specific. Use the economic data as a hard ceiling.
 Name historical precedents with dates and countries.
@@ -4493,7 +4536,39 @@ ${p.promptAddition}
 ================================================================`;
   }
 
-  const finalPrompt=(isLocal ? localPrompt : nationalPrompt)+personaBlock;
+  // Always append a controversies research block
+  const partyNameForPrompt=party.n||'this party';
+  const controversiesBlock=`
+
+================================================================
+SECTION — CONTROVERSIES & DOCUMENTED RECORD
+================================================================
+⚠️  Write this section in ${promptLang} as well.
+
+Research and report on controversies for \${partyNameForPrompt} and its senior members.
+
+A) RECENT CONTROVERSIES (last 2 years, up to today):
+• Ongoing investigations, legal proceedings or official inquiries involving the party or leaders
+• Parliamentary/congressional disciplinary actions or censures
+• Donations controversies, financial irregularities or conflicts of interest
+• Policy failures that triggered formal inquiry or resignations
+• Statements or actions that caused formal complaints or investigations
+
+B) HISTORICAL CONTROVERSIES (last 10 years):
+• Major documented controversies with outcomes (court verdicts, official findings, resignations)
+• Senior members specifically named — what they did, what the outcome was
+• Broken promises reversed after election
+
+C) CURRENT LEADERSHIP:
+• Any open controversies involving the current party leader specifically
+• Any controversies involving key ministers or shadow ministers
+
+For each: give name, year, what happened, documented outcome. Cite sources.
+Distinguish alleged from proven. Be factual and neutral.
+If no major controversies are documented, say so clearly — do not invent any.
+================================================================`;
+
+  const finalPrompt=(isLocal ? localPrompt : nationalPrompt)+controversiesBlock+personaBlock;
   document.getElementById('promptBox').textContent = finalPrompt;
   updateAIBoosterButtons(finalPrompt);
 }
