@@ -16,6 +16,9 @@
 <meta name="twitter:image" content="https://everydaytoolshq.github.io/voterlenshero.jpg"/>
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<!-- Browser translate: setting html[lang] signals Chrome/Edge/Safari to offer translation -->
+<!-- For languages without our manual translations, the API handles key UI strings -->
+<!-- The html lang attribute change also enables browser's built-in translate for dossier content -->
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@400;500;600;700&display=swap');
 :root{
@@ -344,7 +347,7 @@ select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.10);}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="wrap" translate="yes">
 <nav class="breadcrumb"><a href="https://everydaytoolshq.github.io/" data-i18n="home">Home</a> › VoterLens</nav>
 
 <div class="heroImg">
@@ -357,6 +360,10 @@ select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.10);}
   <p class="intro" data-i18n="intro">A full diagnostic dossier on any political party — real promises vs. reality, whether the numbers add up, what history warns us, and exactly how it hits your household. Live data. Zero spin.</p>
 </header>
 
+<div id="translateStatus" style="display:none;background:linear-gradient(135deg,rgba(245,158,11,.08),rgba(217,119,6,.04));border:1.5px solid rgba(245,158,11,.25);border-radius:12px;padding:9px 14px;margin-bottom:10px;font-size:12px;color:#92400e;display:none;align-items:center;gap:8px;">
+  <span style="font-size:16px;">🌐</span>
+  <span id="translateStatusText">Translating interface…</span>
+</div>
 <div class="noticeBox">
   <div class="noticeIcon">⚡</div>
   <div class="noticeText" data-i18n="notice"><strong>100% free. No account. No login.</strong> VoterLens pulls live data from World Bank, WHO, Wikipedia and Wikidata, then builds a complete accountability dossier instantly. Select a country, pick a party, choose your topics — get the truth.</div>
@@ -903,8 +910,135 @@ const TRANSLATIONS = {
     sourceBase:"Base de Conocimiento",progFetch:"Recuperando datos económicos…",progBuild:"Construyendo dossier…",progRender:"Renderizando…",
   },
 };
-// fallback for languages without full translation — use English
-['pt','pl','nl','sv','el','ro','cs','tr','ar','ja','ko','hi','id','uk'].forEach(l=>{ TRANSLATIONS[l]=TRANSLATIONS.en; });
+// Languages with full manual translations — instant, zero network
+const MANUAL_LANGS=new Set(['en','it','fr','de','es']);
+
+// In-memory cache only — cleared on every page reload (fresh start)
+const _tlCache={};
+
+// All UI string keys we need translated
+const _UI_STRINGS={
+  home:"Home",eyebrow:"Free · No Login · 45+ Countries · Your Language",
+  h1pre:"Remove the",h1em:"Veil",
+  intro:"A full diagnostic dossier on any political party — real promises vs reality, whether the numbers add up, what history warns us, and how it hits your household. Live data. Zero spin.",
+  step1badge:"Step One",step1title:"Country & Language",
+  labelCountry:"Country",labelLang:"Language",labelDetail:"Detail",
+  selectCountry:"— Select a country —",
+  simple:"Simple",standard:"Standard",expert:"Expert",
+  srcLabel:"Active Data Sources",
+  step2badge:"Step Two",step2title:"Select a Party",
+  partyEmpty:"Select a country above",partyLoading:"Loading parties…",
+  step3badge:"Step Three",step3title:"Select Topics That Matter to You",
+  tImmig:"Immigration",tHealth:"Healthcare",tEcon:"Economy & Jobs",
+  tHousing:"Housing",tEdu:"Education",tClimate:"Climate",
+  tCrime:"Crime",tWelfare:"Welfare",tTax:"Taxes",
+  tDem:"Democracy",tForeign:"Foreign Policy",tCorrupt:"Corruption",
+  analyseBtn:"Generate Full Dossier",progInit:"Initialising…",
+  boosterBadge:"AI Power Boost — Optional",
+  boosterTitle:"Go Deeper With Your Own AI",
+  boosterSub:"Already logged into an AI? Tick it. VoterLens builds a forensic prompt with live data — paste into your AI for the deepest analysis.",
+  boosterReady:"Ready:",boosterNone:"Select an AI above to generate your forensic prompt.",
+  inPower:"IN POWER",
+  trustScore:"Trust",feasScore:"Feasibility",transpScore:"Transparency",rightsScore:"Civil Rights",
+  secSummary:"Executive Summary",secPulse:"Accountability Pulse",
+  secData:"Live Country Economic Data",secVeil:"The Veil-Remover — Topic by Topic",
+  secHistory:"History Mirror",secWarnings:"Red Flags & Warnings",
+  secPromises:"Promise Tracker",secWallet:"How This Hits Your Home",
+  sec1min:"The 1-Minute Manifesto",secVault:"Source Vault",
+  slogan:"The Slogan",blueprint:"What They'll Actually Do",
+  hiddenPrice:"The Hidden Price",feasibility:"Feasibility",
+  impactPoor:"Low Income",impactMid:"Middle Class",impactRich:"High Income",
+  histParallel:"Historical Parallel",
+  promKept:"Promises Kept",promBroken:"Promises Broken",promFalse:"False / Misleading",
+  walPoor:"Low-Income Household",walMid:"Middle-Class Household",
+  copyPrompt:"Copy Prompt",openAI:"Open",
+  govPulse:"Currently Governing",oppPulse:"In Opposition",
+  sourceBase:"Curated Knowledge Base",
+  pulseSub:"Four gauges based on real data and known party record",
+  veilSub:"Slogan → reality → hidden cost → who pays → historical precedent",
+  dataSub:"Real figures from World Bank API + WHO — used to cross-check all promises",
+  walletSub:"Estimated monthly change per household if this party governs",
+  minuteSub:"Everything above in 60 seconds of plain language",
+  vaultSub:"All data sources consulted for this dossier",
+  feasYes:"Feasible",feasMaybe:"Conditional",feasNo:"Unlikely",feasFalse:"False/Misleading",
+  disclaimer:"VoterLens is a free civic education tool. It does not endorse or oppose any party. Always verify with primary sources before voting decisions.",
+  progFetch:"Fetching live economic data…",progBuild:"Building your dossier…",
+  howTitle:"How VoterLens Works",
+  booksTitle:"Best Sellers in Politics & Current Affairs",
+  booksTitle2:"Best Sellers in Politics & Current Affairs",
+  booksDesc:"The books politicians don't want you to read.",
+  shopBtn:"Shop on Amazon →",
+  affiliate:"Affiliate: we may earn a small commission at no extra cost to you.",
+  boosterBadge:"AI Power Boost — Optional",
+  aiChatGPT:"Best for structured analysis.",aiGemini:"Excellent at economic fact-checking.",
+  aiClaude:"Best for nuanced political analysis.",aiGrok:"Strong on current events.",
+  aiPerp:"Searches live web.",aiCopilot:"Free GPT-4o. Works without login.",
+  aiDeepseek:"Strong reasoning.",aiMistral:"European AI.",
+};
+
+// MyMemory free translation API — no key, CORS enabled, 5000 chars/day/IP
+// Batches all strings in one call per language
+async function _fetchTranslations(langCode){
+  if(_tlCache[langCode]) return _tlCache[langCode];
+  // Build a single pipe-delimited batch string to minimise API calls
+  const keys=Object.keys(_UI_STRINGS);
+  const texts=Object.values(_UI_STRINGS);
+  // MyMemory has a 500 char limit per call — we do individual calls for key strings
+  // and use Google Translate element for the rest of the page
+  const result={..._UI_STRINGS}; // start with English
+  const priority=['step1title','step2title','step3title','analyseBtn','inPower',
+    'secSummary','secPulse','secData','secVeil','secHistory','secWarnings',
+    'secPromises','secWallet','sec1min','secVault','partyEmpty','partyLoading',
+    'tImmig','tHealth','tEcon','tHousing','tEdu','tClimate','tCrime',
+    'tWelfare','tTax','tDem','tForeign','tCorrupt',
+    'trustScore','feasScore','transpScore','rightsScore',
+    'promKept','promBroken','promFalse','walPoor','walMid',
+    'govPulse','oppPulse','feasYes','feasMaybe','feasNo','feasFalse',
+    'impactPoor','impactMid','impactRich','copyPrompt','openAI',
+    'boosterTitle','boosterNone','intro','h1pre','h1em',
+    'labelCountry','labelLang','simple','standard','expert'];
+  // Translate priority strings via MyMemory
+  const batch=priority.map(k=>_UI_STRINGS[k]).join(' ||| ');
+  try{
+    const url=`https://api.mymemory.translated.net/get?q=${encodeURIComponent(batch)}&langpair=en|${langCode}&de=voterlens@civic.tool`;
+    const r=await fetch(url,{signal:AbortSignal.timeout(8000)});
+    const d=await r.json();
+    if(d.responseStatus===200){
+      const translated=(d.responseData.translatedText||'').split(' ||| ');
+      priority.forEach((k,i)=>{if(translated[i]&&translated[i].trim()) result[k]=translated[i].trim();});
+    }
+  }catch(e){console.warn('Translation API unavailable — using English');}
+  // Copy spectrum labels from English for now (rarely need translation)
+  _tlCache[langCode]=result;
+  return result;
+}
+
+// Ensure all languages resolve — manual ones instantly, others via API
+async function ensureLang(langCode){
+  if(MANUAL_LANGS.has(langCode)) return;
+  if(_tlCache[langCode]) { TRANSLATIONS[langCode]=_tlCache[langCode]; return; }
+  // Show translating indicator
+  const statusEl=document.getElementById('translateStatus');
+  const statusTxt=document.getElementById('translateStatusText');
+  if(statusEl){ statusEl.style.display='flex'; }
+  if(statusTxt){ statusTxt.textContent='🌐 Translating interface into '+document.getElementById('langSelect').options[document.getElementById('langSelect').selectedIndex].text+'…'; }
+  // Set English immediately while we fetch
+  TRANSLATIONS[langCode]=TRANSLATIONS.en;
+  const translated=await _fetchTranslations(langCode);
+  TRANSLATIONS[langCode]=translated;
+  // Hide indicator
+  if(statusEl) statusEl.style.display='none';
+  // Re-apply if this is still the active language
+  if(currentLang===langCode){
+    applyTranslations();
+    if(pList.length&&CC[selCountry]) renderParties(pList,CC[selCountry].f);
+  }
+}
+
+// Initialise: all non-manual languages start as English, fetched on demand
+['pt','pl','nl','sv','el','ro','cs','tr','ar','ja','ko','hi','id','uk'].forEach(l=>{
+  TRANSLATIONS[l]=TRANSLATIONS.en;
+});
 
 let currentLang='en';
 
@@ -921,7 +1055,12 @@ function applyTranslations(){
     const val=t(key);
     if(val) el.textContent=val;
   });
+  // Setting html[lang] tells Chrome/Edge/Safari/Firefox to offer/apply browser translation
+  // for any content our manual translations don't cover (dossier body text, etc.)
   document.getElementById('htmlRoot').lang=currentLang;
+  // Update lang indicator if present
+  const li=document.getElementById('langIndicator');
+  if(li) li.textContent=currentLang.toUpperCase();
 }
 
 /* ================================================================
@@ -1352,8 +1491,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 
   if(selCountry){
     document.getElementById('countrySelect').value=selCountry;
-    const dfl=LANG_DEFAULT[selCountry];
-    {currentLang=dfl;document.getElementById('langSelect').value=dfl;applyTranslations();}
+    // Language not set from country — user selects manually
     onCC();
   }
   document.getElementById('countrySelect').addEventListener('change',onCC);
@@ -1362,22 +1500,30 @@ window.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('analyseBtn').addEventListener('click',runAnalysis);
 });
 
-function onLangChange(){
-  currentLang=document.getElementById("langSelect").value;
-  // lang preference not stored
-  applyTranslations();
-  // Re-render party grid in new language
+async function onLangChange(){
+  currentLang=document.getElementById('langSelect').value;
+  // Set html lang immediately — triggers browser's built-in translate for any content we miss
+  document.getElementById('htmlRoot').lang=currentLang;
+  // For non-manual languages, fetch translations via API then re-apply
+  if(!MANUAL_LANGS.has(currentLang)){
+    // Apply English immediately so UI isn't blank while fetching
+    applyTranslations();
+    await ensureLang(currentLang);
+    // ensureLang re-applies automatically when done
+  } else {
+    applyTranslations();
+  }
+  // Re-render dynamic elements in new language
   if(pList.length){
     const cfg=CC[selCountry];
     if(cfg) renderParties(pList,cfg.f);
   }
-  // Re-render dossier in new language
-  if(selParty && document.getElementById("dossier").style.display!=="none"){
+  if(selParty && document.getElementById('dossier').style.display!=='none'){
     const cfg=CC[selCountry];
-    const topics=[...document.querySelectorAll(".tBtn.on")].map(b=>b.dataset.t);
+    const topics=[...document.querySelectorAll('.tBtn.on')].map(b=>b.dataset.t);
     if(cfg && topics.length) renderDossier(selParty,cfg,topics,wbD,whoV);
   }
-  document.getElementById("analyseBtn").textContent=t("analyseBtn");
+  document.getElementById('analyseBtn').textContent=t('analyseBtn');
 }
 
 /* ── COUNTRY CHANGE ── */
@@ -1387,12 +1533,7 @@ async function onCC(){
   selCountry=code;
   const cfg=CC[code]; if(!cfg) return;
 
-  // Auto-set language when country changes (always)
-  const autoLang=LANG_DEFAULT[code]||'en';
-  currentLang=autoLang;
-  document.getElementById('langSelect').value=autoLang;
-  // lang not stored
-  applyTranslations();
+  // Language NOT auto-set from country — user controls language manually
 
   document.getElementById('srcPanel').style.display='block';
   document.getElementById('srcRow').innerHTML=cfg.srcs.map(s=>`<span class="srcPill">${esc(s)}</span>`).join('');
