@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CPZVP7JQ5C"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-CPZVP7JQ5C');</script>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>VoterLens — Political Accountability Engine</title>
+<meta name="description" content="VoterLens removes the veil from political promises. Real data. AI reasoning. Detailed dossier. Free."/>
+<meta name="robots" content="index,follow,max-image-preview:large"/>
+<link rel="canonical" href="https://everydaytoolshq.github.io/voterlens/"/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://everydaytoolshq.github.io/voterlens/"/>
+<meta property="og:title" content="VoterLens — Political Accountability Engine"/>
+<meta property="og:image" content="https://everydaytoolshq.github.io/voterlenshero.jpg"/>
+<meta property="og:site_name" content="EverydayToolsHQ"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://everydaytoolshq.github.io/voterlenshero.jpg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@400;500;600;700&display=swap');
+:root{
+  --cream:#fdf9f4;--warm:#eef2f8;--bark:#0f1c2e;
+  --blue:#1a5fa8;--blue2:#2e8bc0;--bluelt:#e8f2fb;
+  --paw:#c8d8ea;--muted:#526070;--ink:#0a1520;
+  --green:#156b3f;--greenlt:#e6f4ec;--greenbdr:#8fcfae;
+  --amber:#b56d00;--amberlt:#fff7e0;--amberbdr:#e0b840;
+  --red:#a01818;--redlt:#fce8e8;--redbdr:#e89090;
+  --purple:#4a2e8a;--purplelt:#f0eaff;--purplebdr:#b898f0;
+  --shadow:0 6px 24px rgba(10,20,32,.09);
+  --shadow-h:0 14px 44px rgba(10,20,32,.16);
+  --radius:18px;
+}
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:"DM Sans",system-ui,sans-serif;background:var(--cream);color:var(--ink);}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 70% 45% at 5% 0%,rgba(26,95,168,.08),transparent 50%),
+  radial-gradient(ellipse 55% 38% at 95% 100%,rgba(46,139,192,.06),transparent 48%);}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(rgba(10,21,32,.035) 1px,transparent 1px);
+  background-size:24px 24px;}
+a{color:inherit;text-decoration:none;}img{display:block;max-width:100%;}
+.wrap{max-width:940px;margin:0 auto;padding:0 18px;position:relative;z-index:1;}
+
+/* ── NAV ── */
+.breadcrumb{padding:16px 0 0;font-size:12px;font-weight:600;color:var(--muted);}
+.breadcrumb a{color:var(--muted);}
+.breadcrumb a:hover{text-decoration:underline;}
+
+/* ── HERO ── */
+.heroImg{margin:12px 0 0;border-radius:24px;overflow:hidden;box-shadow:var(--shadow);position:relative;}
+.heroImg img{width:100%;height:clamp(190px,36vw,420px);object-fit:cover;object-position:center top;}
+.heroImg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 38%,rgba(10,20,32,.46) 100%);}
+
+/* ── HEADER ── */
+.pageHeader{text-align:center;padding:28px 0 6px;}
+.eyebrow{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--blue);background:rgba(26,95,168,.09);border:1px solid rgba(26,95,168,.20);
+  padding:5px 14px;border-radius:999px;margin-bottom:11px;}
+h1{font-family:"Fraunces",Georgia,serif;font-size:clamp(26px,5vw,50px);font-weight:900;
+  line-height:1.04;letter-spacing:-.03em;margin:0 0 12px;color:var(--bark);}
+h1 em{font-style:italic;color:var(--blue);}
+.intro{font-size:clamp(13px,1.7vw,15px);line-height:1.9;color:var(--muted);max-width:620px;margin:0 auto 22px;}
+
+/* ── NOTICE ── */
+.noticeBox{background:linear-gradient(135deg,rgba(26,95,168,.07),rgba(46,139,192,.04));
+  border:1.5px solid rgba(26,95,168,.18);border-radius:var(--radius);
+  padding:13px 16px;margin:0 0 20px;display:flex;gap:11px;align-items:flex-start;}
+.noticeIcon{font-size:20px;flex-shrink:0;line-height:1.4;}
+.noticeText{font-size:12px;line-height:1.8;color:var(--bark);}
+.noticeText strong{color:var(--blue);}
+
+/* ── CARDS ── */
+.card{background:#fff;border:1.5px solid var(--paw);border-radius:22px;
+  box-shadow:var(--shadow);padding:24px 24px 20px;margin:0 0 18px;}
+.cardBadge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:800;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:9px;}
+.cardNum{width:18px;height:18px;border-radius:50%;background:var(--blue);color:#fff;
+  font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cardTitle{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:var(--bark);margin:0 0 13px;}
+
+/* ── SELECTORS ── */
+.selRow{display:grid;grid-template-columns:2fr 1fr 1fr;gap:11px;margin-bottom:11px;}
+.field{display:flex;flex-direction:column;gap:4px;}
+.fieldLabel{font-size:10px;font-weight:700;color:var(--bark);letter-spacing:.05em;text-transform:uppercase;}
+select,.tInput{height:48px;border:1.5px solid var(--paw);border-radius:11px;padding:0 13px;
+  font-size:13px;font-family:inherit;color:var(--ink);background:var(--cream);outline:none;
+  transition:border-color .14s,box-shadow .14s;-webkit-appearance:none;appearance:none;width:100%;}
+select:focus,.tInput:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.10);}
+
+/* ── SOURCES PANEL ── */
+.srcPanel{background:var(--warm);border:1px solid var(--paw);border-radius:11px;
+  padding:10px 13px;margin-top:10px;display:none;}
+.srcPanelLabel{font-size:10px;font-weight:700;color:var(--bark);text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px;}
+.srcRow{display:flex;flex-wrap:wrap;gap:5px;}
+.srcPill{font-size:9px;font-weight:700;padding:2px 8px;border-radius:999px;
+  background:#fff;border:1px solid var(--paw);color:var(--muted);transition:all .2s;}
+.srcPill.live{background:var(--greenlt);border-color:var(--greenbdr);color:var(--green);}
+.srcPill.loading{background:var(--amberlt);border-color:var(--amberbdr);color:var(--amber);}
+
+/* ── PARTY GRID ── */
+.partyGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:4px;}
+.pBtn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px 10px;
+  border:1.5px solid var(--paw);border-radius:12px;background:var(--cream);cursor:pointer;
+  font-size:11px;font-weight:700;color:var(--muted);transition:all .14s;text-align:center;
+  line-height:1.3;position:relative;min-height:82px;justify-content:center;}
+.pBtn:hover{border-color:var(--blue);color:var(--bark);background:#fff;transform:translateY(-2px);box-shadow:var(--shadow);}
+.pBtn.sel{border-color:var(--blue);background:var(--bluelt);color:var(--bark);box-shadow:0 0 0 3px rgba(26,95,168,.12);}
+.pBtn.sel::after{content:"✓";position:absolute;top:5px;right:7px;font-size:10px;color:var(--blue);font-weight:800;}
+.pFlag{font-size:20px;line-height:1;}.pName{font-size:10px;font-weight:700;line-height:1.3;}
+.pSpec{font-size:9px;font-weight:600;padding:2px 6px;border-radius:999px;margin-top:1px;}
+.sp-fl{background:#d8e4f5;color:#0a1850;}.sp-l{background:#ddeede;color:#093020;}
+.sp-cl{background:#e4f0e4;color:#124028;}.sp-c{background:#eaf0f8;color:#223050;}
+.sp-cr{background:#fceeda;color:#503000;}.sp-r{background:#fce8e8;color:#600808;}
+.sp-fr{background:#f4d8d8;color:#4a0404;}.sp-p{background:#f0e4f8;color:#400870;}
+.sp-u{background:#f0f0f0;color:#555;}
+.pEmpty,.pLoading{text-align:center;padding:24px;color:var(--muted);font-size:13px;}
+
+/* ── TOPICS ── */
+.topicGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:7px;margin-bottom:13px;}
+.tBtn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 5px;
+  border:1.5px solid var(--paw);border-radius:11px;background:var(--cream);cursor:pointer;
+  font-size:10px;font-weight:700;color:var(--muted);transition:all .14s;text-align:center;line-height:1.3;}
+.tBtn .ti{font-size:17px;}.tBtn:hover{border-color:var(--blue);color:var(--bark);background:#fff;}
+.tBtn.on{border-color:var(--blue);background:var(--bluelt);color:var(--bark);}
+
+/* ── ANALYSE BUTTON ── */
+.analyseBtn{width:100%;height:54px;border:0;border-radius:13px;
+  background:linear-gradient(135deg,var(--bark),#1e3a5f);
+  color:#fff;font-family:"Fraunces",serif;font-size:17px;font-weight:700;
+  cursor:pointer;box-shadow:0 7px 22px rgba(10,20,32,.24);
+  transition:transform .12s,box-shadow .12s;letter-spacing:-.01em;}
+.analyseBtn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 13px 30px rgba(10,20,32,.30);}
+.analyseBtn:disabled{opacity:.38;cursor:not-allowed;transform:none;}
+
+/* ── PROGRESS ── */
+.progWrap{margin:14px 0 0;display:none;}
+.progBar{height:5px;background:var(--paw);border-radius:99px;overflow:hidden;margin-bottom:6px;}
+.progFill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--blue),var(--blue2));transition:width .5s ease;width:0%;}
+.progLog{font-size:11px;color:var(--muted);font-weight:600;font-style:italic;min-height:16px;}
+
+/* ── DOSSIER PANEL ── */
+.dossier{display:none;margin-top:18px;border-radius:22px;overflow:hidden;
+  border:1.5px solid var(--paw);box-shadow:var(--shadow-h);animation:fadeUp .4s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* dossier header */
+.dHdr{background:linear-gradient(135deg,#0f1c2e,#1a3050);padding:20px 26px;color:#fff;}
+.dParty{font-family:"Fraunces",serif;font-size:clamp(20px,4.5vw,34px);font-weight:900;margin:0 0 3px;}
+.dMeta{font-size:10px;opacity:.55;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:13px;}
+.scoreRow{display:flex;flex-wrap:wrap;gap:8px;}
+.scoreBox{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12);
+  border-radius:9px;padding:9px 13px;text-align:center;min-width:68px;}
+.scoreVal{font-family:"Fraunces",serif;font-size:17px;font-weight:900;color:#7dd3fc;line-height:1;}
+.scoreLbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;opacity:.55;margin-top:3px;}
+.scoreBar{height:4px;background:rgba(255,255,255,.15);border-radius:99px;margin-top:5px;overflow:hidden;}
+.scoreBarFill{height:100%;border-radius:99px;}
+
+/* dossier body */
+.dBody{background:#fff;padding:0;}
+
+/* section */
+.dSection{padding:20px 26px;border-bottom:1px solid var(--paw);}
+.dSection:last-child{border-bottom:none;}
+.dSecHead{font-family:"Fraunces",serif;font-size:15px;font-weight:700;color:var(--bark);
+  margin:0 0 12px;display:flex;align-items:center;gap:7px;}
+.dSecSubhead{font-size:12px;color:var(--muted);font-style:italic;margin:-8px 0 12px;line-height:1.6;}
+
+/* executive summary */
+.execSummary{font-size:14px;line-height:1.9;color:var(--muted);margin:0 0 12px;}
+.execSummary strong{color:var(--bark);}
+.execQuote{background:var(--bluelt);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
+  padding:12px 16px;font-size:13px;font-style:italic;color:var(--bark);line-height:1.75;margin:12px 0 0;}
+
+/* gauge row */
+.gaugeGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:4px;}
+.gauge{background:var(--warm);border:1px solid var(--paw);border-radius:12px;padding:13px 14px;}
+.gaugeLabel{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:8px;}
+.gaugeVal{font-family:"Fraunces",serif;font-size:22px;font-weight:900;color:var(--blue);line-height:1;margin-bottom:4px;}
+.gaugeBarWrap{height:7px;background:var(--paw);border-radius:99px;overflow:hidden;}
+.gaugeBarFill{height:100%;border-radius:99px;transition:width .8s ease;}
+.gaugeNote{font-size:10px;color:var(--muted);margin-top:5px;line-height:1.5;}
+
+/* stats mini-grid */
+.statsGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;}
+.statMini{background:var(--warm);border:1px solid var(--paw);border-radius:10px;padding:10px 11px;text-align:center;}
+.statMiniVal{font-family:"Fraunces",serif;font-size:18px;font-weight:900;color:var(--blue);line-height:1.1;}
+.statMiniLbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-top:3px;}
+.statMiniSrc{font-size:8px;color:var(--muted);opacity:.7;margin-top:1px;}
+
+/* veil remover table */
+.veilWrap{overflow-x:auto;border-radius:11px;border:1px solid var(--paw);}
+.veilTable{width:100%;min-width:680px;border-collapse:collapse;font-size:12px;}
+.veilTable th{background:var(--warm);color:var(--bark);font-weight:700;padding:9px 11px;
+  text-align:left;font-size:9px;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap;}
+.veilTable td{padding:11px 11px;border-bottom:1px solid var(--paw);color:var(--muted);vertical-align:top;line-height:1.65;}
+.veilTable tr:last-child td{border-bottom:0;}
+.veilTable tr:hover td{background:rgba(26,95,168,.02);}
+.veilTable td.topic{font-weight:700;color:var(--bark);font-size:11px;white-space:nowrap;}
+.veilTable td.slogan{font-style:italic;color:var(--ink);font-size:12px;}
+.veilTable td.reality{font-size:12px;}
+.feasTag{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px;margin-bottom:3px;}
+.f-yes{background:var(--greenlt);color:var(--green);}
+.f-maybe{background:var(--amberlt);color:var(--amber);}
+.f-no{background:var(--redlt);color:var(--red);}
+.f-false{background:var(--purplelt);color:var(--purple);}
+.tlDot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;}
+.tl-g{background:#16a34a;}.tl-y{background:#d97706;}.tl-r{background:#dc2626;}
+.hiddenPrice{font-size:11px;line-height:1.6;}
+.hiddenPrice.danger{color:var(--red);}
+.hiddenPrice.warn{color:var(--amber);}
+.hiddenPrice.ok{color:var(--green);}
+.srcRef{font-size:9px;color:var(--blue);font-weight:700;margin-top:3px;display:block;}
+
+/* alert boxes */
+.alert{border-radius:11px;padding:11px 13px;margin:0 0 9px;font-size:12px;
+  line-height:1.7;display:flex;gap:9px;align-items:flex-start;}
+.alert.danger{background:var(--redlt);border:1.5px solid var(--redbdr);color:#4a0a08;}
+.alert.warn{background:var(--amberlt);border:1.5px solid var(--amberbdr);color:#4a2e00;}
+.alert.info{background:var(--bluelt);border:1.5px solid rgba(26,95,168,.20);color:#0a2848;}
+.alert.good{background:var(--greenlt);border:1.5px solid var(--greenbdr);color:#0a2e18;}
+.alert.purple{background:var(--purplelt);border:1.5px solid var(--purplebdr);color:#280a58;}
+.aIcon{font-size:17px;flex-shrink:0;line-height:1.45;}
+.aText strong{display:block;font-size:12px;margin-bottom:2px;}
+.aText small{font-size:10px;opacity:.75;display:block;margin-top:3px;}
+
+/* history mirror */
+.histCard{background:var(--warm);border-left:4px solid var(--red);border-radius:0 11px 11px 0;
+  padding:12px 14px;margin:0 0 9px;}
+.histTitle{font-size:12px;font-weight:700;color:var(--red);margin:0 0 4px;}
+.histBody{font-size:12px;color:var(--muted);line-height:1.7;}
+.histSimilarity{display:inline-block;font-size:10px;font-weight:700;
+  background:var(--redlt);color:var(--red);border:1px solid var(--redbdr);
+  padding:1px 7px;border-radius:999px;margin-left:6px;}
+
+/* promise tracker */
+.promiseGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;}
+.promBox{border-radius:11px;padding:11px 13px;}
+.promBox.kept{background:var(--greenlt);border:1.5px solid var(--greenbdr);}
+.promBox.broken{background:var(--amberlt);border:1.5px solid var(--amberbdr);}
+.promBox.false{background:var(--redlt);border:1.5px solid var(--redbdr);}
+.promBox h4{font-size:11px;font-weight:700;margin:0 0 6px;display:flex;align-items:center;gap:4px;}
+.promBox.kept h4{color:var(--green);}.promBox.broken h4{color:var(--amber);}.promBox.false h4{color:var(--red);}
+.promBox ul{margin:0;padding-left:13px;font-size:11px;line-height:1.8;color:var(--muted);}
+
+/* wallet impact */
+.walletGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.walletBox{border-radius:11px;padding:13px 14px;text-align:center;}
+.walletBox.plus{background:var(--greenlt);border:1.5px solid var(--greenbdr);}
+.walletBox.minus{background:var(--redlt);border:1.5px solid var(--redbdr);}
+.walletAmt{font-family:"Fraunces",serif;font-size:26px;font-weight:900;line-height:1;}
+.walletBox.plus .walletAmt{color:var(--green);}
+.walletBox.minus .walletAmt{color:var(--red);}
+.walletLabel{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  color:var(--muted);margin-top:4px;}
+.walletNote{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.55;}
+
+/* audio box */
+.audioBox{background:var(--warm);border:1.5px solid var(--paw);border-radius:11px;
+  padding:13px 15px;margin-bottom:0;}
+.audioBox strong{color:var(--bark);font-size:13px;display:block;margin-bottom:5px;}
+.audioBox p{font-size:13px;line-height:1.85;color:var(--muted);margin:0;}
+
+/* sources vault */
+.vaultGrid{display:flex;flex-wrap:wrap;gap:5px;}
+.vaultChip{display:inline-flex;align-items:center;gap:4px;
+  background:#fff;border:1px solid var(--paw);border-radius:7px;
+  padding:3px 8px;font-size:9px;font-weight:700;color:var(--muted);}
+.vaultChip.live{border-color:var(--greenbdr);color:var(--green);}
+.vaultChip.partial{border-color:var(--amberbdr);color:var(--amber);}
+.disclaimer{font-size:10px;color:#a0a8b0;margin-top:10px;line-height:1.65;}
+
+/* ── AMAZON BANNER ── */
+.bannerCard{background:#fff;border:1.5px solid var(--paw);border-radius:17px;overflow:hidden;
+  box-shadow:var(--shadow);display:grid;grid-template-columns:240px 1fr;
+  transition:transform .13s,box-shadow .13s;margin:0 0 18px;}
+.bannerCard:hover{transform:translateY(-2px);box-shadow:var(--shadow-h);}
+.bannerImg{width:100%;height:100%;min-height:130px;object-fit:cover;display:block;}
+.bannerBody{padding:14px 17px;display:flex;flex-direction:column;justify-content:center;gap:8px;}
+.bannerName{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--bark);margin:0;}
+.bannerDesc{font-size:12px;color:var(--muted);margin:0;line-height:1.5;}
+.bannerBtn{display:inline-flex;align-items:center;justify-content:center;align-self:flex-start;
+  padding:9px 17px;border-radius:9px;background:linear-gradient(135deg,#d97706,#f59e0b);color:#fff;
+  font-weight:700;font-size:12px;box-shadow:0 4px 12px rgba(217,119,6,.25);
+  transition:transform .12s,box-shadow .12s;}
+.bannerBtn:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(217,119,6,.30);}
+.bannerDisclosure{font-size:9px;color:#b0a090;line-height:1.5;}
+
+/* ── HOW IT WORKS ── */
+.howCard{background:#fff;border:1.5px solid var(--paw);border-radius:22px;
+  box-shadow:var(--shadow);padding:22px 24px;margin:0 0 18px;font-size:13px;line-height:1.85;color:var(--muted);}
+.howCard h2{font-family:"Fraunces",serif;font-size:clamp(19px,3.2vw,24px);font-weight:700;color:var(--bark);margin:0 0 11px;}
+.howCard h3{font-family:"Fraunces",serif;font-size:15px;font-weight:700;color:var(--bark);margin:15px 0 6px;}
+.howCard p{margin:0 0 9px;}.howCard strong{color:var(--bark);}
+.pillRow{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;}
+.pill{display:flex;align-items:center;gap:4px;padding:5px 11px;border-radius:999px;
+  background:var(--warm);border:1px solid var(--paw);font-size:11px;font-weight:600;color:var(--bark);}
+
+/* ── FOOTER ── */
+.siteFooter{margin-top:44px;padding:32px 0 22px;border-top:1px solid #ddd;
+  text-align:center;font-size:13px;background:#f9fafb;}
+.footerInner{max-width:1200px;margin:0 auto;padding:0 18px;}
+.footerBrand{font-family:"Fraunces",serif;font-weight:700;margin-bottom:10px;font-size:14px;color:#1e140a;}
+.footerLinks{margin-bottom:10px;}
+.footerLinks a{margin:0 8px;color:#374151;font-weight:600;}
+.footerLinks a:hover{text-decoration:underline;}
+.footerLegal a{color:#374151;}
+.footerLegal a:hover{text-decoration:underline;}
+.footerLegal{margin-bottom:12px;}
+.footerPowered{color:#6b7280;}
+.footerPowered a{color:#2563eb;font-weight:700;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  .selRow{grid-template-columns:1fr;}
+  .partyGrid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));}
+  .topicGrid{grid-template-columns:repeat(auto-fill,minmax(105px,1fr));}
+  .card,.howCard{padding:16px 15px;}
+  .dSection{padding:16px 18px;}
+  .promiseGrid{grid-template-columns:1fr;}
+  .walletGrid{grid-template-columns:1fr;}
+  .gaugeGrid{grid-template-columns:1fr 1fr;}
+  .statsGrid{grid-template-columns:repeat(2,1fr);}
+  .bannerCard{grid-template-columns:1fr;}
+  .bannerImg{height:clamp(120px,42vw,200px);min-height:unset;}
+  .bannerBody{padding:13px 15px 15px;}
+  .bannerBtn{align-self:stretch;justify-content:center;}
+  .veilTable{font-size:11px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="breadcrumb"><a href="https://everydaytoolshq.github.io/">Home</a> › VoterLens</nav>
+
+<div class="heroImg">
+  <img src="https://everydaytoolshq.github.io/voterlenshero.jpg"
+       alt="VoterLens — Political Accountability Engine"
+       width="1088" height="752" loading="eager" fetchpriority="high"/>
+</div>
+
+<header class="pageHeader">
+  <span class="eyebrow">🔍 Free · No Login · 45+ Countries · Your Language</span>
+  <h1>VoterLens: Remove the <em>Veil</em></h1>
+  <p class="intro">A full diagnostic dossier on any political party — what they promise, what it really means, whether it adds up, who wins and who loses, and which red flags history warns us about. Real data. Free AI. Zero spin.</p>
+</header>
+
+<div class="noticeBox">
+  <div class="noticeIcon">⚡</div>
+  <div class="noticeText">
+    <strong>Powered by World Bank, Wikipedia, WHO, Wikidata + free AI (no key needed).</strong> VoterLens fetches live economic data, then sends it to AI reasoning to produce a multi-layer accountability dossier — including a Veil-Remover table, History Mirror, Promise Tracker, and personal Wallet Impact estimate.
+  </div>
+</div>
+
+<!-- AMAZON BANNER -->
+<h2 style="font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--bark);margin:0 0 11px;text-align:center;">📚 Best Sellers in Politics &amp; Current Affairs</h2>
+<div class="bannerCard">
+  <img class="bannerImg" src="https://everydaytoolshq.github.io/Amazonbestsellers.jpg"
+       alt="Best Sellers in Politics and Current Affairs on Amazon" width="1101" height="768" loading="lazy"/>
+  <div class="bannerBody">
+    <h3 class="bannerName">Best Sellers in Politics &amp; Current Affairs</h3>
+    <p class="bannerDesc">The books politicians don't want you to read. Understand the system, the history, and the people shaping your world.</p>
+    <a class="bannerBtn" href="https://amzn.to/49ji3uw" target="_blank" rel="sponsored noopener noreferrer">Shop on Amazon →</a>
+    <div class="bannerDisclosure">Affiliate Disclosure: we may earn a small commission at no extra cost to you.</div>
+  </div>
+</div>
+
+<!-- STEP 1 -->
+<div class="card">
+  <div class="cardBadge"><div class="cardNum">1</div> Step One</div>
+  <div class="cardTitle">🌍 Country, Language &amp; Reading Level</div>
+  <div class="selRow">
+    <div class="field">
+      <div class="fieldLabel">Country</div>
+      <select id="countrySelect">
+        <option value="">— Select a country —</option>
+        <optgroup label="🇪🇺 Europe">
+          <option value="GB">🇬🇧 United Kingdom</option>
+          <option value="IT">🇮🇹 Italy</option>
+          <option value="FR">🇫🇷 France</option>
+          <option value="DE">🇩🇪 Germany</option>
+          <option value="ES">🇪🇸 Spain</option>
+          <option value="PT">🇵🇹 Portugal</option>
+          <option value="PL">🇵🇱 Poland</option>
+          <option value="NL">🇳🇱 Netherlands</option>
+          <option value="BE">🇧🇪 Belgium</option>
+          <option value="SE">🇸🇪 Sweden</option>
+          <option value="NO">🇳🇴 Norway</option>
+          <option value="DK">🇩🇰 Denmark</option>
+          <option value="FI">🇫🇮 Finland</option>
+          <option value="GR">🇬🇷 Greece</option>
+          <option value="HU">🇭🇺 Hungary</option>
+          <option value="RO">🇷🇴 Romania</option>
+          <option value="CZ">🇨🇿 Czech Republic</option>
+          <option value="IE">🇮🇪 Ireland</option>
+          <option value="AT">🇦🇹 Austria</option>
+          <option value="CH">🇨🇭 Switzerland</option>
+          <option value="UA">🇺🇦 Ukraine</option>
+        </optgroup>
+        <optgroup label="🌎 Americas">
+          <option value="US">🇺🇸 United States</option>
+          <option value="CA">🇨🇦 Canada</option>
+          <option value="BR">🇧🇷 Brazil</option>
+          <option value="MX">🇲🇽 Mexico</option>
+          <option value="AR">🇦🇷 Argentina</option>
+          <option value="CO">🇨🇴 Colombia</option>
+          <option value="CL">🇨🇱 Chile</option>
+          <option value="PE">🇵🇪 Peru</option>
+          <option value="VE">🇻🇪 Venezuela</option>
+        </optgroup>
+        <optgroup label="🌏 Asia-Pacific">
+          <option value="AU">🇦🇺 Australia</option>
+          <option value="NZ">🇳🇿 New Zealand</option>
+          <option value="IN">🇮🇳 India</option>
+          <option value="JP">🇯🇵 Japan</option>
+          <option value="KR">🇰🇷 South Korea</option>
+          <option value="ID">🇮🇩 Indonesia</option>
+          <option value="PH">🇵🇭 Philippines</option>
+          <option value="MY">🇲🇾 Malaysia</option>
+          <option value="SG">🇸🇬 Singapore</option>
+          <option value="PK">🇵🇰 Pakistan</option>
+        </optgroup>
+        <optgroup label="🌍 Middle East &amp; Africa">
+          <option value="TR">🇹🇷 Turkey</option>
+          <option value="IL">🇮🇱 Israel</option>
+          <option value="EG">🇪🇬 Egypt</option>
+          <option value="ZA">🇿🇦 South Africa</option>
+          <option value="NG">🇳🇬 Nigeria</option>
+          <option value="KE">🇰🇪 Kenya</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="field">
+      <div class="fieldLabel">Output Language</div>
+      <select id="langSelect">
+        <option value="English">English</option>
+        <option value="Italian">Italiano</option>
+        <option value="French">Français</option>
+        <option value="German">Deutsch</option>
+        <option value="Spanish">Español</option>
+        <option value="Portuguese">Português</option>
+        <option value="Polish">Polski</option>
+        <option value="Dutch">Nederlands</option>
+        <option value="Swedish">Svenska</option>
+        <option value="Greek">Ελληνικά</option>
+        <option value="Romanian">Română</option>
+        <option value="Czech">Čeština</option>
+        <option value="Turkish">Türkçe</option>
+        <option value="Arabic">العربية</option>
+        <option value="Japanese">日本語</option>
+        <option value="Korean">한국어</option>
+        <option value="Hindi">हिन्दी</option>
+        <option value="Indonesian">Bahasa Indonesia</option>
+        <option value="Ukrainian">Українська</option>
+      </select>
+    </div>
+    <div class="field">
+      <div class="fieldLabel">Detail Level</div>
+      <select id="levelSelect">
+        <option value="simple">🟢 Simple</option>
+        <option value="standard" selected>🔵 Standard</option>
+        <option value="expert">🟣 Expert</option>
+      </select>
+    </div>
+  </div>
+  <div class="srcPanel" id="srcPanel">
+    <div class="srcPanelLabel">📡 Active Data Sources</div>
+    <div class="srcRow" id="srcRow"></div>
+  </div>
+</div>
+
+<!-- STEP 2 -->
+<div class="card">
+  <div class="cardBadge"><div class="cardNum">2</div> Step Two</div>
+  <div class="cardTitle">🏛️ Select a Party</div>
+  <div id="partyGrid" class="partyGrid">
+    <div class="pEmpty">👆 Select a country above</div>
+  </div>
+</div>
+
+<!-- STEP 3 -->
+<div class="card">
+  <div class="cardBadge"><div class="cardNum">3</div> Step Three</div>
+  <div class="cardTitle">📌 Focus Areas</div>
+  <div class="topicGrid" id="topicGrid">
+    <button class="tBtn on" data-t="Immigration"><span class="ti">🚧</span>Immigration</button>
+    <button class="tBtn on" data-t="Healthcare &amp; NHS"><span class="ti">🏥</span>Healthcare</button>
+    <button class="tBtn on" data-t="Economy &amp; Jobs"><span class="ti">💷</span>Economy &amp; Jobs</button>
+    <button class="tBtn on" data-t="Housing"><span class="ti">🏠</span>Housing</button>
+    <button class="tBtn on" data-t="Education"><span class="ti">🏫</span>Education</button>
+    <button class="tBtn" data-t="Environment &amp; Climate"><span class="ti">🌱</span>Climate</button>
+    <button class="tBtn" data-t="Crime &amp; Police"><span class="ti">⚖️</span>Crime</button>
+    <button class="tBtn" data-t="Benefits &amp; Welfare"><span class="ti">🤝</span>Welfare</button>
+    <button class="tBtn" data-t="Taxes"><span class="ti">💰</span>Taxes</button>
+    <button class="tBtn" data-t="Democracy &amp; Rights"><span class="ti">🗳️</span>Democracy</button>
+    <button class="tBtn" data-t="Foreign Policy"><span class="ti">🌐</span>Foreign Policy</button>
+    <button class="tBtn" data-t="Corruption &amp; Scandals"><span class="ti">🔎</span>Corruption</button>
+  </div>
+  <button class="analyseBtn" id="analyseBtn" disabled>🔍 Generate Full Dossier</button>
+  <div class="progWrap" id="progWrap">
+    <div class="progBar"><div class="progFill" id="progFill"></div></div>
+    <div class="progLog" id="progLog">Initialising…</div>
+  </div>
+</div>
+
+<!-- DOSSIER OUTPUT -->
+<div class="dossier" id="dossier"></div>
+
+<!-- HOW IT WORKS -->
+<div class="howCard">
+  <h2>How VoterLens Builds Your Dossier</h2>
+  <p>VoterLens doesn't guess. It gathers <strong>live data first</strong>, then uses AI to reason over it. Every number in your dossier traces back to a named source.</p>
+  <h3>📡 Data Layer</h3>
+  <p><strong>Wikidata SPARQL</strong> → live party list for your country (ideology, leader, spectrum, seats). <strong>Wikipedia REST API</strong> → party history, known scandals. <strong>World Bank API</strong> (no key, free) → GDP, unemployment, inflation, health spend, debt, GINI, CO₂, poverty rate. <strong>WHO GHO API</strong> → Universal Health Coverage score. All fetched fresh on every analysis.</p>
+  <h3>🧠 Reasoning Layer</h3>
+  <p>The AI receives all fetched data plus a structured prompt that forces it to: (1) cross-check every promise against real economic constraints, (2) flag any promise that is mathematically impossible given actual debt/revenue figures, (3) identify historical parallels to past policies, (4) detect rhetorical shifts from policy to identity/cultural language, (5) estimate wallet impact for poor and middle-class households separately.</p>
+  <h3>📋 The Dossier</h3>
+  <p>Output includes: Executive Summary · Accountability Pulse (4 gauges) · Veil-Remover Table (slogan → blueprint → hidden price) · History Mirror (parallels to past regimes/policies) · Promise Tracker · Personal Wallet Impact · Source Vault.</p>
+  <div class="pillRow">
+    <span class="pill">📊 World Bank API</span>
+    <span class="pill">🏛️ Wikidata SPARQL</span>
+    <span class="pill">📖 Wikipedia</span>
+    <span class="pill">🇬🇧 UK Parliament API</span>
+    <span class="pill">🇪🇺 EU Parliament API</span>
+    <span class="pill">🌍 IPU Parline</span>
+    <span class="pill">🏥 WHO GHO API</span>
+    <span class="pill">🤖 Pollinations AI</span>
+    <span class="pill">🔓 Zero Keys Needed</span>
+  </div>
+</div>
+
+</div>
+
+<footer class="siteFooter">
+  <div class="footerInner">
+    <div class="footerBrand">EverydayToolsHQ</div>
+    <div class="footerLinks"><a href="/">Home</a><a href="/about/">About</a></div>
+    <div class="footerLegal">
+      <a href="https://powerstationhq.com/privacy-policy/" target="_blank">Privacy Policy</a> |
+      <a href="https://powerstationhq.com/terms-and-conditions/" target="_blank">Terms</a> |
+      <a href="https://powerstationhq.com/affiliate-disclosure/" target="_blank">Affiliate Disclosure</a>
+    </div>
+    <div class="footerPowered">Powered by <a href="https://powerstationhq.com/" target="_blank">PowerstationHQ</a></div>
+  </div>
+</footer>
+
+<script>
+/* ================================================================
+   COUNTRY CONFIG
+================================================================ */
+const CC={
+  GB:{n:"United Kingdom",f:"🇬🇧",wb:"GBR",q:"Q145",lang:"English",currency:"£",
+    srcs:["Wikidata SPARQL","Wikipedia","UK Parliament API","TheyWorkForYou","World Bank","WHO","IPU Parline","ONS Statistics"]},
+  US:{n:"United States",f:"🇺🇸",wb:"USA",q:"Q30",lang:"English",currency:"$",
+    srcs:["Wikidata SPARQL","Wikipedia","Congress.gov API","OpenSecrets","FEC Campaign Finance","World Bank","WHO","IPU Parline"]},
+  IT:{n:"Italy",f:"🇮🇹",wb:"ITA",q:"Q38",lang:"Italian",currency:"€",
+    srcs:["Wikidata SPARQL","Wikipedia","Camera.it Open Data","Senato Open Data","EU Parliament API","World Bank","WHO","ISTAT"]},
+  FR:{n:"France",f:"🇫🇷",wb:"FRA",q:"Q142",lang:"French",currency:"€",
+    srcs:["Wikidata SPARQL","Wikipedia","Assemblée Nationale Open Data","EU Parliament API","World Bank","WHO","INSEE"]},
+  DE:{n:"Germany",f:"🇩🇪",wb:"DEU",q:"Q183",lang:"German",currency:"€",
+    srcs:["Wikidata SPARQL","Wikipedia","Bundestag Open Data","EU Parliament API","Abgeordnetenwatch","World Bank","WHO","Destatis"]},
+  ES:{n:"Spain",f:"🇪🇸",wb:"ESP",q:"Q29",lang:"Spanish",currency:"€",
+    srcs:["Wikidata SPARQL","Wikipedia","Congreso.es Open Data","EU Parliament API","World Bank","WHO","INE Spain"]},
+  PT:{n:"Portugal",f:"🇵🇹",wb:"PRT",q:"Q45",lang:"Portuguese",currency:"€",srcs:["Wikidata SPARQL","Wikipedia","Parlamento.pt","EU Parliament API","World Bank","WHO"]},
+  PL:{n:"Poland",f:"🇵🇱",wb:"POL",q:"Q36",lang:"Polish",currency:"PLN",srcs:["Wikidata SPARQL","Wikipedia","Sejm Open Data","EU Parliament API","World Bank","WHO","GUS"]},
+  NL:{n:"Netherlands",f:"🇳🇱",wb:"NLD",q:"Q55",lang:"Dutch",currency:"€",srcs:["Wikidata SPARQL","Wikipedia","Tweede Kamer API","EU Parliament API","World Bank","WHO","CBS"]},
+  BE:{n:"Belgium",f:"🇧🇪",wb:"BEL",q:"Q31",lang:"French",currency:"€",srcs:["Wikidata SPARQL","Wikipedia","Belgian Parliament","EU Parliament API","World Bank","WHO"]},
+  SE:{n:"Sweden",f:"🇸🇪",wb:"SWE",q:"Q34",lang:"Swedish",currency:"SEK",srcs:["Wikidata SPARQL","Wikipedia","Riksdag Open Data","EU Parliament API","World Bank","WHO","SCB"]},
+  NO:{n:"Norway",f:"🇳🇴",wb:"NOR",q:"Q20",lang:"English",currency:"NOK",srcs:["Wikidata SPARQL","Wikipedia","Stortinget API","World Bank","WHO","SSB"]},
+  DK:{n:"Denmark",f:"🇩🇰",wb:"DNK",q:"Q35",lang:"Danish",currency:"DKK",srcs:["Wikidata SPARQL","Wikipedia","Folketing API","EU Parliament API","World Bank","WHO"]},
+  FI:{n:"Finland",f:"🇫🇮",wb:"FIN",q:"Q33",lang:"Finnish",currency:"€",srcs:["Wikidata SPARQL","Wikipedia","Eduskunta API","EU Parliament API","World Bank","WHO"]},
+  GR:{n:"Greece",f:"🇬🇷",wb:"GRC",q:"Q41",lang:"Greek",currency:"€",srcs:["Wikidata SPARQL","Wikipedia","Hellenic Parliament","EU Parliament API","World Bank","WHO","ELSTAT"]},
+  HU:{n:"Hungary",f:"🇭🇺",wb:"HUN",q:"Q28",lang:"English",currency:"HUF",srcs:["Wikidata SPARQL","Wikipedia","Országgyűlés","EU Parliament API","World Bank","WHO"]},
+  RO:{n:"Romania",f:"🇷🇴",wb:"ROU",q:"Q218",lang:"Romanian",currency:"RON",srcs:["Wikidata SPARQL","Wikipedia","Camera Deputatilor","EU Parliament API","World Bank","WHO"]},
+  CZ:{n:"Czech Republic",f:"🇨🇿",wb:"CZE",q:"Q213",lang:"Czech",currency:"CZK",srcs:["Wikidata SPARQL","Wikipedia","PSP.cz Open Data","EU Parliament API","World Bank","WHO"]},
+  IE:{n:"Ireland",f:"🇮🇪",wb:"IRL",q:"Q27",lang:"English",currency:"€",srcs:["Wikidata SPARQL","Wikipedia","Oireachtas Open Data","EU Parliament API","World Bank","WHO"]},
+  AT:{n:"Austria",f:"🇦🇹",wb:"AUT",q:"Q40",lang:"German",currency:"€",srcs:["Wikidata SPARQL","Wikipedia","Parlament Open Data","EU Parliament API","World Bank","WHO"]},
+  CH:{n:"Switzerland",f:"🇨🇭",wb:"CHE",q:"Q39",lang:"German",currency:"CHF",srcs:["Wikidata SPARQL","Wikipedia","Parlament.ch API","World Bank","WHO","IPU Parline"]},
+  UA:{n:"Ukraine",f:"🇺🇦",wb:"UKR",q:"Q212",lang:"Ukrainian",currency:"UAH",srcs:["Wikidata SPARQL","Wikipedia","Verkhovna Rada","World Bank","WHO"]},
+  AU:{n:"Australia",f:"🇦🇺",wb:"AUS",q:"Q408",lang:"English",currency:"AUD",srcs:["Wikidata SPARQL","Wikipedia","AustralianParliament.net","World Bank","WHO","ABS"]},
+  NZ:{n:"New Zealand",f:"🇳🇿",wb:"NZL",q:"Q664",lang:"English",currency:"NZD",srcs:["Wikidata SPARQL","Wikipedia","NZ Parliament API","World Bank","WHO"]},
+  CA:{n:"Canada",f:"🇨🇦",wb:"CAN",q:"Q16",lang:"English",currency:"CAD",srcs:["Wikidata SPARQL","Wikipedia","OpenParliament.ca","World Bank","WHO","Statistics Canada"]},
+  US:{n:"United States",f:"🇺🇸",wb:"USA",q:"Q30",lang:"English",currency:"$",srcs:["Wikidata SPARQL","Wikipedia","Congress.gov API","OpenSecrets","World Bank","WHO","IPU Parline"]},
+  BR:{n:"Brazil",f:"🇧🇷",wb:"BRA",q:"Q155",lang:"Portuguese",currency:"BRL",srcs:["Wikidata SPARQL","Wikipedia","Câmara Federal API","IBGE","World Bank","WHO"]},
+  MX:{n:"Mexico",f:"🇲🇽",wb:"MEX",q:"Q96",lang:"Spanish",currency:"MXN",srcs:["Wikidata SPARQL","Wikipedia","datos.gob.mx","INEGI","World Bank","WHO"]},
+  AR:{n:"Argentina",f:"🇦🇷",wb:"ARG",q:"Q414",lang:"Spanish",currency:"ARS",srcs:["Wikidata SPARQL","Wikipedia","datos.gob.ar","World Bank","WHO"]},
+  CO:{n:"Colombia",f:"🇨🇴",wb:"COL",q:"Q739",lang:"Spanish",currency:"COP",srcs:["Wikidata SPARQL","Wikipedia","datos.gov.co","World Bank","WHO"]},
+  CL:{n:"Chile",f:"🇨🇱",wb:"CHL",q:"Q298",lang:"Spanish",currency:"CLP",srcs:["Wikidata SPARQL","Wikipedia","Congreso.cl","World Bank","WHO"]},
+  PE:{n:"Peru",f:"🇵🇪",wb:"PER",q:"Q419",lang:"Spanish",currency:"PEN",srcs:["Wikidata SPARQL","Wikipedia","Congreso.gob.pe","World Bank","WHO"]},
+  VE:{n:"Venezuela",f:"🇻🇪",wb:"VEN",q:"Q717",lang:"Spanish",currency:"VES",srcs:["Wikidata SPARQL","Wikipedia","World Bank","WHO"]},
+  IN:{n:"India",f:"🇮🇳",wb:"IND",q:"Q668",lang:"Hindi",currency:"₹",srcs:["Wikidata SPARQL","Wikipedia","Lok Sabha Open Data","MyNeta.info","World Bank","WHO","MOSPI"]},
+  JP:{n:"Japan",f:"🇯🇵",wb:"JPN",q:"Q17",lang:"Japanese",currency:"¥",srcs:["Wikidata SPARQL","Wikipedia","Kokkai API","World Bank","WHO","e-Stat"]},
+  KR:{n:"South Korea",f:"🇰🇷",wb:"KOR",q:"Q884",lang:"Korean",currency:"₩",srcs:["Wikidata SPARQL","Wikipedia","National Assembly Open Data","World Bank","WHO","KOSIS"]},
+  ID:{n:"Indonesia",f:"🇮🇩",wb:"IDN",q:"Q252",lang:"Indonesian",currency:"IDR",srcs:["Wikidata SPARQL","Wikipedia","DPR Open Data","World Bank","WHO","BPS"]},
+  PH:{n:"Philippines",f:"🇵🇭",wb:"PHL",q:"Q928",lang:"English",currency:"PHP",srcs:["Wikidata SPARQL","Wikipedia","Congress Open Data","World Bank","WHO","PSA"]},
+  MY:{n:"Malaysia",f:"🇲🇾",wb:"MYS",q:"Q833",lang:"English",currency:"MYR",srcs:["Wikidata SPARQL","Wikipedia","Parliament Malaysia","World Bank","WHO"]},
+  SG:{n:"Singapore",f:"🇸🇬",wb:"SGP",q:"Q334",lang:"English",currency:"SGD",srcs:["Wikidata SPARQL","Wikipedia","data.gov.sg","World Bank","WHO"]},
+  PK:{n:"Pakistan",f:"🇵🇰",wb:"PAK",q:"Q843",lang:"English",currency:"PKR",srcs:["Wikidata SPARQL","Wikipedia","National Assembly Pakistan","World Bank","WHO"]},
+  TR:{n:"Turkey",f:"🇹🇷",wb:"TUR",q:"Q43",lang:"Turkish",currency:"₺",srcs:["Wikidata SPARQL","Wikipedia","TBMM Open Data","World Bank","WHO","TÜİK"]},
+  IL:{n:"Israel",f:"🇮🇱",wb:"ISR",q:"Q801",lang:"English",currency:"₪",srcs:["Wikidata SPARQL","Wikipedia","Knesset Open Data","World Bank","WHO","CBS Israel"]},
+  EG:{n:"Egypt",f:"🇪🇬",wb:"EGY",q:"Q79",lang:"Arabic",currency:"EGP",srcs:["Wikidata SPARQL","Wikipedia","World Bank","WHO","CAPMAS"]},
+  ZA:{n:"South Africa",f:"🇿🇦",wb:"ZAF",q:"Q258",lang:"English",currency:"ZAR",srcs:["Wikidata SPARQL","Wikipedia","PMG Parliament Monitor","World Bank","WHO","Stats SA"]},
+  NG:{n:"Nigeria",f:"🇳🇬",wb:"NGA",q:"Q1033",lang:"English",currency:"NGN",srcs:["Wikidata SPARQL","Wikipedia","World Bank","WHO","NBS Nigeria"]},
+  KE:{n:"Kenya",f:"🇰🇪",wb:"KEN",q:"Q114",lang:"English",currency:"KES",srcs:["Wikidata SPARQL","Wikipedia","World Bank","WHO","KNBS"]},
+};
+
+/* Hardcoded current parties — updated 2025 */
+const PDB={
+  GB:[{n:"Labour Party",s:"l",i:"Social democracy",l:"Keir Starmer",gov:true},{n:"Conservative Party",s:"r",i:"Conservatism",l:"Kemi Badenoch"},{n:"Reform UK",s:"fr",i:"Right-wing populism",l:"Nigel Farage"},{n:"Liberal Democrats",s:"cl",i:"Social liberalism",l:"Ed Davey"},{n:"Scottish National Party",s:"cl",i:"Scottish independence",l:"John Swinney"},{n:"Green Party",s:"l",i:"Green politics",l:"Carla Denyer"},{n:"Plaid Cymru",s:"l",i:"Welsh nationalism"},{n:"DUP",s:"r",i:"Ulster unionism"}],
+  US:[{n:"Democratic Party",s:"cl",i:"Social liberalism",l:"Kamala Harris"},{n:"Republican Party",s:"r",i:"Conservatism",l:"Donald Trump",gov:true},{n:"Green Party",s:"l",i:"Green politics"},{n:"Libertarian Party",s:"c",i:"Libertarianism"}],
+  IT:[{n:"Fratelli d'Italia",s:"fr",i:"National conservatism",l:"Giorgia Meloni",gov:true},{n:"Lega",s:"r",i:"Right-wing populism",l:"Matteo Salvini",gov:true},{n:"Forza Italia",s:"cr",i:"Liberal conservatism",l:"Antonio Tajani",gov:true},{n:"Partito Democratico",s:"l",i:"Social democracy",l2:"Elly Schlein"},{n:"Movimento 5 Stelle",s:"p",i:"Populism",l:"Giuseppe Conte"},{n:"Alleanza Verdi e Sinistra",s:"l",i:"Green politics"},{n:"Italia Viva",s:"c",i:"Social liberalism",l:"Matteo Renzi"},{n:"Azione",s:"c",i:"Liberal democracy",l:"Carlo Calenda"}],
+  FR:[{n:"Rassemblement National",s:"fr",i:"National conservatism",l:"Marine Le Pen"},{n:"Renaissance",s:"c",i:"Centrism",l:"Emmanuel Macron",gov:true},{n:"La France Insoumise",s:"fl",i:"Left-wing populism",l:"Jean-Luc Mélenchon"},{n:"Parti Socialiste",s:"l",i:"Social democracy"},{n:"Les Républicains",s:"cr",i:"Gaullism"},{n:"Europe Écologie Les Verts",s:"cl",i:"Green politics"},{n:"Reconquête",s:"fr",i:"French nationalism",l:"Éric Zemmour"}],
+  DE:[{n:"CDU/CSU",s:"cr",i:"Christian democracy",l:"Friedrich Merz",gov:true},{n:"SPD",s:"l",i:"Social democracy",l2:"Lars Klingbeil"},{n:"AfD",s:"fr",i:"Right-wing populism",l:"Alice Weidel"},{n:"Grüne",s:"cl",i:"Green politics"},{n:"FDP",s:"cr",i:"Classical liberalism"},{n:"BSW",s:"fl",i:"Left-wing populism",l:"Sahra Wagenknecht"},{n:"Die Linke",s:"fl",i:"Democratic socialism"}],
+  ES:[{n:"PSOE",s:"l",i:"Social democracy",l:"Pedro Sánchez",gov:true},{n:"Partido Popular",s:"r",i:"Liberal conservatism",l:"Alberto Núñez Feijóo"},{n:"Vox",s:"fr",i:"National conservatism",l:"Santiago Abascal"},{n:"Sumar",s:"fl",i:"Democratic socialism",l:"Yolanda Díaz",gov:true},{n:"Junts",s:"cr",i:"Catalan nationalism"},{n:"ERC",s:"l",i:"Catalan independence"},{n:"EH Bildu",s:"l",i:"Basque left nationalism"}],
+  BR:[{n:"PT (Workers' Party)",s:"l",i:"Democratic socialism",l:"Lula da Silva",gov:true},{n:"PL (Liberal Party)",s:"r",i:"Right-wing populism",l:"Jair Bolsonaro"},{n:"MDB",s:"c",i:"Centrism"},{n:"União Brasil",s:"cr",i:"Liberal conservatism"},{n:"PDT",s:"l",i:"Social democracy"},{n:"PSDB",s:"cr",i:"Social liberalism"}],
+  AU:[{n:"Australian Labor Party",s:"l",i:"Social democracy",l:"Anthony Albanese",gov:true},{n:"Liberal Party",s:"cr",i:"Liberal conservatism",l:"Peter Dutton"},{n:"National Party",s:"r",i:"Agrarianism"},{n:"Australian Greens",s:"l",i:"Green politics",l2:"Adam Bandt"},{n:"One Nation",s:"fr",i:"Right-wing populism",l:"Pauline Hanson"}],
+  IN:[{n:"BJP",s:"r",i:"Hindu nationalism",l:"Narendra Modi",gov:true},{n:"INC (Congress)",s:"cl",i:"Social liberalism",l:"Rahul Gandhi"},{n:"AAP",s:"cl",i:"Populism",l:"Arvind Kejriwal"},{n:"SP (Samajwadi)",s:"l",i:"Socialism"},{n:"TMC",s:"cl",i:"Populism",l:"Mamata Banerjee"},{n:"CPI(M)",s:"fl",i:"Marxism"}],
+  CA:[{n:"Liberal Party",s:"cl",i:"Liberalism",l:"Mark Carney",gov:true},{n:"Conservative Party",s:"r",i:"Conservatism",l:"Pierre Poilievre"},{n:"NDP",s:"l",i:"Social democracy"},{n:"Bloc Québécois",s:"cl",i:"Quebec nationalism"},{n:"Green Party",s:"l",i:"Green politics"}],
+  JP:[{n:"Liberal Democratic Party",s:"cr",i:"Liberal conservatism",gov:true},{n:"Constitutional Democratic Party",s:"cl",i:"Social liberalism"},{n:"Komeito",s:"c",i:"Buddhist democracy",gov:true},{n:"Nippon Ishin",s:"cr",i:"Reformism"},{n:"Japanese Communist Party",s:"fl",i:"Communism"}],
+  ZA:[{n:"ANC",s:"cl",i:"African nationalism",l:"Cyril Ramaphosa",gov:true},{n:"DA (Democratic Alliance)",s:"cr",i:"Liberal democracy"},{n:"EFF",s:"fl",i:"Socialism",l:"Julius Malema"},{n:"MK Party",s:"p",i:"Populism",l:"Jacob Zuma"},{n:"IFP",s:"cr",i:"Traditional conservatism"}],
+  MX:[{n:"Morena",s:"l",i:"Left-wing populism",l:"Claudia Sheinbaum",gov:true},{n:"PAN",s:"r",i:"Christian democracy"},{n:"PRI",s:"c",i:"Corporatism"},{n:"PRD",s:"cl",i:"Social democracy"},{n:"MC",s:"c",i:"Centrism"}],
+  KR:[{n:"Democratic Party",s:"cl",i:"Social liberalism"},{n:"People Power Party",s:"r",i:"Conservatism",gov:true},{n:"Justice Party",s:"l",i:"Democratic socialism"},{n:"New Reform Party",s:"c",i:"Centrism"}],
+  TR:[{n:"AKP",s:"r",i:"Islamic conservatism",l:"Recep Tayyip Erdoğan",gov:true},{n:"CHP",s:"cl",i:"Kemalism"},{n:"MHP",s:"r",i:"Turkish nationalism",gov:true},{n:"HDP/DEM",s:"l",i:"Kurdish democracy"},{n:"İYİ Parti",s:"r",i:"Turkish nationalism"}],
+};
+
+const SPEC_MAP={fl:'Far Left',l:'Left',cl:'Centre-Left',c:'Centre',cr:'Centre-Right',r:'Right',fr:'Far Right',p:'Populist',u:'?'};
+const SPEC_CSS={fl:'sp-fl',l:'sp-l',cl:'sp-cl',c:'sp-c',cr:'sp-cr',r:'sp-r',fr:'sp-fr',p:'sp-p',u:'sp-u'};
+
+/* ================================================================
+   STATE
+================================================================ */
+let selCountry=localStorage.getItem('vl_c')||'';
+let selParty=null, pList=[], wbD={}, whoV=null;
+
+/* ================================================================
+   INIT
+================================================================ */
+window.addEventListener('DOMContentLoaded',()=>{
+  if(selCountry){
+    document.getElementById('countrySelect').value=selCountry;
+    const cfg=CC[selCountry];
+    if(cfg) document.getElementById('langSelect').value=cfg.lang;
+    onCC();
+  }
+  document.getElementById('countrySelect').addEventListener('change',onCC);
+  document.querySelectorAll('.tBtn').forEach(b=>b.addEventListener('click',()=>b.classList.toggle('on')));
+  document.getElementById('analyseBtn').addEventListener('click',runAnalysis);
+});
+
+/* ================================================================
+   COUNTRY CHANGE
+================================================================ */
+async function onCC(){
+  const code=document.getElementById('countrySelect').value;
+  if(!code) return;
+  selCountry=code; localStorage.setItem('vl_c',code);
+  const cfg=CC[code]; if(!cfg) return;
+  document.getElementById('langSelect').value=cfg.lang;
+  const panel=document.getElementById('srcPanel');
+  panel.style.display='block';
+  document.getElementById('srcRow').innerHTML=cfg.srcs.map(s=>`<span class="srcPill">${esc(s)}</span>`).join('');
+  document.getElementById('partyGrid').innerHTML='<div class="pLoading">⏳ Loading parties…</div>';
+  selParty=null; document.getElementById('analyseBtn').disabled=true;
+  const list=await loadParties(cfg);
+  pList=list;
+  renderParties(list,cfg.f);
+}
+
+/* ================================================================
+   LOAD PARTIES — Wikidata first, hardcoded fallback
+================================================================ */
+async function loadParties(cfg){
+  try{
+    const sparql=`SELECT DISTINCT ?p ?pLabel ?ideLabel ?seats ?leadLabel ?inc WHERE {
+?p wdt:P31/wdt:P279* wd:Q7278;wdt:P17 wd:${cfg.q}.
+OPTIONAL{?p wdt:P1387 ?ide.}OPTIONAL{?p wdt:P1342 ?seats.}
+OPTIONAL{?p wdt:P488 ?lead.}OPTIONAL{?p wdt:P571 ?inc.}
+SERVICE wikibase:label{bd:serviceParam wikibase:language "en".}
+} ORDER BY DESC(?seats) LIMIT 30`;
+    const url='https://query.wikidata.org/sparql?query='+encodeURIComponent(sparql)+'&format=json';
+    const r=await fetch(url,{headers:{Accept:'application/sparql-results+json'},signal:AbortSignal.timeout(10000)});
+    const j=await r.json();
+    const seen=new Set();const out=[];
+    for(const b of j.results.bindings){
+      const id=b.p?.value?.split('/').pop();
+      if(!id||seen.has(id)) continue; seen.add(id);
+      const name=b.pLabel?.value||'';
+      if(!name||name.match(/^Q\d+$/)) continue;
+      out.push({n:name,s:toSp(b.ideLabel?.value||''),i:b.ideLabel?.value||'',
+        l:b.leadLabel?.value||'',seats:b.seats?.value||'',yr:b.inc?.value?.slice(0,4)||''});
+    }
+    if(out.length>=3) return out;
+  }catch(e){}
+  // fallback
+  const fb=PDB[selCountry]||[];
+  return fb.map(p=>({n:p.n,s:p.s,i:p.i,l:p.l||p.l2||'',seats:'',yr:'',gov:p.gov}));
+}
+
+function toSp(s){
+  const i=s.toLowerCase();
+  if(i.includes('far-left')||i.includes('communist')||i.includes('marxist')) return 'fl';
+  if(i.includes('social dem')||i.includes('labour')||i.includes('socialist')) return 'l';
+  if(i.includes('green')||i.includes('progressive')) return 'cl';
+  if(i.includes('liberal')){return i.includes('conserv')?'cr':'cl';}
+  if(i.includes('christian dem')||i.includes('moderate')) return 'cr';
+  if(i.includes('far-right')||i.includes('fascist')) return 'fr';
+  if(i.includes('nationalist')||i.includes('conservat')) return 'r';
+  if(i.includes('populis')) return 'p';
+  if(i.includes('centrist')||i.includes('centrism')) return 'c';
+  return 'u';
+}
+
+/* ================================================================
+   RENDER PARTIES
+================================================================ */
+function renderParties(list,flag){
+  const g=document.getElementById('partyGrid');
+  if(!list.length){g.innerHTML='<div class="pEmpty">No parties found.</div>';return;}
+  g.innerHTML=list.map((p,i)=>`
+    <button class="pBtn" data-i="${i}">
+      <span class="pFlag">${flag}</span>
+      <span class="pName">${esc(p.n)}</span>
+      <span class="pSpec ${SPEC_CSS[p.s]||'sp-u'}">${SPEC_MAP[p.s]||'?'}</span>
+      ${p.gov?'<span style="position:absolute;top:5px;left:7px;font-size:8px;background:#e6f4ec;color:#156b3f;border:1px solid #8fcfae;border-radius:4px;padding:1px 4px;font-weight:700;">IN POWER</span>':''}
+    </button>`).join('');
+  g.querySelectorAll('.pBtn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      g.querySelectorAll('.pBtn').forEach(b=>b.classList.remove('sel'));
+      btn.classList.add('sel');
+      selParty=list[parseInt(btn.dataset.i)];
+      document.getElementById('analyseBtn').disabled=false;
+    });
+  });
+}
+
+/* ================================================================
+   WORLD BANK FETCH
+================================================================ */
+async function fetchWB(code){
+  const inds={gdp:'NY.GDP.MKTP.CD',gdpG:'NY.GDP.MKTP.KD.ZG',unemp:'SL.UEM.TOTL.ZS',
+    youth:'SL.UEM.1524.ZS',inf:'FP.CPI.TOTL.ZG',debt:'GC.DOD.TOTL.GD.ZS',
+    tax:'GC.TAX.TOTL.GD.ZS',health:'SH.XPD.CHEX.GD.ZS',life:'SP.DYN.LE00.IN',
+    pov:'SI.POV.DDAY',gini:'SI.POV.GINI',edu:'SE.XPD.TOTL.GD.ZS',
+    co2:'EN.ATM.CO2E.PC',pop:'SP.POP.TOTL',ruralPov:'SI.POV.RURM',
+    laborForce:'SL.TLF.TOTL.IN',publicServices:'GC.XPD.TOTL.GD.ZS'};
+  const base=`https://api.worldbank.org/v2/country/${code}/indicator/`;
+  const res={};
+  await Promise.allSettled(Object.entries(inds).map(async([k,c])=>{
+    try{
+      const r=await fetch(base+c+'?format=json&mrv=1&per_page=1',{signal:AbortSignal.timeout(7000)});
+      const d=await r.json();
+      const v=d[1]?.[0]?.value;
+      if(v!=null) res[k]={v,y:d[1][0].date};
+    }catch(e){}
+  }));
+  return res;
+}
+
+async function fetchWHO(code){
+  try{
+    const r=await fetch(`https://ghoapi.azureedge.net/api/UHC_INDEX_REPORTED?$filter=SpatialDim eq '${code}'&$orderby=TimeDim desc&$top=1`,{signal:AbortSignal.timeout(7000)});
+    const d=await r.json();
+    return d?.value?.[0]?.NumericValue||null;
+  }catch(e){return null;}
+}
+
+async function fetchWiki(name,lang){
+  try{
+    const lc={Italian:'it',French:'fr',German:'de',Spanish:'es',Portuguese:'pt',Polish:'pl',Dutch:'nl',Swedish:'sv',Greek:'el',Romanian:'ro',Czech:'cs',Turkish:'tr',Arabic:'ar',Japanese:'ja',Korean:'ko',Hindi:'hi',Indonesian:'id',Ukrainian:'uk'}[lang]||'en';
+    const s=await fetch(`https://${lc}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(name)}&format=json&origin=*&srlimit=1`,{signal:AbortSignal.timeout(6000)});
+    const sd=await s.json();
+    const title=sd?.query?.search?.[0]?.title;
+    if(!title) return '';
+    const p=await fetch(`https://${lc}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`,{signal:AbortSignal.timeout(6000)});
+    const pd=await p.json();
+    return (pd.extract||'').slice(0,1500);
+  }catch(e){return '';}
+}
+
+/* ================================================================
+   PROGRESS
+================================================================ */
+function prog(pct,msg){
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progLog').textContent=msg;
+}
+
+/* ================================================================
+   MAIN ANALYSIS
+================================================================ */
+async function runAnalysis(){
+  if(!selParty||!selCountry) return;
+  const cfg=CC[selCountry];
+  const lang=document.getElementById('langSelect').value;
+  const lvl=document.getElementById('levelSelect').value;
+  const topics=[...document.querySelectorAll('.tBtn.on')].map(b=>b.dataset.t);
+  if(!topics.length){alert('Select at least one topic.');return;}
+
+  const btn=document.getElementById('analyseBtn');
+  btn.disabled=true;
+  document.getElementById('dossier').style.display='none';
+  document.getElementById('progWrap').style.display='block';
+  document.querySelectorAll('.srcPill').forEach(p=>p.classList.add('loading'));
+  prog(5,'📡 Collecting live data from official sources…');
+
+  const markLive=n=>document.querySelectorAll('.srcPill').forEach(p=>{if(p.textContent.toLowerCase().includes(n.toLowerCase())){p.classList.remove('loading');p.classList.add('live');}});
+
+  prog(12,'📊 World Bank: fetching 17 economic indicators…');
+  await fetchWB(cfg.wb).then(d=>{wbD=d;markLive('World Bank');prog(32,'✅ World Bank: '+Object.keys(d).length+' indicators loaded');}).catch(()=>{});
+  
+  prog(38,'🏥 WHO: fetching health coverage score…');
+  await fetchWHO(cfg.wb).then(d=>{whoV=d;markLive('WHO');if(d) prog(44,'✅ WHO UHC score loaded');}).catch(()=>{});
+  
+  prog(46,'📖 Wikipedia: fetching party history…');
+  const wiki=await fetchWiki(selParty.n,lang).then(s=>{markLive('Wikipedia');prog(56,'✅ Wikipedia extract loaded');return s;}).catch(()=>'');
+
+  prog(60,'🧠 Building diagnostic dossier prompt…');
+  const facts=buildFacts(wbD,whoV,cfg);
+  const sys=buildSys(lang,lvl,cfg.currency);
+  const usr=buildUsr(selParty,cfg,topics,facts,wiki,lang,lvl);
+  
+  prog(68,'🤖 AI reasoning over all data — this takes 15-30 seconds…');
+  
+  let result=null;
+  try{
+    const polUrl=`https://text.pollinations.ai/${encodeURIComponent(usr)}?model=openai-large&system=${encodeURIComponent(sys)}&json=true`;
+    const r=await fetch(polUrl,{signal:AbortSignal.timeout(40000)});
+    const txt=await r.text();
+    const m=txt.match(/\{[\s\S]*\}/);
+    if(m) result=JSON.parse(m[0]);
+  }catch(e){
+    try{
+      const r2=await fetch(`https://text.pollinations.ai/${encodeURIComponent(buildShort(selParty,cfg,topics,facts,wiki,lang))}?model=openai&json=true`,{signal:AbortSignal.timeout(25000)});
+      const t2=await r2.text();
+      const m2=t2.match(/\{[\s\S]*\}/);
+      if(m2) result=JSON.parse(m2[0]);
+    }catch(e2){}
+  }
+  if(!result) result=buildFallback(selParty,cfg,topics,facts,wiki,lang);
+
+  prog(96,'🎨 Rendering dossier…');
+  setTimeout(()=>{
+    renderDossier(result,wbD,whoV,cfg,topics);
+    document.getElementById('progWrap').style.display='none';
+    prog(0,''); btn.disabled=false;
+  },350);
+  if(typeof gtag==='function') gtag('event','voterlens_dossier',{country:selCountry,party:selParty.n});
+}
+
+/* ================================================================
+   BUILD FACTS
+================================================================ */
+function buildFacts(wb,who,cfg){
+  const f=(k,u,d=1)=>wb[k]?.v!=null?`${Number(wb[k].v).toFixed(d)}${u} (${wb[k].y})`:'N/A';
+  const fB=k=>wb[k]?.v!=null?`${cfg.currency}${(wb[k].v/1e9).toFixed(0)} billion (${wb[k].y})`:'N/A';
+  const fM=k=>wb[k]?.v!=null?`${(wb[k].v/1e6).toFixed(1)} million`:'N/A';
+  return `=== LIVE ECONOMIC DATA: ${cfg.n} ===
+GDP (total): ${fB('gdp')}
+GDP Growth Rate: ${f('gdpG','%')}
+Population: ${fM('pop')}
+Labor Force: ${fM('laborForce')}
+Unemployment Rate: ${f('unemp','%')}
+Youth Unemployment (under 25): ${f('youth','%')}
+Inflation (CPI): ${f('inf','%')}
+Government Debt (% of GDP): ${f('debt','%')}
+Tax Revenue (% of GDP): ${f('tax','%')}
+Total Gov. Expenditure (% of GDP): ${f('publicServices','%')}
+Healthcare Expenditure (% of GDP): ${f('health','%')}
+Life Expectancy: ${f('life',' years')}
+Education Expenditure (% of GDP): ${f('edu','%')}
+Poverty Rate (<$2.15/day): ${f('pov','%')}
+GINI Inequality Index (0=equal, 100=unequal): ${f('gini','')}
+CO2 Emissions per capita: ${f('co2',' tonnes')}
+WHO Universal Health Coverage Index: ${who!=null?Number(who).toFixed(0)+'/100 ('+who.toFixed(0)+'% of people covered)':'N/A'}
+Currency: ${cfg.currency}
+=== END DATA ===`;
+}
+
+/* ================================================================
+   BUILD SYSTEM PROMPT
+================================================================ */
+function buildSys(lang,lvl,cur){
+  const detail=lvl==='simple'?'Write as if explaining to someone with no political background. Use short sentences, analogies, and everyday language. Avoid jargon completely.':lvl==='expert'?'Use precise economic and political science language. Reference specific legislation, academic studies, named economists, and historical events with dates.':'Write clearly for an educated adult who is not a specialist.';
+  return `You are VoterLens, a non-partisan political accountability AI. Your job is to produce a high-quality, detailed DIAGNOSTIC DOSSIER on a political party. You base your analysis ONLY on the real data provided. You NEVER take political sides. You state facts, identify contradictions, flag mathematical impossibilities, and warn about dangerous patterns.
+
+KEY RULES:
+- RESPOND ONLY IN ${lang}
+- ${detail}
+- Every claim must be grounded in the provided economic data or the party's known positions
+- When a promise is mathematically impossible given the real data, say so explicitly with numbers
+- For immigration: ALWAYS distinguish between illegal immigration and legal immigration — this is a critical distinction many parties deliberately blur
+- For healthcare/NHS: explain what privatisation or "reform" actually means for co-pays, waiting times, and who bears the cost (use the health expenditure % GDP figure)
+- For economic promises: use the real GDP, debt, tax revenue, and labor force figures to assess feasibility
+- Flag historical parallels with specific dates and examples
+- All currency figures in ${cur}
+
+RESPOND ONLY WITH VALID JSON. No markdown. No preamble. No explanation outside the JSON. Schema:
+{
+  "party":"string",
+  "country":"string",
+  "ideology":"string",
+  "spectrum":"string",
+  "currentlyGoverning": true|false,
+  "scores":{"trustworthiness":0-10,"feasibility":0-10,"transparency":0-10,"civilRights":0-10},
+  "executiveSummary":"4-6 sentence detailed neutral summary of who this party really is, what their core agenda is, and what the likely real-world outcome of their policies would be",
+  "tldr":"One powerful sentence that cuts to the truth",
+  "accountability":{
+    "factCheckScore": 0-100,
+    "factCheckNote":"Explanation of the score with specific examples of verified vs false claims",
+    "historicalRiskScore": 0-100,
+    "historicalRiskNote":"Assessment of whether current rhetoric matches historical warning patterns",
+    "budgetFeasibility": 0-100,
+    "budgetFeasibilityNote":"Based on the real GDP/debt/tax data: can they actually afford what they promise?",
+    "civilRightsScore": 0-100,
+    "civilRightsNote":"Assessment of civil liberties impact"
+  },
+  "topics":[{
+    "topic":"string",
+    "slogan":"The exact type of catchy phrase or slogan this party uses",
+    "blueprint":"What the policy document actually says they will do — specific, detailed",
+    "hiddenPrice":"The real consequence — who pays, who loses, what gets cut. Be specific with numbers where possible.",
+    "hiddenPriceClass":"danger|warn|ok",
+    "feasibility":"yes|maybe|no|false",
+    "feasibilityDetail":"Detailed explanation referencing real economic data. Include specific numbers. If a promise is impossible, explain WHY with the actual figures.",
+    "impactPoor":"Specific impact on low-income households",
+    "impactMiddle":"Specific impact on middle-class households",
+    "impactRich":"Specific impact on high-income households",
+    "trafficLight":"green|yellow|red",
+    "trafficReason":"Why this traffic light",
+    "historicalParallel":"Has this exact type of policy been tried before? By whom? What happened? Be specific.",
+    "sources":["list of named sources that support this analysis"]
+  }],
+  "historyMirror":[{
+    "title":"Name of the historical parallel",
+    "period":"Date/era",
+    "similarity": 0-100,
+    "description":"Detailed explanation of the parallel — what happened then, what the warning signs were, and how today's rhetoric/policies compare"
+  }],
+  "warnings":[{
+    "type":"racism|authoritarianism|historical_parallel|math_impossible|broken_promise|dog_whistle|scandal",
+    "severity":"high|medium|low",
+    "title":"string",
+    "detail":"Detailed explanation with specific evidence",
+    "evidence":"Specific quote, policy, or action that triggers this warning"
+  }],
+  "promisesKept":["specific promise that was kept, with context"],
+  "promisesBroken":["specific promise that was broken or abandoned, with context"],
+  "falseOrMisleading":["specific false or deliberately misleading claim, with evidence"],
+  "walletImpact":{
+    "poorHousehold":{"monthly":0,"note":"explanation"},
+    "middleHousehold":{"monthly":0,"note":"explanation"},
+    "currency":"${cur}",
+    "caveats":"Important caveats about these estimates"
+  },
+  "audioSummary":"5-6 sentence plain-language podcast-style summary. Start with who the party is. Then what they actually plan. Then whether it adds up. Then what it means for ordinary people. Then one key warning.",
+  "sourcesUsed":["named list of all sources consulted in this analysis"]
+}`;
+}
+
+/* ================================================================
+   BUILD USER PROMPT
+================================================================ */
+function buildUsr(party,cfg,topics,facts,wiki,lang,lvl){
+  return `GENERATE A FULL VOTERLENS DOSSIER FOR:
+Party: ${party.n}
+Country: ${cfg.n} 
+Known Ideology: ${party.i||'Unknown'}
+Political Spectrum: ${SPEC_MAP[party.s]||'Unknown'}
+Current Leader: ${party.l||'Unknown'}
+Currently Governing: ${party.gov?'YES':'NO or unknown'}
+Topics to analyse: ${topics.join(' | ')}
+
+${facts}
+
+WIKIPEDIA PARTY EXTRACT:
+${wiki||'Not available — use your knowledge of this party'}
+
+ANALYSIS INSTRUCTIONS:
+For EACH topic in [${topics.join(', ')}]:
+1. State the party's typical slogan/promise on this topic
+2. Explain what their actual policy document/manifesto says (the blueprint)
+3. Calculate the "hidden price" — what gets cut, who pays more, what the consequence is for ordinary people. USE THE REAL NUMBERS from the economic data above.
+4. Assess feasibility: given ${cfg.n}'s actual GDP of ${wbD.gdp?('$'+(wbD.gdp.v/1e9).toFixed(0)+'B'):'[see data]'}, debt of ${wbD.debt?Number(wbD.debt.v).toFixed(0)+'% GDP':'[see data]'}, and tax revenue of ${wbD.tax?Number(wbD.tax.v).toFixed(1)+'% GDP':'[see data]'}, can they actually afford this?
+5. Compare to historical precedent — has this been tried before?
+
+For the HISTORY MIRROR: identify 1-3 historical parallels where similar language or policies were used, with outcomes.
+
+For WARNINGS: flag ANY of the following:
+- Policies targeting immigrants based on ethnicity/religion rather than legal status
+- Language that dehumanises groups ("swarms", "invasion", "cultural dilution", "infiltrators")  
+- Economic promises that exceed available fiscal space by more than 20%
+- Proposals that reduce judicial independence or democratic oversight
+- Known scandals or corruption involving party leaders
+
+For WALLET IMPACT: estimate realistic monthly ${cfg.currency} impact on a poor household (bottom 20%) and middle-class household, referencing the real unemployment and inflation data.
+
+Be detailed. Be specific. Use numbers. Name sources. Respond in ${lang}.`;
+}
+
+function buildShort(party,cfg,topics,facts,wiki,lang){
+  return `VoterLens dossier for "${party.n}" in ${cfg.n}. Ideology: ${party.i}. Spectrum: ${SPEC_MAP[party.s]}. Topics: ${topics.join(',')}. Key data: ${facts.split('\n').slice(1,8).join(' ')}. Wiki: ${wiki.slice(0,400)}. RESPOND IN ${lang} with JSON only: {party,country,ideology,spectrum,currentlyGoverning,scores:{trustworthiness,feasibility,transparency,civilRights},executiveSummary,tldr,accountability:{factCheckScore,factCheckNote,historicalRiskScore,historicalRiskNote,budgetFeasibility,budgetFeasibilityNote,civilRightsScore,civilRightsNote},topics:[{topic,slogan,blueprint,hiddenPrice,hiddenPriceClass,feasibility,feasibilityDetail,impactPoor,impactMiddle,impactRich,trafficLight,trafficReason,historicalParallel,sources}],historyMirror:[{title,period,similarity,description}],warnings:[{type,severity,title,detail,evidence}],promisesKept,promisesBroken,falseOrMisleading,walletImpact:{poorHousehold:{monthly,note},middleHousehold:{monthly,note},currency,caveats},audioSummary,sourcesUsed}`;
+}
+
+function buildFallback(party,cfg,topics,facts,wiki,lang){
+  return {party:party.n,country:cfg.n,ideology:party.i||'Unknown',spectrum:SPEC_MAP[party.s]||'Unknown',currentlyGoverning:!!party.gov,
+    scores:{trustworthiness:5,feasibility:5,transparency:5,civilRights:5},
+    executiveSummary:(wiki||`${party.n} is a ${SPEC_MAP[party.s]||'political'} party in ${cfg.n} with ${party.i||'unknown'} ideology.`).slice(0,400),
+    tldr:`AI analysis temporarily unavailable — live economic data is shown below.`,
+    accountability:{factCheckScore:50,factCheckNote:'AI unavailable',historicalRiskScore:50,historicalRiskNote:'AI unavailable',budgetFeasibility:50,budgetFeasibilityNote:facts.split('\n').slice(1,5).join(' '),civilRightsScore:50,civilRightsNote:'AI unavailable'},
+    topics:topics.map(t=>({topic:t,slogan:'—',blueprint:'AI temporarily unavailable.',hiddenPrice:'Please retry in a moment.',hiddenPriceClass:'warn',feasibility:'maybe',feasibilityDetail:'AI service unreachable.',impactPoor:'',impactMiddle:'',impactRich:'',trafficLight:'yellow',trafficReason:'Analysis incomplete',historicalParallel:'',sources:[]})),
+    historyMirror:[],warnings:[],promisesKept:[],promisesBroken:[],falseOrMisleading:[],
+    walletImpact:{poorHousehold:{monthly:0,note:'AI unavailable'},middleHousehold:{monthly:0,note:'AI unavailable'},currency:cfg.currency,caveats:'Retry for wallet analysis'},
+    audioSummary:`${party.n} is a ${SPEC_MAP[party.s]||'political'} party in ${cfg.n}. The AI analysis was temporarily unavailable. Live World Bank economic data is displayed below.`,
+    sourcesUsed:['World Bank','Wikipedia','Wikidata']};
+}
+
+/* ================================================================
+   RENDER DOSSIER
+================================================================ */
+function renderDossier(d,wb,who,cfg,topics){
+  const el=document.getElementById('dossier');
+  const sc=d.scores||{};
+  const ac=d.accountability||{};
+  const cur=d.walletImpact?.currency||cfg.currency;
+
+  function sBar(v,col){const p=Math.max(0,Math.min(100,(v||5)/10*100));const c=v>=7?'#22c55e':v>=4?'#f59e0b':'#ef4444';return `<div class="scoreBar"><div class="scoreBarFill" style="width:${p}%;background:${c||col};"></div></div>`;}
+  function gBar(pct,col){return `<div class="gaugeBarWrap"><div class="gaugeBarFill" style="width:${Math.max(0,Math.min(100,pct||50))}%;background:${col};"></div></div>`;}
+  function fmtWB(k,u,dec=1){return wb[k]?.v!=null?`${Number(wb[k].v).toFixed(dec)}${u}`:null;}
+  function fmtB(k){return wb[k]?.v!=null?`${cur}${(wb[k].v/1e9).toFixed(0)}B`:null;}
+  function feasCls(f){return {yes:'f-yes',maybe:'f-maybe',no:'f-no',false:'f-false'}[f]||'f-maybe';}
+  function feasTxt(f){return {yes:'✅ Feasible',maybe:'⚠️ Conditional',no:'❌ Unlikely',false:'🚫 False/Misleading'}[f]||'?';}
+  function tlDot(t){return `<span class="tlDot tl-${(t||'y')[0]}"></span>`;}
+  function warnCls(t){return ['racism','authoritarianism'].includes(t)?'danger':t==='math_impossible'?'purple':'warn';}
+  function warnIcon(t){return {racism:'⛔',authoritarianism:'🚨',historical_parallel:'📜',math_impossible:'🧮',broken_promise:'💔',dog_whistle:'📢',scandal:'🔎'}[t]||'⚠️';}
+
+  let h='';
+
+  /* ── HEADER ── */
+  h+=`<div class="dHdr">
+    <div class="dParty">${esc(d.party)} ${cfg.f}</div>
+    <div class="dMeta">${esc(d.country)} · ${esc(d.ideology)} · ${esc(d.spectrum)}${d.currentlyGoverning?' · <span style="background:rgba(34,197,94,.25);color:#86efac;padding:1px 7px;border-radius:4px;font-size:9px;font-weight:800;">CURRENTLY GOVERNING</span>':''}</div>
+    <div class="scoreRow">
+      <div class="scoreBox"><div class="scoreVal">${sc.trustworthiness||'?'}/10</div><div class="scoreLbl">Trust</div>${sBar(sc.trustworthiness)}</div>
+      <div class="scoreBox"><div class="scoreVal">${sc.feasibility||'?'}/10</div><div class="scoreLbl">Feasibility</div>${sBar(sc.feasibility)}</div>
+      <div class="scoreBox"><div class="scoreVal">${sc.transparency||'?'}/10</div><div class="scoreLbl">Transparency</div>${sBar(sc.transparency)}</div>
+      <div class="scoreBox"><div class="scoreVal">${sc.civilRights||'?'}/10</div><div class="scoreLbl">Civil Rights</div>${sBar(sc.civilRights)}</div>`;
+  if(fmtWB('unemp','%'))  h+=`<div class="scoreBox"><div class="scoreVal">${fmtWB('unemp','%')}</div><div class="scoreLbl">Unemp.</div></div>`;
+  if(fmtWB('inf','%'))    h+=`<div class="scoreBox"><div class="scoreVal">${fmtWB('inf','%')}</div><div class="scoreLbl">Inflation</div></div>`;
+  if(fmtWB('debt','%'))   h+=`<div class="scoreBox"><div class="scoreVal">${fmtWB('debt','%')}</div><div class="scoreLbl">Debt/GDP</div></div>`;
+  if(who!=null)           h+=`<div class="scoreBox"><div class="scoreVal">${Number(who).toFixed(0)}</div><div class="scoreLbl">WHO UHC</div></div>`;
+  h+=`</div></div>`;
+
+  h+=`<div class="dBody">`;
+
+  /* ── 1. EXECUTIVE SUMMARY ── */
+  h+=`<div class="dSection">
+    <div class="dSecHead">📋 Executive Summary — The TL;DR</div>`;
+  if(d.tldr) h+=`<div class="execQuote">${esc(d.tldr)}</div>`;
+  h+=`<div class="execSummary" style="margin-top:10px;">${esc(d.executiveSummary||'')}</div>`;
+  h+=`</div>`;
+
+  /* ── 2. ACCOUNTABILITY PULSE (4 gauges) ── */
+  h+=`<div class="dSection">
+    <div class="dSecHead">📡 Accountability Pulse</div>
+    <div class="dSecSubhead">Four real-time gauges based on live data and AI cross-checking</div>
+    <div class="gaugeGrid">
+      <div class="gauge">
+        <div class="gaugeLabel">Fact-Check Score</div>
+        <div class="gaugeVal">${ac.factCheckScore||'?'}%</div>
+        ${gBar(ac.factCheckScore,'#22c55e')}
+        <div class="gaugeNote">${esc(ac.factCheckNote||'')}</div>
+      </div>
+      <div class="gauge">
+        <div class="gaugeLabel">Historical Risk</div>
+        <div class="gaugeVal">${ac.historicalRiskScore||'?'}%</div>
+        ${gBar(ac.historicalRiskScore,(ac.historicalRiskScore||0)>60?'#dc2626':(ac.historicalRiskScore||0)>30?'#f59e0b':'#22c55e')}
+        <div class="gaugeNote">${esc(ac.historicalRiskNote||'')}</div>
+      </div>
+      <div class="gauge">
+        <div class="gaugeLabel">Budget Feasibility</div>
+        <div class="gaugeVal">${ac.budgetFeasibility||'?'}%</div>
+        ${gBar(ac.budgetFeasibility,'#3b82f6')}
+        <div class="gaugeNote">${esc(ac.budgetFeasibilityNote||'')}</div>
+      </div>
+      <div class="gauge">
+        <div class="gaugeLabel">Civil Rights Score</div>
+        <div class="gaugeVal">${ac.civilRightsScore||'?'}%</div>
+        ${gBar(ac.civilRightsScore,'#8b5cf6')}
+        <div class="gaugeNote">${esc(ac.civilRightsNote||'')}</div>
+      </div>
+    </div>
+  </div>`;
+
+  /* ── 3. LIVE ECONOMIC DATA ── */
+  const stats=[
+    ['GDP',fmtB('gdp'),'World Bank '+( wb.gdp?.y||'')],
+    ['GDP Growth',fmtWB('gdpG','%'),'Annual'],
+    ['Unemployment',fmtWB('unemp','%'),'World Bank'],
+    ['Youth Unemp.',fmtWB('youth','%'),'Under 25s'],
+    ['Inflation',fmtWB('inf','%'),'CPI'],
+    ['Gov. Debt',fmtWB('debt','%')?' '+fmtWB('debt','% GDP'):null,'World Bank'],
+    ['Tax Revenue',fmtWB('tax','%')?' GDP':null,'World Bank'],
+    ['Gov. Spend',fmtWB('publicServices','%')?' GDP':null,'World Bank'],
+    ['Health Spend',fmtWB('health','%')?' GDP':null,'World Bank'],
+    ['Life Expect.',fmtWB('life',' yrs'),'World Bank'],
+    ['Edu. Spend',fmtWB('edu','%')?' GDP':null,'World Bank'],
+    ['GINI Index',fmtWB('gini',''),'Inequality'],
+    ['CO₂/capita',fmtWB('co2',' t'),'World Bank'],
+    ['WHO UHC',who!=null?Number(who).toFixed(0)+'/100':null,'WHO Global'],
+  ].filter(s=>s[1]!=null);
+
+  if(stats.length){
+    h+=`<div class="dSection">
+      <div class="dSecHead">📈 Live Country Data (World Bank + WHO)</div>
+      <div class="statsGrid">`;
+    stats.forEach(([l,v,s])=>h+=`<div class="statMini"><div class="statMiniVal">${esc(String(v||''))}</div><div class="statMiniLbl">${esc(l)}</div><div class="statMiniSrc">${esc(s)}</div></div>`);
+    h+=`</div></div>`;
+  }
+
+  /* ── 4. VEIL-REMOVER TABLE ── */
+  if(d.topics?.length){
+    h+=`<div class="dSection">
+      <div class="dSecHead">🎭 The Veil-Remover — Slogan vs. Reality</div>
+      <div class="dSecSubhead">What they say · What the policy actually does · What it costs you · Who really wins</div>
+      <div class="veilWrap"><table class="veilTable">
+        <thead><tr>
+          <th>Topic</th><th>The Slogan</th><th>The Blueprint (What They'll Actually Do)</th>
+          <th>The Hidden Price</th><th>Who Bears the Cost</th><th>Feasibility</th>
+        </tr></thead><tbody>`;
+    d.topics.forEach(t=>{
+      const hpc=t.hiddenPriceClass||'warn';
+      h+=`<tr>
+        <td class="topic">${tlDot(t.trafficLight)}${esc(t.topic)}</td>
+        <td class="slogan">"${esc(t.slogan||'')}"</td>
+        <td class="reality">${esc(t.blueprint||'')}
+          ${t.historicalParallel?`<div style="font-size:10px;color:var(--muted);margin-top:5px;font-style:italic;">📜 ${esc(t.historicalParallel)}</div>`:''}
+        </td>
+        <td class="hiddenPrice ${hpc}">${esc(t.hiddenPrice||'')}
+          ${t.sources?.length?`<span class="srcRef">📎 ${esc(t.sources.slice(0,2).join(', '))}</span>`:''}
+        </td>
+        <td style="font-size:11px;line-height:1.65;">
+          ${t.impactPoor?`<b style="font-size:9px;color:var(--red);">LOW INCOME:</b><br>${esc(t.impactPoor)}<br>`:''} 
+          ${t.impactMiddle?`<b style="font-size:9px;color:var(--amber);">MIDDLE CLASS:</b><br>${esc(t.impactMiddle)}<br>`:''}
+          ${t.impactRich?`<b style="font-size:9px;color:var(--green);">HIGH INCOME:</b><br>${esc(t.impactRich)}`:''}
+        </td>
+        <td><span class="feasTag ${feasCls(t.feasibility)}">${feasTxt(t.feasibility)}</span><br>
+          <span style="font-size:10px;color:var(--muted);line-height:1.5;">${esc(t.feasibilityDetail||'')}</span>
+        </td>
+      </tr>`;
+    });
+    h+=`</tbody></table></div></div>`;
+  }
+
+  /* ── 5. HISTORY MIRROR ── */
+  if(d.historyMirror?.length){
+    h+=`<div class="dSection">
+      <div class="dSecHead">🪞 History Mirror — Warning System</div>
+      <div class="dSecSubhead">Current policies and rhetoric compared to historical precedents</div>`;
+    d.historyMirror.forEach(hm=>{
+      h+=`<div class="histCard">
+        <div class="histTitle">${esc(hm.title||'')} <span class="histSimilarity">${hm.similarity||'?'}% similarity</span> <span style="font-size:10px;color:var(--muted);font-weight:400;">${esc(hm.period||'')}</span></div>
+        <div class="histBody">${esc(hm.description||'')}</div>
+      </div>`;
+    });
+    h+=`</div>`;
+  }
+
+  /* ── 6. WARNINGS ── */
+  if(d.warnings?.length){
+    h+=`<div class="dSection"><div class="dSecHead">⚠️ Red Flags &amp; Warnings</div>`;
+    d.warnings.forEach(w=>{
+      h+=`<div class="alert ${warnCls(w.type)}">
+        <div class="aIcon">${warnIcon(w.type)}</div>
+        <div class="aText">
+          <strong>${esc(w.title||'')} — ${w.severity||''} severity</strong>
+          ${esc(w.detail||'')}
+          ${w.evidence?`<small>Evidence: "${esc(w.evidence)}"</small>`:''}
+        </div>
+      </div>`;
+    });
+    h+=`</div>`;
+  }
+
+  /* ── 7. PROMISE TRACKER ── */
+  const hk=d.promisesKept?.length, hb=d.promisesBroken?.length, hf=d.falseOrMisleading?.length;
+  if(hk||hb||hf){
+    h+=`<div class="dSection"><div class="dSecHead">📝 Promise Tracker</div><div class="promiseGrid">`;
+    if(hk){h+=`<div class="promBox kept"><h4>✅ Kept / Delivered</h4><ul>`;d.promisesKept.forEach(p=>h+=`<li>${esc(p)}</li>`);h+=`</ul></div>`;}
+    if(hb){h+=`<div class="promBox broken"><h4>❌ Broken / Abandoned</h4><ul>`;d.promisesBroken.forEach(p=>h+=`<li>${esc(p)}</li>`);h+=`</ul></div>`;}
+    if(hf){h+=`<div class="promBox false"><h4>🚫 False or Misleading</h4><ul>`;d.falseOrMisleading.forEach(p=>h+=`<li>${esc(p)}</li>`);h+=`</ul></div>`;}
+    h+=`</div></div>`;
+  }
+
+  /* ── 8. WALLET IMPACT ── */
+  const wi=d.walletImpact||{};
+  const poor=wi.poorHousehold||{};const mid=wi.middleHousehold||{};
+  if(poor.note||mid.note){
+    h+=`<div class="dSection">
+      <div class="dSecHead">💰 How This Hits Your Home</div>
+      <div class="dSecSubhead">Estimated monthly ${cur} impact per household type if this party governs</div>
+      <div class="walletGrid">
+        <div class="walletBox ${(poor.monthly||0)>=0?'plus':'minus'}">
+          <div class="walletAmt">${(poor.monthly||0)>=0?'+':''}${cur}${Math.abs(poor.monthly||0).toFixed(0)}/mo</div>
+          <div class="walletLabel">Low-Income Household</div>
+          <div class="walletNote">${esc(poor.note||'')}</div>
+        </div>
+        <div class="walletBox ${(mid.monthly||0)>=0?'plus':'minus'}">
+          <div class="walletAmt">${(mid.monthly||0)>=0?'+':''}${cur}${Math.abs(mid.monthly||0).toFixed(0)}/mo</div>
+          <div class="walletLabel">Middle-Class Household</div>
+          <div class="walletNote">${esc(mid.note||'')}</div>
+        </div>
+      </div>
+      ${wi.caveats?`<div style="font-size:10px;color:var(--muted);margin-top:10px;font-style:italic;">⚠️ ${esc(wi.caveats)}</div>`:''}
+    </div>`;
+  }
+
+  /* ── 9. AUDIO SUMMARY ── */
+  if(d.audioSummary){
+    h+=`<div class="dSection">
+      <div class="dSecHead">🎙️ The 1-Minute Manifesto — Plain Language</div>
+      <div class="audioBox"><strong>What you need to know in plain words:</strong><p>${esc(d.audioSummary)}</p></div>
+    </div>`;
+  }
+
+  /* ── 10. SOURCE VAULT ── */
+  const allSrcs=[...new Set([...(d.sourcesUsed||[]),...(cfg.srcs||[])])];
+  h+=`<div class="dSection">
+    <div class="dSecHead">🔐 Source Vault — Total Transparency</div>
+    <div class="vaultGrid">`;
+  allSrcs.forEach(s=>h+=`<span class="vaultChip live">✓ ${esc(s)}</span>`);
+  h+=`</div>
+    <div class="disclaimer">VoterLens is a free civic education tool. It does not endorse or oppose any party or candidate. Economic data is from the World Bank (${wb.gdp?.y||'latest available'}). AI reasoning via Pollinations.ai (free, no key). Analysis combines live data with AI inference — always verify important claims with primary sources before making voting decisions. Sources marked ✓ were successfully queried in this session.</div>
+  </div>`;
+
+  h+=`</div>`; // end dBody
+  el.innerHTML=h; el.style.display='block';
+  el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ================================================================
+   UTILS
+================================================================ */
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+</script>
+</body>
+</html>
