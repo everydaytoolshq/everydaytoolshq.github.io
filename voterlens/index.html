@@ -627,11 +627,20 @@ select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.10);}
     <div class="personaExplain" id="personaExplain"></div>
   </div>
   <div id="promptArea" style="display:none;">
-    <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.07em;margin:12px 0 5px;">📋 Your Forensic Prompt — Copy &amp; Paste into Your AI</div>
+    <div style="background:rgba(46,139,192,.2);border:1px solid rgba(46,139,192,.4);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+      <div style="font-size:12px;font-weight:700;color:#7dd3fc;margin-bottom:5px;">📋 How to use this prompt</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.75);line-height:1.75;">
+        <strong style="color:#fff;">1.</strong> Click <strong style="color:#86efac;">Copy Prompt</strong> below<br>
+        <strong style="color:#fff;">2.</strong> Open your AI (ChatGPT / Gemini / Claude etc.) in a new tab<br>
+        <strong style="color:#fff;">3.</strong> Paste and press send — <strong style="color:#fbbf24;">the AI will respond in your chosen language automatically</strong><br>
+        <strong style="color:#fff;">4.</strong> The prompt is in English so the AI gives the best analysis — your language instruction is embedded at the top
+      </div>
+    </div>
+    <div id="promptLangNote" style="font-size:10px;color:rgba(255,255,255,.45);margin-bottom:8px;font-style:italic;"></div>
     <div class="promptBox notranslate" id="promptBox" translate="no"></div>
     <div class="aiActionRow" id="aiActionRow"></div>
   </div>
-</div>
+</div><!-- end boosterCard -->
 
 <div class="howCard">
   <h2>🔬 How VoterLens Works — Full Transparency</h2>
@@ -659,7 +668,6 @@ select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.10);}
     <span class="pill">🌍 44 Countries</span><span class="pill">🤖 8 AI Integrations</span>
   </div>
 </div>
-</div>
 
 <footer class="siteFooter">
   <div class="footerInner">
@@ -673,6 +681,7 @@ select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.10);}
     <div class="footerPowered">Powered by <a href="https://powerstationhq.com/" target="_blank">PowerstationHQ</a></div>
   </div>
 </footer>
+</div><!-- end wrap -->
 
 <script>
 /* ================================================================
@@ -962,16 +971,23 @@ function _waitForGT(cb, tries=0){
 function _applyGTLang(langCode){
   const gtCode = GT_LANG_CODE[langCode] || langCode;
   _waitForGT(function(sel){
-    // Protect the language dropdown from being reset by GT
-    const ld = document.getElementById('langSelect');
-    const savedLang = ld ? ld.value : null;
-    // Apply translation
     sel.value = gtCode;
     sel.dispatchEvent(new Event('change'));
     _gtActive = true;
-    // Restore our language dropdown after GT does its thing
-    if(ld && savedLang) setTimeout(function(){ ld.value = savedLang; }, 300);
     setTranslateStatus(false);
+    // Restore our language dropdown value after GT may have changed it
+    const ld = document.getElementById('langSelect');
+    if(ld) setTimeout(function(){ ld.value = langCode; }, 500);
+    // After GT has had time to translate the initial DOM,
+    // trigger a second pass to catch any content it may have missed
+    setTimeout(function(){
+      if(_gtActive && currentLang===langCode){
+        sel.value = gtCode;
+        sel.dispatchEvent(new Event('change'));
+        // Restore dropdown again
+        if(ld) setTimeout(function(){ ld.value = langCode; }, 400);
+      }
+    }, 2000);
   });
 }
 
@@ -999,14 +1015,56 @@ function setTranslateStatus(visible, text){
 // Called whenever new content is rendered into DOM
 // GT's MutationObserver handles new nodes automatically when active
 // We also do a soft "nudge" to make GT re-scan if it was already active
+// Re-apply GT translation to catch newly visible content
+// Simply re-fires the combo change — GT re-translates the full visible DOM
+function _gtNudge(){
+  if(currentLang==='en' || MANUAL_LANGS.has(currentLang)) return;
+  const sel=document.querySelector('.goog-te-combo');
+  if(!sel) return;
+  const gtCode=GT_LANG_CODE[currentLang]||currentLang;
+  // Only nudge if GT is actually set to our language already
+  if(sel.value===gtCode){
+    // Trigger a re-translation by briefly changing value
+    sel.value='en';
+    sel.dispatchEvent(new Event('change'));
+    setTimeout(function(){
+      sel.value=gtCode;
+      sel.dispatchEvent(new Event('change'));
+    },200);
+  } else if(sel.value==='en' && _gtActive){
+    // GT was reset, re-apply
+    sel.value=gtCode;
+    sel.dispatchEvent(new Event('change'));
+  }
+}
+
 function retranslateNew(container){
-  if(!_gtActive || currentLang==='en' || MANUAL_LANGS.has(currentLang)) return;
-  // GT monitors DOM mutations automatically — new nodes are translated
-  // as they appear, no explicit action needed. This is the key advantage
-  // of the GT Element over custom translation approaches.
-  // The MutationObserver in GT's own code handles this.
+  if(currentLang==='en' || MANUAL_LANGS.has(currentLang)) return;
+  setTimeout(_gtNudge, 300);
 }
 function ensureLang(lc){ return switchLanguage(lc); }
+
+// Our own MutationObserver — watches for new content added to DOM
+// and re-applies GT translation when GT is active
+// This catches dossier renders, booster reveals, Q&A, howCard etc.
+(function(){
+  var _moTimer=null;
+  var observer=new MutationObserver(function(mutations){
+    if(!_gtActive||currentLang==='en'||MANUAL_LANGS.has(currentLang)) return;
+    // Debounce — don't fire for every single node, wait for burst to finish
+    clearTimeout(_moTimer);
+    _moTimer=setTimeout(function(){
+      var sel=document.querySelector('.goog-te-combo');
+      if(!sel) return;
+      var gtCode=GT_LANG_CODE[currentLang]||currentLang;
+      if(sel.value!==gtCode){ sel.value=gtCode; sel.dispatchEvent(new Event('change')); }
+    }, 400);
+  });
+  // Watch the full body for any subtree changes
+  document.addEventListener('DOMContentLoaded',function(){
+    observer.observe(document.body,{childList:true,subtree:true});
+  });
+})();
 
 // ── Main language switch ──────────────────────────────────
 function switchLanguage(langCode){
@@ -1476,6 +1534,8 @@ window.addEventListener('DOMContentLoaded',()=>{
   currentLang='en';
   document.getElementById('langSelect').value=currentLang;
   applyTranslations();
+  // GT Element loads async — once ready, translate any pre-selected lang
+  // (normally none on fresh load, but good to have)
 
   activeAIs.forEach(id=>{const tile=document.querySelector(`[data-ai="${id}"]`);if(tile){tile.classList.add('active');document.getElementById('ck-'+id).textContent='✓';}});
 
@@ -1884,17 +1944,10 @@ function renderDossier(party, cfg, topics, wb, who){
   // Show AI booster and update local country banner
   buildAIBooster(party,cfg,topics,wb,who);
   document.getElementById('boosterCard').style.display='block';
+  retranslateNew(document.getElementById('boosterCard'));
 
-  // Translate all newly rendered content if a non-English language is active
-  if(currentLang!=='en'&&!MANUAL_LANGS.has(currentLang)){
-    // Small delay to let DOM paint first
-    setTimeout(()=>retranslateNew(el),300);
-    // Also translate the country status and Q&A cards that were appended
-    setTimeout(()=>{
-      document.querySelectorAll('.card').forEach(c=>retranslateNew(c));
-      retranslateNew(document.querySelector('.howCard'));
-    },600);
-  }
+  // After dossier renders, ask GT to re-translate newly visible content
+  retranslateNew(el);
   if(selCountry&&CC[selCountry]){
     var bn=document.getElementById('localCountryName');
     var bf=document.getElementById('localCountryFlag');
@@ -4148,6 +4201,17 @@ function updateAIBoosterButtons(prompt){
   document.getElementById('personaSection').style.display='block';
   document.getElementById('promptArea').style.display='block';
   document.getElementById('promptBox').style.display='block';
+  // Update language note
+  const LANG_DISPLAY={en:'English',it:'Italian / Italiano',fr:'French / Français',de:'German / Deutsch',es:'Spanish / Español',pt:'Portuguese / Português',pl:'Polish / Polski',nl:'Dutch / Nederlands',sv:'Swedish / Svenska',el:'Greek / Ελληνικά',ro:'Romanian / Română',cs:'Czech / Čeština',tr:'Turkish / Türkçe',ar:'Arabic / العربية',ja:'Japanese / 日本語',ko:'Korean / 한국어',hi:'Hindi / हिन्दी',id:'Indonesian / Bahasa',uk:'Ukrainian / Українська'};
+  const langNote=document.getElementById('promptLangNote');
+  if(langNote){
+    const ln=LANG_DISPLAY[currentLang]||currentLang;
+    langNote.textContent=currentLang==='en'
+      ?'🌍 The AI will respond in English'
+      :'🌍 The AI will respond in '+ln+' — the language instruction is embedded in the prompt';
+  }
+  // Ask GT to re-translate newly visible persona section
+  retranslateNew(document.getElementById('personaSection'));
   const AI_NAMES={chatgpt:'ChatGPT',gemini:'Gemini',claude:'Claude',grok:'Grok',perplexity:'Perplexity',copilot:'Copilot',deepseek:'DeepSeek',mistral:'Mistral'};
   const aiNames=[...activeAIs].map(id=>AI_NAMES[id]||id);
   document.getElementById('boosterStatusText').textContent=`${aiNames.join(' + ')} selected — copy the forensic prompt below and paste into your AI.`;
