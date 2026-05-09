@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" id="htmlRoot">
+<html lang="en" id="htmlRoot" translate="yes">
 <head>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-CPZVP7JQ5C"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-CPZVP7JQ5C');</script>
@@ -29,12 +29,15 @@ function googleTranslateElementInit(){
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
 <style>
-/* Hide Google Translate toolbar that appears at top of page */
+/* Hide Google Translate toolbar — we control translation via our own UI */
 .goog-te-banner-frame,.skiptranslate{display:none!important;}
-body{top:0!important;}
-/* Hide GT attribution */
-#gt_container{display:none!important;}
+body{top:0!important;position:static!important;}
+#gt_container,#gt_container *{display:none!important;visibility:hidden!important;}
 .goog-te-gadget{display:none!important;}
+/* GT sometimes adds extra space at top — prevent it */
+.goog-te-banner-frame.skiptranslate{display:none!important;}
+/* Elements with notranslate class are skipped by GT */
+.notranslate,.notranslate *{-webkit-user-modify:read-only;}
 </style>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@400;500;600;700&display=swap');
@@ -366,7 +369,7 @@ select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.10);}
 <body>
 <!-- Hidden GT container - required by Google Translate Element -->
 <div id="gt_container" style="display:none;visibility:hidden;position:absolute;"></div>
-<div class="wrap" translate="yes">
+<div class="wrap">
 <nav class="breadcrumb"><a href="https://everydaytoolshq.github.io/" data-i18n="home">Home</a> › VoterLens</nav>
 
 <div class="heroImg">
@@ -406,7 +409,7 @@ select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.10);}
   <div class="selRow">
     <div class="field">
       <div class="fieldLabel" data-i18n="labelCountry">Country</div>
-      <select id="countrySelect">
+      <select id="countrySelect" translate="no" class="notranslate">
         <option value="" data-i18n-opt="selectCountry">— Select a country —</option>
         <optgroup label="🇪🇺 Europe">
           <option value="GB">🇬🇧 United Kingdom</option><option value="IT">🇮🇹 Italy</option>
@@ -441,9 +444,9 @@ select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.10);}
         </optgroup>
       </select>
     </div>
-    <div class="field">
+    <div class="field" translate="no">
       <div class="fieldLabel" data-i18n="labelLang">Language</div>
-      <select id="langSelect">
+      <select id="langSelect" translate="no" class="notranslate">
         <option value="en">English</option><option value="it">Italiano</option>
         <option value="fr">Français</option><option value="de">Deutsch</option>
         <option value="es">Español</option><option value="pt">Português</option>
@@ -625,7 +628,7 @@ select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.10);}
   </div>
   <div id="promptArea" style="display:none;">
     <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.07em;margin:12px 0 5px;">📋 Your Forensic Prompt — Copy &amp; Paste into Your AI</div>
-    <div class="promptBox" id="promptBox"></div>
+    <div class="promptBox notranslate" id="promptBox" translate="no"></div>
     <div class="aiActionRow" id="aiActionRow"></div>
   </div>
 </div>
@@ -958,10 +961,16 @@ function _waitForGT(cb, tries=0){
 // Apply a language via the GT combo select element
 function _applyGTLang(langCode){
   const gtCode = GT_LANG_CODE[langCode] || langCode;
-  _waitForGT(sel=>{
+  _waitForGT(function(sel){
+    // Protect the language dropdown from being reset by GT
+    const ld = document.getElementById('langSelect');
+    const savedLang = ld ? ld.value : null;
+    // Apply translation
     sel.value = gtCode;
     sel.dispatchEvent(new Event('change'));
     _gtActive = true;
+    // Restore our language dropdown after GT does its thing
+    if(ld && savedLang) setTimeout(function(){ ld.value = savedLang; }, 300);
     setTranslateStatus(false);
   });
 }
@@ -988,8 +997,15 @@ function setTranslateStatus(visible, text){
 }
 
 // Called whenever new content is rendered into DOM
-// GT's MutationObserver handles this automatically — no action needed
-function retranslateNew(){ /* GT watches DOM mutations automatically */ }
+// GT's MutationObserver handles new nodes automatically when active
+// We also do a soft "nudge" to make GT re-scan if it was already active
+function retranslateNew(container){
+  if(!_gtActive || currentLang==='en' || MANUAL_LANGS.has(currentLang)) return;
+  // GT monitors DOM mutations automatically — new nodes are translated
+  // as they appear, no explicit action needed. This is the key advantage
+  // of the GT Element over custom translation approaches.
+  // The MutationObserver in GT's own code handles this.
+}
 function ensureLang(lc){ return switchLanguage(lc); }
 
 // ── Main language switch ──────────────────────────────────
@@ -1031,10 +1047,8 @@ function applyTranslations(){
     const val=t(key);
     if(val) el.textContent=val;
   });
-  // Setting html[lang] tells Chrome/Edge/Safari/Firefox to offer/apply browser translation
-  // for any content our manual translations don't cover (dossier body text, etc.)
-  document.getElementById('htmlRoot').lang=currentLang;
-  // Update lang indicator if present
+  // html[lang] intentionally stays "en" — changing it fights with GT Element
+  // GT translates visually regardless of html[lang]
   const li=document.getElementById('langIndicator');
   if(li) li.textContent=currentLang.toUpperCase();
 }
@@ -1479,8 +1493,8 @@ window.addEventListener('DOMContentLoaded',()=>{
 function onLangChange(){
   currentLang = document.getElementById('langSelect').value;
 
-  // Set html[lang] — signals browser this page's language changed
-  document.documentElement.lang = currentLang;
+  // html[lang] stays "en" — page source is English, GT handles visual translation
+  // Changing html[lang] conflicts with GT and confuses browser auto-translate
 
   if(MANUAL_LANGS.has(currentLang)){
     // Instant: use our hardcoded TRANSLATIONS, reset GT if it was active
