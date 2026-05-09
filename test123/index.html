@@ -128,6 +128,103 @@ h1{font-size:2rem;font-weight:700;color:#fff;margin-bottom:.4rem}
 .hi-p{font-size:.72rem;color:#7ba3e0}
 .empty{text-align:center;color:#7ba3e0;padding:2.5rem 1rem;font-size:.9rem}
 
+/* ── PREP MATERIAL ─────────────────────────────────────────── */
+.prep-wrap{max-width:720px;width:100%;margin:0 auto;padding:1.25rem;padding-bottom:4rem}
+.prep-tabs{display:flex;gap:.5rem;margin-bottom:1.1rem}
+.prep-tab{flex:1;padding:.65rem .5rem;border-radius:8px;border:1.5px solid #ffffff25;background:#ffffff08;color:#aac0e0;font-size:.82rem;font-weight:600;cursor:pointer;text-align:center;transition:all.15s}
+.prep-tab.active{background:#1240ab;border-color:#1240ab;color:#fff}
+.prep-content{animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.prep-section{margin-bottom:1.5rem}
+.intro-box{background:#1240ab1a;border:1px solid #1240ab44;border-radius:10px;padding:.9rem 1rem;font-size:.88rem;color:#aac8f0;line-height:1.6}
+.red-intro{background:#cc000018;border-color:#cc000044;color:#ffaaaa}
+.prep-h3{color:#fff;font-size:1rem;margin-bottom:.6rem;padding-bottom:.4rem;border-bottom:1px solid #ffffff18}
+.prep-subtext{font-size:.78rem;color:#7ba3e0;margin-bottom:.6rem}
+/* Plan grid */
+.plan-grid{display:flex;flex-direction:column;gap:.35rem}
+.plan-row{display:flex;gap:.5rem;align-items:flex-start;background:#ffffff07;border-radius:7px;padding:.55rem .75rem}
+.plan-day{min-width:60px;font-weight:700;font-size:.82rem;color:#d4a017;flex-shrink:0}
+.plan-text{font-size:.82rem;color:#e8eef8;line-height:1.4}
+.plan-time{display:inline-block;background:#1240ab33;color:#88aaee;border-radius:4px;padding:.05rem .35rem;font-size:.72rem;margin-left:.35rem}
+.prep-insight{background:#ffffff0a;border-left:3px solid #d4a017;border-radius:0 7px 7px 0;padding:.65rem .85rem;margin-top:.75rem;font-size:.8rem;color:#d4a017;line-height:1.5}
+/* Question types */
+.qtype-list{display:flex;flex-direction:column;gap:.35rem}
+.qtype-item{display:flex;flex-direction:column;gap:.15rem;background:#ffffff07;border-radius:7px;padding:.55rem .75rem}
+.qtype-label{font-weight:700;font-size:.82rem;color:#88aaff}
+.qtype-tip{font-size:.78rem;color:#aac0e0}
+/* Fact table */
+.fact-table{display:flex;flex-direction:column;gap:.22rem}
+.fact-row{display:flex;gap:0;border-radius:6px;overflow:hidden;border:1px solid #ffffff12}
+.fact-row-hi{border-color:#cc440044}
+.fact-k{min-width:42%;max-width:42%;padding:.45rem .6rem;background:#0d1f4c;font-size:.8rem;color:#aac0e0;font-weight:600;line-height:1.4;word-break:break-word}
+.fact-row-hi .fact-k{background:#1a0a00;color:#ff9966}
+.fact-v{flex:1;padding:.45rem .6rem;background:#ffffff07;font-size:.8rem;color:#e8eef8;line-height:1.4;word-break:break-word}
+.fact-row-hi .fact-v{background:#1a0800}
+/* Nations grid */
+.nations-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.75rem}
+.nation-card{background:#ffffff07;border-radius:9px;padding:.65rem .75rem;border:1px solid #ffffff18}
+.eng{border-color:#cc222244}.sco{border-color:#22448844}.wal{border-color:#cc222244}.ni{border-color:#22446644}
+.nation-name{font-weight:700;font-size:.85rem;color:#fff;margin-bottom:.4rem}
+.nation-fact{font-size:.77rem;color:#aac0e0;margin-bottom:.15rem}
+.nation-fact strong{color:#e8eef8}
+/* Trap box */
+.trap-box{background:#cc000018;border:1px solid #cc000044;border-radius:7px;padding:.55rem .75rem;font-size:.8rem;color:#ff9999;margin-top:.5rem;line-height:1.4}
+/* Lightning grid */
+.lightning-grid{display:grid;grid-template-columns:1fr 1fr;gap:.3rem}
+.lg-item{display:flex;justify-content:space-between;align-items:center;background:#ffffff07;border-radius:6px;padding:.4rem .65rem;gap:.25rem}
+.lg-k{font-size:.75rem;color:#aac0e0;line-height:1.3}
+.lg-v{font-size:.78rem;color:#ff9966;font-weight:700;text-align:right;white-space:nowrap}
+.red-txt{color:#ff4444!important}
+/* Pair cards */
+.pair-card{background:#ffffff07;border-radius:10px;padding:.85rem;margin-bottom:.85rem;border:1px solid #ffffff15}
+.pair-title{font-size:.88rem;font-weight:700;color:#fff;margin-bottom:.65rem}
+.pair-cols{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem}
+.pair-side{background:#0d1f4c;border-radius:8px;padding:.6rem}
+.left-side{border:1px solid #cc440044}
+.right-side{border:1px solid #22668844}
+.pair-year{font-size:1.15rem;font-weight:700;color:#d4a017;margin-bottom:.2rem}
+.pair-name{font-size:.8rem;color:#fff;font-weight:600;margin-bottom:.4rem}
+.pair-list{padding-left:1rem;margin:0}
+.pair-list li{font-size:.77rem;color:#aac0e0;margin-bottom:.2rem;line-height:1.4}
+/* Wording traps */
+.wording-list{display:flex;flex-direction:column;gap:.5rem}
+.wording-item{border-radius:9px;overflow:hidden;border:1px solid #ffffff15}
+.false-item{border-color:#cc000044}.true-item{border-color:#22aa2244}
+.w-statement{padding:.5rem .75rem;background:#0d1f4c;font-size:.82rem;color:#e8eef8;line-height:1.4;font-style:italic}
+.w-verdict{padding:.3rem .75rem;font-size:.78rem;font-weight:700}
+.verdict-false{background:#cc000022;color:#ff7777}
+.verdict-true{background:#22aa2222;color:#77dd77}
+.w-exp{padding:.45rem .75rem;background:#ffffff07;font-size:.78rem;color:#aac0e0;line-height:1.5}
+/* Pick 2 */
+.pick2-list{display:flex;flex-direction:column;gap:.45rem}
+.pick2-item{background:#ffffff07;border-radius:8px;padding:.6rem .8rem;border:1px solid #1240ab44}
+.pick2-q{font-size:.82rem;color:#88aaff;font-weight:600;margin-bottom:.25rem;line-height:1.4}
+.pick2-a{font-size:.8rem;color:#88dd88;line-height:1.4}
+/* Which statement */
+.wsc-list{display:flex;flex-direction:column;gap:.45rem}
+.wsc-item{background:#ffffff07;border-radius:8px;padding:.6rem .8rem;border-left:3px solid #cc4400}
+.wsc-wrong{font-size:.8rem;color:#ff8888;margin-bottom:.25rem;line-height:1.4;text-decoration:line-through;text-decoration-color:#ff444488}
+.wsc-right{font-size:.8rem;color:#88dd88;line-height:1.4}
+.wsc-right em{font-style:normal;font-weight:700;background:#22aa2222;padding:.05rem .2rem;border-radius:3px}
+.wsc-wrong em{font-style:normal;font-weight:700}
+/* Rare Q&A */
+.rare-list{display:flex;flex-direction:column;gap:.4rem}
+.rare-item{background:#ffffff07;border-radius:8px;padding:.6rem .8rem;border-left:3px solid #226688}
+.rare-q{display:block;font-size:.82rem;color:#88aaff;font-weight:600;margin-bottom:.2rem;line-height:1.4}
+.rare-a{display:block;font-size:.8rem;color:#aac0e0;line-height:1.5}
+/* Mobile overrides */
+@media(max-width:520px){
+  .pair-cols{grid-template-columns:1fr}
+  .nations-grid{grid-template-columns:1fr 1fr}
+  .lightning-grid{grid-template-columns:1fr}
+  .fact-k{min-width:45%;max-width:45%;font-size:.75rem}
+  .fact-v{font-size:.75rem}
+  .lg-item{flex-direction:column;align-items:flex-start;gap:.1rem}
+  .lg-v{text-align:left}
+  .plan-day{min-width:52px}
+}
+
+
 /* CHEAT SHEET */
 .cs-item{background:#ffffff07;border-radius:9px;padding:.8rem 1rem;margin-bottom:.5rem;border-left:3px solid #1240ab}
 .cs-item.cs-high{border-left-color:#cc4400}
@@ -313,6 +410,580 @@ h1{font-size:2rem;font-weight:700;color:#fff;margin-bottom:.4rem}
     <div id="cs-list"></div>
   </div>
 </div>
+
+
+<!-- PREP MATERIAL SCREEN -->
+<div id="prepscreen" class="screen">
+<div class="prep-wrap">
+  <button class="back-btn" onclick="showScreen('home')">← Back to home</button>
+  <h2 style="color:#fff;margin-bottom:.25rem;font-size:1.2rem">📖 Prep Material</h2>
+  <p style="color:#7ba3e0;font-size:.8rem;margin-bottom:1rem">Two complete study guides — read before drilling questions</p>
+
+  <!-- Tab switcher -->
+  <div class="prep-tabs">
+    <button class="prep-tab active" id="ptab-pass" onclick="showPrepTab('pass')">🟢 Pass Guaranteed</button>
+    <button class="prep-tab" id="ptab-gap" onclick="showPrepTab('gap')">🔴 5% Gap Killer</button>
+  </div>
+
+  <!-- ═══ GUIDE 1: PASS GUARANTEED ═══════════════════════════════════════════ -->
+  <div id="prep-pass" class="prep-content">
+
+    <div class="prep-section intro-box">
+      <p>The exam draws 24 questions randomly from ~400. You need <strong>18/24 (75%)</strong>. Master the core facts below and every question becomes instantly recognisable — even with different wording.</p>
+    </div>
+
+    <!-- 5-Day Plan -->
+    <div class="prep-section">
+      <h3 class="prep-h3">Your 5-Day Pass Plan</h3>
+      <div class="plan-grid">
+        <div class="plan-row"><span class="plan-day">Day 1</span><span class="plan-text">Read this guide cover to cover — just read, don't memorise yet <span class="plan-time">90 min</span></span></div>
+        <div class="plan-row"><span class="plan-day">Day 2</span><span class="plan-text">Memorise TIER 1 facts. Cover the answer, say it aloud. <span class="plan-time">60 min</span></span></div>
+        <div class="plan-row"><span class="plan-day">Day 3</span><span class="plan-text">Memorise TIER 2 facts. Drill Q&amp;A section until zero mistakes. <span class="plan-time">60 min</span></span></div>
+        <div class="plan-row"><span class="plan-day">Day 4</span><span class="plan-text">Do all practice tests at lifeintheuktestweb.co.uk. Note wrong answers. <span class="plan-time">90 min</span></span></div>
+        <div class="plan-row"><span class="plan-day">Day 5</span><span class="plan-text">Re-drill only your wrong answers. Light review. <span class="plan-time">30 min</span></span></div>
+        <div class="plan-row"><span class="plan-day">Test day</span><span class="plan-text">Skim TIER 1 facts in the morning. Arrive 15 min early. Breathe. <span class="plan-time">15 min</span></span></div>
+      </div>
+      <div class="prep-insight">💬 <strong>2026 test-taker:</strong> "I did my exam on 31 March 2026 and got 100%. I finished all 24 questions in 2 minutes. Every question was from tests 1–17 on lifeintheuktestweb.co.uk — just with different wording."</div>
+    </div>
+
+    <!-- Question Types -->
+    <div class="prep-section">
+      <h3 class="prep-h3">Question Types You'll Face</h3>
+      <div class="qtype-list">
+        <div class="qtype-item"><span class="qtype-label">Pick 1 from 4</span><span class="qtype-tip">Know the fact — eliminate obviously wrong options</span></div>
+        <div class="qtype-item"><span class="qtype-label">Pick 2 from 4</span><span class="qtype-tip">Both must be right for the point — don't guess one</span></div>
+        <div class="qtype-item"><span class="qtype-label">True or False</span><span class="qtype-tip">Tests exact dates/numbers — precision matters</span></div>
+        <div class="qtype-item"><span class="qtype-label">Which statement is correct?</span><span class="qtype-tip">Watch for 'always', 'never', 'all', 'only'</span></div>
+      </div>
+    </div>
+
+    <!-- TIER 1 Numbers & Dates -->
+    <div class="prep-section">
+      <h3 class="prep-h3">🔴 TIER 1 — Must Know: Numbers &amp; Dates</h3>
+      <p class="prep-subtext">Cover the right column, say the answer aloud. Repeat until instant recall.</p>
+      <div class="fact-table">
+        <div class="fact-row"><span class="fact-k">Pass mark</span><span class="fact-v">18 out of 24 correct (75%)</span></div>
+        <div class="fact-row"><span class="fact-k">Test format</span><span class="fact-v">24 questions — 45 minutes</span></div>
+        <div class="fact-row"><span class="fact-k">Question bank</span><span class="fact-v">~400 questions drawn randomly</span></div>
+        <div class="fact-row"><span class="fact-k">Voting age</span><span class="fact-v">18 years old</span></div>
+        <div class="fact-row"><span class="fact-k">General election</span><span class="fact-v">At least every 5 years</span></div>
+        <div class="fact-row"><span class="fact-k">House of Commons</span><span class="fact-v">650 elected MPs</span></div>
+        <div class="fact-row"><span class="fact-k">Jury — England/Wales/NI</span><span class="fact-v">12 jurors</span></div>
+        <div class="fact-row"><span class="fact-k">Jury — Scotland</span><span class="fact-v">15 jurors</span></div>
+        <div class="fact-row"><span class="fact-k">UK population</span><span class="fact-v">About 67 million</span></div>
+        <div class="fact-row"><span class="fact-k">Bank holidays E&amp;W</span><span class="fact-v">8 per year</span></div>
+        <div class="fact-row"><span class="fact-k">British Empire (peak)</span><span class="fact-v">One-quarter of world's land mass</span></div>
+        <div class="fact-row"><span class="fact-k">Test cost</span><span class="fact-v">£50 to book</span></div>
+        <div class="fact-row"><span class="fact-k">Retake wait</span><span class="fact-v">7 days minimum after a fail</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Battle of Hastings</span><span class="fact-v">14 October 1066</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Magna Carta</span><span class="fact-v">1215 — King John, Runnymede</span></div>
+        <div class="fact-row"><span class="fact-k">First Parliament</span><span class="fact-v">c.1265 — Simon de Montfort</span></div>
+        <div class="fact-row"><span class="fact-k">Black Death</span><span class="fact-v">1348 — killed ~1/3 of population</span></div>
+        <div class="fact-row"><span class="fact-k">Wars of the Roses</span><span class="fact-v">1455–1485</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Roman invasion</span><span class="fact-v">43 AD — Emperor Claudius</span></div>
+        <div class="fact-row"><span class="fact-k">Hadrian's Wall</span><span class="fact-v">122 AD — Solway Firth to River Tyne</span></div>
+        <div class="fact-row"><span class="fact-k">Romans left Britain</span><span class="fact-v">c.410 AD</span></div>
+        <div class="fact-row"><span class="fact-k">St Augustine arrived</span><span class="fact-v">597 AD</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Gunpowder Plot</span><span class="fact-v">5 November 1605</span></div>
+        <div class="fact-row"><span class="fact-k">English Civil War</span><span class="fact-v">1642–1651</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Charles I executed</span><span class="fact-v">30 January 1649</span></div>
+        <div class="fact-row"><span class="fact-k">Great Plague</span><span class="fact-v">1665</span></div>
+        <div class="fact-row"><span class="fact-k">Great Fire of London</span><span class="fact-v">1666</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Bill of Rights</span><span class="fact-v">1689 — after Glorious Revolution</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Act of Union Scotland</span><span class="fact-v">1707 — England + Scotland = Great Britain</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Act of Union Ireland</span><span class="fact-v">1800 — GB + Ireland = United Kingdom</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Slave Trade abolished</span><span class="fact-v">1807 — Slave Trade Act</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Slavery abolished (Empire)</span><span class="fact-v">1833 — Slavery Abolition Act</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Women vote (age 30+)</span><span class="fact-v">1918 — Representation of the People Act</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Women vote (age 21+)</span><span class="fact-v">1928 — equal with men</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Voting age became 18</span><span class="fact-v">1969</span></div>
+        <div class="fact-row"><span class="fact-k">Irish Free State</span><span class="fact-v">1922</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">WWII started</span><span class="fact-v">3 September 1939</span></div>
+        <div class="fact-row"><span class="fact-k">Dunkirk</span><span class="fact-v">May–June 1940</span></div>
+        <div class="fact-row"><span class="fact-k">Battle of Britain</span><span class="fact-v">Summer 1940 (RAF vs Luftwaffe)</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">D-Day</span><span class="fact-v">6 June 1944 — Normandy landings</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">VE Day</span><span class="fact-v">8 May 1945</span></div>
+        <div class="fact-row"><span class="fact-k">VJ Day</span><span class="fact-v">15 August 1945</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">NHS founded</span><span class="fact-v">1948</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">WWW invented</span><span class="fact-v">1989 — Tim Berners-Lee</span></div>
+        <div class="fact-row"><span class="fact-k">Supreme Court created</span><span class="fact-v">2009</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Penicillin discovered</span><span class="fact-v">1928 — Alexander Fleming</span></div>
+        <div class="fact-row"><span class="fact-k">Wimbledon first held</span><span class="fact-v">1877</span></div>
+        <div class="fact-row"><span class="fact-k">Open Championship first</span><span class="fact-v">1860</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">King Charles III</span><span class="fact-v">8 September 2022 — Queen Elizabeth II died</span></div>
+        <div class="fact-row"><span class="fact-k">Spanish Armada defeated</span><span class="fact-v">1588</span></div>
+        <div class="fact-row"><span class="fact-k">Scottish independence vote</span><span class="fact-v">2014 — 55% No, 45% Yes</span></div>
+      </div>
+    </div>
+
+    <!-- Key People -->
+    <div class="prep-section">
+      <h3 class="prep-h3">🔴 TIER 1 — Key People</h3>
+      <div class="fact-table">
+        <div class="fact-row fact-row-hi"><span class="fact-k">William the Conqueror</span><span class="fact-v">Defeated Harold at Hastings 1066; Domesday Book 1086</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">King John</span><span class="fact-v">Signed Magna Carta 1215 at Runnymede</span></div>
+        <div class="fact-row"><span class="fact-k">Simon de Montfort</span><span class="fact-v">Established first Parliament c.1265</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Henry VIII</span><span class="fact-v">Broke from Rome → Church of England; had 6 wives</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Henry VIII's 6 wives</span><span class="fact-v">Catherine of Aragon (div), Anne Boleyn (exec), Jane Seymour (died), Anne of Cleves (div), Catherine Howard (exec), Catherine Parr (survived)</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Elizabeth I</span><span class="fact-v">Defeated Spanish Armada 1588; Elizabethan golden age</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Oliver Cromwell</span><span class="fact-v">Led Parliamentarians; Lord Protector 1653–1658</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Charles I</span><span class="fact-v">Executed 30 Jan 1649 — only English monarch tried &amp; executed</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Guy Fawkes</span><span class="fact-v">Gunpowder Plot — tried to blow up Parliament 5 Nov 1605</span></div>
+        <div class="fact-row"><span class="fact-k">Alfred the Great</span><span class="fact-v">King of Wessex 849–899; defeated Vikings; helped unify England</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Florence Nightingale</span><span class="fact-v">Transformed nursing in Crimean War 1853–56; Lady with the Lamp</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Aneurin (Nye) Bevan</span><span class="fact-v">Founded the NHS 1948 — Health Secretary under PM Attlee</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Winston Churchill</span><span class="fact-v">Prime Minister from May 1940; led Britain through WWII</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Isaac Newton</span><span class="fact-v">Laws of motion and gravity (1643–1727)</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Charles Darwin</span><span class="fact-v">Theory of evolution; 'Origin of Species' 1859</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Alexander Fleming</span><span class="fact-v">Discovered penicillin 1928</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Tim Berners-Lee</span><span class="fact-v">Invented the World Wide Web 1989</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Alan Turing</span><span class="fact-v">Computing pioneer; cracked Enigma code WWII; Bletchley Park</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">William Shakespeare</span><span class="fact-v">1564–1616; Stratford-upon-Avon; 37 plays, 154 sonnets; Globe Theatre</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Robert Burns</span><span class="fact-v">Scottish poet 1759–1796; 'Auld Lang Syne'; Burns Night = 25 Jan</span></div>
+        <div class="fact-row"><span class="fact-k">Geoffrey Chaucer</span><span class="fact-v">c.1343–1400; 'The Canterbury Tales' — Middle English</span></div>
+        <div class="fact-row"><span class="fact-k">Jane Austen</span><span class="fact-v">1775–1817; 'Pride and Prejudice'</span></div>
+        <div class="fact-row"><span class="fact-k">Charles Dickens</span><span class="fact-v">1812–1870; 'Oliver Twist', 'A Tale of Two Cities'</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Sir Christopher Wren</span><span class="fact-v">1632–1723; designed St Paul's Cathedral after Great Fire 1666</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Julius Caesar</span><span class="fact-v">Led expeditions 55 BC and 54 BC — did NOT invade/conquer</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Emperor Claudius</span><span class="fact-v">Ordered the Roman invasion in 43 AD</span></div>
+        <div class="fact-row"><span class="fact-k">Robert the Bruce</span><span class="fact-v">Scottish king; defeated English at Battle of Bannockburn 1314</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">King Charles III</span><span class="fact-v">Current monarch; became King 8 September 2022</span></div>
+        <div class="fact-row"><span class="fact-k">Richard Arkwright</span><span class="fact-v">Invented the spinning frame — Industrial Revolution</span></div>
+        <div class="fact-row"><span class="fact-k">James Watt</span><span class="fact-v">Improved the steam engine — Industrial Revolution</span></div>
+        <div class="fact-row"><span class="fact-k">Francis Drake</span><span class="fact-v">First Englishman to sail around the world (1577–1580)</span></div>
+        <div class="fact-row"><span class="fact-k">Boudicca</span><span class="fact-v">Queen of Iceni; led revolt against Romans c.60–61 AD</span></div>
+      </div>
+    </div>
+
+    <!-- Government & Law -->
+    <div class="prep-section">
+      <h3 class="prep-h3">🔴 TIER 1 — Government, Law &amp; Parliament</h3>
+      <div class="fact-table">
+        <div class="fact-row fact-row-hi"><span class="fact-k">UK government type</span><span class="fact-v">Constitutional monarchy + parliamentary democracy</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">UK constitution</span><span class="fact-v">Unwritten — Acts of Parliament, common law, conventions</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Parliament location</span><span class="fact-v">Palace of Westminster, London</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">House of Commons</span><span class="fact-v">650 elected MPs</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">House of Lords</span><span class="fact-v">Unelected — life peers, 92 hereditary peers, C of E bishops</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Lords' power</span><span class="fact-v">Can DELAY — cannot permanently BLOCK legislation</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Voting system (general)</span><span class="fact-v">First Past the Post (FPTP)</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">PM's address</span><span class="fact-v">10 Downing Street</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">PM chosen by</span><span class="fact-v">Leader of party with most Commons seats — appointed by Monarch</span></div>
+        <div class="fact-row"><span class="fact-k">Cabinet</span><span class="fact-v">Senior ministers chosen by PM; meets weekly; makes key decisions</span></div>
+        <div class="fact-row"><span class="fact-k">Chancellor</span><span class="fact-v">Manages economy, sets budget</span></div>
+        <div class="fact-row"><span class="fact-k">Home Secretary</span><span class="fact-v">Immigration, policing, security</span></div>
+        <div class="fact-row"><span class="fact-k">Foreign Secretary</span><span class="fact-v">International relations</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Speaker of Commons</span><span class="fact-v">Chairs debates; politically neutral; does not vote (except tie)</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Monarch's role</span><span class="fact-v">Head of state; ceremonial; politically neutral; Supreme Governor C of E</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Royal Assent</span><span class="fact-v">Monarch formally approves bills → becomes law</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Supreme Court</span><span class="fact-v">Highest court in UK — created 2009</span></div>
+        <div class="fact-row"><span class="fact-k">Magistrates' Courts</span><span class="fact-v">Minor crimes — no jury</span></div>
+        <div class="fact-row"><span class="fact-k">Crown Courts</span><span class="fact-v">Serious crimes — with jury (12 in E/W/NI)</span></div>
+        <div class="fact-row"><span class="fact-k">Jury selection</span><span class="fact-v">Randomly from electoral register — civic duty</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Scottish Parliament</span><span class="fact-v">At Holyrood, Edinburgh — devolved powers</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Welsh Parliament</span><span class="fact-v">Senedd Cymru — based in Cardiff</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">N. Ireland Assembly</span><span class="fact-v">Stormont, Belfast — devolved powers</span></div>
+        <div class="fact-row"><span class="fact-k">Electoral Commission</span><span class="fact-v">Independent body — oversees elections</span></div>
+        <div class="fact-row"><span class="fact-k">Police &amp; Crime Commissioner</span><span class="fact-v">Elected — oversees local policing</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Habeas Corpus</span><span class="fact-v">Right of every prisoner to a court hearing — cannot be held without charge</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Rule of law</span><span class="fact-v">Everyone including government is equal before the law</span></div>
+      </div>
+    </div>
+
+    <!-- National Symbols -->
+    <div class="prep-section">
+      <h3 class="prep-h3">🔴 TIER 1 — National Symbols &amp; Patron Saints</h3>
+      <div class="nations-grid">
+        <div class="nation-card eng">
+          <div class="nation-name">🏴󠁧󠁢󠁥󠁮󠁧󠁿 England</div>
+          <div class="nation-fact">Saint: <strong>St George</strong></div>
+          <div class="nation-fact">Day: <strong>23 April</strong></div>
+          <div class="nation-fact">Flower: <strong>Red rose</strong></div>
+          <div class="nation-fact">Symbol: <strong>Three lions</strong></div>
+        </div>
+        <div class="nation-card sco">
+          <div class="nation-name">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland</div>
+          <div class="nation-fact">Saint: <strong>St Andrew</strong></div>
+          <div class="nation-fact">Day: <strong>30 November</strong></div>
+          <div class="nation-fact">Flower: <strong>Thistle</strong></div>
+          <div class="nation-fact">Symbol: <strong>Unicorn</strong></div>
+        </div>
+        <div class="nation-card wal">
+          <div class="nation-name">🏴󠁧󠁢󠁷󠁬󠁳󠁿 Wales</div>
+          <div class="nation-fact">Saint: <strong>St David</strong></div>
+          <div class="nation-fact">Day: <strong>1 March</strong></div>
+          <div class="nation-fact">Flower: <strong>Daffodil / Leek</strong></div>
+          <div class="nation-fact">Symbol: <strong>Red Dragon</strong></div>
+        </div>
+        <div class="nation-card ni">
+          <div class="nation-name">🇬🇧 N. Ireland</div>
+          <div class="nation-fact">Saint: <strong>St Patrick</strong></div>
+          <div class="nation-fact">Day: <strong>17 March</strong></div>
+          <div class="nation-fact">Flower: <strong>Shamrock</strong></div>
+          <div class="nation-fact">Symbol: <strong>Red Hand / Stag</strong></div>
+        </div>
+      </div>
+      <div class="trap-box">⚠️ <strong>TRAP:</strong> Wales is NOT in the Union Flag. The Union Flag combines St George (England), St Andrew (Scotland) and St Patrick (Ireland only).</div>
+      <div class="fact-table" style="margin-top:.75rem">
+        <div class="fact-row fact-row-hi"><span class="fact-k">Church of England</span><span class="fact-v">Established church of England. Monarch = Supreme Governor.</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Church of Scotland</span><span class="fact-v">National church of Scotland. Presbyterian. Monarch is NOT its head.</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Capital cities</span><span class="fact-v">London (England) · Edinburgh (Scotland) · Cardiff (Wales) · Belfast (NI)</span></div>
+      </div>
+    </div>
+
+    <!-- Cultural dates -->
+    <div class="prep-section">
+      <h3 class="prep-h3">📅 Key Cultural Dates</h3>
+      <div class="fact-table">
+        <div class="fact-row"><span class="fact-k">Burns Night</span><span class="fact-v">25 January — Scottish poet Robert Burns</span></div>
+        <div class="fact-row"><span class="fact-k">St David's Day</span><span class="fact-v">1 March — patron saint of Wales</span></div>
+        <div class="fact-row"><span class="fact-k">St Patrick's Day</span><span class="fact-v">17 March — patron saint of N. Ireland</span></div>
+        <div class="fact-row"><span class="fact-k">St George's Day</span><span class="fact-v">23 April — patron saint of England</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Bonfire Night</span><span class="fact-v">5 November — Gunpowder Plot (Guy Fawkes)</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Remembrance Day</span><span class="fact-v">11 November — red poppies for war dead</span></div>
+        <div class="fact-row"><span class="fact-k">St Andrew's Day</span><span class="fact-v">30 November — patron saint of Scotland</span></div>
+        <div class="fact-row"><span class="fact-k">Christmas</span><span class="fact-v">25 December — public holiday</span></div>
+        <div class="fact-row"><span class="fact-k">Boxing Day</span><span class="fact-v">26 December — public holiday</span></div>
+        <div class="fact-row"><span class="fact-k">Hogmanay</span><span class="fact-v">New Year (Scotland) — 31 December</span></div>
+        <div class="fact-row"><span class="fact-k">Mother's Day</span><span class="fact-v">3rd Sunday of Lent</span></div>
+        <div class="fact-row"><span class="fact-k">April Fool's Day</span><span class="fact-v">1 April — jokes until midday only</span></div>
+      </div>
+    </div>
+
+    <!-- TIER 2 -->
+    <div class="prep-section">
+      <h3 class="prep-h3">🟠 TIER 2 — Highly Likely</h3>
+      <div class="fact-table">
+        <div class="fact-row"><span class="fact-k">Stonehenge</span><span class="fact-v">c.3000 BC — Wiltshire — believed to be religious site</span></div>
+        <div class="fact-row"><span class="fact-k">First people in Britain</span><span class="fact-v">~10,000 years ago — after last Ice Age</span></div>
+        <div class="fact-row"><span class="fact-k">Celtic peoples</span><span class="fact-v">Arrived from Europe; spoke languages that became Welsh/Gaelic/Irish</span></div>
+        <div class="fact-row"><span class="fact-k">Domesday Book</span><span class="fact-v">1086 — commissioned by William the Conqueror — survey of England</span></div>
+        <div class="fact-row"><span class="fact-k">Glorious Revolution</span><span class="fact-v">1688 — James II replaced by William of Orange (William III) + Mary II</span></div>
+        <div class="fact-row"><span class="fact-k">Industrial Revolution</span><span class="fact-v">Began ~1760 in Britain; Arkwright, Watt key figures</span></div>
+        <div class="fact-row"><span class="fact-k">Queen Victoria</span><span class="fact-v">Reigned 1837–1901; British Empire = ~1/4 of world's land</span></div>
+        <div class="fact-row"><span class="fact-k">Crimean War</span><span class="fact-v">1853–1856; Florence Nightingale transformed nursing</span></div>
+        <div class="fact-row"><span class="fact-k">WWI</span><span class="fact-v">1914–1918; Britain entered when Germany invaded Belgium; ~2 million British casualties</span></div>
+        <div class="fact-row"><span class="fact-k">NHS founders</span><span class="fact-v">Aneurin Bevan (Health Sec) + PM Clement Attlee = founded NHS 1948</span></div>
+        <div class="fact-row"><span class="fact-k">UK language</span><span class="fact-v">English (UK-wide); Welsh (Wales, ~20%); Scottish Gaelic; Irish</span></div>
+        <div class="fact-row"><span class="fact-k">Ethnic minorities</span><span class="fact-v">About 14% of the UK population</span></div>
+        <div class="fact-row"><span class="fact-k">Cricket — Ashes</span><span class="fact-v">Cricket series between England and Australia</span></div>
+        <div class="fact-row"><span class="fact-k">Football — FA Cup</span><span class="fact-v">Oldest football cup competition in the world</span></div>
+        <div class="fact-row"><span class="fact-k">Wimbledon</span><span class="fact-v">Annual tennis championships, London — since 1877</span></div>
+        <div class="fact-row"><span class="fact-k">Open Championship</span><span class="fact-v">Oldest golf major — first held 1860</span></div>
+        <div class="fact-row"><span class="fact-k">Six Nations</span><span class="fact-v">Annual rugby union: England, Scotland, Wales, Ireland, France, Italy</span></div>
+        <div class="fact-row"><span class="fact-k">Grand National</span><span class="fact-v">Famous horse race — Aintree, Liverpool</span></div>
+        <div class="fact-row"><span class="fact-k">BBC Proms</span><span class="fact-v">Annual summer classical music festival — Royal Albert Hall, London</span></div>
+        <div class="fact-row"><span class="fact-k">Turner Prize</span><span class="fact-v">Annual prize for British contemporary art; named after J.M.W. Turner</span></div>
+        <div class="fact-row"><span class="fact-k">National Trust</span><span class="fact-v">Charity preserving historic places/open spaces — England, Wales, NI</span></div>
+        <div class="fact-row"><span class="fact-k">Commonwealth</span><span class="fact-v">56 countries; mostly former British Empire; Monarch = Head</span></div>
+        <div class="fact-row"><span class="fact-k">Stephen Hawking</span><span class="fact-v">1942–2018; theoretical physicist; 'A Brief History of Time'</span></div>
+        <div class="fact-row"><span class="fact-k">Henry Purcell</span><span class="fact-v">1659–1695; baroque composer</span></div>
+        <div class="fact-row"><span class="fact-k">Capability Brown</span><span class="fact-v">1716–1783; landscape gardener; designed 170+ gardens</span></div>
+      </div>
+    </div>
+
+    <!-- Lightning Round -->
+    <div class="prep-section">
+      <h3 class="prep-h3">⚡ Lightning Round — Read morning of test</h3>
+      <div class="lightning-grid">
+        <div class="lg-item"><span class="lg-k">Battle of Hastings</span><span class="lg-v">1066</span></div>
+        <div class="lg-item"><span class="lg-k">Magna Carta</span><span class="lg-v">1215</span></div>
+        <div class="lg-item"><span class="lg-k">First Parliament</span><span class="lg-v">c.1265</span></div>
+        <div class="lg-item"><span class="lg-k">Black Death</span><span class="lg-v">1348</span></div>
+        <div class="lg-item"><span class="lg-k">Gunpowder Plot</span><span class="lg-v">5 Nov 1605</span></div>
+        <div class="lg-item"><span class="lg-k">Charles I executed</span><span class="lg-v">1649</span></div>
+        <div class="lg-item"><span class="lg-k">Bill of Rights</span><span class="lg-v">1689</span></div>
+        <div class="lg-item"><span class="lg-k">Act of Union Scotland</span><span class="lg-v">1707</span></div>
+        <div class="lg-item"><span class="lg-k">Act of Union Ireland</span><span class="lg-v">1800</span></div>
+        <div class="lg-item"><span class="lg-k">Slave Trade abolished</span><span class="lg-v">1807</span></div>
+        <div class="lg-item"><span class="lg-k">Slavery abolished</span><span class="lg-v">1833</span></div>
+        <div class="lg-item"><span class="lg-k">Women vote (30+)</span><span class="lg-v">1918</span></div>
+        <div class="lg-item"><span class="lg-k">Women vote (21+)</span><span class="lg-v">1928</span></div>
+        <div class="lg-item"><span class="lg-k">Voting age → 18</span><span class="lg-v">1969</span></div>
+        <div class="lg-item"><span class="lg-k">Irish independence</span><span class="lg-v">1922</span></div>
+        <div class="lg-item"><span class="lg-k">WWII start</span><span class="lg-v">3 Sep 1939</span></div>
+        <div class="lg-item"><span class="lg-k">D-Day</span><span class="lg-v">6 June 1944</span></div>
+        <div class="lg-item"><span class="lg-k">VE Day</span><span class="lg-v">8 May 1945</span></div>
+        <div class="lg-item"><span class="lg-k">NHS founded</span><span class="lg-v">1948</span></div>
+        <div class="lg-item"><span class="lg-k">WWW invented</span><span class="lg-v">1989</span></div>
+        <div class="lg-item"><span class="lg-k">MPs in Commons</span><span class="lg-v">650</span></div>
+        <div class="lg-item"><span class="lg-k">Pass mark</span><span class="lg-v">18/24 (75%)</span></div>
+        <div class="lg-item"><span class="lg-k">Jury E/W/NI</span><span class="lg-v">12 jurors</span></div>
+        <div class="lg-item"><span class="lg-k">Jury Scotland</span><span class="lg-v">15 jurors</span></div>
+        <div class="lg-item"><span class="lg-k">UK population</span><span class="lg-v">~67 million</span></div>
+        <div class="lg-item"><span class="lg-k">Wales in Union Jack?</span><span class="lg-v red-txt">NO</span></div>
+        <div class="lg-item"><span class="lg-k">PM's address</span><span class="lg-v">10 Downing Street</span></div>
+        <div class="lg-item"><span class="lg-k">Supreme Court</span><span class="lg-v">Highest court, 2009</span></div>
+        <div class="lg-item"><span class="lg-k">Scottish Parliament</span><span class="lg-v">Holyrood, Edinburgh</span></div>
+        <div class="lg-item"><span class="lg-k">Welsh Parliament</span><span class="lg-v">Senedd Cymru, Cardiff</span></div>
+        <div class="lg-item"><span class="lg-k">NI Assembly</span><span class="lg-v">Stormont, Belfast</span></div>
+        <div class="lg-item"><span class="lg-k">Charles III became King</span><span class="lg-v">8 Sep 2022</span></div>
+        <div class="lg-item"><span class="lg-k">Penicillin</span><span class="lg-v">Fleming, 1928</span></div>
+        <div class="lg-item"><span class="lg-k">Roman invasion</span><span class="lg-v">43 AD, Claudius</span></div>
+        <div class="lg-item"><span class="lg-k">Spanish Armada</span><span class="lg-v">1588, Elizabeth I</span></div>
+        <div class="lg-item"><span class="lg-k">Domesday Book</span><span class="lg-v">1086, William</span></div>
+      </div>
+    </div>
+
+  </div><!-- /prep-pass -->
+
+  <!-- ═══ GUIDE 2: 5% GAP KILLER ════════════════════════════════════════════ -->
+  <div id="prep-gap" class="prep-content" style="display:none">
+
+    <div class="prep-section intro-box red-intro">
+      <p>These are the questions that catch <strong>well-prepared candidates</strong> off guard. Study them TWICE. Together with the Pass Guaranteed guide, you have no surprises left.</p>
+    </div>
+
+    <!-- Confusable Pairs -->
+    <div class="prep-section">
+      <h3 class="prep-h3">⚡ Section 1 — Confusable Pairs</h3>
+      <p class="prep-subtext">Drill BOTH sides of every pair. Knowing one date is not enough.</p>
+
+      <div class="pair-card">
+        <h4 class="pair-title">PAIR 1 — 1807 vs 1833: Slavery</h4>
+        <div class="pair-cols">
+          <div class="pair-side left-side">
+            <div class="pair-year">1807</div>
+            <div class="pair-name">Slave <em>Trade</em> abolished</div>
+            <ul class="pair-list">
+              <li>Slave Trade Act</li>
+              <li>Abolished buying &amp; selling of enslaved people</li>
+              <li>The TRADE was illegal — but slavery itself still existed</li>
+              <li>Campaigned for by William Wilberforce</li>
+            </ul>
+          </div>
+          <div class="pair-side right-side">
+            <div class="pair-year">1833</div>
+            <div class="pair-name"><em>Slavery</em> abolished</div>
+            <ul class="pair-list">
+              <li>Slavery Abolition Act</li>
+              <li>Enslaved people in the Empire were FREED</li>
+              <li>Slavery itself became illegal — not just the trade</li>
+              <li>£20 million paid to slave owners (not enslaved people)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="trap-box">⚠️ <strong>TRAP:</strong> Many candidates say '1833' for both — wrong. They are separate events 26 years apart.</div>
+      </div>
+
+      <div class="pair-card">
+        <h4 class="pair-title">PAIR 2 — 1918 vs 1928: Women's Votes</h4>
+        <div class="pair-cols">
+          <div class="pair-side left-side">
+            <div class="pair-year">1918</div>
+            <div class="pair-name">Women <em>over 30</em></div>
+            <ul class="pair-list">
+              <li>Representation of the People Act</li>
+              <li>Women OVER 30 could vote</li>
+              <li>Same year WWI ended</li>
+              <li>First time ANY women could vote in UK</li>
+            </ul>
+          </div>
+          <div class="pair-side right-side">
+            <div class="pair-year">1928</div>
+            <div class="pair-name">All women <em>over 21</em></div>
+            <ul class="pair-list">
+              <li>Equal Franchise Act</li>
+              <li>Women over 21 — same as men</li>
+              <li>Full equal voting rights for women</li>
+            </ul>
+          </div>
+        </div>
+        <div class="trap-box">⚠️ <strong>TRAP:</strong> In 1918 it was only over-30s. 'All women' came in 1928. Voting age dropped to 18 in 1969 — different event.</div>
+      </div>
+
+      <div class="pair-card">
+        <h4 class="pair-title">PAIR 3 — 1665 vs 1666: Plague and Fire</h4>
+        <div class="pair-cols">
+          <div class="pair-side left-side">
+            <div class="pair-year">1665</div>
+            <div class="pair-name">Great Plague</div>
+            <ul class="pair-list">
+              <li>Bubonic plague hit London</li>
+              <li>~100,000 deaths in London</li>
+              <li>King Charles II fled London</li>
+              <li>One year BEFORE the Fire</li>
+            </ul>
+          </div>
+          <div class="pair-side right-side">
+            <div class="pair-year">1666</div>
+            <div class="pair-name">Great Fire of London</div>
+            <ul class="pair-list">
+              <li>Started in a bakery on Pudding Lane</li>
+              <li>Burned 4 days — destroyed 13,000 homes</li>
+              <li>St Paul's destroyed — Wren rebuilt it</li>
+              <li>One year AFTER the Plague</li>
+            </ul>
+          </div>
+        </div>
+        <div class="trap-box">⚠️ PLAGUE then FIRE (alphabetical = chronological). One year apart.</div>
+      </div>
+
+      <div class="pair-card">
+        <h4 class="pair-title">PAIR 4 — 55 BC vs 43 AD: Caesar vs Claudius</h4>
+        <div class="pair-cols">
+          <div class="pair-side left-side">
+            <div class="pair-year">55 &amp; 54 BC</div>
+            <div class="pair-name">Julius Caesar</div>
+            <ul class="pair-list">
+              <li>Led EXPEDITIONS — not invasions</li>
+              <li>Did NOT conquer Britain</li>
+              <li>Two trips: 55 BC and 54 BC</li>
+            </ul>
+          </div>
+          <div class="pair-side right-side">
+            <div class="pair-year">43 AD</div>
+            <div class="pair-name">Emperor Claudius</div>
+            <ul class="pair-list">
+              <li>The ACTUAL Roman invasion</li>
+              <li>Claudius ordered the conquest</li>
+              <li>Roman rule lasted until ~410 AD</li>
+            </ul>
+          </div>
+        </div>
+        <div class="trap-box">⚠️ <strong>TRAP:</strong> Never say Caesar invaded Britain — he explored. Claudius invaded in 43 AD.</div>
+      </div>
+
+      <div class="pair-card">
+        <h4 class="pair-title">PAIR 5 — 1707 vs 1800: Two Acts of Union</h4>
+        <div class="pair-cols">
+          <div class="pair-side left-side">
+            <div class="pair-year">1707</div>
+            <div class="pair-name">Kingdom of <em>Great Britain</em></div>
+            <ul class="pair-list"><li>England + Scotland</li><li>Welsh already united with England since 1536</li></ul>
+          </div>
+          <div class="pair-side right-side">
+            <div class="pair-year">1800</div>
+            <div class="pair-name"><em>United Kingdom</em></div>
+            <ul class="pair-list"><li>Great Britain + Ireland</li><li>Republic of Ireland left in 1922</li></ul>
+          </div>
+        </div>
+        <div class="trap-box">⚠️ <strong>TRAP:</strong> 1707 ≠ United Kingdom. United Kingdom came in 1800.</div>
+      </div>
+    </div>
+
+    <!-- Wording Traps -->
+    <div class="prep-section">
+      <h3 class="prep-h3">🎯 Section 2 — Wording Traps</h3>
+      <p class="prep-subtext">Words like ONLY, ALL, ALWAYS, NEVER, PERMANENTLY change everything.</p>
+      <div class="wording-list">
+        <div class="wording-item false-item"><div class="w-statement">"The House of Lords can BLOCK legislation permanently."</div><div class="w-verdict verdict-false">FALSE</div><div class="w-exp">Lords can only <strong>DELAY</strong> — cannot permanently block. 'Permanently' makes it false.</div></div>
+        <div class="wording-item false-item"><div class="w-statement">"ALL EU citizens can vote in UK general elections."</div><div class="w-verdict verdict-false">FALSE</div><div class="w-exp">Only British, Irish and qualifying Commonwealth citizens can vote. EU citizens (except Irish) cannot vote since Brexit.</div></div>
+        <div class="wording-item false-item"><div class="w-statement">"The UK has a written constitution."</div><div class="w-verdict verdict-false">FALSE</div><div class="w-exp">The UK has an <strong>UNWRITTEN</strong> constitution — not in a single document.</div></div>
+        <div class="wording-item false-item"><div class="w-statement">"The Speaker votes on all legislation."</div><div class="w-verdict verdict-false">FALSE</div><div class="w-exp">The Speaker does NOT vote except to break a tie. Politically neutral.</div></div>
+        <div class="wording-item false-item"><div class="w-statement">"Magistrates are always legally qualified."</div><div class="w-verdict verdict-false">FALSE</div><div class="w-exp">Magistrates are usually community members — <strong>unpaid</strong>, no legal qualifications required. They are advised by a legal clerk.</div></div>
+        <div class="wording-item false-item"><div class="w-statement">"The Monarch is head of the Church of Scotland."</div><div class="w-verdict verdict-false">FALSE</div><div class="w-exp">Monarch is Supreme Governor of Church of <strong>ENGLAND</strong>. Church of Scotland is Presbyterian — Monarch is an ordinary member there.</div></div>
+        <div class="wording-item false-item"><div class="w-statement">"Wales has its own established church."</div><div class="w-verdict verdict-false">FALSE</div><div class="w-exp">Church in Wales was <strong>disestablished in 1920</strong>. Only England has an established church.</div></div>
+        <div class="wording-item false-item"><div class="w-statement">"The PM must be a Member of the House of Lords."</div><div class="w-verdict verdict-false">FALSE</div><div class="w-exp">PM must be a member of the elected <strong>House of Commons</strong>.</div></div>
+        <div class="wording-item false-item"><div class="w-statement">"Jury service is optional in the UK."</div><div class="w-verdict verdict-false">FALSE</div><div class="w-exp">Jury service is a <strong>civic duty</strong> — you can be legally required to serve.</div></div>
+        <div class="wording-item false-item"><div class="w-statement">"The Scottish Parliament can make laws on ALL matters."</div><div class="w-verdict verdict-false">FALSE</div><div class="w-exp">Some powers are <strong>reserved</strong> to Westminster — defence, foreign policy, immigration, national benefits.</div></div>
+        <div class="wording-item false-item"><div class="w-statement">"The National Trust is a government organisation."</div><div class="w-verdict verdict-false">FALSE</div><div class="w-exp">The National Trust is a <strong>charity</strong> founded in 1895 — independent of government.</div></div>
+        <div class="wording-item true-item"><div class="w-statement">"People in the UK are free to practise any religion."</div><div class="w-verdict verdict-true">TRUE</div><div class="w-exp">Freedom of religion is a fundamental UK right. All religions are free to practise.</div></div>
+      </div>
+    </div>
+
+    <!-- Pick-2 Questions -->
+    <div class="prep-section">
+      <h3 class="prep-h3">☑️ Section 3 — Pick-2 Questions</h3>
+      <p class="prep-subtext">One wrong answer = ZERO points for that question. Both must be correct.</p>
+      <div class="pick2-list">
+        <div class="pick2-item"><div class="pick2-q">Which TWO are Christian festivals celebrated in the UK?</div><div class="pick2-a">✓ Easter &nbsp;&nbsp; ✓ Christmas (not Diwali or Eid)</div></div>
+        <div class="pick2-item"><div class="pick2-q">Which TWO sports is the UK credited with inventing?</div><div class="pick2-a">✓ Cricket &nbsp;&nbsp; ✓ Football/soccer (not basketball or baseball)</div></div>
+        <div class="pick2-item"><div class="pick2-q">Which TWO are devolved governments?</div><div class="pick2-a">✓ Scottish Parliament &nbsp;&nbsp; ✓ Senedd Cymru (not Greater Manchester Assembly or House of Lords)</div></div>
+        <div class="pick2-item"><div class="pick2-q">Which TWO facts about the House of Lords are correct?</div><div class="pick2-a">✓ Life peers are appointed &nbsp;&nbsp; ✓ 92 hereditary peers remain (not 'elected by public' or 'can permanently block')</div></div>
+        <div class="pick2-item"><div class="pick2-q">Which TWO are public holidays in England and Wales?</div><div class="pick2-a">✓ Good Friday &nbsp;&nbsp; ✓ Boxing Day (Burns Night and St George's Day are NOT bank holidays)</div></div>
+        <div class="pick2-item"><div class="pick2-q">Which TWO languages are official in Wales?</div><div class="pick2-a">✓ English &nbsp;&nbsp; ✓ Welsh (not French or Irish)</div></div>
+        <div class="pick2-item"><div class="pick2-q">Which TWO are roles of the Monarch?</div><div class="pick2-a">✓ Opening Parliament &nbsp;&nbsp; ✓ Giving Royal Assent to laws (Monarch does NOT set policy or lead Cabinet)</div></div>
+        <div class="pick2-item"><div class="pick2-q">Which TWO statements about jury service are correct?</div><div class="pick2-a">✓ Jury service is a civic duty &nbsp;&nbsp; ✓ Jurors are chosen randomly from the electoral register</div></div>
+        <div class="pick2-item"><div class="pick2-q">Which TWO contributed to the Industrial Revolution?</div><div class="pick2-a">✓ Richard Arkwright (spinning frame) &nbsp;&nbsp; ✓ James Watt (steam engine) — not Darwin or Newton</div></div>
+        <div class="pick2-item"><div class="pick2-q">Which TWO are correct about the Magna Carta?</div><div class="pick2-a">✓ Signed by King John in 1215 &nbsp;&nbsp; ✓ Established the King was subject to law</div></div>
+        <div class="pick2-item"><div class="pick2-q">Which TWO are correct about the NHS?</div><div class="pick2-a">✓ Founded in 1948 &nbsp;&nbsp; ✓ Set up by Aneurin Bevan (not Churchill, not 1938)</div></div>
+        <div class="pick2-item"><div class="pick2-q">Which TWO were members of the Beatles?</div><div class="pick2-a">✓ John Lennon &nbsp;&nbsp; ✓ Paul McCartney (not Mick Jagger — Rolling Stones; not David Bowie — solo)</div></div>
+      </div>
+    </div>
+
+    <!-- Numbers table -->
+    <div class="prep-section">
+      <h3 class="prep-h3">🔢 Section 5 — Exact Numbers the Examiner Uses to Trick You</h3>
+      <p class="prep-subtext">Know the EXACT figure — the test offers options that are close but wrong.</p>
+      <div class="fact-table">
+        <div class="fact-row fact-row-hi"><span class="fact-k">MPs in House of Commons</span><span class="fact-v"><strong>650</strong> — not 600, 630 or 700</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Jurors in England/Wales/NI</span><span class="fact-v"><strong>12</strong> — not 10, 15 or 18</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Jurors in Scotland</span><span class="fact-v"><strong>15</strong> — not 12, 10 or 18</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Pass mark</span><span class="fact-v"><strong>18 out of 24 (75%)</strong> — not 16, 20 or 80%</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">UK population</span><span class="fact-v"><strong>~67 million</strong> — not 60m, 65m or 70m</span></div>
+        <div class="fact-row"><span class="fact-k">Test questions</span><span class="fact-v"><strong>24</strong> — not 20, 22 or 26</span></div>
+        <div class="fact-row"><span class="fact-k">Test duration</span><span class="fact-v"><strong>45 minutes</strong> — not 30, 40 or 60</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">British Empire (peak)</span><span class="fact-v"><strong>One-quarter</strong> of world's land — not one-third or one-fifth</span></div>
+        <div class="fact-row fact-row-hi"><span class="fact-k">Bank holidays E&amp;W</span><span class="fact-v"><strong>8</strong> per year — not 6, 7 or 9</span></div>
+        <div class="fact-row"><span class="fact-k">Shakespeare's plays</span><span class="fact-v"><strong>37</strong> plays — not 27 or 47</span></div>
+        <div class="fact-row"><span class="fact-k">Shakespeare's sonnets</span><span class="fact-v"><strong>154</strong> sonnets — not 104 or 174</span></div>
+        <div class="fact-row"><span class="fact-k">Test booking cost</span><span class="fact-v"><strong>£50</strong> — not £30 or £75</span></div>
+        <div class="fact-row"><span class="fact-k">Retake wait</span><span class="fact-v"><strong>7 days</strong> — not 3, 5 or 14 days</span></div>
+        <div class="fact-row"><span class="fact-k">WWI British casualties</span><span class="fact-v"><strong>About 2 million</strong> — not 500,000 or 5 million</span></div>
+        <div class="fact-row"><span class="fact-k">Black Death deaths</span><span class="fact-v"><strong>About one-third</strong> — not one-quarter or one-half</span></div>
+        <div class="fact-row"><span class="fact-k">Hereditary peers in Lords</span><span class="fact-v"><strong>92</strong> — not 72, 82 or 102</span></div>
+        <div class="fact-row"><span class="fact-k">Commonwealth countries</span><span class="fact-v"><strong>56</strong> — not 48, 52 or 60</span></div>
+        <div class="fact-row"><span class="fact-k">Welsh speakers</span><span class="fact-v"><strong>About 20%</strong> in Wales — not 5%, 10% or 40%</span></div>
+        <div class="fact-row"><span class="fact-k">UK ethnic minorities</span><span class="fact-v"><strong>About 14%</strong> — not 5%, 10% or 20%</span></div>
+      </div>
+    </div>
+
+    <!-- Which statement is correct -->
+    <div class="prep-section">
+      <h3 class="prep-h3">🔍 Section 6 — 'Which Statement is Correct?' Drill</h3>
+      <p class="prep-subtext">One word is wrong. Train your eye to spot it instantly.</p>
+      <div class="wsc-list">
+        <div class="wsc-item"><div class="wsc-wrong">✗ The Magna Carta established that the King was <em>above</em> the law.</div><div class="wsc-right">✓ The Magna Carta established that the King was <em>subject to</em> the law.</div></div>
+        <div class="wsc-item"><div class="wsc-wrong">✗ The House of <em>Lords</em> is the elected chamber of Parliament.</div><div class="wsc-right">✓ The House of <em>Commons</em> is the elected chamber of Parliament.</div></div>
+        <div class="wsc-item"><div class="wsc-wrong">✗ The UK has a <em>written</em> constitution set out in a single document.</div><div class="wsc-right">✓ The UK has an <em>unwritten</em> constitution drawn from Acts, common law and conventions.</div></div>
+        <div class="wsc-item"><div class="wsc-wrong">✗ The Slave Trade Act <em>1807</em> freed all enslaved people in the Empire.</div><div class="wsc-right">✓ The Slavery Abolition Act <em>1833</em> freed enslaved people in the Empire.</div></div>
+        <div class="wsc-item"><div class="wsc-wrong">✗ The Church of <em>Scotland</em> is headed by the Monarch as Supreme Governor.</div><div class="wsc-right">✓ The Church of <em>England</em> is headed by the Monarch as Supreme Governor.</div></div>
+        <div class="wsc-item"><div class="wsc-wrong">✗ The Supreme Court was created in <em>1999</em>.</div><div class="wsc-right">✓ The Supreme Court was created in <em>2009</em>.</div></div>
+        <div class="wsc-item"><div class="wsc-wrong">✗ Women over <em>21</em> were given the right to vote in 1918.</div><div class="wsc-right">✓ Women over <em>30</em> were given the right to vote in 1918.</div></div>
+        <div class="wsc-item"><div class="wsc-wrong">✗ Julius Caesar successfully <em>invaded and conquered</em> Britain in 55 BC.</div><div class="wsc-right">✓ The Roman invasion began under Emperor <em>Claudius in 43 AD</em>.</div></div>
+        <div class="wsc-item"><div class="wsc-wrong">✗ The NHS was founded in 1948 by <em>Winston Churchill</em>.</div><div class="wsc-right">✓ The NHS was founded in 1948 by <em>Aneurin Bevan</em>.</div></div>
+        <div class="wsc-item"><div class="wsc-wrong">✗ Wales <em>is represented</em> in the Union Flag by the red dragon.</div><div class="wsc-right">✓ Wales <em>is not represented</em> in the Union Flag.</div></div>
+        <div class="wsc-item"><div class="wsc-wrong">✗ The voting age was reduced to 18 in <em>1928</em>.</div><div class="wsc-right">✓ The voting age was reduced to 18 in <em>1969</em>.</div></div>
+        <div class="wsc-item"><div class="wsc-wrong">✗ Scotland has a jury of <em>12</em> in criminal trials.</div><div class="wsc-right">✓ Scotland has a jury of <em>15</em> in criminal trials — and <em>3</em> possible verdicts.</div></div>
+        <div class="wsc-item"><div class="wsc-wrong">✗ The Act of Union 1707 created the <em>United Kingdom</em>.</div><div class="wsc-right">✓ The Act of Union 1707 created the Kingdom of <em>Great Britain</em>.</div></div>
+        <div class="wsc-item"><div class="wsc-wrong">✗ The Prime Minister lives at <em>11</em> Downing Street.</div><div class="wsc-right">✓ The Prime Minister lives at <em>10</em> Downing Street. (Chancellor lives at No. 11)</div></div>
+        <div class="wsc-item"><div class="wsc-wrong">✗ Magistrates are legally qualified judges who receive a salary.</div><div class="wsc-right">✓ Magistrates are usually community members who work <em>unpaid</em>, without legal qualifications.</div></div>
+      </div>
+    </div>
+
+    <!-- Rare Q&A -->
+    <div class="prep-section">
+      <h3 class="prep-h3">🎲 Section 7 — Rarest Questions (appear 1 in every 15–20 tests)</h3>
+      <div class="rare-list">
+        <div class="rare-item"><span class="rare-q">What does 'Habeas Corpus' mean?</span><span class="rare-a">Latin for 'you shall have the body' — gives prisoners the right to a court hearing.</span></div>
+        <div class="rare-item"><span class="rare-q">Who was Capability Brown?</span><span class="rare-a">Lancelot 'Capability' Brown (1716–1783) — most famous landscape gardener; designed over 170 gardens.</span></div>
+        <div class="rare-item"><span class="rare-q">Who were the Puritans?</span><span class="rare-a">Strict Protestants who wanted to 'purify' the Church of England; supported Parliament in the Civil War.</span></div>
+        <div class="rare-item"><span class="rare-q">What is the West Lothian Question?</span><span class="rare-a">The anomaly where Scottish MPs can vote on English-only matters at Westminster, but English MPs cannot vote on devolved Scottish matters.</span></div>
+        <div class="rare-item"><span class="rare-q">What are the Lords Spiritual?</span><span class="rare-a">The 26 bishops of the Church of England who sit in the House of Lords.</span></div>
+        <div class="rare-item"><span class="rare-q">What is a by-election?</span><span class="rare-a">An election to fill a vacant Commons seat between general elections (e.g. when an MP dies or resigns).</span></div>
+        <div class="rare-item"><span class="rare-q">When did the Church of England disestablish in Wales?</span><span class="rare-a">1920 — the Church in Wales was disestablished. Wales has no established church.</span></div>
+        <div class="rare-item"><span class="rare-q">What was the Rump Parliament?</span><span class="rare-a">What remained after Cromwell purged MPs opposed to trying Charles I — later dissolved by Cromwell himself in 1653.</span></div>
+        <div class="rare-item"><span class="rare-q">What are the Crown Dependencies?</span><span class="rare-a">Jersey, Guernsey and the Isle of Man — NOT part of the UK but self-governing territories under the Crown.</span></div>
+        <div class="rare-item"><span class="rare-q">What is the Electoral Register?</span><span class="rare-a">A list of all eligible voters. Must be registered to vote. Also used to select jurors.</span></div>
+        <div class="rare-item"><span class="rare-q">At what Olympics do UK nations compete as one team?</span><span class="rare-a">The Olympics — as 'Team GB'. But in football World Cups etc. each nation competes separately.</span></div>
+        <div class="rare-item"><span class="rare-q">What is common law?</span><span class="rare-a">Law based on court decisions and legal precedent — forms part of the UK's unwritten constitution.</span></div>
+        <div class="rare-item"><span class="rare-q">What is the Petition of Right (1628)?</span><span class="rare-a">Presented to Charles I — confirmed no imprisonment without cause, no taxes without Parliament's consent.</span></div>
+        <div class="rare-item"><span class="rare-q">What was the Heptarchy?</span><span class="rare-a">The seven Anglo-Saxon kingdoms: Northumbria, Mercia, East Anglia, Wessex, Kent, Essex, Sussex.</span></div>
+      </div>
+    </div>
+
+    <div class="prep-section" style="background:#22aa2218;border:1px solid #22aa2244;border-radius:10px;padding:1rem;text-align:center">
+      <p style="color:#88dd88;font-weight:600;font-size:.95rem;margin-bottom:.4rem">✓ You are now 100% prepared</p>
+      <p style="color:#7ba3e0;font-size:.82rem">Pass Guaranteed covers the 95% that always appears. The 5% Gap Killer covers the rest. There is nothing left to surprise you.</p>
+      <p style="color:#7ba3e0;font-size:.78rem;margin-top:.5rem">📱 <strong>Practice:</strong> lifeintheuktestweb.co.uk · <strong>Book:</strong> gov.uk/life-in-uk-test</p>
+    </div>
+
+  </div><!-- /prep-gap -->
+
+</div><!-- /prep-wrap -->
+</div>
+<!-- /PREP MATERIAL SCREEN -->
+
 
 <script>
 // ═══════════════════════════════════════════════════════════════
@@ -4010,6 +4681,13 @@ function showScreen(id){
   document.getElementById(id).classList.add('active');
   if(id==='hscreen') renderHistory();
   if(id==='cheatsheet') initCheatSheet();
+}
+
+function showPrepTab(tab){
+  document.getElementById('prep-pass').style.display = tab==='pass'?'block':'none';
+  document.getElementById('prep-gap').style.display  = tab==='gap' ?'block':'none';
+  document.getElementById('ptab-pass').classList.toggle('active', tab==='pass');
+  document.getElementById('ptab-gap').classList.toggle('active',  tab==='gap');
 }
 
 // ─── EXIT MODAL ───────────────────────────────────────────────
