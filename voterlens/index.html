@@ -1689,7 +1689,7 @@ function onLangChange(){
 }
 
 /* ── COUNTRY CHANGE ── */
-async function onCC(){
+async async function onCC(){
   const code=document.getElementById('countrySelect').value;
   if(!code) return;
   selCountry=code;
@@ -4049,7 +4049,7 @@ function onLocalInput(){
   }
 }
 
-function geoLocate(){
+async function geoLocate(){
   const statusEl=document.getElementById('geoStatus');
   statusEl.textContent='📡 Detecting your location…';
   if(!navigator.geolocation){statusEl.textContent='GPS not available in your browser.';return;}
