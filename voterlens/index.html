@@ -1825,7 +1825,7 @@ function renderDossier(party, cfg, topics, wb, who){
   const isStandard=detailLevel==='standard';
   const isExpert=detailLevel==='expert';
   const el=document.getElementById('dossier');
-  const kb=findKB(party.n);
+  const kb=findKB(party.n, selCountry);
   const cur=cfg.cur;
 
   // Build scores
@@ -1877,6 +1877,30 @@ function renderDossier(party, cfg, topics, wb, who){
   h+=`<div class="execText">${(kb?.summary||generateSummary(party,cfg)).split('\n').join('<br>')}</div></div>`;
 
   /* ── S2: ACCOUNTABILITY PULSE ── */
+  // ── Generate estimated pulse scores for parties without KB data ──
+  function generatePulse(party, cfg){
+    const s=party.s||'c';
+    const isFarRight=s==='fr', isFarLeft=s==='fl';
+    const isExtreme=isFarRight||isFarLeft;
+    const isGov=party.gov||false;
+    const name=esc(party.n||'This party');
+    const country=esc(cfg.n||'this country');
+    // Fact-check: extremes historically make more unverifiable claims
+    const fc=isFarRight?35:isFarLeft?38:isExtreme?38:isGov?52:58;
+    // Historical risk: far-right/left have higher precedent risk
+    const hr=isFarRight?72:isFarLeft?55:isGov?38:28;
+    // Budget feasibility: governing parties constrained by reality
+    const bf=isGov?55:isFarRight?35:isFarLeft?38:55;
+    // Civil rights: far-right typically lower
+    const cr=isFarRight?35:isFarLeft?52:isGov?58:62;
+    return {
+      factCheck:{score:fc,note:`Estimated for ${name} based on political spectrum position and governing record. Exact score requires detailed fact-check analysis. Far-right and far-left parties typically score lower on independent fact-checks due to higher use of emotive and unverifiable claims.`},
+      historicalRisk:{score:hr,note:`Estimated risk based on ${name}'s position on the political spectrum. Parties at the extremes historically carry higher institutional risk. ${isGov?name+' is currently in government — track record being built.':name+' has not yet held national power in '+country+'.'}`},
+      budgetFeasibility:{score:bf,note:`Estimated feasibility based on spectrum position. ${isGov?'Governing parties face real fiscal constraints — budgets are subject to independent audit.':'Opposition manifestos are not constrained by fiscal reality until in government.'} Independent economic analysis of specific manifesto costings is recommended.`},
+      civilRights:{score:cr,note:`Estimated civil rights score based on stated platform and spectrum position for ${name}. ${isFarRight?'Far-right parties in multiple countries have introduced measures restricting minority rights, press freedom and judicial independence.':'Score is an estimate — see party manifesto and voting record for specific positions on rights issues.'}`,}
+    };
+  }
+
   if(kb?.pulse){
     const p=kb.pulse;
     // Color logic: green=good, amber=mixed, red=bad — direction depends on metric
@@ -1901,6 +1925,36 @@ function renderDossier(party, cfg, topics, wb, who){
         <div class="gLabel" style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:5px;">${t('rightsScore')||'Civil Rights Score'}</div>
         <div class="gVal" style="color:${crCol}">${p.civilRights.score}%</div>${gBar(p.civilRights.score,crCol)}
         <div class="gNote">${esc(p.civilRights.note)}</div></div>
+    </div></div>`;
+  } else {
+    // Non-KB party: generate estimated pulse from spectrum + governing status
+    const ep=generatePulse(party,cfg);
+    const fcCol=ep.factCheck.score>65?'#22c55e':ep.factCheck.score>40?'#f59e0b':'#dc2626';
+    const hrCol=ep.historicalRisk.score>60?'#dc2626':ep.historicalRisk.score>30?'#f59e0b':'#22c55e';
+    const bfCol=ep.budgetFeasibility.score>65?'#22c55e':ep.budgetFeasibility.score>40?'#f59e0b':'#dc2626';
+    const crCol=ep.civilRights.score>65?'#22c55e':ep.civilRights.score>40?'#f59e0b':'#dc2626';
+    h+=`<div class="dSec"><div class="dHead">${t('secPulse')}</div>
+      <div class="dSub" style="margin-bottom:8px;">${t('pulseSub')}</div>
+      <div style="background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);border-radius:10px;padding:9px 13px;font-size:10px;color:var(--amber);margin-bottom:12px;">
+        ⚠️ <strong>Estimated scores</strong> — ${esc(party.n)} is not in our Tier 1 database. Scores are generated from spectrum position and governing record. For detailed analysis, use the AI Boost below.
+      </div>
+      <div class="gaugeGrid">
+      <div class="gauge">
+        <div class="gLabel" style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:5px;">${t('trustScore')||'Fact-Check Score'}</div>
+        <div class="gVal" style="color:${fcCol}">${ep.factCheck.score}%</div>${gBar(ep.factCheck.score,fcCol)}
+        <div class="gNote">${esc(ep.factCheck.note)}</div></div>
+      <div class="gauge">
+        <div class="gLabel" style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:5px;">${t('riskScore')||'Historical Risk'} <span style="font-size:8px;opacity:.6;">(low = safer)</span></div>
+        <div class="gVal" style="color:${hrCol}">${ep.historicalRisk.score}%</div>${gBar(ep.historicalRisk.score,hrCol)}
+        <div class="gNote">${esc(ep.historicalRisk.note)}</div></div>
+      <div class="gauge">
+        <div class="gLabel" style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:5px;">${t('feasScore')||'Budget Feasibility'}</div>
+        <div class="gVal" style="color:${bfCol}">${ep.budgetFeasibility.score}%</div>${gBar(ep.budgetFeasibility.score,bfCol)}
+        <div class="gNote">${esc(ep.budgetFeasibility.note)}</div></div>
+      <div class="gauge">
+        <div class="gLabel" style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:5px;">${t('rightsScore')||'Civil Rights Score'}</div>
+        <div class="gVal" style="color:${crCol}">${ep.civilRights.score}%</div>${gBar(ep.civilRights.score,crCol)}
+        <div class="gNote">${esc(ep.civilRights.note)}</div></div>
     </div></div>`;
   }
 
@@ -3666,41 +3720,87 @@ function renderWIIFY(kb,party,cfg,s,wb){
   return h;
 }
 
-function findKB(partyName){
+function findKB(partyName, countryCode){
   // Exact match
   if(PARTY_KB[partyName]) return PARTY_KB[partyName];
   const lc=partyName.toLowerCase();
-  // Fuzzy match - check if party name contains or is contained in a KB key
-  for(const key of Object.keys(PARTY_KB)){
-    const klc=key.toLowerCase();
-    if(lc.includes(klc)||klc.includes(lc)||
-       lc.replace(/\s+/g,'').includes(klc.replace(/\s+/g,''))){
-      return PARTY_KB[key];
+  const cc=(countryCode||selCountry||'').toUpperCase();
+
+  // ── BLOCKLIST: names that MUST NOT fuzzy-match across countries ──
+  // "Liberal Democrats" must never match "Democratic Party" (US) or "Liberal Party" (AU/CA)
+  // "Green Party" must never match anything in KB
+  // Any UK party must never match US/AU/CA parties
+  const ukParties=['liberal democrats','lib dems','green party','snp','scottish national',
+    'plaid cymru','dup','alliance party','ulster unionist','sdlp'];
+  const usParties=['libertarian','green party usa','independent'];
+  if(ukParties.some(b=>lc.includes(b))) return null; // no KB match for these
+  if(cc==='US' && usParties.some(b=>lc.includes(b))) return null;
+
+  // ── Country-scoped keyword matches ──
+  // Only match country-specific parties when we know the country
+  const countryKB={
+    US:{
+      'republican':PARTY_KB["Republican Party"],
+      'democrat':PARTY_KB["Democratic Party"],
+    },
+    GB:{
+      'labour':PARTY_KB["Labour Party"],
+      'reform':PARTY_KB["Reform UK"],
+      'conservative':PARTY_KB["Conservative Party"],
+    },
+    AU:{
+      'labor':PARTY_KB["Australian Labor Party"],
+      'labour':PARTY_KB["Australian Labor Party"],
+      'liberal':PARTY_KB["Liberal Party"], // AU Liberal
+    },
+    IE:{
+      'fianna':PARTY_KB["Fianna Fáil"],
+      'fine gael':PARTY_KB["Fine Gael"],
+      'sinn':PARTY_KB["Sinn Féin"],
+    },
+    IN:{
+      'bjp':PARTY_KB["BJP"],
+      'bharatiya':PARTY_KB["BJP"],
+    },
+    DE:{
+      'afd':PARTY_KB["AfD"],
+      'alternative':PARTY_KB["AfD"],
+    },
+    IT:{
+      'fratelli':PARTY_KB["Fratelli d'Italia"],
+      'fdi':PARTY_KB["Fratelli d'Italia"],
+    },
+    CA:{
+      'liberal':PARTY_KB["Liberal Party"], // CA Liberal
+      'conservative':PARTY_KB["Conservative Party"],
+    },
+  };
+
+  // Try country-scoped match first (most accurate)
+  if(cc && countryKB[cc]){
+    for(const [kw,kb] of Object.entries(countryKB[cc])){
+      if(lc.includes(kw)) return kb;
     }
   }
-  // Keyword match - pick up renamed/variant parties
-  const keywords={
-    'republican':PARTY_KB["Republican Party"],
-    'democrat':PARTY_KB["Democratic Party"],
-    'labor':PARTY_KB["Australian Labor Party"],
-    'labour':PARTY_KB["Labour Party"],
-    'liberal':null, // ambiguous - need country context
-    'conservative':PARTY_KB["Conservative Party"],
-    'reform':PARTY_KB["Reform UK"],
-    'fratelli':PARTY_KB["Fratelli d'Italia"],
-    'afd':PARTY_KB["AfD"],
+
+  // ── Global keyword fallback (only for unambiguous names) ──
+  const globalKB={
+    'republican party':PARTY_KB["Republican Party"],
+    'democratic party':PARTY_KB["Democratic Party"],
+    'australian labor':PARTY_KB["Australian Labor Party"],
+    'fratelli d':PARTY_KB["Fratelli d'Italia"],
     'alternative für':PARTY_KB["AfD"],
-    'fianna':PARTY_KB["Fianna Fáil"],
+    'fianna fáil':PARTY_KB["Fianna Fáil"],
     'fine gael':PARTY_KB["Fine Gael"],
     'sinn féin':PARTY_KB["Sinn Féin"],
     'sinn fein':PARTY_KB["Sinn Féin"],
-    'bjp':PARTY_KB["BJP"],
-    'bharatiya':PARTY_KB["BJP"],
+    'bharatiya janata':PARTY_KB["BJP"],
   };
-  for(const [kw,kb] of Object.entries(keywords)){
-    if(kb && lc.includes(kw)) return kb;
+  for(const [kw,kb] of Object.entries(globalKB)){
+    if(lc.includes(kw)) return kb;
   }
-  return null;
+
+  return null; // No match — use generated content
 }
 
 /* ── SMART TIER 2 TOPIC GENERATOR ──
@@ -4063,7 +4163,7 @@ async function geoLocate(){
 }
 
 function buildAIBooster(party, cfg, topics, wb, who){
-  const kb=findKB(party.n);
+  const kb=findKB(party.n, selCountry);
   const cur=cfg.cur;
   const isLocal=currentPromptMode==='local';
   const locationStr=localLocation.town?`${localLocation.town}${localLocation.postcode?' ('+localLocation.postcode+')':''}`:cfg.n;
