@@ -304,6 +304,43 @@ select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.10);}
 .qaA.open{max-height:400px;padding:10px 14px;}
 .qaA strong{color:var(--bark);}
 .countryBadge{display:inline-flex;align-items:center;gap:6px;background:rgba(26,95,168,.10);border:1px solid rgba(26,95,168,.20);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;color:var(--blue);margin-bottom:12px;}
+
+/* WIIFY — What's In It For You */
+.wiifyGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:10px;}
+.wiifyCard{border-radius:13px;padding:13px 14px;border:1.5px solid var(--paw);position:relative;overflow:hidden;}
+.wiifyCard::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;}
+.wiify-precariat::before{background:#dc2626;} .wiify-precariat{background:#fff8f8;}
+.wiify-middle::before{background:#d97706;} .wiify-middle{background:#fffbf0;}
+.wiify-capital::before{background:#7c3aed;} .wiify-capital{background:#faf5ff;}
+.wiify-young::before{background:#2563eb;} .wiify-young{background:#eff6ff;}
+.wiify-elderly::before{background:#059669;} .wiify-elderly{background:#f0fdf4;}
+.wiify-women::before{background:#db2777;} .wiify-women{background:#fdf2f8;}
+.wiify-minority::before{background:#0891b2;} .wiify-minority{background:#f0f9ff;}
+.wiifyTop{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;}
+.wiifyEmoji{font-size:20px;line-height:1;flex-shrink:0;}
+.wiifyLabel{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);}
+.wiifyName{font-size:13px;font-weight:700;color:var(--bark);line-height:1.2;}
+.wiifyMetric{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:6px 0 3px;}
+.wiifyVerdict{font-size:11px;line-height:1.7;color:var(--muted);}
+.wiifyFlag{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;margin-top:6px;}
+.wiifyFlag.red{background:#fee2e2;color:#b91c1c;} .wiifyFlag.amber{background:#fef3c7;color:#92400e;}
+.wiifyFlag.green{background:#dcfce7;color:#166534;} .wiifyFlag.grey{background:#f1f5f9;color:#64748b;}
+
+/* Persona Selector in AI Booster */
+.personaSection{margin:16px 0 0;border-top:1px solid rgba(255,255,255,.10);padding-top:16px;}
+.personaTitle{font-size:11px;font-weight:700;color:#7dd3fc;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+.personaSubtitle{font-size:11px;color:rgba(255,255,255,.55);margin-bottom:12px;line-height:1.6;}
+.personaGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:12px;}
+.personaTile{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:12px;padding:11px 12px;cursor:pointer;transition:all .15s;user-select:none;position:relative;}
+.personaTile:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25);}
+.personaTile.psel{background:rgba(46,139,192,.28);border-color:#2e8bc0;box-shadow:0 0 0 2px rgba(46,139,192,.20);}
+.personaTile.psel::after{content:"✓";position:absolute;top:6px;right:8px;font-size:10px;color:#7dd3fc;font-weight:800;}
+.personaEmoji{font-size:20px;line-height:1;margin-bottom:5px;}
+.personaName{font-size:11px;font-weight:700;color:#fff;margin-bottom:2px;}
+.personaDesc{font-size:9px;color:rgba(255,255,255,.50);line-height:1.4;}
+.personaExplain{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px 14px;font-size:11px;color:rgba(255,255,255,.75);line-height:1.75;display:none;margin-bottom:10px;}
+.personaExplain.show{display:block;}
+.personaExplain strong{color:#7dd3fc;display:block;margin-bottom:4px;}
 </style>
 </head>
 <body>
@@ -511,6 +548,54 @@ select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.10);}
   </div>
   <div class="boosterStatus" id="boosterStatus">
     <strong data-i18n="boosterReady">✅ Ready:</strong> <span id="boosterStatusText" data-i18n="boosterNone">Select an AI above to generate a deep-dive prompt you can paste directly.</span>
+  </div>
+  <!-- PERSONA SELECTOR -->
+  <div class="personaSection" id="personaSection" style="display:none;">
+    <div class="personaTitle">🎯 Who Are You? — Personalise Your Analysis</div>
+    <div class="personaSubtitle">Select the category that best describes you. VoterLens will add a personalised deep-dive section to your AI prompt — showing exactly how this party's policies affect <em>your</em> specific situation.</div>
+    <div class="personaGrid" id="personaGrid">
+      <div class="personaTile" data-persona="precariat" onclick="selectPersona(this)">
+        <div class="personaEmoji">🏚️</div>
+        <div class="personaName">The Precariat</div>
+        <div class="personaDesc">Low-income / renting / benefit-dependent / zero-hours work</div>
+      </div>
+      <div class="personaTile" data-persona="middle" onclick="selectPersona(this)">
+        <div class="personaEmoji">🏠</div>
+        <div class="personaName">Squeezed Middle</div>
+        <div class="personaDesc">Mortgage holder / median income / public service user</div>
+      </div>
+      <div class="personaTile" data-persona="capital" onclick="selectPersona(this)">
+        <div class="personaEmoji">📈</div>
+        <div class="personaName">Capital Class</div>
+        <div class="personaDesc">Business owner / investor / high earner / asset-rich</div>
+      </div>
+      <div class="personaTile" data-persona="young" onclick="selectPersona(this)">
+        <div class="personaEmoji">🎓</div>
+        <div class="personaName">Young Generation</div>
+        <div class="personaDesc">Under 35 / renting / student debt / first-time buyer</div>
+      </div>
+      <div class="personaTile" data-persona="elderly" onclick="selectPersona(this)">
+        <div class="personaEmoji">👴</div>
+        <div class="personaName">Elderly & Retired</div>
+        <div class="personaDesc">Pension-dependent / healthcare user / social care concerns</div>
+      </div>
+      <div class="personaTile" data-persona="women" onclick="selectPersona(this)">
+        <div class="personaEmoji">👩</div>
+        <div class="personaName">Women & Caregivers</div>
+        <div class="personaDesc">Primary carer / part-time worker / domestic violence concern</div>
+      </div>
+      <div class="personaTile" data-persona="minority" onclick="selectPersona(this)">
+        <div class="personaEmoji">🌍</div>
+        <div class="personaName">Minority & Faith Groups</div>
+        <div class="personaDesc">Ethnic / religious / LGBTQ+ / immigrant background</div>
+      </div>
+      <div class="personaTile" data-persona="rural" onclick="selectPersona(this)">
+        <div class="personaEmoji">🌾</div>
+        <div class="personaName">Rural & Agricultural</div>
+        <div class="personaDesc">Farming / rural services / transport dependency</div>
+      </div>
+    </div>
+    <div class="personaExplain" id="personaExplain"></div>
   </div>
   <div id="promptArea" style="display:none;">
     <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.07em;margin:12px 0 5px;">📋 Your Forensic Prompt — Copy &amp; Paste into Your AI</div>
@@ -1253,13 +1338,13 @@ const PDB={
 };
 
 /* ── STATE ── */
-let selCountry=localStorage.getItem('vl_c')||'';
+let selCountry='';
 let selParty=null, pList=[], wbD={}, whoV=null;
-let activeAIs=new Set(JSON.parse(localStorage.getItem('vl_ais')||'[]'));
+let activeAIs=new Set();
 
 /* ── INIT ── */
 window.addEventListener('DOMContentLoaded',()=>{
-  currentLang=localStorage.getItem('vl_lang')||'en';
+  currentLang='en';
   document.getElementById('langSelect').value=currentLang;
   applyTranslations();
 
@@ -1268,7 +1353,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   if(selCountry){
     document.getElementById('countrySelect').value=selCountry;
     const dfl=LANG_DEFAULT[selCountry];
-    if(dfl&&!localStorage.getItem('vl_lang')){currentLang=dfl;document.getElementById('langSelect').value=dfl;applyTranslations();}
+    {currentLang=dfl;document.getElementById('langSelect').value=dfl;applyTranslations();}
     onCC();
   }
   document.getElementById('countrySelect').addEventListener('change',onCC);
@@ -1279,7 +1364,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 
 function onLangChange(){
   currentLang=document.getElementById("langSelect").value;
-  localStorage.setItem("vl_lang",currentLang);
+  // lang preference not stored
   applyTranslations();
   // Re-render party grid in new language
   if(pList.length){
@@ -1299,14 +1384,14 @@ function onLangChange(){
 async function onCC(){
   const code=document.getElementById('countrySelect').value;
   if(!code) return;
-  selCountry=code; localStorage.setItem('vl_c',code);
+  selCountry=code;
   const cfg=CC[code]; if(!cfg) return;
 
   // Auto-set language when country changes (always)
   const autoLang=LANG_DEFAULT[code]||'en';
   currentLang=autoLang;
   document.getElementById('langSelect').value=autoLang;
-  localStorage.setItem('vl_lang',autoLang);
+  // lang not stored
   applyTranslations();
 
   document.getElementById('srcPanel').style.display='block';
@@ -1642,6 +1727,9 @@ function renderDossier(party, cfg, topics, wb, who){
     <div class="vaultRow">`;
   allSrcs.forEach(s=>h+=`<span class="vChip live">✓ ${esc(s)}</span>`);
   h+=`</div><div class="disclaimer">${t('disclaimer')}</div></div>`;
+
+  /* ── S11: WHAT'S IN IT FOR YOU ── */
+  h+=renderWIIFY(kb,party,cfg,s,wb);
 
   h+=`</div>`;
   // append country status and Q&A OUTSIDE dossier box
@@ -2837,6 +2925,341 @@ function renderQA(party,cfg,wb){
   return h;
 }
 
+
+/* ================================================================
+   PERSONA DEFINITIONS — 8 categories with full forensic details
+================================================================ */
+const PERSONAS={
+  precariat:{
+    emoji:'🏚️',name:'The Precariat',
+    subtitle:'Low income · Renting · Benefits · Zero-hours / Gig work',
+    keyMetric:'Purchasing Power (CPI & benefits)',
+    redFlag:'Flag if: food/rent costs rise >5% · benefit rates frozen · zero-hours protections removed · social housing not built',
+    whatToWatch:[
+      'Are benefit rates rising with inflation or being frozen?',
+      'Does the housing plan include social housing — or just "help to buy"?',
+      'Do employment rights include gig and zero-hours workers?',
+      'Are food bank funding and homelessness services protected?',
+      'Will energy bill support continue for households in fuel poverty?',
+    ],
+    promptAddition:`PERSONALISED ANALYSIS — THE PRECARIAT (Low-Income / Benefit-Dependent / Renter):
+Forensic Key Metric: Purchasing Power — real change in take-home income after inflation, housing costs and benefit changes.
+Red Flag Trigger: Flag as CRITICAL if any policy raises food or rent costs by >5%, freezes benefits below inflation, removes zero-hours/gig protections, or fails to build social housing.
+Answer ALL of the following specifically for this party's stated policies:
+1. BENEFIT SECURITY: Are benefit rates rising above, at, or below inflation? What happens to Universal Credit / welfare equivalent?
+2. RENTAL IMPACT: Does housing policy build social housing at scale or only help buyers? What happens to private rental costs?
+3. EMPLOYMENT RIGHTS: Are gig economy and zero-hours workers explicitly included in employment rights legislation?
+4. FOOD & ENERGY: Are food prices affected by tariffs/immigration policy? Is fuel poverty support maintained?
+5. HEALTHCARE ACCESS: Is NHS/public health system protected for those who cannot afford private alternatives?
+6. MONTHLY WALLET: Give a specific monthly currency estimate of net change for a household on minimum wage renting privately.
+7. VERDICT: Is this party's overall package a net positive or negative for the bottom 20% of earners? Be specific and honest.`,
+  },
+  middle:{
+    emoji:'🏠',name:'The Squeezed Middle',
+    subtitle:'Mortgage holder · Median income · Public service user · Two-income household',
+    keyMetric:'Disposable Income (mortgages, taxes, services)',
+    redFlag:'Flag if: interest rates rise from unfunded promises · income tax changes hit median earners · NHS/school quality declines',
+    whatToWatch:[
+      'How does the mortgage market respond to their fiscal plans? (Unfunded tax cuts raise rates)',
+      'Do income tax changes actually help median earners or mainly top earners?',
+      'Are school and NHS quality maintained for those who cannot afford private?',
+      'Are childcare costs addressed — the biggest squeeze for working families?',
+      'Does their borrowing plan threaten credit rating and mortgage rates?',
+    ],
+    promptAddition:`PERSONALISED ANALYSIS — THE SQUEEZED MIDDLE (Median Income / Mortgage Holder / Public Service Dependent):
+Forensic Key Metric: Disposable Income — net change after mortgage costs, income tax, childcare, and public service quality.
+Red Flag Trigger: Flag as CRITICAL if unfunded tax cuts risk mortgage rate rises, if income tax cuts primarily benefit top earners not median, or if NHS/school quality declines through underfunding.
+Answer ALL of the following specifically:
+1. MORTGAGE RISK: Could this party's fiscal plans (unfunded promises, borrowing) trigger bond market reaction that raises mortgage rates? Reference UK Truss 2022 as the benchmark.
+2. INCOME TAX REALITY: Who actually benefits from their tax changes — median earners or top earners? Give % benefit by income quintile if possible.
+3. CHILDCARE: Is childcare cost addressed? This is the single biggest squeeze for working families with children under 5.
+4. NHS/SCHOOLS: For families who cannot afford private school or private healthcare, are public alternatives maintained or declining?
+5. SAVINGS & PENSIONS: Are interest rates, pension tax relief and savings incentives protected?
+6. MONTHLY WALLET: Estimate net monthly change for a household earning median income with a mortgage and two children.
+7. VERDICT: Net positive or negative for the median household? Account for both tax changes and service quality changes.`,
+  },
+  capital:{
+    emoji:'📈',name:'The Capital Class',
+    subtitle:'Business owner · Investor · High earner · Asset-rich / property owner',
+    keyMetric:'Return on Investment & Regulatory Environment',
+    redFlag:'Flag if: tax cuts exceed Debt-to-GDP safety limit (triggering rating downgrade) · deregulation creates systemic risk · wealth taxes exceed capital flight threshold',
+    whatToWatch:[
+      'Does the corporation tax / capital gains approach match or beat competitor countries?',
+      'Do borrowing plans threaten sovereign credit rating? (Moody\'s, S&P thresholds)',
+      'Is the regulatory environment stable for long-term business planning?',
+      'Are wealth/inheritance taxes changing — and by how much?',
+      'Does trade policy (tariffs, EU/trade deal relationships) affect export markets?',
+    ],
+    promptAddition:`PERSONALISED ANALYSIS — THE CAPITAL CLASS (Business Owner / Investor / High Earner / Asset-Rich):
+Forensic Key Metric: Return on Investment — net change in after-tax returns on business income, capital gains, dividends and property assets.
+Red Flag Trigger: Flag as CRITICAL if tax cuts increase debt beyond sovereign rating thresholds, if deregulation echoes pre-2008 conditions, or if wealth taxes significantly exceed comparable countries creating capital flight incentive.
+Answer ALL of the following specifically:
+1. CORPORATION TAX: Rate, trajectory and comparison to competitor jurisdictions (Ireland 12.5-15%, US 21%, EU average 21.3%).
+2. CAPITAL GAINS & DIVIDENDS: Rate changes and how they compare to income tax rates. Is there a growing or shrinking gap?
+3. INHERITANCE / WEALTH TAX: Changes and estimated impact on estate planning.
+4. SOVEREIGN RISK: Is the debt/GDP trajectory sustainable? What credit rating agencies say. Reference Moody's/S&P thresholds.
+5. REGULATORY ENVIRONMENT: Is the regulatory burden increasing or decreasing? Specific sectors: finance, property, energy.
+6. TRADE POLICY: Does their approach to trade agreements, tariffs or EU/international relations affect export markets or supply chains?
+7. PROPERTY MARKET: What happens to commercial and residential property values under their housing, tax and planning policies?
+8. VERDICT: Net positive or negative for capital owners — with specific reference to returns, regulatory costs and sovereign risk.`,
+  },
+  young:{
+    emoji:'🎓',name:'The Young Generation',
+    subtitle:'Under 35 · Renting · Student debt · First-time buyer aspirant · Climate-aware',
+    keyMetric:'Opportunity Cost (housing, debt, climate future)',
+    redFlag:'Flag if: education spend cut to fund pensions · housing unaffordable for first-time buyers · climate inaction creates long-term costs · student debt worsens',
+    whatToWatch:[
+      'Is there a credible first-time buyer pathway — or just schemes that inflate prices?',
+      'Is student / higher education debt being reduced or worsening?',
+      'Is climate investment protecting the world they will inherit?',
+      'Are renter rights strengthened — or weakened to protect landlords?',
+      'Are youth unemployment and apprenticeship/skills pathways funded?',
+    ],
+    promptAddition:`PERSONALISED ANALYSIS — THE YOUNG GENERATION (Under 35 / Renter / Student Debt / First-Time Buyer):
+Forensic Key Metric: Opportunity Cost — the long-term economic and environmental cost of policies that defer or deny the opportunities young people need: homeownership, debt-free education, stable climate, secure employment.
+Red Flag Trigger: Flag as CRITICAL if education spend is cut to fund pensions, if housing policy inflates prices without supply, if climate inaction commits future generations to hundreds of billions in adaptation costs, or if student debt terms worsen.
+Answer ALL of the following specifically:
+1. HOUSING LADDER: Does this party's housing policy create a genuine pathway to homeownership for first-time buyers on median income? Or does it subsidise demand without increasing supply (inflating prices)?
+2. EDUCATION DEBT: For those with student loans — are terms improving or worsening? Is fee-free further education or apprenticeships expanding?
+3. CLIMATE INHERITANCE: What is the 30-year cost of their climate policy to public finances? Reference Stern Review and climate damage costs.
+4. RENTAL RIGHTS: Are renter protections strengthened (no-fault eviction ban, rent controls) or weakened?
+5. EMPLOYMENT PROSPECTS: Youth unemployment rate and what this party's economic plan does to early-career job prospects.
+6. INTERGENERATIONAL FAIRNESS: Is this party prioritising pensioner benefits over investment in young people? Give specific examples of the trade-offs.
+7. VERDICT: Net positive or negative for someone currently aged 18-35 in 10 and 25 year timeframes?`,
+  },
+  elderly:{
+    emoji:'👴',name:'The Elderly & Retired',
+    subtitle:'Pension-dependent · Heavy healthcare user · Social care concerns · Fixed income',
+    keyMetric:'Service Continuity (pension, NHS, social care, winter fuel)',
+    redFlag:'Flag if: immigration caps reduce NHS/care staff below safe levels · pension triple lock removed · social care privatised · winter fuel means-tested away from genuine need',
+    whatToWatch:[
+      'Is the pension triple lock or equivalent maintained — or quietly eroded?',
+      'Is immigration policy protecting NHS and care home staffing levels?',
+      'Is social care funding adequate — or will families have to pay or provide care?',
+      'Are winter fuel, bus pass and other elderly benefits protected?',
+      'Is the NHS waiting list being reduced — elderly are disproportionate users?',
+    ],
+    promptAddition:`PERSONALISED ANALYSIS — THE ELDERLY & RETIRED (Pension-Dependent / Healthcare User / Social Care):
+Forensic Key Metric: Service Continuity — ability to access pension income at real-terms value, NHS and GP services without cost, and social care support without catastrophic personal expenditure.
+Red Flag Trigger: Flag as CRITICAL if immigration caps reduce NHS or care home staff below safe levels (elderly are 40%+ of NHS users), if pension triple lock or equivalent is removed, or if social care is privatised without affordable alternatives.
+Answer ALL of the following specifically:
+1. PENSION SECURITY: Is the pension triple lock (or equivalent) maintained? What is the real-terms value trajectory over 10 years under their plan?
+2. NHS STAFFING: Does their immigration policy threaten NHS and care home staffing? Current data: what % of NHS staff / care home workers are migrants?
+3. SOCIAL CARE: Is social care funded to allow independent living without catastrophic personal cost? Is there a care cap?
+4. HEALTHCARE ACCESS: NHS waiting list trajectory under their plan. Elderly use NHS 3-4x more than young — what is the specific plan for geriatric and specialist services?
+5. HEATING & WINTER FUEL: Is energy support for fixed-income households protected? Winter fuel payment status.
+6. COST OF LIVING: On a fixed pension income, what is the net monthly change from their tax, benefit and inflation policies?
+7. VERDICT: Net positive or negative for someone fully retired on state pension plus modest private pension?`,
+  },
+  women:{
+    emoji:'👩',name:'Women & Caregivers',
+    subtitle:'Primary carer · Part-time worker · Gender pay gap · Domestic violence concern · Reproductive rights',
+    keyMetric:'Autonomy & Support (rights, childcare, pay, safety)',
+    redFlag:'Flag if: reproductive rights restricted · childcare unaffordable · domestic violence funding cut · gender pay enforcement weakened · carer benefits reduced',
+    whatToWatch:[
+      'Are reproductive rights protected by law and funding?',
+      'Is affordable childcare expanding — or remaining a market-only provision?',
+      'Is domestic violence funding and refuge provision maintained?',
+      'Are equal pay enforcement mechanisms strengthened?',
+      'Are carer benefits and flexible working rights improving?',
+    ],
+    promptAddition:`PERSONALISED ANALYSIS — WOMEN & CAREGIVERS (Primary Carer / Part-Time Worker / Reproductive Rights):
+Forensic Key Metric: Autonomy & Support — the degree to which a woman can make independent choices about her body, career, and family without financial penalty or legal restriction.
+Red Flag Trigger: Flag as CRITICAL if reproductive rights are restricted by legislation or funding withdrawal, if childcare costs remain above 30% of net household income for families with young children, if domestic violence refuge provision is cut, or if gender pay enforcement is weakened.
+Answer ALL of the following specifically:
+1. REPRODUCTIVE RIGHTS: What is their exact position on abortion access — legally and in terms of NHS funding? Any plans to change current law?
+2. CHILDCARE: What is their specific childcare policy? What would the net monthly cost be for a family with one child under 3 in nursery full-time?
+3. DOMESTIC VIOLENCE: Is refuge and support service funding maintained, reduced or increased? Current funding gap data?
+4. EQUAL PAY: Do they have specific enforcement mechanisms for the gender pay gap — or just aspiration?
+5. CARER ECONOMY: Women perform 60%+ of unpaid care. What does this party do for carer benefits, carer leave and pension credit for caring years?
+6. FLEXIBLE WORKING: Are day-one flexible working rights included in employment legislation?
+7. VERDICT: Net positive or negative for a woman working part-time as primary carer for children and/or elderly relatives?`,
+  },
+  minority:{
+    emoji:'🌍',name:'Minority & Faith Groups',
+    subtitle:'Ethnic · Religious · LGBTQ+ · Immigrant background · Civil liberties priority',
+    keyMetric:'Civil Liberty Index (rights, safety, representation)',
+    redFlag:'Flag "Us vs Them" rhetoric mirroring historical persecution patterns · citizenship exclusions by ethnicity/religion · hate crime prosecution declining · equality law rollback',
+    whatToWatch:[
+      'Does their rhetoric use in-group/out-group language targeting specific communities?',
+      'Are equality laws being maintained, expanded or reduced?',
+      'Are hate crime prosecution rates and sentencing maintained?',
+      'Does immigration policy affect legally settled communities (ILR, family reunion)?',
+      'Are LGBTQ+ protections in law maintained or being reduced?',
+    ],
+    promptAddition:`PERSONALISED ANALYSIS — MINORITY & FAITH GROUPS (Ethnic / Religious / LGBTQ+ / Immigrant Background):
+Forensic Key Metric: Civil Liberty Index — the degree to which state power is used to protect or threaten the rights, safety and equal treatment of minority communities.
+Red Flag Trigger: Flag as CRITICAL if party uses "Us vs. Them" rhetoric with specific historical parallels, if citizenship rights are qualified by ethnicity or religion, if hate crime prosecution is weakened, or if equality legislation is rolled back.
+Answer ALL of the following specifically:
+1. RHETORICAL ANALYSIS: Identify specific phrases used by this party that carry "double meaning" targeting minority groups. Give examples and explain the surface vs. underlying message.
+2. EQUALITY LAW: Are equality protections (race, religion, sexual orientation, gender) being maintained, expanded or reduced? Specific legislative changes?
+3. HATE CRIME: Prosecution rates and sentencing for hate crimes — direction of travel under this party?
+4. IMMIGRATION & SETTLEMENT: How does their immigration policy affect people already legally settled? ILR, family reunion rights, citizenship pathways?
+5. LGBTQ+ RIGHTS: Specific position on same-sex rights, trans rights and conversion therapy ban?
+6. CIVIL SERVICE REPRESENTATION: Are there specific commitments on representation in public institutions?
+7. HISTORICAL PARALLEL: Does this party's rhetoric match any documented historical pattern of minority persecution? Use the Historical Risk Score methodology — specific country, year, outcome.
+8. VERDICT: Net positive, neutral or negative for someone from an ethnic, religious or sexual minority background?`,
+  },
+  rural:{
+    emoji:'🌾',name:'Rural & Agricultural',
+    subtitle:'Farming · Rural services · Transport dependency · Small business · Agricultural worker',
+    keyMetric:'Rural Service Access & Agricultural Viability',
+    redFlag:'Flag if: agricultural migrant worker restrictions damage harvest viability · rural NHS/bus/school closures · trade deals undercut domestic farming prices · planning restrictions prevent rural housing',
+    whatToWatch:[
+      'Do tariff/trade policies undercut domestic farm prices with cheaper imports?',
+      'Does immigration policy protect seasonal agricultural workers?',
+      'Are rural NHS, school and public transport services protected or at risk?',
+      'Does planning reform include rural housing or only focus on cities?',
+      'Are farm subsidies maintained or changing in scale and structure?',
+    ],
+    promptAddition:`PERSONALISED ANALYSIS — RURAL & AGRICULTURAL (Farming / Rural Services / Agricultural Worker):
+Forensic Key Metric: Rural Service Access & Agricultural Viability — can a farming or rural household access viable income, healthcare, education, transport and community services?
+Red Flag Trigger: Flag as CRITICAL if trade deals allow cheaper imports that undercut domestic farm prices, if immigration restrictions remove seasonal agricultural workers, or if rural NHS and school closures continue.
+Answer ALL of the following specifically:
+1. AGRICULTURAL TRADE: Do their trade/tariff policies protect domestic farming from unfair competition (US chlorinated chicken, hormone beef)? Or do free trade deals undercut prices?
+2. SEASONAL WORKERS: What is their specific policy on agricultural seasonal worker visas? If restricted, how does harvest viability survive?
+3. FARM SUBSIDIES: Are direct payments / Basic Payment Scheme equivalent being maintained, reduced or reformed? What replaces them?
+4. RURAL NHS: Are rural GP surgeries, district hospitals and ambulance response times protected? Rural elderly are more isolated — what is the specific rural health plan?
+5. RURAL TRANSPORT: Is bus and rail service in rural areas protected or being cut further?
+6. RURAL HOUSING: Does planning reform include rural housing — or just focus on urban development?
+7. VERDICT: Net positive or negative for a farming household or rural small business owner?`,
+  },
+};
+
+let selectedPersona=null;
+
+function selectPersona(tile){
+  document.querySelectorAll('.personaTile').forEach(t=>t.classList.remove('psel'));
+  tile.classList.add('psel');
+  const key=tile.dataset.persona;
+  selectedPersona=key;
+  const p=PERSONAS[key];
+  const explEl=document.getElementById('personaExplain');
+  explEl.innerHTML=`<strong>${p.emoji} ${p.name} — ${p.subtitle}</strong>
+    <span style="display:block;margin-bottom:5px;"><strong style="color:#f59e0b;">🔍 Key Forensic Metric:</strong> ${esc(p.keyMetric)}</span>
+    <span style="display:block;margin-bottom:5px;"><strong style="color:#f87171;">⚠️ Red Flag Trigger:</strong> ${esc(p.redFlag)}</span>
+    <span style="display:block;margin-bottom:4px;"><strong style="color:#86efac;">✅ What to watch:</strong></span>
+    ${p.whatToWatch.map(q=>`<span style="display:block;padding-left:10px;">• ${esc(q)}</span>`).join('')}
+    <span style="display:block;margin-top:6px;font-size:10px;opacity:.65;">This persona section will be added to your AI prompt automatically.</span>`;
+  explEl.classList.add('show');
+  // rebuild prompt if we already have party data
+  if(selParty&&selCountry){
+    const cfg=CC[selCountry];
+    const topics=[...document.querySelectorAll('.tBtn.on')].map(b=>b.dataset.t);
+    if(cfg&&topics.length) buildAIBooster(selParty,cfg,topics,wbD,whoV);
+  }
+}
+
+/* ================================================================
+   renderWIIFY — "What's In It For You" dossier section
+================================================================ */
+function renderWIIFY(kb,party,cfg,s,wb){
+  const isRight=['r','fr','cr'].indexOf(s)>=0;
+  const isFarRight=s==='fr';
+  const isLeft=['l','fl','cl'].indexOf(s)>=0;
+  const isGov=party.gov||kb?.governing||false;
+  const name=party.n;
+  const cur=cfg.cur;
+
+  // Generate verdicts for each bucket based on spectrum + KB data
+  function verdict(bucket){
+    // KB override if it exists
+    if(kb&&kb.wiify&&kb.wiify[bucket]) return kb.wiify[bucket];
+    // Generated from spectrum
+    const v={
+      precariat:{
+        pos:name+' typically invests in social housing, higher minimum wages, and benefit protection — broadly positive for low-income households if delivered.',
+        neg:name+' proposals on immigration restriction raise food and care costs. Benefit freezes or welfare conditionality risk increasing poverty for the bottom 20%.',
+        far:name+' immigration restrictions raise food and care prices for all. Benefit reform rhetoric and lack of social housing plans are red flags for the lowest earners.',
+        flag:isFarRight?'red':isRight?'amber':'green',
+        trigger:isFarRight?'⚠️ Food/care prices risk rising >5%':isRight?'🟡 Benefit levels: check the detail':'✅ Broadly positive if delivered',
+      },
+      middle:{
+        pos:'Investment in NHS and schools protects the quality of public services on which median earners depend. Employment rights expansion is broadly positive.',
+        neg:'Tax cuts primarily benefit higher earners. Reduced public services offset any income tax gains. Watch if fiscal plans threaten mortgage rates.',
+        far:'Unfunded promises create bond market risk. See UK Truss 2022 for benchmark. Even tax cut gains are wiped out if mortgage rates spike 1.5%.',
+        flag:isFarRight?'red':isRight?'amber':'green',
+        trigger:isFarRight?'🔴 Fiscal risk to mortgage rates':isRight?'🟡 Check if tax cuts are actually funded':'✅ Public services maintained',
+      },
+      capital:{
+        pos:'Investment in infrastructure and stability creates predictable business environment. Progressive taxation is moderate and internationally competitive.',
+        neg:'Corporation tax, capital gains and business regulation changes affect ROI. Debt trajectory from unfunded promises threatens sovereign rating.',
+        far:'Deregulation short-term benefit. But political instability, rule of law risks, and potential trade penalties from exiting international agreements create long-term uncertainty for capital.',
+        flag:isLeft?'amber':isFarRight?'amber':isRight?'green':'amber',
+        trigger:isLeft?'🟡 Progressive taxes: check rates vs comparable countries':isFarRight?'🟡 Stability risk offsets deregulation':'✅ Tax environment broadly supportive',
+      },
+      young:{
+        pos:'Climate investment protects future. Housing supply plans may moderate prices. Education investment improves prospects. Renter rights help the renting majority.',
+        neg:'Housing promises without supply increase inflate prices. Student debt not addressed. Climate delay means higher adaptation costs later.',
+        far:'Climate inaction is the single biggest cost imposed on young people. Housing deregulation without social housing ignores the young who cannot afford to buy.',
+        flag:isFarRight?'red':isRight?'amber':'green',
+        trigger:isFarRight?'🔴 Climate cost + housing unaffordability':isRight?'🟡 Housing supply: does it help first-time buyers?':'✅ Climate + housing investment positive',
+      },
+      elderly:{
+        pos:'NHS investment directly benefits elderly who are the heaviest users. Pension protections maintained. Social care investment helps.',
+        neg:'If immigration restriction reduces NHS staffing, elderly waiting times worsen first. Pension triple lock: check if really protected.',
+        far:'Immigration restriction directly threatens NHS and care home staffing — elderly are 40%+ of NHS users. This is the most direct red flag for older voters.',
+        flag:isFarRight?'red':isRight?'amber':'green',
+        trigger:isFarRight?'🔴 NHS staffing threat from immigration caps':isRight?'🟡 Check: pension triple lock actually protected?':'✅ NHS + pension investment positive',
+      },
+      women:{
+        pos:'Childcare investment, equal pay enforcement, domestic violence funding and employment rights all benefit women disproportionately.',
+        neg:'Social conservatism may restrict reproductive rights or limit gender equality legislation. Childcare: market-only approaches leave low-income mothers out.',
+        far:'Far-right social conservatism consistently restricts reproductive rights, opposes childcare investment and frames traditional roles over autonomy. Highest risk bucket.',
+        flag:isFarRight?'red':isRight?'amber':'green',
+        trigger:isFarRight?'🔴 Reproductive rights + childcare at risk':isRight?'🟡 Check: childcare investment or market-only?':'✅ Rights + childcare + employment protected',
+      },
+      minority:{
+        pos:'Strong equality legislation, hate crime enforcement and immigration family reunion rights. LGBTQ+ protections maintained.',
+        neg:'Immigration restrictions affect legally settled communities. Equality legislation may not expand. Representation deprioritised.',
+        far:'This is where far-right parties most consistently cause harm. "Us vs. Them" rhetoric, citizenship language by ethnicity, equality law rollback, and press attacks on courts remove the institutional protections minorities rely on.',
+        flag:isFarRight?'red':isRight?'amber':'green',
+        trigger:isFarRight?'🔴 Civil rights risk: matches historical warning patterns':isRight?'🟡 Equality law: maintained but not expanded':'✅ Strong rights protections',
+      },
+    };
+    return v[bucket]||{pos:'',neg:'',far:'',flag:'grey',trigger:'—'};
+  }
+
+  const buckets=[
+    {key:'precariat',emoji:'🏚️',name:'The Precariat',sub:'Low income · Benefits · Renting',cls:'wiify-precariat'},
+    {key:'middle',emoji:'🏠',name:'Squeezed Middle',sub:'Mortgage · Median income · Public services',cls:'wiify-middle'},
+    {key:'capital',emoji:'📈',name:'Capital Class',sub:'Business · Investment · Assets',cls:'wiify-capital'},
+    {key:'young',emoji:'🎓',name:'Young Generation',sub:'Under 35 · Renting · Climate future',cls:'wiify-young'},
+    {key:'elderly',emoji:'👴',name:'Elderly & Retired',sub:'Pension · NHS · Social care',cls:'wiify-elderly'},
+    {key:'women',emoji:'👩',name:'Women & Caregivers',sub:'Rights · Childcare · Equal pay',cls:'wiify-women'},
+    {key:'minority',emoji:'🌍',name:'Minority & Faith',sub:'Civil rights · Safety · Representation',cls:'wiify-minority'},
+  ];
+
+  var h=`<div class="dSec" style="background:linear-gradient(135deg,rgba(15,28,46,.03),rgba(26,95,168,.02));">
+    <div class="dHead">🎯 What's In It For You — By Group</div>
+    <div class="dSub">A forensic snapshot of how ${esc(name)}'s policies affect each major group — with red flag triggers based on the data above</div>
+    <div class="wiifyGrid">`;
+
+  buckets.forEach(function(b){
+    const v=verdict(b.key);
+    const text=isFarRight?v.far:isRight?v.neg:v.pos;
+    const flagCls=v.flag||'grey';
+    const trigger=v.trigger||'';
+    h+=`<div class="wiifyCard ${b.cls}">
+      <div class="wiifyTop">
+        <div class="wiifyEmoji">${b.emoji}</div>
+        <div><div class="wiifyLabel">${esc(b.sub)}</div><div class="wiifyName">${esc(b.name)}</div></div>
+      </div>
+      <div class="wiifyMetric">Key forensic metric</div>
+      <div class="wiifyVerdict">${esc(PERSONAS[b.key]?.keyMetric||'')}</div>
+      <div class="wiifyVerdict" style="margin-top:6px;">${esc(text)}</div>
+      <div class="wiifyFlag ${flagCls}">${esc(trigger)}</div>
+    </div>`;
+  });
+
+  h+=`</div>
+    <div style="font-size:10px;color:var(--muted);margin-top:10px;font-style:italic;line-height:1.65;">
+      🎯 To get a deeper, personalised analysis for your specific situation — scroll down to the AI Boost section below and select "I am..." to personalise the forensic prompt for your category.
+    </div>
+  </div>`;
+  return h;
+}
+
 function findKB(partyName){
   // Exact match
   if(PARTY_KB[partyName]) return PARTY_KB[partyName];
@@ -3524,7 +3947,24 @@ party position. A voter's experience of ${party.n} in ${locationStr}
 may be very different from the national narrative. Analyse both.
 ================================================================`;
 
-  const finalPrompt = isLocal ? localPrompt : nationalPrompt;
+  // Append persona deep-dive if one is selected
+  var personaBlock='';
+  if(selectedPersona&&PERSONAS[selectedPersona]){
+    var p=PERSONAS[selectedPersona];
+    personaBlock=`
+
+================================================================
+PERSONALISED DEEP-DIVE — ${p.emoji} ${p.name.toUpperCase()}
+================================================================
+The user has identified as: ${p.name} (${p.subtitle})
+Key Forensic Metric: ${p.keyMetric}
+Red Flag Trigger: ${p.redFlag}
+
+${p.promptAddition}
+================================================================`;
+  }
+
+  const finalPrompt=(isLocal ? localPrompt : nationalPrompt)+personaBlock;
   document.getElementById('promptBox').textContent = finalPrompt;
   updateAIBoosterButtons(finalPrompt);
 }
@@ -3535,8 +3975,11 @@ function updateAIBoosterButtons(prompt){
   if(activeAIs.size===0){
     document.getElementById('boosterStatusText').textContent=t('boosterNone');
     document.getElementById('promptArea').style.display='none';
+    document.getElementById('personaSection').style.display='none';
     return;
   }
+  // Show persona selector when AI is selected
+  document.getElementById('personaSection').style.display='block';
   document.getElementById('promptArea').style.display='block';
   document.getElementById('promptBox').style.display='block';
   const AI_NAMES={chatgpt:'ChatGPT',gemini:'Gemini',claude:'Claude',grok:'Grok',perplexity:'Perplexity',copilot:'Copilot',deepseek:'DeepSeek',mistral:'Mistral'};
@@ -3565,7 +4008,7 @@ function toggleAI(tile){
   const ck=document.getElementById('ck-'+id);
   if(tile.classList.toggle('active')){activeAIs.add(id);ck.textContent='✓';}
   else{activeAIs.delete(id);ck.textContent='';}
-  localStorage.setItem('vl_ais',JSON.stringify([...activeAIs]));
+  // AI selections not stored
   if(selParty&&selCountry){
     const cfg=CC[selCountry];
     const topics=[...document.querySelectorAll('.tBtn.on')].map(b=>b.dataset.t);
