@@ -3,7 +3,8 @@
 <head>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-CPZVP7JQ5C"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-CPZVP7JQ5C');</script>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8"/>
+<meta name="google" content="notranslate"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>VoterLens — Political Accountability Engine</title>
 <meta name="description" content="VoterLens removes the veil from political promises. Real data. Full party dossier. Free."/>
 <meta name="robots" content="index,follow,max-image-preview:large"/>
@@ -947,7 +948,7 @@ const TRANSLATIONS = {
 // All others: Google Translate Element (free, no key,
 //   watches entire DOM including dynamically rendered content)
 // ═══════════════════════════════════════════════════════
-const MANUAL_LANGS = new Set(['en','it','fr','de','es']);
+const MANUAL_LANGS = new Set(['en']); // Only English -- all others use GT
 
 // GT language codes (most match ours, a few differ)
 const GT_LANG_CODE = {
@@ -1018,7 +1019,7 @@ function setTranslateStatus(visible, text){
 // Re-apply GT translation to catch newly visible content
 // Simply re-fires the combo change — GT re-translates the full visible DOM
 function _gtNudge(){
-  if(currentLang==='en' || MANUAL_LANGS.has(currentLang)) return;
+  if(currentLang==='en') return;
   const sel=document.querySelector('.goog-te-combo');
   if(!sel) return;
   const gtCode=GT_LANG_CODE[currentLang]||currentLang;
@@ -1039,7 +1040,7 @@ function _gtNudge(){
 }
 
 function retranslateNew(container){
-  if(currentLang==='en' || MANUAL_LANGS.has(currentLang)) return;
+  if(currentLang==='en') return;
   setTimeout(_gtNudge, 300);
 }
 function ensureLang(lc){ return switchLanguage(lc); }
@@ -1050,7 +1051,7 @@ function ensureLang(lc){ return switchLanguage(lc); }
 (function(){
   var _moTimer=null;
   var observer=new MutationObserver(function(mutations){
-    if(!_gtActive||currentLang==='en'||MANUAL_LANGS.has(currentLang)) return;
+    if(!_gtActive||currentLang==='en') return;
     // Debounce — don't fire for every single node, wait for burst to finish
     clearTimeout(_moTimer);
     _moTimer=setTimeout(function(){
@@ -1068,25 +1069,18 @@ function ensureLang(lc){ return switchLanguage(lc); }
 
 // ── Main language switch ──────────────────────────────────
 function switchLanguage(langCode){
-  if(langCode === 'en'){
-    _resetGT();
-    return;
-  }
-  if(MANUAL_LANGS.has(langCode)){
-    _resetGT(); // ensure GT not interfering
-    // applyTranslations() already called by onLangChange
-    return;
-  }
-  // Non-manual: use Google Translate
-  const langName = document.getElementById('langSelect')
-    ?.options[document.getElementById('langSelect').selectedIndex]?.text || langCode;
-  setTranslateStatus(true, '🌐 Translating into ' + langName + '…');
+  if(langCode === 'en'){ _resetGT(); return; }
+  // ALL non-English go through GT -- user selection overrides browser language
+  const sel = document.getElementById('langSelect');
+  const langName = sel ? sel.options[sel.selectedIndex].text : langCode;
+  setTranslateStatus(true, 'Translating into ' + langName + '...');
   _applyGTLang(langCode);
 }
 
 // All non-manual languages use GT — set to English in TRANSLATIONS
 // (GT translates the visual page; our TRANSLATIONS just drives data-i18n for manual langs)
-['pt','pl','nl','sv','el','ro','cs','tr','ar','ja','ko','hi','id','uk'].forEach(l=>{
+// All non-English start as English; GT translates the full page
+['it','fr','de','es','pt','pl','nl','sv','el','ro','cs','tr','ar','ja','ko','hi','id','uk'].forEach(l=>{
   TRANSLATIONS[l] = TRANSLATIONS.en;
 });
 
@@ -1553,25 +1547,20 @@ window.addEventListener('DOMContentLoaded',()=>{
 function onLangChange(){
   currentLang = document.getElementById('langSelect').value;
 
-  // html[lang] stays "en" — page source is English, GT handles visual translation
-  // Changing html[lang] conflicts with GT and confuses browser auto-translate
-
-  if(MANUAL_LANGS.has(currentLang)){
-    // Instant: use our hardcoded TRANSLATIONS, reset GT if it was active
+  if(currentLang === 'en'){
     applyTranslations();
+    _resetGT();
     if(pList.length && CC[selCountry]) renderParties(pList, CC[selCountry].f);
     if(selParty && document.getElementById('dossier').style.display !== 'none'){
       const cfg = CC[selCountry];
       const topics = [...document.querySelectorAll('.tBtn.on')].map(b=>b.dataset.t);
       if(cfg && topics.length) renderDossier(selParty, cfg, topics, wbD, whoV);
     }
-    // Reset GT (it may have been active before)
-    switchLanguage(currentLang);
   } else {
-    // Non-manual: keep English data-i18n strings, let GT translate visually
-    applyTranslations(); // applies English strings (data-i18n stays English — GT will translate them)
+    // ALL non-English: GT translates everything
+    // User dropdown selection always wins -- browser language is irrelevant
+    applyTranslations();
     if(pList.length && CC[selCountry]) renderParties(pList, CC[selCountry].f);
-    // GT translates EVERYTHING including dossier — no need to re-render
     switchLanguage(currentLang);
   }
   document.getElementById('analyseBtn').textContent = t('analyseBtn');
