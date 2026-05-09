@@ -1713,12 +1713,18 @@ async function onCC(){
 
 /* ── LOAD PARTIES ── */
 async function loadParties(cfg,code){
+  // PDB is always the source of truth — curated, correct size, right parties
+  const pdbList=(PDB[code]||[]).map(p=>({n:p.n,s:p.s,i:p.i,l:p.l||'',seats:'',gov:p.gov}));
+  if(pdbList.length>=3) return pdbList;
+  // Only use Wikidata if we have no PDB for this country
   try{
     const sparql=`SELECT DISTINCT ?p ?pLabel ?ideLabel ?seats ?leadLabel WHERE {
 ?p wdt:P31/wdt:P279* wd:Q7278;wdt:P17 wd:${cfg.q}.
-OPTIONAL{?p wdt:P1387 ?ide.}OPTIONAL{?p wdt:P1342 ?seats.}OPTIONAL{?p wdt:P488 ?lead.}
+?p wdt:P1342 ?seats.
+FILTER(?seats > 0)
+OPTIONAL{?p wdt:P1387 ?ide.}OPTIONAL{?p wdt:P488 ?lead.}
 SERVICE wikibase:label{bd:serviceParam wikibase:language "en".}
-} ORDER BY DESC(?seats) LIMIT 30`;
+} ORDER BY DESC(?seats) LIMIT 12`;
     const r=await fetch('https://query.wikidata.org/sparql?query='+encodeURIComponent(sparql)+'&format=json',{headers:{Accept:'application/sparql-results+json'},signal:AbortSignal.timeout(9000)});
     const j=await r.json();
     const seen=new Set();const out=[];
@@ -1729,14 +1735,9 @@ SERVICE wikibase:label{bd:serviceParam wikibase:language "en".}
       if(!name||name.match(/^Q\d+$/)||name.length<2) continue;
       out.push({n:name,s:toSp(b.ideLabel?.value||''),i:b.ideLabel?.value||'',l:b.leadLabel?.value||'',seats:b.seats?.value||''});
     }
-    if(out.length>=3){
-      // Merge with hardcoded for gov flag and better leader info
-      const hc=PDB[code]||[];
-      out.forEach(p=>{const hcp=hc.find(h=>h.n===p.n);if(hcp){p.gov=hcp.gov;if(!p.l&&hcp.l) p.l=hcp.l;}});
-      return out;
-    }
+    if(out.length>=3) return out;
   }catch(e){}
-  return (PDB[code]||[]).map(p=>({n:p.n,s:p.s,i:p.i,l:p.l||'',seats:'',gov:p.gov}));
+  return pdbList;
 }
 
 function toSp(s){
