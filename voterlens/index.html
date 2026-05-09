@@ -411,7 +411,7 @@ select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.10);}
     <div class="field">
       <div class="fieldLabel" data-i18n="labelCountry">Country</div>
       <select id="countrySelect" translate="no" class="notranslate">
-        <option value="" data-i18n-opt="selectCountry">— Select a country —</option>
+        <option value="" data-i18n-opt="selectCountry" class="notranslate" translate="no">— Select a country —</option>
         <optgroup label="🇪🇺 Europe">
           <option value="GB">🇬🇧 United Kingdom</option><option value="IT">🇮🇹 Italy</option>
           <option value="FR">🇫🇷 France</option><option value="DE">🇩🇪 Germany</option>
@@ -1079,9 +1079,12 @@ function switchLanguage(langCode){
 
 // All non-manual languages use GT — set to English in TRANSLATIONS
 // (GT translates the visual page; our TRANSLATIONS just drives data-i18n for manual langs)
-// All non-English start as English; GT translates the full page
-['it','fr','de','es','pt','pl','nl','sv','el','ro','cs','tr','ar','ja','ko','hi','id','uk'].forEach(l=>{
-  TRANSLATIONS[l] = TRANSLATIONS.en;
+// Languages with full TRANSLATIONS blocks: en, it, fr, de, es
+// These have real content — do NOT overwrite with English
+// All other languages: start as English copy (GT translates them visually)
+['pt','pl','nl','sv','el','ro','cs','tr','ar','ja','ko','hi','id','uk'].forEach(l=>{
+  // Make a shallow copy so setting keys doesn't affect TRANSLATIONS.en
+  TRANSLATIONS[l] = Object.assign({}, TRANSLATIONS.en);
 });
 
 let currentLang='en';
@@ -1092,12 +1095,17 @@ function applyTranslations(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const key=el.dataset.i18n;
     const val=t(key);
-    if(val) el.innerHTML=val;
+    if(val){ el.innerHTML=val; }
+    // Mark as notranslate so GT doesn't re-translate already-correct text
+    el.setAttribute('translate','no');
+    el.classList.add('notranslate');
   });
   document.querySelectorAll('[data-i18n-opt]').forEach(el=>{
     const key=el.dataset.i18nOpt;
     const val=t(key);
-    if(val) el.textContent=val;
+    if(val){ el.textContent=val; }
+    el.setAttribute('translate','no');
+    el.classList.add('notranslate');
   });
   // html[lang] intentionally stays "en" — changing it fights with GT Element
   // GT translates visually regardless of html[lang]
@@ -1464,6 +1472,55 @@ TRANSLATIONS.de.specFR='Rechtsextrem';TRANSLATIONS.de.specP='Populistisch';
 TRANSLATIONS.es.specFL='Extrema Izquierda';TRANSLATIONS.es.specL='Izquierda';TRANSLATIONS.es.specCL='Centro-Izquierda';
 TRANSLATIONS.es.specC='Centro';TRANSLATIONS.es.specCR='Centro-Derecha';TRANSLATIONS.es.specR='Derecha';
 TRANSLATIONS.es.specFR='Extrema Derecha';TRANSLATIONS.es.specP='Populista';
+// Spectrum labels for GT-translated languages (used by specLabel() before GT runs)
+// These set the correct terms so party grid shows right label immediately
+const _specByLang={
+  pt:{fl:'Extrema Esquerda',l:'Esquerda',cl:'Centro-Esquerda',c:'Centro',cr:'Centro-Direita',r:'Direita',fr:'Extrema Direita',p:'Populista'},
+  pl:{fl:'Skrajna Lewica',l:'Lewica',cl:'Centrum-Lewica',c:'Centrum',cr:'Centrum-Prawica',r:'Prawica',fr:'Skrajna Prawica',p:'Populistyczny'},
+  nl:{fl:'Extreem Links',l:'Links',cl:'Centrum-Links',c:'Centrum',cr:'Centrum-Rechts',r:'Rechts',fr:'Extreem Rechts',p:'Populistisch'},
+  sv:{fl:'Yttersta Vänster',l:'Vänster',cl:'Vänstercentrum',c:'Centrum',cr:'Högercentrum',r:'Höger',fr:'Yttersta Höger',p:'Populistisk'},
+  el:{fl:'Άκρα Αριστερά',l:'Αριστερά',cl:'Κεντροαριστερά',c:'Κέντρο',cr:'Κεντροδεξιά',r:'Δεξιά',fr:'Άκρα Δεξιά',p:'Λαϊκισμός'},
+  ro:{fl:'Extremă Stânga',l:'Stânga',cl:'Centru-Stânga',c:'Centru',cr:'Centru-Dreapta',r:'Dreapta',fr:'Extremă Dreapta',p:'Populist'},
+  cs:{fl:'Krajní Levice',l:'Levice',cl:'Střed-Levice',c:'Střed',cr:'Střed-Pravice',r:'Pravice',fr:'Krajní Pravice',p:'Populistický'},
+  tr:{fl:'Aşırı Sol',l:'Sol',cl:'Merkez-Sol',c:'Merkez',cr:'Merkez-Sağ',r:'Sağ',fr:'Aşırı Sağ',p:'Popülist'},
+  ar:{fl:'أقصى اليسار',l:'يسار',cl:'وسط يسار',c:'وسط',cr:'وسط يمين',r:'يمين',fr:'أقصى اليمين',p:'شعبوي'},
+  ja:{fl:'極左',l:'左翼',cl:'中道左派',c:'中道',cr:'中道右派',r:'右翼',fr:'極右',p:'ポピュリスト'},
+  ko:{fl:'극좌',l:'좌파',cl:'중도좌파',c:'중도',cr:'중도우파',r:'우파',fr:'극우',p:'포퓰리스트'},
+  hi:{fl:'अति वामपंथी',l:'वामपंथी',cl:'मध्य-वाम',c:'मध्यमार्गी',cr:'मध्य-दक्षिण',r:'दक्षिणपंथी',fr:'अति दक्षिणपंथी',p:'लोकलुभावन'},
+  id:{fl:'Kiri Jauh',l:'Kiri',cl:'Tengah-Kiri',c:'Tengah',cr:'Tengah-Kanan',r:'Kanan',fr:'Kanan Jauh',p:'Populis'},
+  uk:{fl:'Крайні ліві',l:'Ліві',cl:'Центр-ліві',c:'Центр',cr:'Центр-праві',r:'Праві',fr:'Крайні праві',p:'Популіст'},
+};
+// Apply spectrum labels to each language's TRANSLATIONS
+Object.keys(_specByLang).forEach(function(lang){
+  var s=_specByLang[lang];
+  if(!TRANSLATIONS[lang]) TRANSLATIONS[lang]=Object.assign({},TRANSLATIONS.en);
+  TRANSLATIONS[lang].specFL=s.fl; TRANSLATIONS[lang].specL=s.l;
+  TRANSLATIONS[lang].specCL=s.cl; TRANSLATIONS[lang].specC=s.c;
+  TRANSLATIONS[lang].specCR=s.cr; TRANSLATIONS[lang].specR=s.r;
+  TRANSLATIONS[lang].specFR=s.fr; TRANSLATIONS[lang].specP=s.p;
+  TRANSLATIONS[lang].specU='?';
+});
+// Key UI strings for GT languages (show correct text before GT finishes loading)
+const _uiByLang={
+  pt:{selectCountry:'— Selecione um país —',partyEmpty:'👆 Selecione um país acima',partyLoading:'⏳ Carregando partidos…',inPower:'NO PODER',analyseBtn:'🔍 Gerar Dossiê Completo'},
+  pl:{selectCountry:'— Wybierz kraj —',partyEmpty:'👆 Wybierz kraj powyżej',partyLoading:'⏳ Ładowanie partii…',inPower:'U WŁADZY',analyseBtn:'🔍 Generuj Pełny Raport'},
+  nl:{selectCountry:'— Selecteer een land —',partyEmpty:'👆 Selecteer een land hierboven',partyLoading:'⏳ Partijen laden…',inPower:'AAN DE MACHT',analyseBtn:'🔍 Volledig Dossier Genereren'},
+  sv:{selectCountry:'— Välj ett land —',partyEmpty:'👆 Välj ett land ovan',partyLoading:'⏳ Laddar partier…',inPower:'VID MAKTEN',analyseBtn:'🔍 Generera Fullständigt Dossier'},
+  el:{selectCountry:'— Επιλέξτε χώρα —',partyEmpty:'👆 Επιλέξτε χώρα παραπάνω',partyLoading:'⏳ Φόρτωση κομμάτων…',inPower:'ΣΤΗ ΕΞΟΥΣΙΑ',analyseBtn:'🔍 Δημιουργία Πλήρους Ντοσιέ'},
+  ro:{selectCountry:'— Selectați o țară —',partyEmpty:'👆 Selectați o țară mai sus',partyLoading:'⏳ Se încarcă partidele…',inPower:'LA PUTERE',analyseBtn:'🔍 Generați Dosarul Complet'},
+  cs:{selectCountry:'— Vyberte zemi —',partyEmpty:'👆 Vyberte zemi výše',partyLoading:'⏳ Načítání stran…',inPower:'U MOCI',analyseBtn:'🔍 Generovat Úplnou Zprávu'},
+  tr:{selectCountry:'— Ülke seçin —',partyEmpty:'👆 Yukarıdan bir ülke seçin',partyLoading:'⏳ Partiler yükleniyor…',inPower:'İKTİDARDA',analyseBtn:'🔍 Tam Dosya Oluştur'},
+  ar:{selectCountry:'— اختر دولة —',partyEmpty:'👆 اختر دولة من فوق',partyLoading:'⏳ جارٍ تحميل الأحزاب…',inPower:'في السلطة',analyseBtn:'🔍 إنشاء ملف كامل'},
+  ja:{selectCountry:'— 国を選択 —',partyEmpty:'👆 上から国を選択してください',partyLoading:'⏳ 政党を読み込み中…',inPower:'与党',analyseBtn:'🔍 完全なドシエを生成'},
+  ko:{selectCountry:'— 국가 선택 —',partyEmpty:'👆 위에서 국가를 선택하세요',partyLoading:'⏳ 정당 로딩 중…',inPower:'집권',analyseBtn:'🔍 전체 보고서 생성'},
+  hi:{selectCountry:'— देश चुनें —',partyEmpty:'👆 ऊपर से देश चुनें',partyLoading:'⏳ पार्टियां लोड हो रही हैं…',inPower:'सत्ता में',analyseBtn:'🔍 पूरी रिपोर्ट बनाएं'},
+  id:{selectCountry:'— Pilih negara —',partyEmpty:'👆 Pilih negara di atas',partyLoading:'⏳ Memuat partai…',inPower:'BERKUASA',analyseBtn:'🔍 Buat Laporan Lengkap'},
+  uk:{selectCountry:'— Оберіть країну —',partyEmpty:'👆 Оберіть країну вище',partyLoading:'⏳ Завантаження партій…',inPower:'ПРИ ВЛАДІ',analyseBtn:'🔍 Створити Повне Досьє'},
+};
+Object.keys(_uiByLang).forEach(function(lang){
+  if(!TRANSLATIONS[lang]) TRANSLATIONS[lang]=Object.assign({},TRANSLATIONS.en);
+  Object.assign(TRANSLATIONS[lang], _uiByLang[lang]);
+});
 
 function specLabel(s){ return t(SPEC_MAP_KEYS[s]||'specU'); }
 const SPEC_MAP=SPEC_MAP_EN; // kept for backward compat — use specLabel() in rendering
@@ -1636,10 +1693,10 @@ function renderParties(list,flag){
   if(!list.length){g.innerHTML=`<div class="pEmpty">${t('partyEmpty')}</div>`;return;}
   g.innerHTML=list.map((p,i)=>`
     <button class="pBtn" data-i="${i}">
-      ${p.gov?`<div class="pGovBadge">${t('inPower')}</div>`:''}
+      ${p.gov?`<div class="pGovBadge notranslate" translate="no">${t('inPower')}</div>`:''}
       <span class="pFlag">${flag}</span>
       <span class="pName">${esc(p.n)}</span>
-      <span class="pSpec ${SPEC_CSS[p.s]||'sp-u'}">${specLabel(p.s)}</span>
+      <span class="pSpec ${SPEC_CSS[p.s]||'sp-u'} notranslate" translate="no">${specLabel(p.s)}</span>
     </button>`).join('');
   g.querySelectorAll('.pBtn').forEach(btn=>{
     btn.addEventListener('click',()=>{
