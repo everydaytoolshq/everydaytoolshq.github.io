@@ -976,66 +976,147 @@ const _UI_STRINGS={
   aiDeepseek:"Strong reasoning.",aiMistral:"European AI.",
 };
 
-// MyMemory free translation API — no key, CORS enabled, 5000 chars/day/IP
-// Batches all strings in one call per language
+// MyMemory free API — no key, CORS enabled
+// Splits text into ≤400 char chunks to stay within per-call limits
+async function _mmTranslate(text,langCode){
+  if(!text||!text.trim()||langCode==='en') return text;
+  try{
+    const url=`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text.slice(0,450))}&langpair=en|${langCode}&de=voterlens@civic`;
+    const r=await fetch(url,{signal:AbortSignal.timeout(7000)});
+    const d=await r.json();
+    if(d.responseStatus===200&&d.responseData?.translatedText){
+      const tr=d.responseData.translatedText;
+      // MyMemory sometimes echoes the source — detect and reject
+      return (tr.toLowerCase()===text.toLowerCase())?text:tr;
+    }
+  }catch(e){}
+  return text;
+}
+
+// Translate all UI key strings for a language code (for data-i18n elements)
 async function _fetchTranslations(langCode){
   if(_tlCache[langCode]) return _tlCache[langCode];
-  // Build a single pipe-delimited batch string to minimise API calls
+  const result={..._UI_STRINGS};
+  // Batch into groups of ~400 chars joined by ||| separator
   const keys=Object.keys(_UI_STRINGS);
-  const texts=Object.values(_UI_STRINGS);
-  // MyMemory has a 500 char limit per call — we do individual calls for key strings
-  // and use Google Translate element for the rest of the page
-  const result={..._UI_STRINGS}; // start with English
-  const priority=['step1title','step2title','step3title','analyseBtn','inPower',
-    'secSummary','secPulse','secData','secVeil','secHistory','secWarnings',
-    'secPromises','secWallet','sec1min','secVault','partyEmpty','partyLoading',
-    'tImmig','tHealth','tEcon','tHousing','tEdu','tClimate','tCrime',
-    'tWelfare','tTax','tDem','tForeign','tCorrupt',
-    'trustScore','feasScore','transpScore','rightsScore',
-    'promKept','promBroken','promFalse','walPoor','walMid',
-    'govPulse','oppPulse','feasYes','feasMaybe','feasNo','feasFalse',
-    'impactPoor','impactMid','impactRich','copyPrompt','openAI',
-    'boosterTitle','boosterNone','intro','h1pre','h1em',
-    'labelCountry','labelLang','simple','standard','expert'];
-  // Translate priority strings via MyMemory
-  const batch=priority.map(k=>_UI_STRINGS[k]).join(' ||| ');
-  try{
-    const url=`https://api.mymemory.translated.net/get?q=${encodeURIComponent(batch)}&langpair=en|${langCode}&de=voterlens@civic.tool`;
-    const r=await fetch(url,{signal:AbortSignal.timeout(8000)});
-    const d=await r.json();
-    if(d.responseStatus===200){
-      const translated=(d.responseData.translatedText||'').split(' ||| ');
-      priority.forEach((k,i)=>{if(translated[i]&&translated[i].trim()) result[k]=translated[i].trim();});
-    }
-  }catch(e){console.warn('Translation API unavailable — using English');}
-  // Copy spectrum labels from English for now (rarely need translation)
+  const CHUNK=6; // keys per API call
+  for(let i=0;i<keys.length;i+=CHUNK){
+    const slice=keys.slice(i,i+CHUNK);
+    const batch=slice.map(k=>_UI_STRINGS[k]).join(' ||| ');
+    const tr=await _mmTranslate(batch,langCode);
+    const parts=tr.split('|||').map(s=>s.trim());
+    slice.forEach((k,j)=>{if(parts[j]&&parts[j].length>0) result[k]=parts[j];});
+    // Small delay to be polite to the free API
+    if(i+CHUNK<keys.length) await new Promise(r=>setTimeout(r,120));
+  }
   _tlCache[langCode]=result;
   return result;
 }
 
-// Ensure all languages resolve — manual ones instantly, others via API
-async function ensureLang(langCode){
-  if(MANUAL_LANGS.has(langCode)) return;
-  if(_tlCache[langCode]) { TRANSLATIONS[langCode]=_tlCache[langCode]; return; }
-  // Show translating indicator
-  const statusEl=document.getElementById('translateStatus');
-  const statusTxt=document.getElementById('translateStatusText');
-  if(statusEl){ statusEl.style.display='flex'; }
-  if(statusTxt){ statusTxt.textContent='🌐 Translating interface into '+document.getElementById('langSelect').options[document.getElementById('langSelect').selectedIndex].text+'…'; }
-  // Set English immediately while we fetch
-  TRANSLATIONS[langCode]=TRANSLATIONS.en;
-  const translated=await _fetchTranslations(langCode);
-  TRANSLATIONS[langCode]=translated;
-  // Hide indicator
-  if(statusEl) statusEl.style.display='none';
-  // Re-apply if this is still the active language
-  if(currentLang===langCode){
-    applyTranslations();
-    if(pList.length&&CC[selCountry]) renderParties(pList,CC[selCountry].f);
+// Translate all visible text in a DOM container via MyMemory
+// Walks text nodes, batches them, replaces in place
+async function translateContainer(container,langCode){
+  if(!container||MANUAL_LANGS.has(langCode)||langCode==='en') return;
+  // Collect all text nodes with meaningful content
+  const walker=document.createTreeWalker(
+    container,
+    NodeFilter.SHOW_TEXT,
+    {acceptNode:n=>{
+      const p=n.parentElement;
+      if(!p) return NodeFilter.FILTER_REJECT;
+      const tag=p.tagName;
+      // Skip script, style, code, input
+      if(['SCRIPT','STYLE','CODE','INPUT','TEXTAREA','SELECT'].includes(tag)) return NodeFilter.FILTER_REJECT;
+      if(p.classList.contains('promptBox')) return NodeFilter.FILTER_REJECT;
+      if(!n.textContent.trim()||n.textContent.trim().length<3) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }}
+  );
+  const nodes=[];
+  let node;
+  while((node=walker.nextNode())) nodes.push(node);
+  if(!nodes.length) return;
+
+  // Process in batches of 5 nodes joined by |||
+  const BATCH=5;
+  for(let i=0;i<nodes.length;i+=BATCH){
+    const slice=nodes.slice(i,i+BATCH);
+    const texts=slice.map(n=>n.textContent.trim());
+    const joined=texts.join(' ||| ');
+    if(joined.length<5) continue;
+    const tr=await _mmTranslate(joined.slice(0,450),langCode);
+    if(!tr||tr===joined) continue;
+    const parts=tr.split('|||').map(s=>s.trim());
+    slice.forEach((n,j)=>{
+      if(parts[j]&&parts[j].length>0&&parts[j]!==n.textContent.trim()){
+        n.textContent=n.textContent.replace(n.textContent.trim(),parts[j]);
+      }
+    });
+    // Tiny delay between batches
+    if(i+BATCH<nodes.length) await new Promise(r=>setTimeout(r,80));
   }
 }
 
-// Initialise: all non-manual languages start as English, fetched on demand
+// Translate the entire page — called when language changes
+// Translates: static data-i18n elements + all visible dynamic content
+async function translateFullPage(langCode){
+  if(langCode==='en') return; // English is source — no translation needed
+  if(MANUAL_LANGS.has(langCode)){
+    // Manual translation — already applied by applyTranslations()
+    return;
+  }
+  // Show progress
+  const statusEl=document.getElementById('translateStatus');
+  const statusTxt=document.getElementById('translateStatusText');
+  const langName=document.getElementById('langSelect')?.options[document.getElementById('langSelect').selectedIndex]?.text||langCode;
+  if(statusEl){ statusEl.style.display='flex'; }
+  if(statusTxt){ statusTxt.textContent='🌐 Translating into '+langName+'…'; }
+
+  // 1. Translate UI strings (data-i18n elements)
+  const uiTranslations=await _fetchTranslations(langCode);
+  TRANSLATIONS[langCode]=uiTranslations;
+  applyTranslations();
+
+  // 2. Translate all currently visible dynamic content
+  const toTranslate=[
+    document.getElementById('dossier'),
+    document.querySelector('.card:last-of-type'), // Q&A card
+    document.querySelector('.howCard'),
+    document.querySelector('.boosterCard'),
+  ].filter(Boolean);
+
+  for(const el of toTranslate){
+    if(el&&el.style.display!=='none'&&el.offsetParent!==null){
+      await translateContainer(el,langCode);
+    }
+  }
+
+  if(statusEl) statusEl.style.display='none';
+}
+
+async function ensureLang(langCode){
+  if(MANUAL_LANGS.has(langCode)){
+    // Already in TRANSLATIONS — just apply
+    applyTranslations();
+    return;
+  }
+  if(_tlCache[langCode]){
+    TRANSLATIONS[langCode]=_tlCache[langCode];
+    applyTranslations();
+    return;
+  }
+  await translateFullPage(langCode);
+}
+
+// Called after any new content is rendered into the DOM
+// Re-translates that specific container if language is active
+async function retranslateNew(container){
+  if(!container) return;
+  if(currentLang==='en'||MANUAL_LANGS.has(currentLang)) return;
+  await translateContainer(container,currentLang);
+}
+
+// Initialise: all non-manual languages start as English, translated on demand
 ['pt','pl','nl','sv','el','ro','cs','tr','ar','ja','ko','hi','id','uk'].forEach(l=>{
   TRANSLATIONS[l]=TRANSLATIONS.en;
 });
@@ -1502,26 +1583,32 @@ window.addEventListener('DOMContentLoaded',()=>{
 
 async function onLangChange(){
   currentLang=document.getElementById('langSelect').value;
-  // Set html lang immediately — triggers browser's built-in translate for any content we miss
   document.getElementById('htmlRoot').lang=currentLang;
-  // For non-manual languages, fetch translations via API then re-apply
-  if(!MANUAL_LANGS.has(currentLang)){
-    // Apply English immediately so UI isn't blank while fetching
+
+  if(MANUAL_LANGS.has(currentLang)){
+    // Instant — no network needed
     applyTranslations();
-    await ensureLang(currentLang);
-    // ensureLang re-applies automatically when done
+    if(pList.length&&CC[selCountry]) renderParties(pList,CC[selCountry].f);
+    if(selParty&&document.getElementById('dossier').style.display!=='none'){
+      const cfg=CC[selCountry];
+      const topics=[...document.querySelectorAll('.tBtn.on')].map(b=>b.dataset.t);
+      if(cfg&&topics.length) renderDossier(selParty,cfg,topics,wbD,whoV);
+    }
   } else {
+    // Apply English immediately so nothing goes blank
     applyTranslations();
-  }
-  // Re-render dynamic elements in new language
-  if(pList.length){
-    const cfg=CC[selCountry];
-    if(cfg) renderParties(pList,cfg.f);
-  }
-  if(selParty && document.getElementById('dossier').style.display!=='none'){
-    const cfg=CC[selCountry];
-    const topics=[...document.querySelectorAll('.tBtn.on')].map(b=>b.dataset.t);
-    if(cfg && topics.length) renderDossier(selParty,cfg,topics,wbD,whoV);
+    if(pList.length&&CC[selCountry]) renderParties(pList,CC[selCountry].f);
+    // Now translate everything visible on the page
+    await translateFullPage(currentLang);
+    // If dossier is visible, also re-translate it (translateFullPage covers it but refresh ensures it)
+    if(selParty&&document.getElementById('dossier').style.display!=='none'){
+      const cfg=CC[selCountry];
+      const topics=[...document.querySelectorAll('.tBtn.on')].map(b=>b.dataset.t);
+      if(cfg&&topics.length){
+        renderDossier(selParty,cfg,topics,wbD,whoV);
+        // renderDossier calls retranslateNew internally
+      }
+    }
   }
   document.getElementById('analyseBtn').textContent=t('analyseBtn');
 }
@@ -1893,6 +1980,17 @@ function renderDossier(party, cfg, topics, wb, who){
   // Show AI booster and update local country banner
   buildAIBooster(party,cfg,topics,wb,who);
   document.getElementById('boosterCard').style.display='block';
+
+  // Translate all newly rendered content if a non-English language is active
+  if(currentLang!=='en'&&!MANUAL_LANGS.has(currentLang)){
+    // Small delay to let DOM paint first
+    setTimeout(()=>retranslateNew(el),300);
+    // Also translate the country status and Q&A cards that were appended
+    setTimeout(()=>{
+      document.querySelectorAll('.card').forEach(c=>retranslateNew(c));
+      retranslateNew(document.querySelector('.howCard'));
+    },600);
+  }
   if(selCountry&&CC[selCountry]){
     var bn=document.getElementById('localCountryName');
     var bf=document.getElementById('localCountryFlag');
@@ -3824,9 +3922,25 @@ function buildAIBooster(party, cfg, topics, wb, who){
 
   const topicList=topics.map(k=>topicLabel(k)).join(', ');
 
+
+  // Map lang code to full language name for AI prompt
+  const LANG_NAMES={
+    en:'English',it:'Italian',fr:'French',de:'German',es:'Spanish',
+    pt:'Portuguese',pl:'Polish',nl:'Dutch',sv:'Swedish',el:'Greek',
+    ro:'Romanian',cs:'Czech',tr:'Turkish',ar:'Arabic',
+    ja:'Japanese',ko:'Korean',hi:'Hindi',id:'Indonesian',uk:'Ukrainian',
+  };
+  const promptLang=LANG_NAMES[currentLang]||'English';
+
   const nationalPrompt=`================================================================
 VOTERLENS FORENSIC POLITICAL ACCOUNTABILITY ANALYSIS
 ================================================================
+
+⚠️  LANGUAGE INSTRUCTION — THIS IS CRITICAL:
+Write your ENTIRE response in ${promptLang}.
+Every section heading, every sentence, every number explanation — all in ${promptLang}.
+The user will copy and paste your response directly. Do NOT translate for them.
+You are the translator. Respond fully in ${promptLang} from the first word to the last.
 
 ROLE: You are VoterLens — a high-precision forensic political accountability AI.
 Your primary objective is to strip away political marketing and expose the 
@@ -3970,6 +4084,12 @@ Your job is forensic diagnosis, not political commentary.
 VOTERLENS LOCAL/REGIONAL ELECTION FORENSIC ANALYSIS
 ================================================================
 
+⚠️  LANGUAGE INSTRUCTION — THIS IS CRITICAL:
+Write your ENTIRE response in ${promptLang}.
+Every section heading, every sentence, every number explanation — all in ${promptLang}.
+The user will copy and paste your response directly. Do NOT translate for them.
+You are the translator. Respond fully in ${promptLang} from the first word to the last.
+
 ROLE: You are VoterLens — a forensic political accountability AI focusing on
 LOCAL and REGIONAL governance. Apply the same rigour as national analysis
 but through the lens of what LOCAL councils/assemblies actually control.
@@ -4097,6 +4217,7 @@ may be very different from the national narrative. Analyse both.
 ================================================================
 PERSONALISED DEEP-DIVE — ${p.emoji} ${p.name.toUpperCase()}
 ================================================================
+⚠️  Write this section in ${promptLang} as well — same language as the rest of your response.
 The user has identified as: ${p.name} (${p.subtitle})
 Key Forensic Metric: ${p.keyMetric}
 Red Flag Trigger: ${p.redFlag}
