@@ -128,6 +128,41 @@ h1{font-size:2rem;font-weight:700;color:#fff;margin-bottom:.4rem}
 .hi-p{font-size:.72rem;color:#7ba3e0}
 .empty{text-align:center;color:#7ba3e0;padding:2.5rem 1rem;font-size:.9rem}
 
+
+/* ── FULL READ */
+.read-chapters{background:#0d1f4c;border-radius:9px;padding:.75rem;margin-bottom:1.25rem}
+.read-chap-title{font-size:.72rem;color:#7ba3e0;margin-bottom:.5rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.read-chap-list{display:flex;flex-wrap:wrap;gap:.35rem}
+.chap-link{font-size:.75rem;background:#1240ab33;color:#88aaff;border:1px solid #1240ab55;border-radius:5px;padding:.2rem .5rem;text-decoration:none;transition:all.15s}
+.chap-link:hover{background:#1240ab66;color:#fff}
+.read-chapter{margin-bottom:2rem;scroll-margin-top:80px}
+.chap-header{display:flex;align-items:center;gap:.65rem;margin-bottom:.9rem;padding-bottom:.6rem;border-bottom:2px solid #1240ab44}
+.chap-num{font-size:.72rem;font-weight:700;color:#d4a017;background:#d4a01720;border:1px solid #d4a01740;border-radius:5px;padding:.2rem .55rem;white-space:nowrap;text-transform:uppercase;letter-spacing:.04em}
+.chap-title{font-size:1rem;font-weight:700;color:#fff;line-height:1.3}
+.read-p{font-size:.88rem;color:#c8d8f0;line-height:1.75;margin-bottom:.9rem}
+.read-p strong{color:#fff}
+.read-p em{color:#d4a017;font-style:normal}
+.read-h4{font-size:.9rem;font-weight:700;color:#88aaff;margin:.9rem 0 .4rem;padding-left:.5rem;border-left:3px solid #1240ab}
+.read-callout{display:flex;gap:.65rem;background:#1240ab15;border:1px solid #1240ab44;border-radius:9px;padding:.8rem;margin:1rem 0;align-items:flex-start}
+.callout-icon{font-size:1.3rem;flex-shrink:0;margin-top:.05rem}
+.callout-text{font-size:.82rem;color:#aac0e0;line-height:1.6}
+.callout-text strong{color:#fff}
+.values-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:1rem 0}
+.value-card{background:#0d1f4c;border:1px solid #1240ab44;border-radius:9px;padding:.7rem}
+.value-icon{font-size:1.2rem;margin-bottom:.3rem}
+.value-name{font-size:.82rem;font-weight:700;color:#fff;margin-bottom:.25rem}
+.value-desc{font-size:.76rem;color:#7ba3e0;line-height:1.4}
+.wives-list{display:flex;flex-direction:column;gap:.3rem;margin:1rem 0}
+.wife-item{display:flex;align-items:center;gap:.6rem;padding:.45rem .75rem;border-radius:7px;background:#ffffff07}
+.wife-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;background:#1240ab;color:#fff}
+.wife-name{flex:1;font-size:.82rem;color:#e8eef8;font-weight:600}
+.wife-fate{font-size:.72rem;font-weight:700;padding:.15rem .45rem;border-radius:4px}
+.divorced .wife-fate{background:#2244aa33;color:#88aaff}
+.executed .wife-fate{background:#aa222233;color:#ff8888}
+.died .wife-fate{background:#44444433;color:#aaaaaa}
+.survived .wife-fate{background:#22aa2233;color:#88dd88}
+@media(max-width:520px){.values-grid{grid-template-columns:1fr}.chap-title{font-size:.88rem}.read-p{font-size:.83rem}}
+
 /* ── PREP MATERIAL ─────────────────────────────────────────── */
 .prep-wrap{max-width:720px;width:100%;margin:0 auto;padding:1.25rem;padding-bottom:4rem}
 .prep-tabs{display:flex;gap:.5rem;margin-bottom:1.1rem}
@@ -309,6 +344,7 @@ h1{font-size:2rem;font-weight:700;color:#fff;margin-bottom:.4rem}
     <button class="btn btn-secondary" onclick="showScreen('categories')">By category</button>
     <button class="btn btn-secondary" onclick="showScreen('hscreen')">Test history</button>
     <button class="btn btn-secondary" onclick="showScreen('cheatsheet')">📋 Cheat sheet (600 Q&amp;A)</button>
+    <button class="btn btn-secondary" onclick="showScreen('prepscreen')">📖 Prep material</button>
   </div>
   <p class="hint">Real test: 24 Qs · 45 min · no hints · Practice: hints shown<br>🔴 High = appears on most real tests · 🔵 Low = rare, for completeness</p>
 </div>
@@ -421,12 +457,344 @@ h1{font-size:2rem;font-weight:700;color:#fff;margin-bottom:.4rem}
 
   <!-- Tab switcher -->
   <div class="prep-tabs">
-    <button class="prep-tab active" id="ptab-pass" onclick="showPrepTab('pass')">🟢 Pass Guaranteed</button>
+    <button class="prep-tab active" id="ptab-read" onclick="showPrepTab('read')">📚 Full Read</button>
+    <button class="prep-tab" id="ptab-pass" onclick="showPrepTab('pass')">🟢 Pass Guaranteed</button>
     <button class="prep-tab" id="ptab-gap" onclick="showPrepTab('gap')">🔴 5% Gap Killer</button>
   </div>
 
+  <!-- ═══ FULL READ ══════════════════════════════════════════════════════════ -->
+  <div id="prep-read" class="prep-content">
+
+<div class="prep-section intro-box" style="background:#22336622;border-color:#334488">
+  <p style="font-size:.9rem;color:#aac8f0"><strong>📚 The Primer</strong> — Read this first, before you memorise anything.</p>
+  <p style="margin-top:.4rem;font-size:.82rem;color:#7ba3e0">This is the full story of the UK — history, government, culture and society — written as a flowing read, not just facts. Once you've read it, everything in the memorisation guides will make sense and stick. Allow 30–45 minutes.</p>
+</div>
+
+<!-- Chapter nav -->
+<div class="read-chapters">
+  <div class="read-chap-title">Jump to chapter:</div>
+  <div class="read-chap-list">
+    <a class="chap-link" href="#ch1">1. Early Britain</a>
+    <a class="chap-link" href="#ch2">2. Medieval England</a>
+    <a class="chap-link" href="#ch3">3. Tudors &amp; Stuarts</a>
+    <a class="chap-link" href="#ch4">4. 18th–19th Century</a>
+    <a class="chap-link" href="#ch5">5. 20th Century</a>
+    <a class="chap-link" href="#ch6">6. Government Today</a>
+    <a class="chap-link" href="#ch7">7. Law &amp; Rights</a>
+    <a class="chap-link" href="#ch8">8. National Identity</a>
+    <a class="chap-link" href="#ch9">9. Culture &amp; Society</a>
+    <a class="chap-link" href="#ch10">10. Famous People</a>
+  </div>
+</div>
+
+<!-- ═══ CHAPTER 1 ═══════════════════════════════════════════════════════════ -->
+<div class="read-chapter" id="ch1">
+  <div class="chap-header">
+    <span class="chap-num">Chapter 1</span>
+    <h3 class="chap-title">Early Britain — From the Ice Age to the Normans</h3>
+  </div>
+
+  <p class="read-p">Britain's story begins around <strong>10,000 years ago</strong>, when the last Ice Age ended and the climate warmed enough for people to settle on the land. For thousands of years Britain was connected to mainland Europe — you could walk across what is now the English Channel. Around <strong>6,000 years ago</strong> rising sea levels finally cut Britain off, making it an island.</p>
+
+  <p class="read-p">These early Britons built remarkable things despite having no metal tools. The most famous is <strong>Stonehenge</strong>, constructed around <strong>3,000 BC</strong> on Salisbury Plain in Wiltshire. Nobody knows exactly why it was built — the leading theory is that it was a religious site, possibly for sun worship or ancestor ceremonies. The massive stones were transported from Wales, hundreds of miles away, an extraordinary feat for the time.</p>
+
+  <p class="read-p">Around <strong>2,000 BC</strong> the Bronze Age arrived — people learned to make tools and weapons from a mixture of copper and tin, called bronze. This was followed by the <strong>Iron Age</strong> around <strong>800 BC</strong>, when iron — stronger and more abundant — replaced bronze. During this period the <strong>Celtic peoples</strong> arrived from mainland Europe, bringing their languages — which survive today as Welsh, Irish Gaelic and Scottish Gaelic — and their distinctive artistic culture.</p>
+
+  <div class="read-callout">
+    <div class="callout-icon">⚔️</div>
+    <div class="callout-text"><strong>Julius Caesar arrived in 55 BC and 54 BC</strong> — but he did NOT conquer Britain. He led two expeditions and then went back to Gaul. Britain remained independent. The actual Roman conquest came in <strong>43 AD</strong> under Emperor Claudius. This is one of the most commonly confused facts on the test.</div>
+  </div>
+
+  <p class="read-p">The Romans transformed Britain. They built an extensive network of straight roads — many still followed by modern roads today — and established towns including Londinium (London), Eboracum (York), Aquae Sulis (Bath) and Deva (Chester). They brought organised government, sanitation, underfloor heating and Latin. But perhaps their most significant long-term contribution was Christianity, which spread during the Roman occupation and would shape Britain for the next 2,000 years.</p>
+
+  <p class="read-p">The Romans also built <strong>Hadrian's Wall</strong> in <strong>122 AD</strong>, stretching 73 miles from the Solway Firth on the west coast to the River Tyne on the east. It was built by Emperor Hadrian to defend the northern frontier of Roman Britain against the Picts — fierce tribes from what is now Scotland. Large sections still stand today and it is a UNESCO World Heritage Site.</p>
+
+  <p class="read-p">Roman rule ended around <strong>410 AD</strong> when Rome, struggling to defend its vast empire, withdrew its troops. Britain was left to defend itself. Into this vacuum came the <strong>Angles, Saxons and Jutes</strong> — Germanic peoples from what is now northern Germany and Denmark. They settled across England (the very name 'England' comes from 'Angles-land'), establishing kingdoms and speaking Old English, the ancestor of the language we speak today.</p>
+
+  <p class="read-p">Christianity had faded somewhat after the Romans left, which is why in <strong>597 AD</strong>, Pope Gregory I sent a monk called <strong>Augustine</strong> to Britain. Augustine landed in Kent, converted the Anglo-Saxon king Ethelbert, and established his base at Canterbury. He became the first Archbishop of Canterbury — a position that still exists today, held by the spiritual leader of the Church of England.</p>
+
+  <p class="read-p">Then came the Vikings. From <strong>789 AD</strong> onwards, Norse and Danish raiders began attacking Britain's coasts, targeting monasteries (which contained gold and other riches). Over time the Vikings did not just raid — they settled. Large parts of northern and eastern England fell under Viking control, an area known as the Danelaw.</p>
+
+  <p class="read-p">The man who stopped the Viking conquest of all England was <strong>Alfred the Great</strong>, King of Wessex (<strong>849–899 AD</strong>). He defeated the Viking leader Guthrum at the Battle of Edington in 878 AD and negotiated a treaty dividing England between the Saxon south and the Viking Danelaw. Alfred promoted learning, had books translated into Old English, and created a legal code. He is sometimes called the father of England.</p>
+
+  <p class="read-p">Then, in <strong>1066</strong>, everything changed. The Anglo-Saxon king Harold II was defeated at the <strong>Battle of Hastings on 14 October 1066</strong> by <strong>William, Duke of Normandy</strong> — a French nobleman with a claim to the English throne. William — known to history as the Conqueror — was crowned King of England on <strong>25 December 1066</strong> at Westminster Abbey. The Norman Conquest transformed England utterly.</p>
+
+  <p class="read-p">William replaced virtually all Anglo-Saxon nobles with Normans. He introduced the feudal system, where the King owned all land and granted it to lords in exchange for military service. He commissioned the <strong>Domesday Book in 1086</strong> — a comprehensive survey of all land ownership and resources in England, written in Latin, used for taxation. It is one of the most remarkable administrative achievements of the medieval world. Norman French flooded into the English language — the words we use for law, government, aristocracy, cuisine — all came from the Normans.</p>
+</div>
+
+<!-- ═══ CHAPTER 2 ═══════════════════════════════════════════════════════════ -->
+<div class="read-chapter" id="ch2">
+  <div class="chap-header">
+    <span class="chap-num">Chapter 2</span>
+    <h3 class="chap-title">Medieval England — Magna Carta to the Wars of the Roses</h3>
+  </div>
+
+  <p class="read-p">The century after the Norman Conquest saw enormous power concentrated in royal hands — but that power would soon be challenged. The crucial moment came in <strong>1215</strong>, when a group of powerful barons forced the weak and unpopular King <strong>John</strong> to sign a document at <strong>Runnymede</strong>, a meadow on the banks of the Thames near Windsor. That document was the <strong>Magna Carta</strong>.</p>
+
+  <p class="read-p">The Magna Carta — 'Great Charter' in Latin — established, for the first time in English history, that the King was not above the law. He could not imprison people without legal cause, could not levy taxes without consent, and had to respect the rights of free men. It is one of the most important documents in history, influencing constitutional law worldwide including the US Bill of Rights and the Universal Declaration of Human Rights.</p>
+
+  <div class="read-callout">
+    <div class="callout-icon">📜</div>
+    <div class="callout-text">The Magna Carta was signed in <strong>1215</strong> by <strong>King John</strong> at <strong>Runnymede</strong>. All three facts are tested. It established that the King was <strong>subject to the law</strong> — not above it.</div>
+  </div>
+
+  <p class="read-p">Parliament grew out of the Magna Carta era. Around <strong>1265</strong>, a nobleman called <strong>Simon de Montfort</strong> summoned not just nobles and bishops but also knights and burgesses (town representatives) — ordinary men of property. This was the first Parliament in the modern sense — a representative body, not just a royal court.</p>
+
+  <p class="read-p">Medieval England was also shaped by catastrophe. In <strong>1348</strong>, the <strong>Black Death</strong> arrived — a form of bubonic plague spread by fleas on rats. It killed approximately <strong>one-third of Britain's entire population</strong>. The social consequences were enormous: with so many workers dead, the survivors had bargaining power for the first time. Peasants began demanding higher wages, and the feudal system — where labourers were bound to the land and their lord — began to crack.</p>
+
+  <p class="read-p">The 15th century brought one of England's most dramatic internal conflicts: the <strong>Wars of the Roses</strong> (<strong>1455–1485</strong>). This was a civil war — or rather a series of them — between two royal dynasties: the <strong>House of York</strong> (whose symbol was a white rose) and the <strong>House of Lancaster</strong> (red rose). Both claimed the right to the throne. The conflict was bloody and prolonged, weakening the English nobility significantly.</p>
+
+  <p class="read-p">It ended in <strong>1485</strong> at the <strong>Battle of Bosworth Field</strong>, where <strong>Henry Tudor</strong> — a Lancastrian — defeated and killed the Yorkist king Richard III. Henry became <strong>Henry VII</strong>, the first Tudor king. To unite the warring factions, he married Elizabeth of York — combining the red and white roses into the Tudor rose, still a symbol of England today.</p>
+
+  <p class="read-p">Scotland's story ran in parallel. Scotland's greatest military triumph was the <strong>Battle of Bannockburn in 1314</strong>, where King <strong>Robert the Bruce</strong> defeated the much larger English army of Edward II. This victory secured Scottish independence for centuries. Scotland and England would remain separate kingdoms until 1707.</p>
+</div>
+
+<!-- ═══ CHAPTER 3 ═══════════════════════════════════════════════════════════ -->
+<div class="read-chapter" id="ch3">
+  <div class="chap-header">
+    <span class="chap-num">Chapter 3</span>
+    <h3 class="chap-title">The Tudors &amp; Stuarts — Reformation, Civil War &amp; Revolution</h3>
+  </div>
+
+  <p class="read-p">The Tudor period (1485–1603) was one of the most dramatic in English history. <strong>Henry VIII</strong> (reigned 1509–1547) is famous for two things above all: his six wives, and his decision to break from the Catholic Church. The story of the wives is dramatic — he had them divorced, beheaded or widowed:</p>
+
+  <div class="wives-list">
+    <div class="wife-item divorced"><span class="wife-num">1</span><span class="wife-name">Catherine of Aragon</span><span class="wife-fate">DIVORCED</span></div>
+    <div class="wife-item executed"><span class="wife-num">2</span><span class="wife-name">Anne Boleyn</span><span class="wife-fate">EXECUTED</span></div>
+    <div class="wife-item died"><span class="wife-num">3</span><span class="wife-name">Jane Seymour</span><span class="wife-fate">DIED</span></div>
+    <div class="wife-item divorced"><span class="wife-num">4</span><span class="wife-name">Anne of Cleves</span><span class="wife-fate">DIVORCED</span></div>
+    <div class="wife-item executed"><span class="wife-num">5</span><span class="wife-name">Catherine Howard</span><span class="wife-fate">EXECUTED</span></div>
+    <div class="wife-item survived"><span class="wife-num">6</span><span class="wife-name">Catherine Parr</span><span class="wife-fate">SURVIVED</span></div>
+  </div>
+
+  <p class="read-p">Memory aid: <em>"Divorced, Beheaded, Died — Divorced, Beheaded, Survived."</em></p>
+
+  <p class="read-p">Why did Henry break from Rome? It came down to divorce. Henry desperately wanted to divorce Catherine of Aragon (who had failed to give him a male heir) to marry Anne Boleyn. The Pope refused to grant an annulment. So Henry simply declared himself the Supreme Head of the Church of England through the <strong>Act of Supremacy in 1534</strong>, cutting ties with Rome entirely and establishing the <strong>Protestant Church of England</strong>. He then dissolved the monasteries (1536–1541), seizing their enormous wealth.</p>
+
+  <p class="read-p"><strong>Elizabeth I</strong> (reigned 1558–1603) — Henry's daughter by Anne Boleyn — presided over a golden age. She never married, earning the name the 'Virgin Queen'. Her reign saw the flourishing of English literature (Shakespeare, Marlowe), exploration (Francis Drake became the first Englishman to sail around the world, 1577–1580), and a crucial military victory: the defeat of the <strong>Spanish Armada in 1588</strong>. Philip II of Spain sent 130 ships to invade England; a combination of English naval skill and severe storms destroyed the fleet.</p>
+
+  <p class="read-p">The Stuarts succeeded the Tudors when Elizabeth died childless. <strong>James I</strong> (1603–1625) — already James VI of Scotland — united the Scottish and English crowns. His reign was marked by religious tension, which exploded in the <strong>Gunpowder Plot of 5 November 1605</strong>: a group of Catholic conspirators, including the infamous <strong>Guy Fawkes</strong>, planned to blow up the Houses of Parliament during the State Opening and kill the King. They were caught, and Fawkes was found in the cellars with barrels of gunpowder. All the plotters were executed. Every year on 5 November, Britain celebrates Bonfire Night with fireworks and bonfires in memory of the plot's failure.</p>
+
+  <p class="read-p">The conflict between King and Parliament came to a head under <strong>Charles I</strong> (1625–1649). Charles believed in the Divine Right of Kings — that God had appointed him to rule and he answered to no earthly power, including Parliament. Parliament disagreed. The result was the <strong>English Civil War (1642–1651)</strong>, pitting Royalists ('Cavaliers') against Parliamentarians ('Roundheads') led by <strong>Oliver Cromwell</strong>. Parliament won. Charles I was tried, found guilty, and executed on <strong>30 January 1649</strong> — the only English monarch ever to be tried and executed by his own Parliament.</p>
+
+  <div class="read-callout">
+    <div class="callout-icon">👑</div>
+    <div class="callout-text">Charles I was executed on <strong>30 January 1649</strong>. He is the <strong>only</strong> English monarch ever to be tried and executed. After his death, England became a republic — the Commonwealth — with Oliver Cromwell ruling as Lord Protector (1653–1658).</div>
+  </div>
+
+  <p class="read-p">After Cromwell died in 1658, the republic collapsed. Parliament invited Charles II — son of the executed king — to return from exile. The <strong>Restoration of 1660</strong> brought the monarchy back, along with theatres (closed by the Puritans), a more relaxed culture, and a scientific revolution. The Royal Society was founded in 1660. Two disasters struck London during Charles II's reign: the <strong>Great Plague of 1665</strong> (killing about 100,000 Londoners) and the <strong>Great Fire of London in 1666</strong>, which burned for four days and destroyed 13,000 houses. Out of the ashes rose a new St Paul's Cathedral, designed by the architect genius <strong>Sir Christopher Wren</strong>.</p>
+
+  <p class="read-p">The final Stuart crisis came with the Catholic James II (1685–1688), whose attempts to favour Catholics alarmed Protestant England. Parliament invited his Protestant daughter Mary and her Dutch husband <strong>William of Orange</strong> to take the throne. James fled to France without a fight — this was the <strong>Glorious Revolution of 1688</strong>, 'glorious' because it happened without bloodshed. William and Mary accepted the <strong>Bill of Rights in 1689</strong>, which established parliamentary supremacy: the monarch could not tax without Parliament's consent, could not keep an army without Parliament's approval, and had to call Parliament regularly. Constitutional monarchy was born.</p>
+</div>
+
+<!-- ═══ CHAPTER 4 ═══════════════════════════════════════════════════════════ -->
+<div class="read-chapter" id="ch4">
+  <div class="chap-header">
+    <span class="chap-num">Chapter 4</span>
+    <h3 class="chap-title">18th &amp; 19th Century — Empire, Industry &amp; Reform</h3>
+  </div>
+
+  <p class="read-p">The 18th century opened with a crucial constitutional event. In <strong>1707</strong>, the Act of Union united England (including Wales) and Scotland into the <strong>Kingdom of Great Britain</strong>, with a single Parliament at Westminster. The Scottish Parliament was dissolved. This union — which Scotland had debated for years — was driven partly by economic necessity (Scotland had been financially ruined by a disastrous colonial venture in Panama). Then in <strong>1800</strong>, a second Act of Union united Great Britain with Ireland to form the <strong>United Kingdom of Great Britain and Ireland</strong>. Most of Ireland would leave the UK in 1922.</p>
+
+  <p class="read-p">Britain became the world's first industrial nation. The <strong>Industrial Revolution</strong> — beginning around <strong>1760</strong> — transformed a rural agricultural society into an urban industrial powerhouse within a few generations. Two inventions were central: <strong>Richard Arkwright's spinning frame</strong> (1769), which mechanised cotton spinning and created the factory system; and <strong>James Watt's improved steam engine</strong> (developed 1769–1782), which provided the power source for factories, mines, and eventually railways. Britain's coal, iron and engineering talent made it the workshop of the world.</p>
+
+  <p class="read-p">But the industrial wealth came at a cost. Factory workers — including children — laboured in appalling conditions. Reformers pushed back. The most significant moral campaign of the era was the fight against slavery. <strong>William Wilberforce</strong> led the parliamentary campaign to abolish the slave trade. After 20 years of campaigning, the <strong>Slave Trade Act of 1807</strong> abolished the buying and selling of enslaved people across the British Empire. This was not the same as freeing enslaved people — that took another 26 years. The <strong>Slavery Abolition Act of 1833</strong> finally freed enslaved people throughout the Empire. The government paid £20 million in compensation — to the slave owners, not the enslaved people.</p>
+
+  <div class="read-callout">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-text"><strong>1807 ≠ 1833.</strong> The Slave Trade Act 1807 abolished the TRADE — enslaved people were not freed. The Slavery Abolition Act 1833 actually FREED enslaved people. These two dates are among the most tested and most confused facts on the exam.</div>
+  </div>
+
+  <p class="read-p">The 19th century also saw the gradual expansion of voting rights — what historians call the Reform Era. Before 1832, Britain's electoral system was a mess: 'rotten boroughs' had almost no voters but sent MPs to Parliament, while vast industrial cities like Manchester had no representation at all. The <strong>Great Reform Act of 1832</strong> began to fix this, abolishing rotten boroughs and extending the vote to more middle-class men. Further Reform Acts followed: 1867 (extending the vote to urban working-class men) and 1884 (agricultural workers). But women still could not vote at all.</p>
+
+  <p class="read-p"><strong>Queen Victoria</strong> reigned from <strong>1837 to 1901</strong> — 64 years, the longest reign of any British monarch until Elizabeth II. Under her reign, the British Empire expanded to cover about <strong>one-quarter of the world's land mass</strong> — the largest empire in history. It was an age of invention, exploration, literature and extraordinary change.</p>
+
+  <p class="read-p">The <strong>Crimean War (1853–1856)</strong> brought lasting change to nursing. <strong>Florence Nightingale</strong> went to the military hospital at Scutari (modern Turkey) where soldiers were dying not from battle wounds but from preventable diseases — cholera, typhus — due to appalling sanitary conditions. By improving hygiene, ventilation, clean water and nutrition, she reduced the death rate from about 42% to 2%. She became known as 'the Lady with the Lamp' because she walked the wards at night. She is considered the founder of modern nursing.</p>
+</div>
+
+<!-- ═══ CHAPTER 5 ═══════════════════════════════════════════════════════════ -->
+<div class="read-chapter" id="ch5">
+  <div class="chap-header">
+    <span class="chap-num">Chapter 5</span>
+    <h3 class="chap-title">The 20th Century — Wars, Women's Votes &amp; the Welfare State</h3>
+  </div>
+
+  <p class="read-p">The 20th century opened with Britain at the height of imperial power. It ended with a welfare state, a National Health Service, and a transformed, multicultural society. The journey between those two points ran through two world wars and a social revolution.</p>
+
+  <p class="read-p"><strong>World War I (1914–1918)</strong> began when Germany invaded Belgium. Britain had guaranteed Belgian neutrality by treaty, so on 4 August 1914 it declared war. The war was fought mainly in the trenches of France and Belgium. British casualties were staggering — about <strong>2 million</strong> killed and wounded. The <strong>Battle of the Somme</strong> on 1 July 1916 was the worst single day in British military history: 57,470 British casualties, including 19,240 dead. The war ended with the Armistice on <strong>11 November 1918</strong> — at 11am on the 11th day of the 11th month. This is why Remembrance Day is on 11 November and the two-minute silence begins at exactly 11am.</p>
+
+  <p class="read-p">The war transformed women's position in society. With millions of men away at the front, women took over jobs previously closed to them — munitions factories, transport, agriculture, offices. When the war ended, it was no longer tenable to deny them the vote. The <strong>Representation of the People Act 1918</strong> gave the vote to <strong>women over 30</strong>. In <strong>1928</strong>, the <strong>Equal Franchise Act</strong> gave all <strong>women over 21</strong> the vote — equal with men. The voting age for everyone was later reduced to <strong>18 in 1969</strong>.</p>
+
+  <div class="read-callout">
+    <div class="callout-icon">🗳️</div>
+    <div class="callout-text">Women's vote timeline: <strong>1918</strong> = women over 30. <strong>1928</strong> = all women over 21 (equal with men). <strong>1969</strong> = everyone votes at 18. Three different years, three different changes.</div>
+  </div>
+
+  <p class="read-p"><strong>World War II (1939–1945)</strong> began when Germany invaded Poland. Britain declared war on <strong>3 September 1939</strong>. The early months were catastrophic: German forces swept through France, trapping the British Expeditionary Force on the beaches of <strong>Dunkirk</strong>. In May–June 1940, a remarkable rescue operation — hundreds of naval and civilian boats — evacuated over 330,000 Allied troops.</p>
+
+  <p class="read-p"><strong>Winston Churchill</strong> became Prime Minister in <strong>May 1940</strong>, replacing the appeaser Neville Chamberlain. Churchill's oratory galvanised the nation. In the summer of 1940, the <strong>Battle of Britain</strong> was fought in the skies over southern England as the Royal Air Force defended against massive German Luftwaffe attacks. The RAF — including thousands of Polish and other Allied pilots — succeeded. Churchill said of them: "Never in the field of human conflict was so much owed by so many to so few."</p>
+
+  <p class="read-p">The decisive turning point came on <strong>6 June 1944 — D-Day</strong> — when Allied forces landed on five beaches in Normandy, France in the largest seaborne invasion in history (Operation Overlord). The liberation of Western Europe followed. Germany surrendered on <strong>8 May 1945 — VE Day</strong> (Victory in Europe). Japan surrendered on <strong>15 August 1945 — VJ Day</strong> (Victory over Japan), ending the war completely.</p>
+
+  <p class="read-p">Post-war Britain was exhausted but determined to build a better society. In July 1945, despite Churchill's wartime heroism, voters elected a Labour government under <strong>Clement Attlee</strong> by a landslide. Attlee's government created the modern welfare state, based on the <strong>Beveridge Report (1942)</strong>, which proposed universal support 'from the cradle to the grave'. The centrepiece was the <strong>National Health Service (NHS)</strong>, founded on <strong>5 July 1948</strong> by Health Secretary <strong>Aneurin (Nye) Bevan</strong>. The NHS's revolutionary principle: healthcare should be <strong>free at the point of need for everyone</strong>, funded through taxation. Before the NHS, a serious illness could bankrupt a family. After it, no one would have to choose between health and money.</p>
+
+  <p class="read-p">Ireland had left the United Kingdom in <strong>1922</strong> as the Irish Free State, following years of conflict. Six counties in the north-east — Northern Ireland — remained part of the UK. Tensions between unionists (wanting to remain in the UK, mainly Protestant) and nationalists (wanting to join a united Ireland, mainly Catholic) erupted into decades of violent conflict known as <strong>the Troubles</strong> (late 1960s to 1998). The <strong>Good Friday Agreement</strong> of 10 April 1998 brought peace, establishing power-sharing between unionists and nationalists in the Northern Ireland Assembly.</p>
+
+  <p class="read-p">The late 20th century saw major constitutional changes through <strong>devolution</strong>. Referendums in 1997 approved parliaments for Scotland and Wales. The <strong>Scottish Parliament</strong> at Holyrood in Edinburgh and the <strong>Welsh Assembly</strong> (now the <strong>Senedd Cymru</strong>) in Cardiff were established in 1999, with powers over health, education, and justice devolved from Westminster.</p>
+</div>
+
+<!-- ═══ CHAPTER 6 ═══════════════════════════════════════════════════════════ -->
+<div class="read-chapter" id="ch6">
+  <div class="chap-header">
+    <span class="chap-num">Chapter 6</span>
+    <h3 class="chap-title">Government Today — How the UK is Governed</h3>
+  </div>
+
+  <p class="read-p">The United Kingdom is a <strong>constitutional monarchy and a parliamentary democracy</strong>. This means it has a Monarch as head of state, but the Monarch's powers are limited by law and convention — real power lies with the elected Parliament and the government formed from it.</p>
+
+  <p class="read-p">The UK has an <strong>unwritten constitution</strong> — unusual among democracies. There is no single constitutional document. Instead, the constitution is drawn from Acts of Parliament (like the Magna Carta, Bill of Rights, Human Rights Act), common law (judges' decisions), constitutional conventions (unwritten rules), and authoritative works. Because it is unwritten, Parliament can change it by passing new laws.</p>
+
+  <p class="read-p"><strong>Parliament</strong> is made up of three parts: the Crown (Monarch), the <strong>House of Commons</strong>, and the <strong>House of Lords</strong>. It meets at the Palace of Westminster in London.</p>
+
+  <p class="read-p">The <strong>House of Commons</strong> has <strong>650 elected Members of Parliament (MPs)</strong> — one for each constituency. Elections use the <strong>First Past the Post</strong> system: the candidate with the most votes in each constituency wins, even without a majority. General elections must be held at least every <strong>5 years</strong>. You must be <strong>18 or over</strong> to vote and be on the Electoral Register. British citizens, Irish citizens and qualifying Commonwealth citizens can vote in general elections — EU citizens (other than Irish) cannot.</p>
+
+  <p class="read-p">The <strong>House of Lords</strong> is unelected. It consists of life peers (appointed for their lifetime, usually for service or expertise), 92 hereditary peers (who inherited their titles; most hereditary peers were removed in 1999), and 26 Church of England bishops (the Lords Spiritual). The Lords can scrutinise and delay legislation but <strong>cannot permanently block it</strong> — the elected Commons ultimately prevails.</p>
+
+  <p class="read-p">The <strong>Prime Minister</strong> is the leader of the party commanding a majority in the Commons. They are appointed by the Monarch but in practice the choice is determined by the election result. The PM lives and works at <strong>10 Downing Street</strong>. The <strong>Cabinet</strong> — around 20–25 senior ministers — meets weekly and makes key government decisions. All Cabinet ministers must publicly support government decisions (collective responsibility) even if they privately disagreed.</p>
+
+  <div class="read-callout">
+    <div class="callout-icon">🏛️</div>
+    <div class="callout-text">Head of STATE = the <strong>Monarch</strong> (ceremonial, politically neutral). Head of GOVERNMENT = the <strong>Prime Minister</strong> (runs the government, makes policy, answerable to Parliament). These are two different roles held by two different people.</div>
+  </div>
+
+  <p class="read-p">The <strong>Monarch's role</strong> is largely ceremonial. The Monarch opens Parliament each year and reads the King's Speech (written by the government). The Monarch gives <strong>Royal Assent</strong> to bills passed by Parliament — formally turning them into law. The Monarch must remain completely politically neutral. King <strong>Charles III</strong> became Monarch on <strong>8 September 2022</strong> when Queen Elizabeth II died. His Coronation was on 6 May 2023.</p>
+
+  <p class="read-p"><strong>Devolved governments</strong> handle matters like health, education and justice for their own countries: the <strong>Scottish Parliament</strong> at Holyrood in Edinburgh; the <strong>Senedd Cymru</strong> (Welsh Parliament) in Cardiff; and the <strong>Northern Ireland Assembly</strong> at Stormont in Belfast. 'Reserved matters' — defence, foreign policy, immigration, national benefits — remain with the UK Parliament at Westminster. England does not have its own Parliament — it is governed on these matters by the UK Parliament.</p>
+
+  <p class="read-p">The <strong>Supreme Court</strong> is the highest court in the UK, created in <strong>2009</strong>. It hears appeals on important legal questions. Below it are the Court of Appeal, the High Court, Crown Courts (for serious crimes with juries of 12), and Magistrates' Courts (for minor crimes). Scotland has its own separate legal system, including its own courts and a unique third criminal verdict — <strong>'Not Proven'</strong> — alongside Guilty and Not Guilty.</p>
+</div>
+
+<!-- ═══ CHAPTER 7 ═══════════════════════════════════════════════════════════ -->
+<div class="read-chapter" id="ch7">
+  <div class="chap-header">
+    <span class="chap-num">Chapter 7</span>
+    <h3 class="chap-title">Law, Rights &amp; Fundamental Values</h3>
+  </div>
+
+  <p class="read-p">The United Kingdom has five <strong>fundamental values</strong> that everyone living here is expected to respect and uphold:</p>
+
+  <div class="values-grid">
+    <div class="value-card"><div class="value-icon">🗳️</div><div class="value-name">Democracy</div><div class="value-desc">The right of people to choose their government through free, fair and regular elections.</div></div>
+    <div class="value-card"><div class="value-icon">⚖️</div><div class="value-name">Rule of Law</div><div class="value-desc">Everyone — including the government — is equal before the law. No one is above it.</div></div>
+    <div class="value-card"><div class="value-icon">🕊️</div><div class="value-name">Individual Liberty</div><div class="value-desc">Freedom to live your life as you choose within the law, without government interference.</div></div>
+    <div class="value-card"><div class="value-icon">🤝</div><div class="value-name">Tolerance of Different Faiths</div><div class="value-desc">Respect for diversity — people can practise any religion or none without persecution.</div></div>
+    <div class="value-card"><div class="value-icon">🏘️</div><div class="value-name">Participation in Community Life</div><div class="value-desc">Engaging actively with society and community.</div></div>
+  </div>
+
+  <p class="read-p">These values are not just words — they are backed by centuries of law. The Magna Carta (1215) established the rule of law. The Bill of Rights (1689) established parliamentary sovereignty and individual freedoms. The <strong>Human Rights Act 1998</strong> incorporated the European Convention on Human Rights into UK law, allowing people to enforce rights like freedom of expression, right to privacy, and right to a fair trial in UK courts. Note: the European Convention on Human Rights is separate from the EU — the UK remains signed up to it after Brexit.</p>
+
+  <p class="read-p">The <strong>Habeas Corpus Act</strong> is one of the most important protections of individual liberty. It means that no one can be held in prison indefinitely without being brought before a court and charged. 'Habeas corpus' is Latin for 'you shall have the body'. If you are arrested, you have the right to know why and to appear before a judge.</p>
+
+  <p class="read-p">The legal system treats people as <strong>innocent until proven guilty</strong>. In criminal trials, the prosecution must prove guilt <strong>beyond reasonable doubt</strong> — a very high standard, reflecting the principle that wrongly convicting an innocent person is worse than acquitting a guilty one.</p>
+
+  <p class="read-p"><strong>Jury service</strong> is a civic duty — you can be legally required to serve. Jurors are chosen randomly from the Electoral Register. In England, Wales and Northern Ireland, a jury has <strong>12 members</strong>. In Scotland, a jury has <strong>15 members</strong>. Magistrates — who handle minor crimes in Magistrates' Courts — are usually ordinary community members, work largely unpaid, and do not need legal qualifications. They are advised by a legally qualified clerk.</p>
+
+  <p class="read-p">The <strong>Equality Act 2010</strong> protects people from discrimination based on nine 'protected characteristics': age, disability, gender reassignment, marriage/civil partnership, pregnancy/maternity, race, religion or belief, sex, and sexual orientation. This applies to employment, education, services and housing. The UK also has strong protections for freedom of religion — people can practise any faith or none.</p>
+</div>
+
+<!-- ═══ CHAPTER 8 ═══════════════════════════════════════════════════════════ -->
+<div class="read-chapter" id="ch8">
+  <div class="chap-header">
+    <span class="chap-num">Chapter 8</span>
+    <h3 class="chap-title">National Identity — The Four Nations, Symbols &amp; Traditions</h3>
+  </div>
+
+  <p class="read-p">The United Kingdom is made up of four nations: <strong>England</strong>, <strong>Scotland</strong>, <strong>Wales</strong> and <strong>Northern Ireland</strong>. Each has its own identity, traditions, patron saint and national symbols — and in some cases its own language.</p>
+
+  <p class="read-p"><strong>England</strong>'s patron saint is <strong>St George</strong>, whose feast day is <strong>23 April</strong>. His symbol is a red cross on white — St George's Cross, the flag of England. The national flower is the red rose. England is the largest of the four nations, with a population of about 56 million out of the UK's total of approximately <strong>67 million</strong>.</p>
+
+  <p class="read-p"><strong>Scotland</strong>'s patron saint is <strong>St Andrew</strong>, celebrated on <strong>30 November</strong> (St Andrew's Day — a bank holiday in Scotland). His symbol is a white diagonal cross (saltire) on blue — the Scottish flag. The national emblem is the thistle; the national animal, charmingly, is the unicorn. Scotland has its own distinct legal system, its own Church (the Church of Scotland, which is Presbyterian — the Monarch is NOT its head), and its own Parliament at Holyrood in Edinburgh.</p>
+
+  <p class="read-p"><strong>Wales</strong>'s patron saint is <strong>St David</strong> (Dewi Sant in Welsh), celebrated on <strong>1 March</strong> — St David's Day. Wales is officially bilingual — about <strong>20% of the Welsh population speaks Welsh</strong>, and it is an official language alongside English. National emblems include the daffodil and the leek. The national symbol is the magnificent Red Dragon, which appears on the Welsh flag — but notably <strong>NOT on the Union Flag</strong>.</p>
+
+  <p class="read-p"><strong>Northern Ireland</strong>'s patron saint is <strong>St Patrick</strong>, celebrated on <strong>17 March</strong> — St Patrick's Day, which is a public holiday in Northern Ireland (but not in England, Scotland or Wales). The shamrock is the national symbol.</p>
+
+  <div class="read-callout">
+    <div class="callout-icon">🏴󠁧󠁢󠁷󠁬󠁳󠁿</div>
+    <div class="callout-text"><strong>Wales is NOT represented in the Union Flag.</strong> The Union Flag combines St George's Cross (England), St Andrew's Cross (Scotland), and St Patrick's Cross (Ireland). It was designed before Wales was considered a separate kingdom. This is the single most tested fact about national symbols.</div>
+  </div>
+
+  <p class="read-p">The <strong>Church of England</strong> is the established (official state) church in England. The Monarch is its Supreme Governor. The Archbishop of Canterbury is its spiritual leader. The Church of Scotland is Presbyterian — governed by elected elders, not bishops — and is the national church of Scotland, but the Monarch is simply an ordinary member there. Wales has no established church (the Church in Wales was disestablished in 1920). Northern Ireland also has no established church.</p>
+
+  <p class="read-p">The UK population is approximately <strong>67 million</strong> (2021 census: 67.1 million). About <strong>14% of the population</strong> belongs to an ethnic minority group. The UK is a genuinely diverse, multicultural society — about 270 languages are spoken in London alone. The NHS and public transport were built in part by the <strong>Windrush generation</strong> — Caribbean migrants invited to Britain from 1948 onwards. The MV Empire Windrush brought 492 Jamaicans to Tilbury Docks in June 1948.</p>
+
+  <p class="read-p">The <strong>Commonwealth</strong> is a voluntary association of <strong>56 independent countries</strong> — mostly former British Empire territories — including India, Australia, Canada, New Zealand, Jamaica and Nigeria. The Monarch is the Head of the Commonwealth. It promotes democracy, rule of law, and development among its members.</p>
+</div>
+
+<!-- ═══ CHAPTER 9 ═══════════════════════════════════════════════════════════ -->
+<div class="read-chapter" id="ch9">
+  <div class="chap-header">
+    <span class="chap-num">Chapter 9</span>
+    <h3 class="chap-title">Culture, Sport &amp; Traditions</h3>
+  </div>
+
+  <p class="read-p">Britain has made enormous contributions to world sport, inventing or codifying many of the world's most popular games. <strong>Football (soccer)</strong> — the world's most popular sport — was codified in England; the <strong>FA Cup</strong> (Football Association Challenge Cup) is the oldest football cup competition in the world, first held in 1872. Each UK nation has its own international football team — England, Scotland, Wales and Northern Ireland each compete separately at World Cups and European Championships.</p>
+
+  <p class="read-p"><strong>Cricket</strong> — Britain's great summer sport — has its own unique international rivalry: the <strong>Ashes</strong>, a series between England and Australia. The England cricket team represents both England and Wales (not just England). <strong>Rugby union</strong> — another British invention — sees England, Scotland, Wales and Ireland compete in the annual <strong>Six Nations Championship</strong> alongside France and Italy.</p>
+
+  <p class="read-p"><strong>Wimbledon</strong> is the world's oldest Grand Slam tennis tournament, first held in <strong>1877</strong> at the All England Club in London. It is famous for its grass courts, strict all-white dress code, and the tradition of strawberries and cream. The <strong>Open Championship</strong> — 'The Open' in golf — is the oldest major championship in golf, first held in <strong>1860</strong> at Prestwick in Scotland. The <strong>Grand National</strong> is Britain's most famous horse race, a steeplechase held annually at Aintree Racecourse in Liverpool.</p>
+
+  <p class="read-p">British cultural traditions include some of the world's most distinctive annual events. <strong>Bonfire Night (5 November)</strong> commemorates the failure of the Gunpowder Plot of 1605 — celebrated with bonfires and fireworks. <strong>Remembrance Day (11 November)</strong> honours those who died in conflict — people wear red poppies, inspired by the poem 'In Flanders Fields'. A two-minute silence is observed at 11am. <strong>Burns Night (25 January)</strong> celebrates Scottish poet Robert Burns — with haggis, whisky, and readings of his poetry.</p>
+
+  <p class="read-p">Scotland's <strong>Hogmanay</strong> (New Year, 31 December) is one of the world's great celebrations, featuring the tradition of 'first-footing' — the first person to enter a home after midnight brings symbolic gifts (coal, shortbread, whisky) for good luck. Wales has the <strong>Eisteddfod</strong> — an annual festival of Welsh-language literature, music and performance. The <strong>Notting Hill Carnival</strong>, held in London each August, is Europe's largest street festival, celebrating Caribbean culture.</p>
+
+  <p class="read-p">The <strong>BBC</strong> (British Broadcasting Corporation) is Britain's national public broadcaster, funded by the licence fee rather than advertising. It was founded as a company in 1922 and became a corporation in 1927. The BBC Proms — the annual summer classical music festival at the Royal Albert Hall in London — ends with the Last Night of the Proms, famous for patriotic songs including 'Land of Hope and Glory', 'Rule, Britannia!' and 'Jerusalem'.</p>
+
+  <p class="read-p">The <strong>National Trust</strong> is a charity (not a government body) founded in 1895, which preserves historic buildings, landscapes and open spaces across England, Wales and Northern Ireland. The National Trust is one of the largest landowners in the UK.</p>
+</div>
+
+<!-- ═══ CHAPTER 10 ═══════════════════════════════════════════════════════════ -->
+<div class="read-chapter" id="ch10">
+  <div class="chap-header">
+    <span class="chap-num">Chapter 10</span>
+    <h3 class="chap-title">Famous People — Scientists, Writers, Artists &amp; Inventors</h3>
+  </div>
+
+  <p class="read-p">Britain has produced a remarkable number of the world's most influential scientists, writers, artists and inventors. These are the people you need to know for the test.</p>
+
+  <h4 class="read-h4">Literature</h4>
+  <p class="read-p"><strong>Geoffrey Chaucer</strong> (c.1343–1400) wrote 'The Canterbury Tales' — a collection of stories told by pilgrims travelling to Canterbury, written in Middle English. He is sometimes called the Father of English literature.</p>
+  <p class="read-p"><strong>William Shakespeare</strong> (1564–1616) is widely regarded as the greatest writer in the English language. Born in <strong>Stratford-upon-Avon</strong>, he wrote <strong>37 plays</strong> and <strong>154 sonnets</strong>. His company performed at the <strong>Globe Theatre</strong> in London. Works include Hamlet, Macbeth, Romeo and Juliet, A Midsummer Night's Dream and King Lear.</p>
+  <p class="read-p"><strong>Robert Burns</strong> (1759–1796) is Scotland's national poet. His most famous works include 'Auld Lang Syne' (sung worldwide at New Year) and 'To a Mouse'. His birthday, <strong>25 January</strong>, is celebrated as Burns Night across Scotland and by Scottish communities worldwide.</p>
+  <p class="read-p"><strong>Jane Austen</strong> (1775–1817) wrote novels exploring women's lives in Regency England with wit and insight: 'Pride and Prejudice', 'Sense and Sensibility', 'Emma', 'Persuasion'.</p>
+  <p class="read-p"><strong>Charles Dickens</strong> (1812–1870) used his novels to campaign against Victorian social injustice: 'Oliver Twist' (workhouses and poverty), 'A Tale of Two Cities', 'Great Expectations', 'A Christmas Carol'. His father was imprisoned for debt when Dickens was 12 — the experience shaped his writing profoundly.</p>
+
+  <h4 class="read-h4">Scientists &amp; Inventors</h4>
+  <p class="read-p"><strong>Isaac Newton</strong> (1643–1727) formulated the laws of motion and universal gravity — the most important scientific work since Aristotle. He also developed calculus and made fundamental advances in optics.</p>
+  <p class="read-p"><strong>Charles Darwin</strong> (1809–1882) developed the theory of evolution by natural selection after his voyage on HMS Beagle (1831–1836). His book 'On the Origin of Species' (1859) transformed our understanding of life on Earth.</p>
+  <p class="read-p"><strong>Alexander Fleming</strong> (1881–1955) discovered <strong>penicillin in 1928</strong> — the world's first antibiotic — when he noticed a mould was killing bacteria in a petri dish. This discovery has saved hundreds of millions of lives.</p>
+  <p class="read-p"><strong>Alan Turing</strong> (1912–1954) was a mathematician and computing pioneer. During WWII he worked at <strong>Bletchley Park</strong> and helped crack Germany's Enigma code — work that historians estimate shortened the war by two to four years. He also developed foundational concepts in computing and artificial intelligence.</p>
+  <p class="read-p"><strong>Tim Berners-Lee</strong> (born 1955) invented the <strong>World Wide Web in 1989</strong> while working at CERN in Switzerland. The Web — websites, hyperlinks, URLs and HTTP — is built on top of the internet, which already existed. He made it freely available without patent.</p>
+
+  <h4 class="read-h4">Arts &amp; Architecture</h4>
+  <p class="read-p"><strong>Sir Christopher Wren</strong> (1632–1723) was the greatest English architect of his era. He designed <strong>St Paul's Cathedral</strong> — completed in 1710 after the original was destroyed in the Great Fire of London (1666) — as well as 51 other London churches.</p>
+  <p class="read-p"><strong>J.M.W. Turner</strong> (1775–1851) was one of Britain's greatest painters, famous for dramatic seascapes and landscapes ('The Fighting Temeraire', voted the UK's greatest painting). The <strong>Turner Prize</strong> — the UK's most prestigious contemporary art award — is named after him.</p>
+  <p class="read-p"><strong>John Constable</strong> (1776–1837) was a Romantic painter famous for his landscapes of the Suffolk countryside ('The Hay Wain'). His work influenced the French Impressionists.</p>
+  <p class="read-p"><strong>Lancelot 'Capability' Brown</strong> (1716–1783) was the most celebrated landscape gardener in British history, designing over <strong>170</strong> parks and gardens including Blenheim Palace and Chatsworth in a sweeping naturalistic style.</p>
+  <p class="read-p"><strong>Henry Purcell</strong> (1659–1695) was a baroque composer considered one of Britain's greatest. He wrote the opera 'Dido and Aeneas' and music for the Chapel Royal.</p>
+
+  <div class="read-callout" style="border-color:#22aa22;background:#22aa2210">
+    <div class="callout-icon">✅</div>
+    <div class="callout-text">You've read the primer! You now have the full story. Move to the <strong>Pass Guaranteed</strong> tab to memorise the key facts, then drill with the <strong>practice tests</strong>. You're ready.</div>
+  </div>
+
+</div>
+</div><!-- /prep-read -->
+
+  </div><!-- /prep-read -->
+
   <!-- ═══ GUIDE 1: PASS GUARANTEED ═══════════════════════════════════════════ -->
-  <div id="prep-pass" class="prep-content">
+  <div id="prep-pass" class="prep-content" style="display:none">
 
     <div class="prep-section intro-box">
       <p>The exam draws 24 questions randomly from ~400. You need <strong>18/24 (75%)</strong>. Master the core facts below and every question becomes instantly recognisable — even with different wording.</p>
@@ -4681,13 +5049,16 @@ function showScreen(id){
   document.getElementById(id).classList.add('active');
   if(id==='hscreen') renderHistory();
   if(id==='cheatsheet') initCheatSheet();
+  if(id==='prepscreen') showPrepTab('read');
 }
 
 function showPrepTab(tab){
-  document.getElementById('prep-pass').style.display = tab==='pass'?'block':'none';
-  document.getElementById('prep-gap').style.display  = tab==='gap' ?'block':'none';
-  document.getElementById('ptab-pass').classList.toggle('active', tab==='pass');
-  document.getElementById('ptab-gap').classList.toggle('active',  tab==='gap');
+  ['read','pass','gap'].forEach(function(t){
+    var c=document.getElementById('prep-'+t);
+    if(c) c.style.display=(t===tab)?'block':'none';
+    var b=document.getElementById('ptab-'+t);
+    if(b) b.classList.toggle('active', t===tab);
+  });
 }
 
 // ─── EXIT MODAL ───────────────────────────────────────────────
