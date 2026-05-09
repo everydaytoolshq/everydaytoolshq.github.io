@@ -16,9 +16,26 @@
 <meta name="twitter:image" content="https://everydaytoolshq.github.io/voterlenshero.jpg"/>
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<!-- Browser translate: setting html[lang] signals Chrome/Edge/Safari to offer translation -->
-<!-- For languages without our manual translations, the API handles key UI strings -->
-<!-- The html lang attribute change also enables browser's built-in translate for dossier content -->
+<!-- Google Translate Element — handles ALL content including JS-rendered dossier -->
+<!-- Free, no API key, no limits, works on mobile and desktop -->
+<script>
+function googleTranslateElementInit(){
+  new google.translate.TranslateElement({
+    pageLanguage:'en',
+    autoDisplay:false,
+    multilanguagePage:false
+  },'gt_container');
+}
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
+<style>
+/* Hide Google Translate toolbar that appears at top of page */
+.goog-te-banner-frame,.skiptranslate{display:none!important;}
+body{top:0!important;}
+/* Hide GT attribution */
+#gt_container{display:none!important;}
+.goog-te-gadget{display:none!important;}
+</style>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@400;500;600;700&display=swap');
 :root{
@@ -347,6 +364,8 @@ select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.10);}
 </style>
 </head>
 <body>
+<!-- Hidden GT container - required by Google Translate Element -->
+<div id="gt_container" style="display:none;visibility:hidden;position:absolute;"></div>
 <div class="wrap" translate="yes">
 <nav class="breadcrumb"><a href="https://everydaytoolshq.github.io/" data-i18n="home">Home</a> › VoterLens</nav>
 
@@ -910,215 +929,91 @@ const TRANSLATIONS = {
     sourceBase:"Base de Conocimiento",progFetch:"Recuperando datos económicos…",progBuild:"Construyendo dossier…",progRender:"Renderizando…",
   },
 };
-// Languages with full manual translations — instant, zero network
-const MANUAL_LANGS=new Set(['en','it','fr','de','es']);
+// ═══════════════════════════════════════════════════════
+// TRANSLATION SYSTEM
+// Manual (en/it/fr/de/es): instant hardcoded strings
+// All others: Google Translate Element (free, no key,
+//   watches entire DOM including dynamically rendered content)
+// ═══════════════════════════════════════════════════════
+const MANUAL_LANGS = new Set(['en','it','fr','de','es']);
 
-// In-memory cache only — cleared on every page reload (fresh start)
-const _tlCache={};
-
-// All UI string keys we need translated
-const _UI_STRINGS={
-  home:"Home",eyebrow:"Free · No Login · 45+ Countries · Your Language",
-  h1pre:"Remove the",h1em:"Veil",
-  intro:"A full diagnostic dossier on any political party — real promises vs reality, whether the numbers add up, what history warns us, and how it hits your household. Live data. Zero spin.",
-  step1badge:"Step One",step1title:"Country & Language",
-  labelCountry:"Country",labelLang:"Language",labelDetail:"Detail",
-  selectCountry:"— Select a country —",
-  simple:"Simple",standard:"Standard",expert:"Expert",
-  srcLabel:"Active Data Sources",
-  step2badge:"Step Two",step2title:"Select a Party",
-  partyEmpty:"Select a country above",partyLoading:"Loading parties…",
-  step3badge:"Step Three",step3title:"Select Topics That Matter to You",
-  tImmig:"Immigration",tHealth:"Healthcare",tEcon:"Economy & Jobs",
-  tHousing:"Housing",tEdu:"Education",tClimate:"Climate",
-  tCrime:"Crime",tWelfare:"Welfare",tTax:"Taxes",
-  tDem:"Democracy",tForeign:"Foreign Policy",tCorrupt:"Corruption",
-  analyseBtn:"Generate Full Dossier",progInit:"Initialising…",
-  boosterBadge:"AI Power Boost — Optional",
-  boosterTitle:"Go Deeper With Your Own AI",
-  boosterSub:"Already logged into an AI? Tick it. VoterLens builds a forensic prompt with live data — paste into your AI for the deepest analysis.",
-  boosterReady:"Ready:",boosterNone:"Select an AI above to generate your forensic prompt.",
-  inPower:"IN POWER",
-  trustScore:"Trust",feasScore:"Feasibility",transpScore:"Transparency",rightsScore:"Civil Rights",
-  secSummary:"Executive Summary",secPulse:"Accountability Pulse",
-  secData:"Live Country Economic Data",secVeil:"The Veil-Remover — Topic by Topic",
-  secHistory:"History Mirror",secWarnings:"Red Flags & Warnings",
-  secPromises:"Promise Tracker",secWallet:"How This Hits Your Home",
-  sec1min:"The 1-Minute Manifesto",secVault:"Source Vault",
-  slogan:"The Slogan",blueprint:"What They'll Actually Do",
-  hiddenPrice:"The Hidden Price",feasibility:"Feasibility",
-  impactPoor:"Low Income",impactMid:"Middle Class",impactRich:"High Income",
-  histParallel:"Historical Parallel",
-  promKept:"Promises Kept",promBroken:"Promises Broken",promFalse:"False / Misleading",
-  walPoor:"Low-Income Household",walMid:"Middle-Class Household",
-  copyPrompt:"Copy Prompt",openAI:"Open",
-  govPulse:"Currently Governing",oppPulse:"In Opposition",
-  sourceBase:"Curated Knowledge Base",
-  pulseSub:"Four gauges based on real data and known party record",
-  veilSub:"Slogan → reality → hidden cost → who pays → historical precedent",
-  dataSub:"Real figures from World Bank API + WHO — used to cross-check all promises",
-  walletSub:"Estimated monthly change per household if this party governs",
-  minuteSub:"Everything above in 60 seconds of plain language",
-  vaultSub:"All data sources consulted for this dossier",
-  feasYes:"Feasible",feasMaybe:"Conditional",feasNo:"Unlikely",feasFalse:"False/Misleading",
-  disclaimer:"VoterLens is a free civic education tool. It does not endorse or oppose any party. Always verify with primary sources before voting decisions.",
-  progFetch:"Fetching live economic data…",progBuild:"Building your dossier…",
-  howTitle:"How VoterLens Works",
-  booksTitle:"Best Sellers in Politics & Current Affairs",
-  booksTitle2:"Best Sellers in Politics & Current Affairs",
-  booksDesc:"The books politicians don't want you to read.",
-  shopBtn:"Shop on Amazon →",
-  affiliate:"Affiliate: we may earn a small commission at no extra cost to you.",
-  boosterBadge:"AI Power Boost — Optional",
-  aiChatGPT:"Best for structured analysis.",aiGemini:"Excellent at economic fact-checking.",
-  aiClaude:"Best for nuanced political analysis.",aiGrok:"Strong on current events.",
-  aiPerp:"Searches live web.",aiCopilot:"Free GPT-4o. Works without login.",
-  aiDeepseek:"Strong reasoning.",aiMistral:"European AI.",
+// GT language codes (most match ours, a few differ)
+const GT_LANG_CODE = {
+  pt:'pt',pl:'pl',nl:'nl',sv:'sv',el:'el',ro:'ro',
+  cs:'cs',tr:'tr',ar:'ar',ja:'ja',ko:'ko',hi:'hi',
+  id:'id',uk:'uk'
 };
 
-// MyMemory free API — no key, CORS enabled
-// Splits text into ≤400 char chunks to stay within per-call limits
-async function _mmTranslate(text,langCode){
-  if(!text||!text.trim()||langCode==='en') return text;
-  try{
-    const url=`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text.slice(0,450))}&langpair=en|${langCode}&de=voterlens@civic`;
-    const r=await fetch(url,{signal:AbortSignal.timeout(7000)});
-    const d=await r.json();
-    if(d.responseStatus===200&&d.responseData?.translatedText){
-      const tr=d.responseData.translatedText;
-      // MyMemory sometimes echoes the source — detect and reject
-      return (tr.toLowerCase()===text.toLowerCase())?text:tr;
-    }
-  }catch(e){}
-  return text;
+let _gtReady = false; // true once GT widget has loaded
+let _gtActive = false; // true once GT has translated the page
+
+// Wait for GT widget to be ready (it loads async)
+function _waitForGT(cb, tries=0){
+  const sel = document.querySelector('.goog-te-combo');
+  if(sel){ _gtReady=true; cb(sel); return; }
+  if(tries > 40){ console.warn('GT widget timeout'); return; }
+  setTimeout(()=>_waitForGT(cb, tries+1), 250);
 }
 
-// Translate all UI key strings for a language code (for data-i18n elements)
-async function _fetchTranslations(langCode){
-  if(_tlCache[langCode]) return _tlCache[langCode];
-  const result={..._UI_STRINGS};
-  // Batch into groups of ~400 chars joined by ||| separator
-  const keys=Object.keys(_UI_STRINGS);
-  const CHUNK=6; // keys per API call
-  for(let i=0;i<keys.length;i+=CHUNK){
-    const slice=keys.slice(i,i+CHUNK);
-    const batch=slice.map(k=>_UI_STRINGS[k]).join(' ||| ');
-    const tr=await _mmTranslate(batch,langCode);
-    const parts=tr.split('|||').map(s=>s.trim());
-    slice.forEach((k,j)=>{if(parts[j]&&parts[j].length>0) result[k]=parts[j];});
-    // Small delay to be polite to the free API
-    if(i+CHUNK<keys.length) await new Promise(r=>setTimeout(r,120));
+// Apply a language via the GT combo select element
+function _applyGTLang(langCode){
+  const gtCode = GT_LANG_CODE[langCode] || langCode;
+  _waitForGT(sel=>{
+    sel.value = gtCode;
+    sel.dispatchEvent(new Event('change'));
+    _gtActive = true;
+    setTranslateStatus(false);
+  });
+}
+
+// Restore English — reset GT
+function _resetGT(){
+  if(!_gtActive) return;
+  _waitForGT(sel=>{
+    sel.value = 'en';
+    sel.dispatchEvent(new Event('change'));
+    _gtActive = false;
+  });
+  // Clear GT cookie so page truly resets
+  document.cookie = 'googtrans=; expires=Thu,01 Jan 1970 00:00:00 UTC; path=/;';
+  document.cookie = 'googtrans=; expires=Thu,01 Jan 1970 00:00:00 UTC; path=/; domain=.' + location.hostname;
+}
+
+// Status banner
+function setTranslateStatus(visible, text){
+  const el = document.getElementById('translateStatus');
+  const tx = document.getElementById('translateStatusText');
+  if(el) el.style.display = visible ? 'flex' : 'none';
+  if(tx && text) tx.textContent = text;
+}
+
+// Called whenever new content is rendered into DOM
+// GT's MutationObserver handles this automatically — no action needed
+function retranslateNew(){ /* GT watches DOM mutations automatically */ }
+function ensureLang(lc){ return switchLanguage(lc); }
+
+// ── Main language switch ──────────────────────────────────
+function switchLanguage(langCode){
+  if(langCode === 'en'){
+    _resetGT();
+    return;
   }
-  _tlCache[langCode]=result;
-  return result;
-}
-
-// Translate all visible text in a DOM container via MyMemory
-// Walks text nodes, batches them, replaces in place
-async function translateContainer(container,langCode){
-  if(!container||MANUAL_LANGS.has(langCode)||langCode==='en') return;
-  // Collect all text nodes with meaningful content
-  const walker=document.createTreeWalker(
-    container,
-    NodeFilter.SHOW_TEXT,
-    {acceptNode:n=>{
-      const p=n.parentElement;
-      if(!p) return NodeFilter.FILTER_REJECT;
-      const tag=p.tagName;
-      // Skip script, style, code, input
-      if(['SCRIPT','STYLE','CODE','INPUT','TEXTAREA','SELECT'].includes(tag)) return NodeFilter.FILTER_REJECT;
-      if(p.classList.contains('promptBox')) return NodeFilter.FILTER_REJECT;
-      if(!n.textContent.trim()||n.textContent.trim().length<3) return NodeFilter.FILTER_REJECT;
-      return NodeFilter.FILTER_ACCEPT;
-    }}
-  );
-  const nodes=[];
-  let node;
-  while((node=walker.nextNode())) nodes.push(node);
-  if(!nodes.length) return;
-
-  // Process in batches of 5 nodes joined by |||
-  const BATCH=5;
-  for(let i=0;i<nodes.length;i+=BATCH){
-    const slice=nodes.slice(i,i+BATCH);
-    const texts=slice.map(n=>n.textContent.trim());
-    const joined=texts.join(' ||| ');
-    if(joined.length<5) continue;
-    const tr=await _mmTranslate(joined.slice(0,450),langCode);
-    if(!tr||tr===joined) continue;
-    const parts=tr.split('|||').map(s=>s.trim());
-    slice.forEach((n,j)=>{
-      if(parts[j]&&parts[j].length>0&&parts[j]!==n.textContent.trim()){
-        n.textContent=n.textContent.replace(n.textContent.trim(),parts[j]);
-      }
-    });
-    // Tiny delay between batches
-    if(i+BATCH<nodes.length) await new Promise(r=>setTimeout(r,80));
-  }
-}
-
-// Translate the entire page — called when language changes
-// Translates: static data-i18n elements + all visible dynamic content
-async function translateFullPage(langCode){
-  if(langCode==='en') return; // English is source — no translation needed
   if(MANUAL_LANGS.has(langCode)){
-    // Manual translation — already applied by applyTranslations()
+    _resetGT(); // ensure GT not interfering
+    // applyTranslations() already called by onLangChange
     return;
   }
-  // Show progress
-  const statusEl=document.getElementById('translateStatus');
-  const statusTxt=document.getElementById('translateStatusText');
-  const langName=document.getElementById('langSelect')?.options[document.getElementById('langSelect').selectedIndex]?.text||langCode;
-  if(statusEl){ statusEl.style.display='flex'; }
-  if(statusTxt){ statusTxt.textContent='🌐 Translating into '+langName+'…'; }
-
-  // 1. Translate UI strings (data-i18n elements)
-  const uiTranslations=await _fetchTranslations(langCode);
-  TRANSLATIONS[langCode]=uiTranslations;
-  applyTranslations();
-
-  // 2. Translate all currently visible dynamic content
-  const toTranslate=[
-    document.getElementById('dossier'),
-    document.querySelector('.card:last-of-type'), // Q&A card
-    document.querySelector('.howCard'),
-    document.querySelector('.boosterCard'),
-  ].filter(Boolean);
-
-  for(const el of toTranslate){
-    if(el&&el.style.display!=='none'&&el.offsetParent!==null){
-      await translateContainer(el,langCode);
-    }
-  }
-
-  if(statusEl) statusEl.style.display='none';
+  // Non-manual: use Google Translate
+  const langName = document.getElementById('langSelect')
+    ?.options[document.getElementById('langSelect').selectedIndex]?.text || langCode;
+  setTranslateStatus(true, '🌐 Translating into ' + langName + '…');
+  _applyGTLang(langCode);
 }
 
-async function ensureLang(langCode){
-  if(MANUAL_LANGS.has(langCode)){
-    // Already in TRANSLATIONS — just apply
-    applyTranslations();
-    return;
-  }
-  if(_tlCache[langCode]){
-    TRANSLATIONS[langCode]=_tlCache[langCode];
-    applyTranslations();
-    return;
-  }
-  await translateFullPage(langCode);
-}
-
-// Called after any new content is rendered into the DOM
-// Re-translates that specific container if language is active
-async function retranslateNew(container){
-  if(!container) return;
-  if(currentLang==='en'||MANUAL_LANGS.has(currentLang)) return;
-  await translateContainer(container,currentLang);
-}
-
-// Initialise: all non-manual languages start as English, translated on demand
+// All non-manual languages use GT — set to English in TRANSLATIONS
+// (GT translates the visual page; our TRANSLATIONS just drives data-i18n for manual langs)
 ['pt','pl','nl','sv','el','ro','cs','tr','ar','ja','ko','hi','id','uk'].forEach(l=>{
-  TRANSLATIONS[l]=TRANSLATIONS.en;
+  TRANSLATIONS[l] = TRANSLATIONS.en;
 });
 
 let currentLang='en';
@@ -1581,36 +1476,31 @@ window.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('analyseBtn').addEventListener('click',runAnalysis);
 });
 
-async function onLangChange(){
-  currentLang=document.getElementById('langSelect').value;
-  document.getElementById('htmlRoot').lang=currentLang;
+function onLangChange(){
+  currentLang = document.getElementById('langSelect').value;
+
+  // Set html[lang] — signals browser this page's language changed
+  document.documentElement.lang = currentLang;
 
   if(MANUAL_LANGS.has(currentLang)){
-    // Instant — no network needed
+    // Instant: use our hardcoded TRANSLATIONS, reset GT if it was active
     applyTranslations();
-    if(pList.length&&CC[selCountry]) renderParties(pList,CC[selCountry].f);
-    if(selParty&&document.getElementById('dossier').style.display!=='none'){
-      const cfg=CC[selCountry];
-      const topics=[...document.querySelectorAll('.tBtn.on')].map(b=>b.dataset.t);
-      if(cfg&&topics.length) renderDossier(selParty,cfg,topics,wbD,whoV);
+    if(pList.length && CC[selCountry]) renderParties(pList, CC[selCountry].f);
+    if(selParty && document.getElementById('dossier').style.display !== 'none'){
+      const cfg = CC[selCountry];
+      const topics = [...document.querySelectorAll('.tBtn.on')].map(b=>b.dataset.t);
+      if(cfg && topics.length) renderDossier(selParty, cfg, topics, wbD, whoV);
     }
+    // Reset GT (it may have been active before)
+    switchLanguage(currentLang);
   } else {
-    // Apply English immediately so nothing goes blank
-    applyTranslations();
-    if(pList.length&&CC[selCountry]) renderParties(pList,CC[selCountry].f);
-    // Now translate everything visible on the page
-    await translateFullPage(currentLang);
-    // If dossier is visible, also re-translate it (translateFullPage covers it but refresh ensures it)
-    if(selParty&&document.getElementById('dossier').style.display!=='none'){
-      const cfg=CC[selCountry];
-      const topics=[...document.querySelectorAll('.tBtn.on')].map(b=>b.dataset.t);
-      if(cfg&&topics.length){
-        renderDossier(selParty,cfg,topics,wbD,whoV);
-        // renderDossier calls retranslateNew internally
-      }
-    }
+    // Non-manual: keep English data-i18n strings, let GT translate visually
+    applyTranslations(); // applies English strings (data-i18n stays English — GT will translate them)
+    if(pList.length && CC[selCountry]) renderParties(pList, CC[selCountry].f);
+    // GT translates EVERYTHING including dossier — no need to re-render
+    switchLanguage(currentLang);
   }
-  document.getElementById('analyseBtn').textContent=t('analyseBtn');
+  document.getElementById('analyseBtn').textContent = t('analyseBtn');
 }
 
 /* ── COUNTRY CHANGE ── */
