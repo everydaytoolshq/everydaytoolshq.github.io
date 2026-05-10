@@ -28,6 +28,17 @@ function googleTranslateElementInit(){
   },'gt_container');
 }
 </script>
+<script>
+// !! MUST run before GT Element loads !!
+// Clear GT translation cookie so the page always starts in English
+// Without this, GT reads the cached /en/it cookie and auto-translates on reload
+(function(){
+  var e='expires=Thu,01 Jan 1970 00:00:00 UTC;path=/;';
+  document.cookie='googtrans=;'+e;
+  document.cookie='googtrans=;'+e+'domain=.'+location.hostname+';';
+  document.cookie='googtrans=;'+e+'domain='+location.hostname+';';
+})();
+</script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
 <style>
 /* Hide Google Translate toolbar — we control translation via our own UI */
@@ -1036,15 +1047,19 @@ function _applyGTLang(langCode){
 
 // Restore English — reset GT
 function _resetGT(){
+  // Always clear the cookie — regardless of whether GT is active
+  var exp='expires=Thu,01 Jan 1970 00:00:00 UTC;path=/;';
+  document.cookie='googtrans=;'+exp;
+  document.cookie='googtrans=;'+exp+'domain=.'+location.hostname+';';
+  document.cookie='googtrans=;'+exp+'domain='+location.hostname+';';
   if(!_gtActive) return;
-  _waitForGT(sel=>{
-    sel.value = 'en';
+  _waitForGT(function(sel){
+    sel.value='en';
     sel.dispatchEvent(new Event('change'));
-    _gtActive = false;
+    _gtActive=false;
+    // Restore html lang attribute
+    document.documentElement.lang='en';
   });
-  // Clear GT cookie so page truly resets
-  document.cookie = 'googtrans=; expires=Thu,01 Jan 1970 00:00:00 UTC; path=/;';
-  document.cookie = 'googtrans=; expires=Thu,01 Jan 1970 00:00:00 UTC; path=/; domain=.' + location.hostname;
 }
 
 // Status banner
@@ -1688,11 +1703,24 @@ let aiDetailLevel='standard'; // concise / standard / detailed // {n:'party name
 
 /* ── INIT ── */
 window.addEventListener('DOMContentLoaded',()=>{
+  // Always start in English — clear any cached GT cookie state
   currentLang='en';
-  document.getElementById('langSelect').value=currentLang;
+  document.getElementById('langSelect').value='en';
+  // Belt-and-braces: clear cookie again after DOM loads
+  document.cookie='googtrans=;expires=Thu,01 Jan 1970 00:00:00 UTC;path=/;';
+  document.cookie='googtrans=;expires=Thu,01 Jan 1970 00:00:00 UTC;path=/;domain=.'+location.hostname+';';
+  // If GT already initialised from cache, reset it to English now
+  setTimeout(function(){
+    var sel=document.querySelector('.goog-te-combo');
+    if(sel && sel.value && sel.value!=='en'){
+      sel.value='en';
+      sel.dispatchEvent(new Event('change'));
+    }
+    // Also restore body to untranslated state
+    document.body.setAttribute('translate','yes');
+    document.documentElement.lang='en';
+  }, 500);
   applyTranslations();
-  // GT Element loads async — once ready, translate any pre-selected lang
-  // (normally none on fresh load, but good to have)
 
   activeAIs.forEach(id=>{const tile=document.querySelector(`[data-ai="${id}"]`);if(tile){tile.classList.add('active');document.getElementById('ck-'+id).textContent='✓';}});
 
