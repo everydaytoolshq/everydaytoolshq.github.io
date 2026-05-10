@@ -413,6 +413,15 @@ details[open] summary::after{transform:rotate(-135deg);margin-bottom:-2px}
   .ref-table-wrap{max-width:100% !important;overflow-x:auto !important}
   .ref-table{max-width:none !important}
 }
+/* BREADCRUMB */
+.bc-bar{background:var(--bg);border-bottom:1px solid var(--border);padding:10px 0}
+.bc{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--grey);font-family:var(--fb);flex-wrap:wrap}
+.bc a{color:var(--grey);text-decoration:none;transition:color .15s}
+.bc a:hover{color:var(--fire);text-decoration:underline}
+.bc-sep{color:var(--border);font-size:14px;line-height:1}
+.bc-current{color:var(--coal);font-weight:700}
+
+/* FOOTER */
 .siteFooter{margin-top:80px;padding:40px 0 30px;border-top:1px solid #ddd;
   text-align:center;font-size:14px;background:#f9fafb}
 .footerBrand{font-family:var(--fd);font-weight:900;margin-bottom:12px}
@@ -429,6 +438,17 @@ details[open] summary::after{transform:rotate(-135deg);margin-bottom:-2px}
 </head>
 <body>
 <div id="page-lock">
+
+<!-- BREADCRUMB -->
+<div class="bc-bar">
+  <div class="wrap">
+    <nav class="bc" aria-label="Breadcrumb">
+      <a href="https://everydaytoolshq.github.io/">Home</a>
+      <span class="bc-sep">›</span>
+      <span class="bc-current">Air Fryer Companion Tool</span>
+    </nav>
+  </div>
+</div>
 
 <!-- HERO -->
 <section class="hero">
