@@ -216,8 +216,8 @@ input:focus,select:focus{outline:none;border-color:var(--fire);box-shadow:0 0 0 
 .ref-table thead tr{background:linear-gradient(135deg,var(--fire),var(--ember));color:white}
 .ref-table thead th{padding:11px 13px;text-align:left;font-family:var(--fd);font-size:.75rem;
   letter-spacing:.06em;white-space:nowrap;font-weight:900}
-.ref-table tbody tr{border-bottom:1px solid var(--border);background:white;transition:background .12s}
-.ref-table tbody tr:hover{background:var(--smoke)}
+.ref-table tbody tr{border-bottom:1px solid var(--border);background:white;transition:background .12s,transform .1s;cursor:pointer}
+.ref-table tbody tr:hover{background:var(--smoke);outline:2px solid var(--fire);outline-offset:-2px}
 .ref-table tbody tr:last-child{border-bottom:none}
 .ref-table td{padding:10px 13px;vertical-align:middle;line-height:1.4}
 .ref-table td:first-child{font-weight:700;color:var(--coal)}
@@ -431,6 +431,10 @@ details[open] summary::after{transform:rotate(-135deg);margin-bottom:-2px}
         </select>
       </div>
       <div class="ref-count" id="refCount">Showing all 64 foods</div>
+      <div style="display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#fff3e0,#ffe8cc);border:1.5px solid var(--border);border-radius:12px;padding:11px 16px;margin-bottom:12px;font-size:13px;font-weight:700;color:var(--coal)">
+        <span style="font-size:20px">👆</span>
+        <span><strong>Click any food row</strong> to see full air fryer settings, step-by-step instructions, and pro tips.</span>
+      </div>
       <div class="ref-table-wrap">
         <table class="ref-table" id="refTable">
           <thead>
