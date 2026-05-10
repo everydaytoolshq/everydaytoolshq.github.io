@@ -102,14 +102,12 @@ h1 span{color:var(--fire)}
 
 /* ── TAB SYSTEM ──────────────────────────────────────────── */
 .tab-bar{
-  position:sticky;top:0;z-index:100;
+  position:sticky;top:40px;z-index:100;
   background:var(--bg);
   border-bottom:2px solid var(--border);
-  padding:12px 0;
+  padding:10px 0;
   box-shadow:0 4px 16px rgba(255,85,0,.08);
-  width:100%;
-  max-width:100%;
-  overflow:hidden;
+  width:100%;max-width:100%;overflow:hidden;
 }
 .tab-bar-inner{
   max-width:1200px;margin:0 auto;padding:0 24px;
@@ -414,8 +412,13 @@ details[open] summary::after{transform:rotate(-135deg);margin-bottom:-2px}
   .ref-table{max-width:none !important}
 }
 /* BREADCRUMB */
-.bc-bar{background:var(--bg);border-bottom:1px solid var(--border);padding:10px 0}
-.bc{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--grey);font-family:var(--fb);flex-wrap:wrap}
+.bc-bar{
+  position:sticky;top:0;z-index:200;
+  background:var(--bg);border-bottom:1px solid var(--border);
+  padding:10px 0;width:100%;max-width:100%;overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+.bc{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--grey);font-family:var(--fb)}
 .bc a{color:var(--grey);text-decoration:none;transition:color .15s}
 .bc a:hover{color:var(--fire);text-decoration:underline}
 .bc-sep{color:var(--border);font-size:14px;line-height:1}
