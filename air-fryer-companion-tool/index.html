@@ -140,7 +140,7 @@ h2{font-family:var(--fd);font-size:clamp(18px,3vw,36px);font-weight:900;
 
 /* CARDS */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
-  padding:28px;box-shadow:var(--shadow);width:100%;max-width:100%}
+  padding:28px;box-shadow:var(--shadow);width:100%;max-width:100%;overflow:hidden}
 @media(max-width:600px){.card{padding:16px;border-radius:18px}}
 .cardHeader{display:flex;align-items:center;gap:10px;margin-bottom:20px;
   padding-bottom:14px;border-bottom:2px solid var(--border);flex-wrap:wrap}
@@ -221,6 +221,7 @@ input:focus,select:focus{outline:none;border-color:var(--fire);box-shadow:0 0 0 
 
 .ref-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:16px;border:1px solid var(--border);max-width:100%}
 .ref-table{width:100%;min-width:520px;border-collapse:collapse;font-size:.85rem}
+@media(max-width:600px){.ref-table{min-width:0}}
 .ref-table thead tr{background:linear-gradient(135deg,var(--fire),var(--ember));color:white}
 .ref-table thead th{padding:11px 13px;text-align:left;font-family:var(--fd);font-size:.75rem;
   letter-spacing:.06em;white-space:nowrap;font-weight:900}
@@ -249,6 +250,27 @@ input:focus,select:focus{outline:none;border-color:var(--fire);box-shadow:0 0 0 
 .ref-boost{font-size:.72rem;color:var(--fire);font-weight:700;white-space:nowrap}
 .ref-empty{text-align:center;padding:32px;color:var(--grey);font-size:.9rem}
 .ref-count{font-size:.8rem;color:var(--grey);margin-bottom:10px;font-style:italic}
+/* Click hint banner */
+.click-hint{
+  display:flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,#fff3e0,#ffe8cc);
+  border:1.5px solid var(--border);border-radius:12px;
+  padding:11px 16px;margin-bottom:12px;
+  font-size:13px;font-weight:700;color:var(--coal);
+  max-width:100%;overflow:hidden;
+}
+.click-hint-icon{font-size:20px;flex-shrink:0}
+.click-hint span:last-child{min-width:0;word-break:break-word}
+/* Table — hide Category and Tips columns on mobile to prevent overflow */
+@media(max-width:600px){
+  .ref-table thead th:nth-child(2),
+  .ref-table thead th:nth-child(5),
+  .ref-table tbody td:nth-child(2),
+  .ref-table tbody td:nth-child(5){display:none}
+  .ref-table{font-size:.8rem;min-width:0;width:100%}
+  .ref-table td,.ref-table th{padding:9px 10px}
+  .ref-table td:first-child{font-size:.83rem}
+}
 /* Individual food result card */
 .food-result-card{background:linear-gradient(135deg,var(--smoke),var(--ash));border:1.5px solid var(--border);
   border-radius:var(--radius-lg);padding:20px;margin-top:16px;display:none;max-width:100%}
@@ -441,9 +463,9 @@ details[open] summary::after{transform:rotate(-135deg);margin-bottom:-2px}
         </select>
       </div>
       <div class="ref-count" id="refCount">Showing all 64 foods</div>
-      <div style="display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#fff3e0,#ffe8cc);border:1.5px solid var(--border);border-radius:12px;padding:11px 16px;margin-bottom:12px;font-size:13px;font-weight:700;color:var(--coal)">
-        <span style="font-size:20px">👆</span>
-        <span><strong>Click any food row</strong> to see full air fryer settings, step-by-step instructions, and pro tips.</span>
+      <div class="click-hint">
+        <span class="click-hint-icon">👆</span>
+        <span><strong>Click any row</strong> to see full settings, steps &amp; tips.</span>
       </div>
       <div class="ref-table-wrap">
         <table class="ref-table" id="refTable">
