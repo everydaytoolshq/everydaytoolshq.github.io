@@ -517,6 +517,36 @@ select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.10);}
   <div class="cardBadge" style="color:#7dd3fc"><div class="cardNum" style="background:#2e8bc0">⚡</div> <span data-i18n="boosterBadge">AI Power Boost — Optional</span></div>
   <div class="boosterTitle" data-i18n="boosterTitle">🤖 Go Deeper With Your Own AI</div>
   <div class="boosterSub" data-i18n="boosterSub">Already logged into ChatGPT, Gemini, Claude or another AI? Tick it and choose National or Local mode. VoterLens builds a forensic prompt with live economic data — paste into your AI for the deepest possible analysis.</div>
+  <!-- PARTY OVERRIDE -->
+  <div id="boosterPartyRow" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px 14px;margin-bottom:14px;">
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.45);margin-bottom:8px;">🎯 Party being analysed</div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <div id="boosterPartyLabel" style="font-size:13px;font-weight:700;color:#7dd3fc;flex:1;min-width:140px;">—</div>
+      <button id="boosterOverrideBtn" onclick="togglePartyOverride()" style="font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);cursor:pointer;white-space:nowrap;">✏️ Change party</button>
+    </div>
+    <div id="boosterOverrideArea" style="display:none;margin-top:10px;">
+      <input id="boosterPartyInput" type="text" placeholder="Type any party name… e.g. Lega, SNP, Greens, Podemos"
+        style="width:100%;box-sizing:border-box;padding:9px 12px;border-radius:10px;border:1px solid rgba(46,139,192,.5);background:rgba(0,0,0,.3);color:#fff;font-size:13px;outline:none;"
+        oninput="onBoosterPartyInput(this.value)"
+        onkeydown="if(event.key==='Enter'){applyPartyOverride();}" />
+      <div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:5px;">Press Enter or click Apply — the AI prompt will update with your party</div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button onclick="applyPartyOverride()" style="padding:6px 16px;border-radius:20px;background:#2e8bc0;color:#fff;border:none;font-size:12px;font-weight:700;cursor:pointer;">✅ Apply</button>
+        <button onclick="cancelPartyOverride()" style="padding:6px 14px;border-radius:20px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.2);font-size:12px;cursor:pointer;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI DETAIL LEVEL -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+    <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.45);">📊 Analysis depth:</span>
+    <div style="display:flex;gap:6px;">
+      <button class="aiLevelBtn" data-level="simple" onclick="setAILevel('simple')" style="padding:5px 13px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:rgba(255,255,255,.6);cursor:pointer;">📋 Concise</button>
+      <button class="aiLevelBtn active" data-level="standard" onclick="setAILevel('standard')" style="padding:5px 13px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid #2e8bc0;background:rgba(46,139,192,.2);color:#7dd3fc;cursor:pointer;">📊 Standard</button>
+      <button class="aiLevelBtn" data-level="expert" onclick="setAILevel('expert')" style="padding:5px 13px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:rgba(255,255,255,.6);cursor:pointer;">🔬 Detailed</button>
+    </div>
+  </div>
+
   <!-- MODE SELECTOR -->
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
     <button class="modeBtn active" id="modeNational" onclick="setPromptMode('national')">🌍 National Election</button>
@@ -709,7 +739,7 @@ const TRANSLATIONS = {
     affiliate:"Affiliate Disclosure: we may earn a small commission at no extra cost to you.",
     step1badge:"Step One",step1title:"🌍 Country & Language",
     labelCountry:"Country",labelLang:"Language",labelDetail:"Detail",selectCountry:"— Select a country —",
-    simple:"🟢 Simple",standard:"🔵 Standard",expert:"🟣 Expert",
+    simple:"📋 Concise",standard:"📊 Standard",expert:"🟣 Expert",
     srcLabel:"📡 Active Data Sources",
     step2badge:"Step Two",step2title:"🏛️ Select a Party",partyEmpty:"👆 Select a country above",partyLoading:"⏳ Loading parties…",
     step3badge:"Step Three",step3title:"📌 Select Topics That Matter to You",
@@ -1653,6 +1683,8 @@ const PDB={
 let selCountry='';
 let selParty=null, pList=[], wbD={}, whoV=null;
 let activeAIs=new Set();
+let boosterPartyOverride=null;
+let aiDetailLevel='standard'; // concise / standard / detailed // {n:'party name', custom:true} or null = use selParty
 
 /* ── INIT ── */
 window.addEventListener('DOMContentLoaded',()=>{
@@ -1891,10 +1923,74 @@ function renderDossier(party, cfg, topics, wb, who){
   /* -- S0c: IMMIGRATION REALITY -- */
   h+=renderImmigrationReality(cfg,party,s,wb);
 
-  /* ── S1: EXECUTIVE SUMMARY ── */
-  h+=`<div class="dSec"><div class="dHead">${t('secSummary')}</div>`;
-  if(kb?.tldr) h+=`<div class="tldrQuote">"${esc(kb.tldr)}"</div>`;
-  h+=`<div class="execText">${(kb?.summary||generateSummary(party,cfg)).split('\n').join('<br>')}</div></div>`;
+  /* ── S1: SUMMARY CARD (always shown, depth varies by level) ── */
+
+  // ── Build promise bar: kept vs broken ──
+  const keptCount=(kb?.promisesKept||[]).length;
+  const brokenCount=(kb?.promisesBroken||[]).length;
+  const falseCount=(kb?.falseOrMisleading||[]).length;
+  const totalP=keptCount+brokenCount;
+  const keptPct=totalP>0?Math.round(keptCount/totalP*100):null;
+
+  // ── Score badges for summary ──
+  const pulse=kb?.pulse||generatePulse(party,cfg);
+  const fcS=pulse.factCheck.score;
+  const hrS=pulse.historicalRisk.score;
+  const bfS=pulse.budgetFeasibility.score;
+  const crS=pulse.civilRights.score;
+  const scoreColor=sc=>(sc>65?'#22c55e':sc>40?'#f59e0b':'#dc2626');
+  const hrColor=sc=>(sc>60?'#dc2626':sc>30?'#f59e0b':'#22c55e');
+
+  // ── TLDR / summary text — shorter for Concise ──
+  const tldrText=kb?.tldr||(kb?.summary||'').split('.')[0]+'.';
+  const summaryText=kb?.summary||generateSummary(party,cfg);
+  const summaryDisplay=isSimple
+    ? (tldrText||summaryText.split('.').slice(0,2).join('.')+'.') 
+    : isExpert ? summaryText
+    : summaryText.split('.').slice(0,4).join('.')+'.';
+
+  h+=`<div class="dSec summaryCard" style="background:linear-gradient(135deg,rgba(46,139,192,.08) 0%,rgba(0,0,0,0) 100%);border:1.5px solid rgba(46,139,192,.2);">
+    <div class="dHead" style="margin-bottom:6px;">📋 ${t('secSummary')}</div>
+
+    ${kb?.tldr&&!isSimple?`<div class="tldrQuote" style="margin-bottom:12px;">"${esc(kb.tldr)}"</div>`:''}
+
+    <div class="execText" style="margin-bottom:14px;">${summaryDisplay.split('\n').join('<br>')}</div>
+
+    <!-- 4 score badges inline -->
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:${isSimple?'0':'14px'};">
+      <div style="background:rgba(0,0,0,.2);border-radius:10px;padding:7px 12px;text-align:center;min-width:70px;">
+        <div style="font-size:16px;font-weight:800;color:${scoreColor(fcS)}">${fcS}%</div>
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">Fact-Check</div>
+      </div>
+      <div style="background:rgba(0,0,0,.2);border-radius:10px;padding:7px 12px;text-align:center;min-width:70px;">
+        <div style="font-size:16px;font-weight:800;color:${hrColor(hrS)}">${hrS}%</div>
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">Risk</div>
+      </div>
+      <div style="background:rgba(0,0,0,.2);border-radius:10px;padding:7px 12px;text-align:center;min-width:70px;">
+        <div style="font-size:16px;font-weight:800;color:${scoreColor(bfS)}">${bfS}%</div>
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">Feasibility</div>
+      </div>
+      <div style="background:rgba(0,0,0,.2);border-radius:10px;padding:7px 12px;text-align:center;min-width:70px;">
+        <div style="font-size:16px;font-weight:800;color:${scoreColor(crS)}">${crS}%</div>
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">Rights</div>
+      </div>
+      ${keptPct!==null?`<div style="background:rgba(0,0,0,.2);border-radius:10px;padding:7px 12px;text-align:center;min-width:70px;">
+        <div style="font-size:16px;font-weight:800;color:${scoreColor(keptPct)}">${keptPct}%</div>
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">Kept</div>
+      </div>`:''}
+    </div>
+
+    ${!isSimple&&(kb?.warnings||[]).length>0?`
+    <!-- Key warnings row -->
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px;">
+      ${(kb.warnings||[]).slice(0,isExpert?6:3).map(w=>`<span style="background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.25);border-radius:20px;padding:3px 10px;font-size:10px;color:#fca5a5;">⚠️ ${esc(w.title)}</span>`).join('')}
+    </div>`:''}
+
+    ${isSimple?`<div style="font-size:10px;color:var(--muted);margin-top:8px;font-style:italic;">Switch to Standard or Detailed for full analysis including policy breakdown, controversies and voter impact.</div>`:''}
+  </div>`;
+
+  /* ── S2: ACCOUNTABILITY PULSE ── */
+  // ── Generate estimated pulse scores for parties without KB data ──
 
   /* ── S2: ACCOUNTABILITY PULSE ── */
   // ── Generate estimated pulse scores for parties without KB data ──
@@ -1932,7 +2028,7 @@ function renderDossier(party, cfg, topics, wb, who){
       <div class="gauge">
         <div class="gLabel" style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:5px;">${t('trustScore')||'Fact-Check Score'}</div>
         <div class="gVal" style="color:${fcCol}">${p.factCheck.score}%</div>${gBar(p.factCheck.score,fcCol)}
-        <div class="gNote">${isSimple?esc(p.factCheck.note.slice(0,120))+'…':esc(p.factCheck.note)}</div></div>
+        <div class="gNote">${isSimple?esc(p.factCheck.note.slice(0,100))+'…':isExpert?esc(p.factCheck.note):esc(p.factCheck.note.slice(0,200))+(p.factCheck.note.length>200?'…':'')}</div></div>
       <div class="gauge">
         <div class="gLabel" style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:5px;">${t('riskScore')||'Historical Risk'} <span style="font-size:8px;opacity:.6;">(low = safer)</span></div>
         <div class="gVal" style="color:${hrCol}">${p.historicalRisk.score}%</div>${gBar(p.historicalRisk.score,hrCol)}
@@ -2031,15 +2127,15 @@ function renderDossier(party, cfg, topics, wb, who){
         ${td.impactRich?`<div class="impBox rich"><div class="impLbl">${t('impactRich')}</div><div class="impText">${esc(td.impactRich)}</div></div>`:''}
       </div>`;
     }
-    if(td.histParallel&&(isStandard||isExpert)){
-      h+=`<div class="histRef">${esc(td.histParallel)}</div>`;
+    if(td.histParallel&&isExpert){
+      h+=`<div class="histRef" style="margin-top:8px;font-size:11px;color:var(--muted);font-style:italic;border-left:2px solid var(--muted);padding-left:8px;">${esc(td.histParallel)}</div>`;
     }
     h+=`</div>`;
   });
   h+=`</div></div>`;
 
   /* ── S5: HISTORY MIRROR ── */
-  if(kb?.historyMirror?.length){
+  if(!isSimple&&kb?.historyMirror?.length){
     h+=`<div class="dSec"><div class="dHead">${t('secHistory')}</div>`;
     kb.historyMirror.forEach(hm=>{
       h+=`<div class="histCard">
@@ -2071,8 +2167,8 @@ function renderDossier(party, cfg, topics, wb, who){
         <div style="font-size:18px;line-height:1;flex-shrink:0;">⚠️</div>
         <div style="flex:1;">
           <div style="font-size:12px;font-weight:700;color:var(--bark);margin-bottom:3px;">${esc(sc.title)} <span style="font-weight:400;color:var(--muted);font-size:10px;">(${sc.year})</span></div>
-          <div style="font-size:11px;line-height:1.75;color:var(--muted);">${esc(sc.detail)}</div>
-          ${sc.source?'<div style="font-size:10px;color:var(--blue);margin-top:4px;font-style:italic;">📎 '+esc(sc.source)+'</div>':''}
+          <div style="font-size:11px;line-height:1.75;color:var(--muted);">${esc(isExpert?sc.detail:sc.detail.slice(0,200)+(sc.detail.length>200?'…':''))}</div>
+          ${isExpert&&sc.source?'<div style="font-size:10px;color:var(--blue);margin-top:4px;font-style:italic;">📎 '+esc(sc.source)+'</div>':''}
         </div>
       </div>`;
     });
@@ -2088,10 +2184,10 @@ function renderDossier(party, cfg, topics, wb, who){
   }
 
   /* ── S7: PROMISE TRACKER ── */
-  if(kb&&(kb.promisesKept?.length||kb.promisesBroken?.length||kb.falseOrMisleading?.length)){
+  if(kb&&!isSimple&&(kb.promisesKept?.length||kb.promisesBroken?.length||kb.falseOrMisleading?.length)){
     h+=`<div class="dSec"><div class="dHead">${t('secPromises')}</div><div class="promGrid">`;
-    if(kb.promisesKept?.length){h+=`<div class="promBox kept"><h4>${t('promKept')}</h4><ul>`;kb.promisesKept.forEach(p=>h+=`<li>${esc(p)}</li>`);h+=`</ul></div>`;}
-    if(kb.promisesBroken?.length){h+=`<div class="promBox broken"><h4>${t('promBroken')}</h4><ul>`;kb.promisesBroken.forEach(p=>h+=`<li>${esc(p)}</li>`);h+=`</ul></div>`;}
+    if(kb.promisesKept?.length){h+=`<div class="promBox kept"><h4>${t('promKept')}</h4><ul>`;(isExpert?kb.promisesKept:kb.promisesKept.slice(0,4)).forEach(p=>h+=`<li>${esc(p)}</li>`);h+=`</ul></div>`;}
+    if(kb.promisesBroken?.length){h+=`<div class="promBox broken"><h4>${t('promBroken')}</h4><ul>`;(isExpert?kb.promisesBroken:kb.promisesBroken.slice(0,4)).forEach(p=>h+=`<li>${esc(p)}</li>`);h+=`</ul></div>`;}
     if(kb.falseOrMisleading?.length){h+=`<div class="promBox lied"><h4>${t('promFalse')}</h4><ul>`;kb.falseOrMisleading.forEach(p=>h+=`<li>${esc(p)}</li>`);h+=`</ul></div>`;}
     h+=`</div></div>`;
   }
@@ -2135,8 +2231,8 @@ function renderDossier(party, cfg, topics, wb, who){
 
   h+=`</div>`;
   // append country status and Q&A OUTSIDE dossier box
-  h+=renderCountryStatus(cfg,wb,who);
-  h+=renderQA(party,cfg,wb);
+  if(!isSimple) h+=renderCountryStatus(cfg,wb,who);
+  if(!isSimple) h+=renderQA(party,cfg,wb);
 
   el.innerHTML=h;
   el.style.display='block';
@@ -2152,8 +2248,10 @@ function renderDossier(party, cfg, topics, wb, who){
   });
 
   // Show AI booster and update local country banner
+  boosterPartyOverride=null; // reset override when new dossier is generated
   buildAIBooster(party,cfg,topics,wb,who);
   document.getElementById('boosterCard').style.display='block';
+  updateBoosterPartyLabel();
   retranslateNew(document.getElementById('boosterCard'));
 
   // After dossier renders, ask GT to re-translate newly visible content
@@ -4148,6 +4246,82 @@ function topicLabel(key){
 let currentPromptMode='national';
 let localLocation={town:'',postcode:''};
 
+// ── Party Override Functions ──
+function setAILevel(level){
+  aiDetailLevel=level;
+  document.querySelectorAll('.aiLevelBtn').forEach(b=>{
+    const active=b.dataset.level===level;
+    b.style.borderColor=active?'#2e8bc0':'rgba(255,255,255,.2)';
+    b.style.background=active?'rgba(46,139,192,.2)':'rgba(255,255,255,.06)';
+    b.style.color=active?'#7dd3fc':'rgba(255,255,255,.6)';
+  });
+  // Rebuild prompt with new level
+  const cfg=CC[selCountry];
+  if(cfg&&selParty){
+    const p=boosterPartyOverride||selParty;
+    buildAIBooster(p,cfg,[...document.querySelectorAll('.tBtn.on')].map(b=>b.dataset.t),wbD,whoV);
+  }
+}
+
+function togglePartyOverride(){
+  const area=document.getElementById('boosterOverrideArea');
+  const input=document.getElementById('boosterPartyInput');
+  const isOpen=area.style.display!=='none';
+  area.style.display=isOpen?'none':'block';
+  if(!isOpen){
+    input.value=boosterPartyOverride?boosterPartyOverride.n:(selParty?selParty.n:'');
+    input.focus();
+    input.select();
+  }
+}
+
+function onBoosterPartyInput(val){
+  // Live preview - update label as user types
+  const label=document.getElementById('boosterPartyLabel');
+  if(val.trim()){
+    label.style.color='#fbbf24';
+    label.textContent=(val.trim().length>2?'✏️ ':'')+val.trim()+(val.trim().length>2?' (custom)':'');
+  } else {
+    const base=selParty?selParty.n:'—';
+    label.style.color='#7dd3fc';
+    label.textContent=base;
+  }
+}
+
+function applyPartyOverride(){
+  const val=document.getElementById('boosterPartyInput').value.trim();
+  if(val.length>=2){
+    boosterPartyOverride={n:val,s:'c',custom:true};
+  } else {
+    boosterPartyOverride=null;
+  }
+  updateBoosterPartyLabel();
+  document.getElementById('boosterOverrideArea').style.display='none';
+  // Rebuild prompt with new party
+  const cfg=CC[selCountry];
+  if(cfg){
+    const effectiveParty=boosterPartyOverride||selParty;
+    if(effectiveParty) buildAIBooster(effectiveParty,cfg,[...document.querySelectorAll('.tBtn.on')].map(b=>b.dataset.t),wbD,whoV);
+  }
+}
+
+function cancelPartyOverride(){
+  document.getElementById('boosterOverrideArea').style.display='none';
+  updateBoosterPartyLabel();
+}
+
+function updateBoosterPartyLabel(){
+  const label=document.getElementById('boosterPartyLabel');
+  if(!label) return;
+  if(boosterPartyOverride){
+    label.style.color='#fbbf24';
+    label.textContent='✏️ '+boosterPartyOverride.n+' (custom)';
+  } else {
+    label.style.color='#7dd3fc';
+    label.textContent=selParty?(selParty.n+' '+((CC[selCountry]||{}).f||'')):'—';
+  }
+}
+
 function setPromptMode(mode){
   currentPromptMode=mode;
   document.getElementById('modeNational').classList.toggle('active',mode==='national');
@@ -4196,7 +4370,11 @@ async function geoLocate(){
 }
 
 function buildAIBooster(party, cfg, topics, wb, who){
-  const kb=findKB(party.n, selCountry);
+  // Use manual override if set
+  const effectiveParty=boosterPartyOverride||party;
+  const kb=boosterPartyOverride?null:findKB(party.n, selCountry);
+  party=effectiveParty; // use override for all prompt building
+  updateBoosterPartyLabel();
   const cur=cfg.cur;
   const isLocal=currentPromptMode==='local';
   const locationStr=localLocation.town?`${localLocation.town}${localLocation.postcode?' ('+localLocation.postcode+')':''}`:cfg.n;
@@ -4250,6 +4428,8 @@ Topics: ${topicList}
 ${econBlock||'⚠️ Use your own knowledge of '+cfg.n+' economic data'}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ANALYSIS DEPTH: \${aiDetailLevel==='simple'?'📋 CONCISE — brief, punchy, key facts only. Each section max 3-4 bullet points or 2 sentences. Skip sub-details.':aiDetailLevel==='expert'?'🔬 DETAILED — comprehensive, full evidence, all sub-points, historical parallels, full arithmetic. Leave nothing out.':'📊 STANDARD — balanced depth. Main points per section, key evidence, brief arithmetic.'}
+
 MANDATORY RULES — READ BEFORE STARTING
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅ Complete ALL 13 sections. No skipping, no "insufficient data" excuses.
