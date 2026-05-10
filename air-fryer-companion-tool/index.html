@@ -34,19 +34,40 @@
   --fb:'Nunito',sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
-body{font-family:var(--fb);background:var(--bg);color:var(--char);line-height:1.6;min-height:100vh;overflow-x:hidden;max-width:100vw}
+html{overflow-x:hidden;overflow-y:scroll;-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  font-family:var(--fb);background:var(--bg);color:var(--char);
+  line-height:1.6;min-height:100vh;
+  overflow-x:hidden;
+  /* iOS Safari fix: position relative + overflow hidden on body is the only reliable clip */
+  position:relative;
+  width:100%;
+  max-width:100%;
+}
+/* Outer page lock — clips everything on iOS */
+#page-lock{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+  position:relative;
+}
 img{max-width:100%;height:auto;display:block}
 a{color:inherit}
-.wrap{width:100%;max-width:1200px;margin:0 auto;padding:0 24px;overflow-x:hidden}
+.wrap{width:100%;max-width:1200px;margin:0 auto;padding:0 24px}
 @media(max-width:600px){.wrap{padding:0 14px}}
 
 /* HERO */
 .hero{background:linear-gradient(160deg,#fff4e6 0%,#ffe8cc 50%,#ffd6a8 100%);
-  border-bottom:1px solid var(--border);padding:48px 0 56px;overflow:hidden;position:relative;max-width:100vw}
+  border-bottom:1px solid var(--border);padding:48px 0 56px;overflow:hidden;position:relative;
+  /* Clip the decorative blob on all sides */
+  clip-path:inset(0);
+}
 .hero::before{content:'';position:absolute;top:-120px;right:-100px;width:600px;height:600px;
-  background:radial-gradient(circle,rgba(255,140,0,.22) 0%,transparent 70%);pointer-events:none}
-.heroWrap{position:relative;z-index:1;overflow:hidden}
+  background:radial-gradient(circle,rgba(255,140,0,.22) 0%,transparent 70%);pointer-events:none;
+  /* Keep blob contained — no contribution to scroll width */
+  max-width:100%;
+}
+.heroWrap{position:relative;z-index:1;overflow:hidden;width:100%}
 .heroBadgeRow{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
 .heroBadge{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:999px;
   font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
@@ -86,7 +107,9 @@ h1 span{color:var(--fire)}
   border-bottom:2px solid var(--border);
   padding:12px 0;
   box-shadow:0 4px 16px rgba(255,85,0,.08);
-  max-width:100vw;overflow:hidden;
+  width:100%;
+  max-width:100%;
+  overflow:hidden;
 }
 .tab-bar-inner{
   max-width:1200px;margin:0 auto;padding:0 24px;
@@ -186,6 +209,11 @@ input:focus,select:focus{outline:none;border-color:var(--fire);box-shadow:0 0 0 
   color:white;box-shadow:0 6px 20px rgba(255,85,0,.3)}
 .btnFire:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,85,0,.4)}
 .btnFire:active{transform:translateY(0)}
+/* Disable transforms on touch to prevent iOS scroll interference */
+@media(hover:none){
+  .btnFire:hover,.toolNavPill:hover,.tab-btn:hover,
+  .methodCard:hover,.productCard:hover{transform:none}
+}
 
 /* RESULTS */
 .resultsBlock{display:none}
@@ -369,7 +397,22 @@ details[open] summary::after{transform:rotate(-135deg);margin-bottom:-2px}
   background:var(--fire);color:white;font-size:.7rem;font-weight:700;letter-spacing:.06em;
   text-transform:uppercase;padding:3px 10px;border-radius:999px;z-index:1}
 
-/* FOOTER */
+/* ── MOBILE OVERFLOW NUCLEAR OPTION ─────────────────────
+   iOS Safari ignores overflow-x:hidden on html/body.
+   This catch-all ensures nothing can be wider than 100vw.
+   The #page-lock wrapper is the primary iOS fix.
+─────────────────────────────────────────────────────── */
+@media(max-width:768px){
+  *{max-width:100% !important}
+  /* Exceptions for elements that legitimately need specific widths */
+  input[type="range"],
+  .liveBlip,.stepNum,.removeBtn,.checkRow input[type="checkbox"],
+  .radioOpt input[type="radio"],
+  .heroBadge .dot,.ref-tag,.ref-cat-badge{max-width:none !important}
+  /* Table scroll container exception */
+  .ref-table-wrap{max-width:100% !important;overflow-x:auto !important}
+  .ref-table{max-width:none !important}
+}
 .siteFooter{margin-top:80px;padding:40px 0 30px;border-top:1px solid #ddd;
   text-align:center;font-size:14px;background:#f9fafb}
 .footerBrand{font-family:var(--fd);font-weight:900;margin-bottom:12px}
@@ -385,6 +428,7 @@ details[open] summary::after{transform:rotate(-135deg);margin-bottom:-2px}
 </style>
 </head>
 <body>
+<div id="page-lock">
 
 <!-- HERO -->
 <section class="hero">
@@ -1239,5 +1283,6 @@ document.querySelectorAll('[data-tab]').forEach(function(btn) {
   });
 });
 </script>
+</div><!-- /page-lock -->
 </body>
 </html>
