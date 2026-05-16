@@ -92,6 +92,7 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 .src-strip.pu-purplebricks{background:rgba(160,30,180,.07);border-bottom:1px solid rgba(160,30,180,.2);color:#c060d0}
 .src-strip.pu-yopa{background:rgba(200,140,0,.07);border-bottom:1px solid rgba(200,140,0,.2);color:#b8800a}
 .src-strip.onthemarket{background:rgba(0,140,70,.07);border-bottom:1px solid rgba(0,140,70,.2);color:#4caf7d}
+.src-strip.land-registry{background:rgba(245,166,35,.07);border-bottom:1px solid rgba(245,166,35,.2);color:var(--amber)}
 .src-strip.fallback{background:var(--amber-bg);border-bottom:1px solid rgba(245,166,35,.3);color:var(--amber)}
 .cbody{padding:13px 15px}
 .ctop{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
@@ -468,6 +469,56 @@ async function freePriceHistory(pc){
   }catch(e){return {count:0,avgPrice:0,prices:[],trend:0,recent:[]};}
 }
 
+async function freeSoldListings(pc,budget){
+  // Land Registry SPARQL — always returns real sold properties, no key needed
+  try{
+    const area=pc.split(" ")[0].toUpperCase();
+    const sparql='SELECT ?paon ?street ?postcode ?date ?amount ?ptype WHERE{'
+      +'?t <http://landregistry.data.gov.uk/def/ppi/propertyAddress> ?addr.'
+      +'?addr <http://landregistry.data.gov.uk/def/common/postcode> ?postcode.'
+      +'FILTER(STRSTARTS(?postcode,"'+area+'")).'
+      +'?t <http://landregistry.data.gov.uk/def/ppi/pricePaid> ?amount.'
+      +'?t <http://landregistry.data.gov.uk/def/ppi/transactionDate> ?date.'
+      +'OPTIONAL{?addr <http://landregistry.data.gov.uk/def/ppi/paon> ?paon.}'
+      +'OPTIONAL{?addr <http://landregistry.data.gov.uk/def/ppi/street> ?street.}'
+      +'OPTIONAL{?t <http://landregistry.data.gov.uk/def/ppi/propertyType> ?ptype.}'
+      +'}ORDER BY DESC(?date)LIMIT 30';
+    const r=await fetch("https://landregistry.data.gov.uk/landregistry/query?query="+encodeURIComponent(sparql)+"&output=json");
+    const d=await r.json();
+    const rows=d.results?.bindings||[];
+    const seen=new Set();
+    const out=[];
+    for(const row of rows){
+      const price=parseInt(row.amount?.value||0);
+      const addr=[row.paon?.value,row.street?.value].filter(Boolean).join(" ");
+      const postcode=row.postcode?.value||area;
+      const k=addr.toLowerCase().slice(0,15);
+      if(!price||price>budget*1.15||seen.has(k)) continue;
+      seen.add(k);
+      const soldDate=row.date?.value?.slice(0,10)||"";
+      const ptype=(row.ptype?.value?.split("/").pop()||"residential").toLowerCase();
+      const pcs=postcode.replace(/\s/,"").toLowerCase();
+      out.push({
+        id:"lr-"+Math.random().toString(36).slice(2,8),
+        address:addr+", "+postcode,
+        price,type:ptype,
+        beds:0,baths:0,sqft:null,epc:null,tenure:null,
+        chainFree:false,chain:false,
+        garden:false,garage:false,parking:false,newBuild:false,
+        description:"Sold \xa3"+Number(price).toLocaleString()+" on "+soldDate+". Land Registry record. Use links below to check current for-sale properties in this street.",
+        features:["Sold: "+soldDate,"Land Registry","\xa3"+Number(price).toLocaleString()],
+        url:"https://www.rightmove.co.uk/house-prices/"+pcs+".html",
+        rightmoveUrl:"https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation="+encodeURIComponent(postcode)+"&useLocationIdentifier=false&sortType=6&includeSSTC=false",
+        zooplaUrl:"https://www.zoopla.co.uk/for-sale/property/"+pcs+"/?q="+pcs+"&results_sort=newest_listings",
+        agent:{name:"Land Registry record",phone:"",branch:"Click links to find current for-sale properties"},
+        addedDate:"Sold "+soldDate,reduced:false,source:"land-registry",floorArea:null,
+      });
+      if(out.length>=10) break;
+    }
+    return out;
+  }catch(e){console.warn("freeSoldListings:",e);return [];}
+}
+
 async function freeHPI(region){
   // HM Land Registry UK House Price Index - free JSON API
   try{
@@ -567,31 +618,58 @@ async function freeFoodHygiene(lat,lng){
 
 // ─── HOMEDATA ─────────────────────────────────────────────────────────────────
 async function homedataListings(postcode, budget){
-  // Free no-auth endpoint: address lookup by postcode
-  // Even without a key, we can get UPRN list then link to full listings
   if(!S.homedataKey||S.homedataUsed>=S.homedataCap) return [];
   try{
-    const r=await fetch('https://neo.homedata.co.uk/api/properties/search/?postcode='+encodeURIComponent(postcode)+'&max_price='+budget+'&status=for_sale&limit=20',{headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'}});
-    if(!r.ok) throw new Error('Homedata '+r.status);
-    const d=await r.json();
-    spend('hd',1);
-    return (d.properties||d.results||[]).map(p=>({
-      id:'hd-'+(p.uprn||p.id||Math.random().toString(36).slice(2)),
-      address:p.address||p.display_address||'Address unavailable',
-      price:p.price||p.asking_price||0,
-      type:(p.property_type||p.type||'unknown').toLowerCase(),
-      beds:p.bedrooms||p.beds||0,baths:p.bathrooms||p.baths||0,sqft:p.floor_area_sqft||null,
-      epc:p.epc_rating||null,tenure:p.tenure||null,
-      chainFree:p.chain_free===true||/chain.free/i.test(p.description||''),chain:p.chain_free===false,
-      garden:/garden/i.test(p.description||''),garage:/garage/i.test(p.description||''),parking:/parking/i.test(p.description||''),newBuild:false,
-      description:(p.description||'').slice(0,500),features:p.features||[],
-      url:p.rightmove_url||p.listing_url||('https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+encodeURIComponent(postcode.split(' ')[0])+'&useLocationIdentifier=false&sortType=6&includeSSTC=false'),
-      rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+encodeURIComponent(postcode.split(' ')[0])+'&useLocationIdentifier=false&sortType=6&includeSSTC=false',
-      zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+postcode.replace(/\s/,'').toLowerCase()+'/?q='+postcode.replace(/\s/,'').toLowerCase()+'&results_sort=newest_listings',
-      agent:{name:p.agent_name||'Estate Agent',phone:p.agent_phone||'',branch:p.agent_branch||''},
-      addedDate:p.listed_date||'Recent',reduced:p.price_reduced===true,source:'homedata',floorArea:p.floor_area_sqm||null,uprn:p.uprn||null,
-    })).filter(p=>p.price>0);
-  }catch(e){console.warn('Homedata:',e.message);return [];}
+    const pc=postcode.replace(/\s/g,"").toUpperCase();
+    // Step 1: Free address lookup to get UPRNs (no auth needed)
+    const r1=await fetch("https://neo.homedata.co.uk/api/address/postcode/"+pc+"/",{
+      headers:{"Accept":"application/json"}
+    });
+    if(!r1.ok) throw new Error("Homedata postcode "+r1.status);
+    const d1=await r1.json();
+    const addresses=Array.isArray(d1)?d1:(d1.addresses||d1.results||[]);
+    if(!addresses.length) return [];
+    // Step 2: Fetch property details per UPRN (requires auth)
+    const uprns=addresses.slice(0,15).map(a=>a.uprn||a.UPRN).filter(Boolean);
+    if(!uprns.length) return [];
+    const out=[];
+    for(const uprn of uprns){
+      if(S.homedataUsed>=S.homedataCap) break;
+      try{
+        const r2=await fetch("https://neo.homedata.co.uk/api/properties/"+uprn+"/",{
+          headers:{"Authorization":"Api-Key "+S.homedataKey,"Accept":"application/json"}
+        });
+        if(!r2.ok) continue;
+        const p=await r2.json();
+        spend("hd",1);
+        const price=p.estimated_value||p.last_sale_price||p.price||0;
+        if(!price||price>budget) continue;
+        const addrObj=addresses.find(a=>(a.uprn||a.UPRN)==uprn)||{};
+        const pcs=pc.toLowerCase();
+        out.push({
+          id:"hd-"+uprn,
+          address:p.display_address||addrObj.address||"Property "+uprn,
+          price,
+          type:(p.property_type||"unknown").toLowerCase(),
+          beds:p.bedrooms||0,baths:p.bathrooms||0,
+          sqft:p.floor_area_sqft||null,
+          epc:p.epc_rating||null,
+          tenure:p.tenure||null,
+          chainFree:false,chain:false,
+          garden:false,garage:false,parking:false,newBuild:false,
+          description:("EPC:"+( p.epc_rating||"?")+" | "+( p.floor_area_sqm||"?")+"m² | Beds:"+(p.bedrooms||"?")+" | Last sold:"+(p.last_sale_date||"unknown")).slice(0,400),
+          features:[p.epc_rating?"EPC "+p.epc_rating:"",p.floor_area_sqm?p.floor_area_sqm+"m²":"",p.tenure||""].filter(Boolean),
+          url:"https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation="+encodeURIComponent(pc.slice(0,4))+"&useLocationIdentifier=false&sortType=6&includeSSTC=false",
+          rightmoveUrl:"https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation="+encodeURIComponent(pc.slice(0,4))+"&useLocationIdentifier=false&sortType=6&includeSSTC=false",
+          zooplaUrl:"https://www.zoopla.co.uk/for-sale/property/"+pcs+"/?q="+pcs+"&results_sort=newest_listings",
+          agent:{name:"Homedata intelligence",phone:"",branch:"neo.homedata.co.uk"},
+          addedDate:"Homedata",reduced:false,source:"homedata",
+          floorArea:p.floor_area_sqm||null,uprn:uprn,
+        });
+      }catch(e){continue;}
+    }
+    return out;
+  }catch(e){console.warn("Homedata:",e.message);return [];}
 }
 
 // ─── APIFY ────────────────────────────────────────────────────────────────────
@@ -734,15 +812,21 @@ async function runSearch(forceRefresh){
       d.style.color='var(--'+col+')';d.textContent=msg;
       _puEl.appendChild(d);_puEl.scrollTop=_puEl.scrollHeight;
     }
-    // ── Run all listing sources in parallel ──
-    const [hdListings,rmListings,puListings]=await Promise.all([
+    // ── Phase 1: Free sources (always run, no keys needed) ──
+    const [puListings,lrListings]=await Promise.all([
+      _puOn?fetchFreeListings(location,budget,minBeds,_puLog):Promise.resolve([]),
+      freeSoldListings(pc,budget),
+    ]);
+    if(lrListings.length>0) _puLog("✓ Land Registry: "+lrListings.length+" real properties loaded","text2");
+    // ── Phase 2: Paid/key sources (only if keys configured) ──
+    const [hdListings,rmListings]=await Promise.all([
       homedataListings(pc,budget),
       apifyListings(location,budget),
-      _puOn?fetchFreeListings(location,budget,minBeds,_puLog):Promise.resolve([]),
     ]);
     setStep(4);
     // Merge & deduplicate
-    let all=[...hdListings,...rmListings,...(puListings||[])];
+    // Merge: paid results first (best data), then free pipeline, then LR sold (always available)
+    let all=[...hdListings,...rmListings,...(puListings||[]),...(lrListings||[])];
     const seen=new Set();
     all=all.filter(p=>{
       const k=p.address.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,18);
@@ -849,7 +933,7 @@ function renderAll(listings,area,ai,opts){
     const tbc=p.type.includes('detach')?'bd':p.type.includes('bungalow')?'bb':p.type.includes('flat')||p.type.includes('apart')?'ba':'bs';
     const urgColor=p.urgency==='high'?'var(--red)':p.urgency==='med'?'var(--amber)':'var(--green)';
     const srcClass=p.source==='apify'?'apify':p.source==='homedata'?'hd':p.source==='fallback'?'fallback':'live';
-    const srcLabel=p.source==='apify'?'⬤ Rightmove (live)'+(p.reduced?' · PRICE REDUCED':' · '+(p.addedDate||'Recent')):p.source==='homedata'?'⬤ Homedata.co.uk':'⚠ NO KEYS — Register at homedata.co.uk for free live listings';
+    const srcLabel=p.source==='apify'?'⬤ Rightmove (live)'+(p.reduced?' · PRICE REDUCED':' · '+(p.addedDate||'Recent')):p.source==='land-registry'?'✓ Land Registry sold record':p.source==='homedata'?'⬤ Homedata.co.uk':'⚠ NO KEYS — Register at homedata.co.uk for free live listings';
     const verdict=isFallback?'Register free at homedata.co.uk for your Homedata API key. You get 250 free API calls per day — enough for dozens of searches. Homedata and Apify provide real listings.':( getVerdict(ai,p)||p.type+' at £'+fmt(p.price)+'. '+(p.chainFree?'Chain-free.':'In chain.')+(p.garden?' Has garden.':'')+( p.epc?' EPC '+p.epc+'.':''));
     const urgText=isFallback?'':getUrgencyText(ai,p);
     const mustTxt=getMust(ai,p);
@@ -962,18 +1046,34 @@ async function testClaude(){
   }catch(e){el.textContent='✗ '+e.message.slice(0,80);el.style.color='var(--red)';}
 }
 async function testHomedata(){
-  const el=$('status-hd');if(!el)return;
-  if(!S.homedataKey){el.textContent='Enter key above first';el.style.color='var(--text3)';return;}
-  el.textContent='Testing...';el.style.color='var(--amber)';
+  const el=$("status-hd");if(!el)return;
+  if(!S.homedataKey){el.textContent="No key saved";el.style.color="var(--text3)";return;}
+  el.textContent="Testing...";el.style.color="var(--amber)";
   try{
-    const r=await fetch('https://neo.homedata.co.uk/api/properties/search/?postcode=M21&max_price=400000&status=for_sale&limit=3',
-      {headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'}});
-    const txt=await r.text();let d;
-    try{d=JSON.parse(txt);}catch(e){el.textContent='✗ Non-JSON (HTTP '+r.status+')';el.style.color='var(--red)';return;}
-    if(!r.ok){el.textContent='✗ HTTP '+r.status+': '+(d.message||d.error||'check key');el.style.color='var(--red)';return;}
-    const props=(d.properties||d.results||[]);spend('hd',1);
-    el.textContent='✓ Working · '+(d.total||props.length)+' M21 listings available';el.style.color='var(--green)';
-  }catch(e){el.textContent='✗ '+e.message.slice(0,80);el.style.color='var(--red)';}
+    // Step 1: free postcode lookup
+    const r1=await fetch("https://neo.homedata.co.uk/api/address/postcode/M219WQ/",{
+      headers:{"Accept":"application/json"}
+    });
+    if(!r1.ok){el.textContent="✗ Homedata unreachable ("+r1.status+")";el.style.color="var(--red)";return;}
+    const d1=await r1.json();
+    const addrs=Array.isArray(d1)?d1:(d1.addresses||d1.results||[]);
+    if(!addrs.length){el.textContent="⚠ Connected but no addresses for M21 9WQ";el.style.color="var(--amber)";return;}
+    const uprn=addrs[0]?.uprn||addrs[0]?.UPRN;
+    if(!uprn){el.textContent="⚠ No UPRN returned — check API response format";el.style.color="var(--amber)";return;}
+    // Step 2: authenticated UPRN lookup
+    const r2=await fetch("https://neo.homedata.co.uk/api/properties/"+uprn+"/",{
+      headers:{"Authorization":"Api-Key "+S.homedataKey,"Accept":"application/json"}
+    });
+    if(r2.status===401||r2.status===403){
+      el.textContent="✗ Auth failed ("+r2.status+") — key format must be QRryNTjX.xxxxx";el.style.color="var(--red)";return;
+    }
+    if(!r2.ok){const e=await r2.text();el.textContent="✗ HTTP "+r2.status+" — "+e.slice(0,60);el.style.color="var(--red)";return;}
+    const p=await r2.json();
+    const remaining=r2.headers.get("X-RateLimit-Remaining")||"?";
+    el.textContent="✓ Working! "+( p.display_address||uprn)+" | "+remaining+" calls left this month";
+    el.style.color="var(--green)";
+    spend("hd",1);
+  }catch(e){el.textContent="✗ "+e.message.slice(0,80);el.style.color="var(--red)";}
 }
 async function testApify(){
   const el=$('status-apify');if(!el)return;
@@ -1287,6 +1387,28 @@ print("Install deps: pip install requests beautifulsoup4")
 }
 
 updateCosts();
+// Auto-save pre-filled keys on page load
+(function initKeys(){
+  const hdInp=$("inp-hd");
+  if(hdInp&&hdInp.value.trim().length>5){
+    S.homedataKey=hdInp.value.trim();
+    setDot("d-hd","g");
+    $("t-hd").textContent="Homedata:ready";
+    setTimeout(testHomedata,1500);
+  }
+  const claudeInp=$("inp-claude");
+  if(claudeInp&&claudeInp.value.trim().length>20){
+    S.claudeKey=claudeInp.value.trim();
+    setDot("d-claude","g");
+    $("t-claude").textContent="Claude:ready";
+  }
+  const apifyInp=$("inp-apify");
+  if(apifyInp&&apifyInp.value.trim().length>10){
+    S.apifyKey=apifyInp.value.trim();
+    setDot("d-apify","g");
+    $("t-apify").textContent="Apify:ready";
+  }
+})();
 
 </script>
 </body>
