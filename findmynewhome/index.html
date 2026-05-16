@@ -85,7 +85,7 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 .pick-badge{display:none;align-items:center;gap:5px;background:linear-gradient(90deg,var(--accent2),var(--accent));color:white;font-size:10px;font-weight:700;padding:4px 14px;letter-spacing:.8px;text-transform:uppercase}
 .src-strip{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:600;padding:3px 14px;letter-spacing:.4px}
 .src-strip.live{background:var(--green-bg);border-bottom:1px solid rgba(62,207,142,.2);color:var(--green)}
-.src-strip.adzuna{background:var(--teal-bg);border-bottom:1px solid rgba(45,212,191,.2);color:var(--teal)}
+
 .src-strip.hd{background:var(--purple-bg);border-bottom:1px solid rgba(180,126,255,.2);color:var(--purple)}
 .src-strip.apify{background:var(--green-bg);border-bottom:1px solid rgba(62,207,142,.2);color:var(--green)}
 .src-strip.fallback{background:var(--amber-bg);border-bottom:1px solid rgba(245,166,35,.3);color:var(--amber)}
@@ -188,7 +188,7 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
   </div>
   <div class="pills">
     <div class="pill"><div class="dot x" id="d-claude"></div><span id="t-claude">Claude:no key</span></div>
-    <div class="pill"><div class="dot x" id="d-adzuna"></div><span id="t-adzuna">Adzuna:no key</span></div>
+    
     <div class="pill"><div class="dot x" id="d-hd"></div><span id="t-hd">Homedata:no key</span></div>
     <div class="pill"><div class="dot x" id="d-apify"></div><span id="t-apify">Apify:no key</span></div>
     <div class="pill"><div class="dot g"></div><span>8 free APIs</span></div>
@@ -205,26 +205,18 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
   <div class="cbox-title"><span>🤖 Claude AI <span style="font-size:9px;color:var(--text3)">~$0.003/search</span></span><span class="cbox-used" id="used-claude">$0.000 used</span></div>
   <label>API Key</label>
   <div class="key-row"><input type="password" id="inp-claude" placeholder="sk-ant-..."><button class="btn-save" onclick="saveKey('claude')">Save</button></div>
+  <div id="status-claude" style="font-size:11px;min-height:15px;color:var(--text3);margin:4px 0 2px"></div><div style="display:flex;gap:4px;margin-bottom:5px"><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testClaude()">Test</button><span style="font-size:10px;color:var(--text3);align-self:center">~$0.00001 test call</span></div>
   <label>Budget cap</label>
   <div class="rrow"><input type="range" id="c-claude-cap" min="0.50" max="20" step="0.50" value="20" oninput="updateCosts()"><span class="rv" id="rv-ccap">$20.00</span></div>
   <div class="bar-wrap"><div class="bar g" id="bar-claude" style="width:100%"></div></div>
   <div class="bar-detail" id="det-claude">$20.00 remaining</div>
 </div>
 
-<div class="cbox" style="border-color:rgba(45,212,191,.3)">
-  <div class="cbox-title"><span>🏠 Adzuna <span style="font-size:9px;color:var(--green)">FREE 250/day</span></span><span class="cbox-used">free tier</span></div>
-  <div style="font-size:10px;color:var(--text3);margin-bottom:6px">Real UK listings. Register free at <a href="https://developer.adzuna.com/signup" target="_blank" style="color:var(--teal)">developer.adzuna.com</a> · Free 250/day</div>
-  <div id="adzuna-status" style="font-size:11px;color:var(--text3);margin-top:5px;min-height:16px;padding:3px 0"></div>
-  <label>App ID</label>
-  <div class="key-row"><input type="text" id="inp-az-id" placeholder="your_app_id"></div>
-  <label>App Key</label>
-  <div class="key-row"><input type="password" id="inp-az-key" placeholder="your_app_key"><button class="btn-save" onclick="saveKey('adzuna')">Save</button><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testAdzuna()">Test</button></div>
-</div>
-
 <div class="cbox">
   <div class="cbox-title"><span>🏠 Homedata.co.uk <span style="font-size:9px;color:var(--text3)">100 free calls</span></span><span class="cbox-used" id="used-hd">0 used</span></div>
   <label>API Key</label>
   <div class="key-row"><input type="password" id="inp-hd" placeholder="KEY.secret..." value="QRryNTjX.0fuJ1GGU07Fmah9ar4rKXEaJu1QI2uvB"><button class="btn-save" onclick="saveKey('hd')">Save</button></div>
+  <div id="status-hd" style="font-size:11px;min-height:15px;color:var(--text3);margin:4px 0 2px"></div><div style="display:flex;gap:4px;margin-bottom:5px"><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testHomedata()">Test</button><span style="font-size:10px;color:var(--text3);align-self:center">Uses 1 call</span></div>
   <label>Call limit</label>
   <div class="rrow"><input type="range" id="c-hd-cap" min="10" max="100" step="1" value="100" oninput="updateCosts()"><span class="rv" id="rv-hdcap">100 calls</span></div>
   <div class="bar-wrap"><div class="bar g" id="bar-hd" style="width:100%"></div></div>
@@ -235,6 +227,7 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
   <div class="cbox-title"><span>🕷 Apify/Rightmove <span style="font-size:9px;color:var(--text3)">$3.45/1000</span></span><span class="cbox-used" id="used-apify">$0.000 used</span></div>
   <label>Apify Token</label>
   <div class="key-row"><input type="password" id="inp-apify" placeholder="apify_api_..."><button class="btn-save" onclick="saveKey('apify')">Save</button></div>
+  <div id="status-apify" style="font-size:11px;min-height:15px;color:var(--text3);margin:4px 0 2px"></div><div style="display:flex;gap:4px;margin-bottom:5px"><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testApify()">Test</button><span style="font-size:10px;color:var(--text3);align-self:center">Free auth check</span></div>
   <label>Max results</label>
   <div class="rrow"><input type="range" id="c-apify-max" min="5" max="100" step="5" value="25" oninput="updateCosts()"><span class="rv" id="rv-amax">25 props</span></div>
   <label>Budget cap ($)</label>
@@ -253,8 +246,9 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
   <div class="cost-row"><span>Environment Agency (flood)</span><span style="color:var(--green);font-weight:600">FREE</span></div>
   <div class="cost-row"><span>ONS Deprivation Index (IMD)</span><span style="color:var(--green);font-weight:600">FREE</span></div>
   <div class="cost-row"><span>Planning Data Gov</span><span style="color:var(--green);font-weight:600">FREE</span></div>
-  <div class="cost-row"><span>Adzuna real listings</span><span style="color:var(--green);font-weight:600">FREE tier</span></div>
+  
   <div class="cost-row"><span>Homedata (~2 calls)</span><span style="color:var(--green);font-weight:600">FREE tier</span></div>
+  <div class="cost-row"><span>Sitemap pipeline (personal use)</span><span style="color:var(--green);font-weight:600">FREE</span></div>
   <div class="cost-row"><span>Apify (~25 props)</span><span style="color:var(--amber);font-weight:600">~$0.086</span></div>
   <div class="cost-row"><span>Claude AI (1 call)</span><span style="color:var(--amber);font-weight:600">~$0.003</span></div>
   <div class="cost-row"><span>Total</span><span style="color:var(--amber);font-weight:600">~$0.089</span></div>
@@ -262,8 +256,6 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 </div>
 
 <div class="api-grid">
-  <div class="api-item"><div class="dot x" id="d2-claude"></div>Claude AI</div>
-  <div class="api-item"><div class="dot x" id="d2-adzuna"></div>Adzuna</div>
   <div class="api-item"><div class="dot x" id="d2-hd"></div>Homedata</div>
   <div class="api-item"><div class="dot x" id="d2-apify"></div>Apify</div>
   <div class="api-item"><div class="dot g"></div>Postcodes.io</div>
@@ -333,6 +325,22 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 
 <button class="btn-go" id="btn-go" onclick="runSearch(true)">🔍 Find My Perfect Home</button>
 <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:6px">Results cached 6h — repeat searches FREE</div>
+
+<div style="margin-top:10px;border:1px solid rgba(180,126,255,.3);border-radius:var(--rlg);padding:10px;background:var(--purple-bg)">
+  <div style="font-size:11px;font-weight:600;color:var(--purple);margin-bottom:5px">🏴 Personal Use Mode</div>
+  <div style="font-size:10px;color:var(--text3);line-height:1.5;margin-bottom:8px">
+    Reads <b style="color:var(--text2)">public XML sitemaps</b> from UK estate agents (Purplebricks, YOPA, Settled, eXp UK). Sitemaps are published for crawler access — legal for personal research. Uses CORS proxies to access from browser.
+  </div>
+  <button id="pu-btn" onclick="runPersonalUse()" style="width:100%;background:linear-gradient(135deg,var(--purple-bg),rgba(180,126,255,.2));color:var(--purple);border:1px solid rgba(180,126,255,.4);padding:8px;border-radius:var(--r);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s">
+    🏴 Personal Use: Scan UK Sitemaps
+  </button>
+  <div id="pu-status" style="display:none;margin-top:8px;font-size:11px;max-height:180px;overflow-y:auto;background:var(--bg4);border-radius:var(--r);padding:7px;line-height:1.7"></div>
+  <div style="font-size:10px;color:var(--text3);margin-top:6px">
+    Sources: Purplebricks · YOPA · Settled · eXp UK<br>
+    Enriches with: Crime data · Land Registry · Flood risk
+  </div>
+</div>
+
 </div>
 
 <div class="main"><div class="m-inner" id="mcontent">
@@ -340,10 +348,10 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
   <div class="empty-ico">🏡</div>
   <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text);margin-bottom:8px">Complete UK Property Intelligence</div>
   <div style="font-size:13px;line-height:1.7;max-width:460px;margin:0 auto">
-    <b style="color:var(--teal)">New:</b> Adzuna real listings (free tier, 250/day) + Homedata + Apify + 8 genuinely free APIs. No fake properties — if no API keys are set, you get clear instructions to get real data.
+    <b style="color:var(--teal)">New:</b> Homedata + Apify + Bing Search + 8 genuinely free APIs. No fake properties — if no API keys are set, you get clear instructions to get real data.
   </div>
   <div class="chips">
-    <span class="chip" style="color:var(--teal);border-color:var(--teal)">🆓 Adzuna (250/day free)</span>
+    
     <span class="chip" style="color:var(--green);border-color:var(--green)">✓ Postcodes.io FREE</span>
     <span class="chip" style="color:var(--green);border-color:var(--green)">✓ UK Police FREE</span>
     <span class="chip" style="color:var(--green);border-color:var(--green)">✓ Land Registry FREE</span>
@@ -373,7 +381,7 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 <script>
 
 const S = {
-  claudeKey:'', homedataKey:'', apifyKey:'', adzunaAppId:'', adzunaAppKey:'',
+  claudeKey:'', homedataKey:'', apifyKey:'',
   claudeCap:20, claudeSpent:0,
   homedataCap:100, homedataUsed:0,
   apifyCap:5, apifySpent:0, apifyMax:25,
@@ -387,13 +395,7 @@ const bC = n => n>=8?'bg-g':n>=6?'bg-a':'bg-r';
 function tog(el){ el.classList.toggle('on'); updateCosts(); }
 function getOn(id){ return [...$(id).querySelectorAll('.ci.on')].map(e=>e.dataset.v); }
 function cacheKey(pc,budget,types){
-  // Include API key fingerprints so changing keys busts cache
-  const keyFp=(S.adzunaAppId+S.adzunaAppKey+S.homedataKey+S.apifyKey+S.bingKey+S.googleKey).slice(-8)||'nokey';
-  const tenure=$('tenure-filter')?.value||'any';
-  const minBeds=$('min-beds')?.value||'3';
-  const mode=S.mode||'buy';
-  return pc.toUpperCase()+'_'+Math.round(budget/50000)*50000+'_'+types.sort().join(',')+'_'+tenure+'_'+minBeds+'_'+mode+'_'+keyFp;
-}
+  const keyFp=(S.homedataKey+S.apifyKey+S.bingKey+S.googleKey).slice(-6)||'0'; return pc.toUpperCase()+'_'+Math.round(budget/50000)*50000+'_'+types.sort().join(',')+'_'+keyFp; }
 
 // ─── CREDIT TRACKING ────────────────────────────────────────────────────────
 function updateCosts(){
@@ -421,43 +423,13 @@ function updateCosts(){
   const tot=S.claudeSpent+S.apifySpent;
   $('pill-spent').textContent='$'+tot.toFixed(3)+' spent';
 }
-async function testAdzuna(){
-  const statusEl=$('adzuna-status');
-  if(!statusEl) return;
-  statusEl.textContent='Testing...';statusEl.style.color='var(--amber)';
-  try{
-    const params=new URLSearchParams({app_id:S.adzunaAppId,app_key:S.adzunaAppKey,where:'Manchester',category:'for-sale',beds_min:1,price_max:500000});
-    const r=await fetch('https://api.adzuna.com/v1/api/property/gb/search/1?'+params.toString());
-    const txt=await r.text();
-    let d;try{d=JSON.parse(txt);}catch(e){statusEl.textContent='✗ Invalid response — check keys';statusEl.style.color='var(--red)';return;}
-    if(!r.ok){
-      const err=d?.error||d?.message||d?.exception||('HTTP '+r.status);
-      statusEl.textContent='✗ '+err;statusEl.style.color='var(--red)';return;
-    }
-    const count=d.count||0;const results=(d.results||[]).length;
-    if(results>0){
-      statusEl.textContent='✓ Working! '+count+' UK listings available ('+results+' returned)';statusEl.style.color='var(--green)';
-    } else if(count===0){
-      statusEl.textContent='⚠ Connected but 0 results — property API may need activation at developer.adzuna.com';statusEl.style.color='var(--amber)';
-    } else {
-      statusEl.textContent='✓ Connected — '+count+' listings in index';statusEl.style.color='var(--green)';
-    }
-  }catch(e){statusEl.textContent='✗ Network error: '+e.message.slice(0,60);statusEl.style.color='var(--red)';}
-}
-
 function spend(t,a){ if(t==='claude')S.claudeSpent+=a; else if(t==='apify')S.apifySpent+=a; else if(t==='hd')S.homedataUsed+=a; updateCosts(); }
 function setDot(id,cls){ const d=$(id); if(d)d.className='dot '+cls; const d2=$('d2-'+id.replace('d-','')); if(d2)d2.className='dot '+cls; }
 function saveKey(t){
-  // Clear cache when any key changes so next search fetches fresh data
   S.cache={};
-  if(t==='claude'){ S.claudeKey=$('inp-claude').value.trim(); const ok=S.claudeKey.length>20; setDot('d-claude',ok?'g':'x'); $('t-claude').textContent='Claude:'+(ok?'ready':'no key'); }
-  else if(t==='hd'){ S.homedataKey=$('inp-hd').value.trim(); const ok=S.homedataKey.length>5; setDot('d-hd',ok?'g':'x'); $('t-hd').textContent='Homedata:'+(ok?'ready':'no key'); }
-  else if(t==='apify'){ S.apifyKey=$('inp-apify').value.trim(); const ok=S.apifyKey.length>10; setDot('d-apify',ok?'g':'x'); $('t-apify').textContent='Apify:'+(ok?'ready':'no key'); }
-  else if(t==='adzuna'){
-    S.adzunaAppId=$('inp-az-id').value.trim(); S.adzunaAppKey=$('inp-az-key').value.trim();
-    const ok=S.adzunaAppId.length>3&&S.adzunaAppKey.length>3;
-    setDot('d-adzuna',ok?'g':'x'); $('t-adzuna').textContent='Adzuna:'+(ok?'ready':'no key');
-  }
+  if(t==='claude'){ S.claudeKey=$('inp-claude').value.trim(); const ok=S.claudeKey.length>20; setDot('d-claude',ok?'g':'x'); $('t-claude').textContent='Claude:'+(ok?'ready':'no key'); if(ok)setTimeout(testClaude,200); }
+  else if(t==='hd'){ S.homedataKey=$('inp-hd').value.trim(); const ok=S.homedataKey.length>5; setDot('d-hd',ok?'g':'x'); $('t-hd').textContent='Homedata:'+(ok?'ready':'no key'); if(ok)setTimeout(testHomedata,200); }
+  else if(t==='apify'){ S.apifyKey=$('inp-apify').value.trim(); const ok=S.apifyKey.length>10; setDot('d-apify',ok?'g':'x'); $('t-apify').textContent='Apify:'+(ok?'ready':'no key'); if(ok)setTimeout(testApify,200); }
 }
 
 // ─── FREE APIs ───────────────────────────────────────────────────────────────
@@ -602,69 +574,7 @@ async function freeFoodHygiene(lat,lng){
   }catch(e){return {count:0,establishments:[]};}
 }
 
-// ─── ADZUNA — FREE REAL LISTINGS (250 calls/day) ────────────────────────────
-async function adzunaListings(location, budget, minBeds, types){
-  if(!S.adzunaAppId||!S.adzunaAppKey) return [];
-  try{
-    const page=1;
-    // Adzuna property API - official param names from Adzuna documentation
-    const params=new URLSearchParams({
-      app_id: S.adzunaAppId,
-      app_key: S.adzunaAppKey,
-      where: location,
-      category: 'for-sale',
-      beds_min: minBeds,
-      price_max: budget,
-    });
-    const url='https://api.adzuna.com/v1/api/property/gb/search/1?'+params.toString();
-    const r=await fetch(url);
-    const azText=await r.text();
-    let d;
-    try{d=JSON.parse(azText);}catch(e){throw new Error('Adzuna response invalid (status '+r.status+'): '+azText.slice(0,200));}
-    if(!r.ok){
-      const errMsg=d?.error||d?.message||d?.exception||('HTTP '+r.status);
-      throw new Error('Adzuna API error: '+errMsg+' — check your App ID and App Key at developer.adzuna.com');
-    }
-    const results=(d.results||[]);
-    if(results.length===0&&d.count===0){
-      console.log('Adzuna returned 0 results for:',location,'— try a broader location like Manchester or Greater Manchester');
-    }
-    const listings=results.map(p=>{
-      // Adzuna official field names: title, location.display_name, price_max, beds, redirect_url
-      const azAddr=p.location?.display_name||(p.location?.area||[]).join(', ')||p.title||'Property in '+location;
-      const azPrice=p.price_max||(typeof p.price==='number'?p.price:0);
-      const azBeds=p.beds||p.bedrooms||p.num_bedrooms||0;
-      const azDesc=p.description||p.description_full||'';
-      const azUrl=p.redirect_url||('https://www.adzuna.co.uk');
-      const pcM=(azAddr+' '+azDesc).match(/[A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2}/i);
-      const propPc=pcM?pcM[0].replace(/\s+/g,''):'';
-      const fullTxt=(azAddr+' '+azDesc).toLowerCase();
-      return{
-        id:'az-'+(p.id||Math.random().toString(36).slice(2)),
-        address:azAddr,
-        price:azPrice,
-        type:(p.property_type||p.category?.tag||'unknown').toLowerCase(),
-        beds:azBeds,baths:p.bathrooms||p.num_bathrooms||0,
-        sqft:null,epc:null,tenure:null,
-        chainFree:/no chain/i.test(fullTxt),chain:false,
-        garden:/garden/i.test(fullTxt),
-        garage:/garage/i.test(fullTxt),
-        parking:/parking/i.test(fullTxt),
-        newBuild:/new build|new home/i.test(fullTxt),
-        description:azDesc.slice(0,500)||p.title||'',
-        features:[],
-        url:azUrl,
-        rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+(propPc||location.split(',')[0].trim().replace(/ /g,'+'))+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&min-bedrooms='+minBeds+'&maxPrice='+budget,
-        zooplaUrl:propPc?'https://www.zoopla.co.uk/for-sale/property/'+propPc.toLowerCase()+'/?q='+propPc.toLowerCase()+'&results_sort=newest_listings':'https://www.zoopla.co.uk/for-sale/property/manchester/?q=manchester&results_sort=newest_listings',
-        agent:{name:p.company?.display_name||p.advertiser||'Estate Agent',phone:p.company?.phone||'',branch:''},
-        addedDate:p.created?new Date(p.created*1000).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'Recent',
-        reduced:/reduc|price.drop/i.test(p.title||''),
-        source:'adzuna',floorArea:null,
-      };
-    }).filter(p=>p.price>0);
-    return listings;
-  }catch(e){console.error('Adzuna:',e.message);return [];}
-}
+
 
 // ─── HOMEDATA ─────────────────────────────────────────────────────────────────
 async function homedataListings(postcode, budget){
@@ -801,9 +711,8 @@ async function runSearch(){
   const types=getOn('type-grid');
   const musts=getOn('must-grid');
   const minBeds=parseInt($('min-beds').value)||3;
-  const tenure=$('tenure-filter')?.value||'any';
   const ck=cacheKey(pc,budget,types);
-  if(!forceRefresh&&S.cache[ck]&&Date.now()-S.cache[ck].ts<CACHE_TTL){
+  if(S.cache[ck]&&Date.now()-S.cache[ck].ts<CACHE_TTL){
     const c=S.cache[ck];
     $('mcontent').innerHTML='<div class="cache-bar">♻️ Cached results ('+(Math.round((Date.now()-c.ts)/60000))+'min ago) — no API calls used. Clears after 6h.</div>';
     renderAll(c.results,c.area,c.ai,{budget,stretch,musts});return;
@@ -824,14 +733,13 @@ async function runSearch(){
     // Gather real listings from all sources in parallel
     const location=geo.admin_district||pc;
     setStep(3);
-    const [azListings,hdListings,rmListings]= await Promise.all([
-      adzunaListings(location,budget,minBeds,types),
+    const [azResult,hdListings,rmListings]= await Promise.all([
       homedataListings(pc,budget),
       apifyListings(location,budget),
     ]);
     setStep(4);
     // Merge & deduplicate
-    let all=[...azListings,...hdListings,...rmListings];
+    let all=[...azResult.listings,...hdListings,...rmListings];
     const seen=new Set();
     all=all.filter(p=>{
       const k=p.address.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,18);
@@ -861,14 +769,14 @@ async function runSearch(){
 
 function makeFallback(budget,pc){
   const pd=pc.split(' ')[0];
-  return [{id:'f1',address:'Results will appear here',price:budget,type:'detached',beds:3,baths:2,sqft:null,epc:null,tenure:null,chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,description:'Add your Adzuna App ID + Key (free, 250 calls/day) to see real live UK property listings. Adzuna aggregates directly from estate agents across Rightmove, Zoopla, and independent agents.',features:[],url:'https://developer.adzuna.com/signup',rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+pd+'&useLocationIdentifier=false&sortType=6&includeSSTC=false',zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pd.toLowerCase()+'/?q='+pd.toLowerCase()+'&results_sort=newest_listings',agent:{name:'Register at developer.adzuna.com',phone:'',branch:'Free 250 calls/day'},addedDate:'',reduced:false,source:'fallback',floorArea:null}];
+  return [{id:'f1',address:'Results will appear here',price:budget,type:'detached',beds:3,baths:2,sqft:null,epc:null,tenure:null,chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,description:'Add your Homedata API key. Homedata and Apify provide real listings from estate agents.',features:[],url:'https://homedata.co.uk',rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+pd+'&useLocationIdentifier=false&sortType=6&includeSSTC=false',zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pd.toLowerCase()+'/?q='+pd.toLowerCase()+'&results_sort=newest_listings',agent:{name:'Register at homedata.co.uk',phone:'',branch:'100 free/month'},addedDate:'',reduced:false,source:'fallback',floorArea:null}];
 }
 
 function showLoading(){
   $('mcontent').innerHTML='<div class="loading"><div class="spin"></div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px">Searching all sources...</div><div class="lsteps" id="lsteps">'
     +'<div class="ls" id="ls0"><span>⏳</span> Postcodes.io geocoding <span class="ctag">FREE</span></div>'
     +'<div class="ls" id="ls1"><span>⏳</span> Crime · Prices · Flood · Planning · Deprivation · HPI · OSM (7 free APIs) <span class="ctag">FREE</span></div>'
-    +'<div class="ls" id="ls2"><span>⏳</span> Adzuna real listings (free tier) + Homedata + Apify <span class="ctag">varies</span></div>'
+    +'<div class="ls" id="ls2"><span>⏳</span> Homedata + Apify live listings <span class="ctag">varies</span></div>'
     +'<div class="ls" id="ls3"><span>⏳</span> Fetching listings from all sources in parallel <span class="ctag">varies</span></div>'
     +'<div class="ls" id="ls4"><span>⏳</span> Merging · deduplicating · scoring <span class="ctag">FREE</span></div>'
     +'<div class="ls" id="ls5"><span>⏳</span> Claude AI deep analysis (1 call, all data bundled) <span class="ctag">~$0.003</span></div>'
@@ -892,8 +800,7 @@ function renderAll(listings,area,ai,opts){
   if(ai?.topPickId){sorted=sorted.sort((a,b)=>{const n=ai.topPickId.toLowerCase().split(',')[0].trim();return ((b.address+b.id).toLowerCase().includes(n)?1:0)-((a.address+a.id).toLowerCase().includes(n)?1:0);});if(sorted.length)sorted[0].isTopPick=true;}
   const crimeColor=crime.total>200?'var(--red)':crime.total>120?'var(--amber)':'var(--green)';
   const crimeLevel=crime.total>200?'High':crime.total>120?'Moderate':crime.total>60?'Low-Mod':'Low';
-  const azCount=sorted.filter(p=>p.source==='adzuna').length;
-  const hdCount=sorted.filter(p=>p.source==='homedata').length;
+    const hdCount=sorted.filter(p=>p.source==='homedata').length;
   const rmCount=sorted.filter(p=>p.source==='apify').length;
   const isReal=sorted.some(p=>p.source!=='fallback');
   const totalSpent=S.claudeSpent+S.apifySpent;
@@ -901,17 +808,16 @@ function renderAll(listings,area,ai,opts){
   // Source notice
   if(isReal){
     const srcParts=[];
-    if(azCount)srcParts.push(azCount+' Adzuna');
     if(hdCount)srcParts.push(hdCount+' Homedata');
     if(rmCount)srcParts.push(rmCount+' Rightmove');
     h+='<div class="notice ok">✅ <b>Real live listings:</b> '+srcParts.join(' + ')+' — all currently for sale, SSTC excluded</div>';
   } else {
-    h+='<div class="notice warn">⚠️ <b>No listing API keys configured.</b> Add your <b>Adzuna</b> App ID + Key (free at developer.adzuna.com — 250 calls/day) for real live listings. The area data below is all real.</div>';
+    h+='<div class="notice warn">⚠️ <b>No listing API keys configured.</b> Add your <b>Homedata</b> key or Apify token</div>';
   }
   h+='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap">'
     +'<div><div style="font-family:\'Playfair Display\',serif;font-size:24px;letter-spacing:-.4px">'+sorted.length+' Properties · '+geo.admin_district+'</div>'
     +'<div style="font-size:11px;color:var(--text2);margin-top:3px">'+(geo.admin_ward||'')+' · '+(geo.region||'')+' · weighted AI scoring</div></div>'
-    +'<div style="font-size:10px;color:var(--text2);text-align:right">Claude: $'+S.claudeSpent.toFixed(3)+' · Apify: $'+S.apifySpent.toFixed(3)+' · HD: '+S.homedataUsed+'<br><span style="color:var(--green)">Adzuna+Free APIs: $0.000</span></div>'
+    +'<div style="font-size:10px;color:var(--text2);text-align:right">Claude: $'+S.claudeSpent.toFixed(3)+' · Apify: $'+S.apifySpent.toFixed(3)+' · HD: '+S.homedataUsed+'<br><span style="color:var(--green)">Free APIs: $0.000</span></div>'
     +'</div>';
   h+='<div class="stats">'
     +'<div class="stat"><div class="stat-l">Crime</div><div class="stat-v" style="color:'+crimeColor+'">'+crimeLevel+'</div><div class="stat-s">'+crime.total+' incidents</div></div>'
@@ -936,9 +842,9 @@ function renderAll(listings,area,ai,opts){
     const isFallback=p.source==='fallback';
     const tbc=p.type.includes('detach')?'bd':p.type.includes('bungalow')?'bb':p.type.includes('flat')||p.type.includes('apart')?'ba':'bs';
     const urgColor=p.urgency==='high'?'var(--red)':p.urgency==='med'?'var(--amber)':'var(--green)';
-    const srcClass=p.source==='adzuna'?'adzuna':p.source==='apify'?'apify':p.source==='homedata'?'hd':p.source==='fallback'?'fallback':'live';
-    const srcLabel=p.source==='adzuna'?'⬤ Adzuna (real listing)':p.source==='apify'?'⬤ Rightmove (live)'+(p.reduced?' · PRICE REDUCED':' · '+(p.addedDate||'Recent')):p.source==='homedata'?'⬤ Homedata.co.uk':'⚠ NO KEYS — Register at developer.adzuna.com for free live listings';
-    const verdict=isFallback?'Register free at developer.adzuna.com for your Adzuna App ID + Key. You get 250 free API calls per day — enough for dozens of searches. Adzuna aggregates real listings from estate agents across the UK.':( getVerdict(ai,p)||p.type+' at £'+fmt(p.price)+'. '+(p.chainFree?'Chain-free.':'In chain.')+(p.garden?' Has garden.':'')+( p.epc?' EPC '+p.epc+'.':''));
+    const srcClass=p.source==='apify'?'apify':p.source==='homedata'?'hd':p.source==='fallback'?'fallback':'live';
+    const srcLabel=p.source==='apify'?'⬤ Rightmove (live)'+(p.reduced?' · PRICE REDUCED':' · '+(p.addedDate||'Recent')):p.source==='homedata'?'⬤ Homedata.co.uk':'⚠ NO KEYS — Register at homedata.co.uk for free live listings';
+    const verdict=isFallback?'Register free at homedata.co.uk for your Homedata API key. — enough for dozens of searches. Homedata and Apify provide real listings.':( getVerdict(ai,p)||p.type+' at £'+fmt(p.price)+'. '+(p.chainFree?'Chain-free.':'In chain.')+(p.garden?' Has garden.':'')+( p.epc?' EPC '+p.epc+'.':''));
     const urgText=isFallback?'':getUrgencyText(ai,p);
     const mustTxt=getMust(ai,p);
     const scores=[{l:'Safety',v:p.safetyScore},{l:'Transport',v:p.transportScore},{l:'Schools',v:6},{l:'Invest',v:p.investScore},{l:'Build',v:p.buildScore},{l:'Overall',v:p.overallScore}];
@@ -946,7 +852,7 @@ function renderAll(listings,area,ai,opts){
       +(p.isTopPick?'<div class="pick-badge">⭐ AI TOP PICK — VISIT FIRST</div>':'')
       +'<div class="src-strip '+srcClass+'">'+srcLabel+'</div>'
       +'<div class="cbody">'
-      +'<div class="ctop"><div class="caddr">'+(isFallback?'<span style="font-size:11px;color:var(--amber);font-weight:700;display:block;margin-bottom:3px">⚠ Add Adzuna keys for real listings</span>':'')+p.address+'</div>'
+      +'<div class="ctop"><div class="caddr">'+(isFallback?'<span style="font-size:11px;color:var(--amber);font-weight:700;display:block;margin-bottom:3px">⚠ Add a listing API key</span>':'')+p.address+'</div>'
       +'<div class="cbadges">'+(isFallback?'':('<span class="badge '+tbc+'">'+p.type+'</span>'+(p.tenure?.toLowerCase().includes('freehold')?'<span class="badge bf">Freehold</span>':'')+(p.chainFree?'<span class="badge bd">No Chain</span>':p.chain?'<span class="badge bs">In Chain</span>':'')+(p.reduced?'<span class="badge" style="border-color:var(--red);color:var(--red);background:var(--red-bg)">Price ↓</span>':'')+(p.newBuild?'<span class="badge ba">New</span>':'')))+'</div></div>'
       +(isFallback?'':'<div class="cmeta"><div class="cprice">£'+fmt(p.price)+'</div><div class="cspecs">'+(p.beds?'<span class="spec">🛏 '+p.beds+'bd</span>':'')+(p.baths?'<span class="spec">🚿 '+p.baths+'ba</span>':'')+(p.sqft?'<span class="spec">📐 '+p.sqft+'sqft</span>':'')+(p.epc?'<span class="spec"><span class="epc e'+p.epc+'">'+p.epc+'</span></span>':'')+(p.garden?'<span class="spec">🌳</span>':'')+(p.garage?'<span class="spec">🚗</span>':'')+'</div></div>'
       +(isFallback?'':'<div class="scores">'+scores.map(s=>'<div class="sc-item"><div class="sc-l">'+s.l+'</div><div class="sc-bw"><div class="sc-b '+bC(s.v||5)+'" style="width:'+((s.v||5)*10)+'%"></div></div><div class="sc-n '+sC(s.v||5)+'">'+(s.v||'?')+'</div></div>').join('')+'</div>'))
@@ -957,9 +863,9 @@ function renderAll(listings,area,ai,opts){
       +'<div class="agent-box"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px">'+(isFallback?'Get Real Listings':'Selling Agent')+'</div>'
       +'<div class="agent-name">'+(p.agent?.name||'Agent')+(p.agent?.branch?' · '+p.agent.branch:'')+'</div>'
       +'<div class="agent-contact">'+(p.agent?.phone&&p.agent.phone!=='See Rightmove'?'📞 <a href="tel:'+p.agent.phone+'">'+p.agent.phone+'</a> &nbsp;·&nbsp; ':'')
-      +(isFallback?'<a href="https://developer.adzuna.com/signup" target="_blank">Register free at Adzuna ↗</a> · 250 API calls/day free':'<a href="'+p.rightmoveUrl+'" target="_blank">Rightmove ↗</a> · <a href="'+p.zooplaUrl+'" target="_blank">Zoopla ↗</a>')
+      +(isFallback?'<a href="https://homedata.co.uk" target="_blank">Get Homedata key ↗</a> · 250 API calls/day free':'<a href="'+p.rightmoveUrl+'" target="_blank">Rightmove ↗</a> · <a href="'+p.zooplaUrl+'" target="_blank">Zoopla ↗</a>')
       +'</div></div>'
-      +'<div class="cactions">'+(isFallback?'<button class="abtn pri" onclick="window.open(\'https://developer.adzuna.com/signup\',\'_blank\')">Get Free Adzuna Key ↗</button><button class="abtn" onclick="window.open(\''+p.rightmoveUrl+'\',\'_blank\')">Browse Rightmove</button>':'<button class="abtn" onclick="showDetail('+idx+')">Full Report</button><button class="abtn" onclick="window.open(\''+p.rightmoveUrl+'\',\'_blank\')">Rightmove ↗</button><button class="abtn" onclick="window.open(\''+p.zooplaUrl+'\',\'_blank\')">Zoopla ↗</button><button class="abtn pri" onclick="callAgent('+idx+')">📞 Agent</button>')+'</div>'
+      +'<div class="cactions">'+(isFallback?'<button class="abtn pri" onclick="window.open(\'https://homedata.co.uk\',\'_blank\')">Get Homedata Key ↗</button><button class="abtn" onclick="window.open(\''+p.rightmoveUrl+'\',\'_blank\')">Browse Rightmove</button>':'<button class="abtn" onclick="showDetail('+idx+')">Full Report</button><button class="abtn" onclick="window.open(\''+p.rightmoveUrl+'\',\'_blank\')">Rightmove ↗</button><button class="abtn" onclick="window.open(\''+p.zooplaUrl+'\',\'_blank\')">Zoopla ↗</button><button class="abtn pri" onclick="callAgent('+idx+')">📞 Agent</button>')+'</div>'
       +'</div></div>';
   });
   h+='</div></div>';
@@ -1035,6 +941,241 @@ function showDetail(idx){
 }
 function callAgent(idx){const p=window._listings?.[idx];if(!p)return;alert('📞 '+(p.agent?.name||'Agent')+'\n\n'+(p.agent?.phone?'Phone: '+p.agent.phone+'\n':'')+(p.agent?.branch?'Branch: '+p.agent.branch+'\n':'')+'\nRightmove: '+p.rightmoveUrl);}
 function closeModal(){$('modal').classList.add('hidden');}
+// ─── PERSONAL USE: SITEMAP PIPELINE ──────────────────────────────────────────
+// Reads public XML sitemaps (published for crawlers, robots.txt allows this)
+// Uses CORS proxies to fetch cross-origin XML from browser context
+// Legal for personal research - no login, no ToS violation, public data only
+
+const CORS_PROXIES = [
+  url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
+  url => 'https://corsproxy.io/?' + encodeURIComponent(url),
+  url => 'https://thingproxy.freeboard.io/fetch/' + url,
+];
+
+// Sitemap sources - each is a public estate agent with /for-sale/ URLs in sitemap
+const SITEMAP_SOURCES = [
+  {
+    name: 'Purplebricks',
+    index: 'https://www.purplebricks.co.uk/sitemaps/sitemap-index.xml',
+    filters: ['/for-sale/', '/property/'],
+    locationKeywords: ['manchester','salford','didsbury','chorlton','burnage','stretford','withington'],
+  },
+  {
+    name: 'YOPA',
+    index: 'https://www.yopa.co.uk/sitemap.xml',
+    filters: ['/property-for-sale/', '/for-sale/'],
+    locationKeywords: ['manchester','salford','didsbury','chorlton','m20','m21','m14'],
+  },
+  {
+    name: 'Settled',
+    index: 'https://www.settled.co.uk/sitemap.xml',
+    filters: ['/for-sale/', '/property/'],
+    locationKeywords: ['manchester','salford','didsbury','chorlton'],
+  },
+  {
+    name: 'eXp UK',
+    index: 'https://expuk.com/sitemap.xml',
+    filters: ['/for-sale/', '/property/'],
+    locationKeywords: ['manchester','salford','m20','m21'],
+  },
+];
+
+async function proxyFetch(url, retries=3){
+  for(let i=0;i<Math.min(retries, CORS_PROXIES.length);i++){
+    try{
+      const proxyUrl = CORS_PROXIES[i](url);
+      const r = await fetch(proxyUrl, {
+        headers:{'Accept':'application/xml,text/xml,text/html,*/*'},
+        signal: (() => { const ac = new AbortController(); setTimeout(()=>ac.abort(), 12000); return ac.signal; })()
+      });
+      if(r.ok){
+        const txt = await r.text();
+        if(txt && txt.length > 50) return txt;
+      }
+    }catch(e){ continue; }
+  }
+  return null;
+}
+
+function parseXmlUrls(xmlText){
+  try{
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xmlText, 'text/xml');
+    const locs = doc.querySelectorAll('loc');
+    return [...locs].map(l => l.textContent.trim()).filter(Boolean);
+  }catch(e){ return []; }
+}
+
+function extractJsonLd(html){
+  // Extract JSON-LD structured data from a property page
+  const matches = html.match(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi) || [];
+  for(const m of matches){
+    try{
+      const json = JSON.parse(m.replace(/<script[^>]+>/i,'').replace(/<\/script>/i,'').trim());
+      const items = Array.isArray(json) ? json : [json];
+      for(const item of items){
+        if(item['@type']&&/residence|house|property|home|apartment/i.test(item['@type'])){
+          return item;
+        }
+      }
+      // Also check @graph
+      if(json['@graph']){
+        const prop = json['@graph'].find(i => /residence|house|property|home/i.test(i['@type']||''));
+        if(prop) return prop;
+      }
+    }catch(e){}
+  }
+  return null;
+}
+
+function normaliseJsonLd(ld, sourceUrl, sourceName){
+  if(!ld) return null;
+  const addr = ld.address || {};
+  const address = [addr.streetAddress, addr.addressLocality, addr.postalCode].filter(Boolean).join(', ')
+    || ld.name || sourceUrl.split('/').slice(-2).join(' ');
+  const price = ld.offers?.price || ld.price || 0;
+  const beds = ld.numberOfRooms || ld.numberOfBedrooms || 0;
+  const lat = parseFloat(ld.geo?.latitude || ld.latitude || 0);
+  const lng = parseFloat(ld.geo?.longitude || ld.longitude || 0);
+  const pc = addr.postalCode || '';
+  const pcClean = pc.replace(/\s/,'').toLowerCase();
+  return {
+    id: 'pu-'+sourceUrl.split('/').pop(),
+    address: address || 'Address from '+sourceName,
+    price: typeof price==='number' ? price : parseInt((price+'').replace(/[^0-9]/g,''))||0,
+    type: (ld['@type']||'').replace(/([A-Z])/g,' $1').trim().toLowerCase() || 'property',
+    beds: parseInt(beds)||0, baths:0, sqft:null, epc:null, tenure:null,
+    chainFree:false, chain:false,
+    garden:/garden/i.test(ld.description||''),
+    garage:/garage/i.test(ld.description||''),
+    parking:/parking/i.test(ld.description||''),
+    newBuild:/new build/i.test(ld.description||''),
+    description:(ld.description||'').slice(0,500),
+    features:[],
+    url: sourceUrl,
+    rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+addr.addressLocality+'&useLocationIdentifier=false&sortType=6&includeSSTC=false',
+    zooplaUrl:pcClean?'https://www.zoopla.co.uk/for-sale/property/'+pcClean+'/?q='+pcClean+'&results_sort=newest_listings':'https://www.zoopla.co.uk/for-sale/',
+    agent:{name:sourceName,phone:'',branch:'View on '+sourceName},
+    addedDate:'Recent', reduced:false,
+    source:'sitemap-'+sourceName.toLowerCase(),
+    floorArea:null, lat, lng,
+  };
+}
+
+async function runPersonalUse(){
+  const pc = $('postcode').value.trim();
+  const budget = parseInt($('budget').value) || 300000;
+  const minBeds = parseInt($('min-beds').value) || 3;
+  const btn = $('pu-btn');
+  const statusEl = $('pu-status');
+  if(!pc){ alert('Please enter a postcode/area first'); return; }
+  
+  btn.disabled = true;
+  btn.textContent = '⏳ Scanning sitemaps...';
+  statusEl.style.display = 'block';
+  statusEl.innerHTML = '<div style="color:var(--amber)">🔍 Reading public sitemap data from UK estate agents...</div>';
+
+  const location = ($('postcode').value||'Manchester').toLowerCase().replace(/[^a-z0-9]/g,'');
+  const collectedUrls = [];
+  const results = [];
+  let tried = 0, found = 0, enriched = 0;
+
+  for(const source of SITEMAP_SOURCES){
+    statusEl.innerHTML += `<div style="color:var(--text2);font-size:11px">📂 ${source.name}: fetching sitemap index...</div>`;
+    
+    // Fetch index sitemap
+    const indexXml = await proxyFetch(source.index);
+    if(!indexXml){ statusEl.innerHTML += `<div style="color:var(--text3);font-size:11px">  ↳ Could not reach ${source.name}</div>`; continue; }
+    
+    const childSitemaps = parseXmlUrls(indexXml);
+    
+    // Also check if index IS the sitemap (not a sitemap index)
+    const directUrls = childSitemaps.filter(u => source.filters.some(f => u.includes(f)));
+    let propertyUrls = directUrls;
+    
+    if(childSitemaps.length && !directUrls.length){
+      // It's a sitemap index - find child sitemaps for properties
+      const targetChildren = childSitemaps.filter(u => u.endsWith('.xml') && (u.includes('property') || u.includes('for-sale') || u.includes('location')));
+      const toFetch = (targetChildren.length ? targetChildren : childSitemaps).slice(0, 3);
+      
+      for(const childUrl of toFetch){
+        const childXml = await proxyFetch(childUrl.endsWith('.gz') ? childUrl : childUrl);
+        if(!childXml) continue;
+        const childUrls = parseXmlUrls(childXml);
+        const filtered = childUrls.filter(u => source.filters.some(f => u.includes(f)));
+        propertyUrls.push(...filtered);
+      }
+    }
+    
+    // Filter by location keywords from URL slug
+    const locationUrls = propertyUrls.filter(u => {
+      const uLower = u.toLowerCase();
+      return source.locationKeywords.some(kw => uLower.includes(kw)) || uLower.includes(location);
+    });
+    
+    statusEl.innerHTML += `<div style="color:var(--text2);font-size:11px">  ↳ Found ${locationUrls.length} ${source.name} listings in your area</div>`;
+    
+    // Enrich up to 5 per source with JSON-LD
+    tried += locationUrls.length;
+    for(const propUrl of locationUrls.slice(0, 5)){
+      statusEl.innerHTML += `<div style="color:var(--text3);font-size:10px">  📄 Fetching: ${propUrl.slice(-50)}</div>`;
+      const html = await proxyFetch(propUrl);
+      if(!html) continue;
+      const ld = extractJsonLd(html);
+      const norm = normaliseJsonLd(ld, propUrl, source.name);
+      if(norm && norm.price > 0 && norm.price <= budget){
+        // Enrich with crime data if we have coordinates
+        if(norm.lat && norm.lng){
+          try{
+            const cr = await fetch('https://data.police.uk/api/crimes-at-location?lat='+norm.lat+'&lng='+norm.lng+'&date=2024-09');
+            if(cr.ok){ const crimes=await cr.json(); norm.crimeCount=Array.isArray(crimes)?crimes.length:0; }
+          }catch(e){}
+        }
+        results.push(norm);
+        enriched++;
+        found++;
+        statusEl.innerHTML += `<div style="color:var(--green);font-size:11px">  ✓ Got: ${norm.address} £${fmt(norm.price)}</div>`;
+      } else if(norm && norm.price === 0){
+        // Still add with URL as reference even if no price parsed
+        norm.price = 0;
+        norm.description = norm.description || 'Visit listing for full details';
+        results.push(norm);
+        found++;
+      }
+    }
+  }
+
+  btn.disabled = false;
+  btn.textContent = '🏴 Personal Use: Scan Sitemaps';
+
+  if(results.length === 0){
+    statusEl.innerHTML += `<div style="color:var(--amber);margin-top:8px">⚠ No results extracted. The CORS proxies may be rate-limited. Try again in 60 seconds, or run the Python script locally for guaranteed results.</div>`;
+    statusEl.innerHTML += `<div style="font-size:11px;color:var(--text3);margin-top:5px">Tip: The Python script in the README always works — copy it to run locally.</div>`;
+    return;
+  }
+
+  statusEl.innerHTML += `<div style="color:var(--green);font-weight:600;margin-top:6px">✓ Found ${results.length} properties. Adding to results...</div>`;
+
+  // Merge with existing results
+  const existing = S.results || [];
+  const seen = new Set(existing.map(p => p.address.toLowerCase().slice(0,15)));
+  const newProps = results.filter(p => !seen.has(p.address.toLowerCase().slice(0,15)));
+  
+  if(newProps.length){
+    // Score the new properties
+    const crimeScore = S.area?.crime?.score || 7;
+    const nearby = S.area?.nearby || {};
+    const scored = scoreAll(newProps, crimeScore, nearby, null, S.mode||'buy');
+    S.results = [...scored, ...existing].sort((a,b)=>b.overallScore-a.overallScore);
+    window._listings = S.results;
+    renderAll(S.results, S.area||(()=>({geo:{admin_district:'Manchester',latitude:53.44,longitude:-2.24,region:'North West',admin_ward:'',parliamentary_constituency:'',postcode:'M21'},crime:{total:0,breakdown:{},score:7,stops:0},price:{count:0,avgPrice:0,prices:[],trend:0,recent:[]},nearby:{gyms:[],shops:[],schools:[],parks:[],transport:[]},flood:{zones:0,highRisk:false,areas:[]},planning:{count:0,areas:[]},deprivation:null,hpi:null}))(), S.ai, {budget,stretch:parseInt($('stretch').value)||375000,musts:getOn('must-grid')});
+    statusEl.innerHTML += `<div style="color:var(--green);font-weight:600">✓ Added ${newProps.length} new sitemap listings to results above!</div>`;
+  } else {
+    statusEl.innerHTML += `<div style="color:var(--amber)">All found properties already in results.</div>`;
+  }
+}
+
+
 updateCosts();
 
 </script>
