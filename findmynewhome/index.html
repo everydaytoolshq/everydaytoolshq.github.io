@@ -1049,29 +1049,42 @@ async function testClaude(){
 
 async function testHomedata(){
   const el=$('status-hd');if(!el)return;
-  if(!S.homedataKey){el.textContent='No key \u2014 enter and click Save Key';el.style.color='var(--text3)';return;}
-  el.textContent='\u23f3 Step 1: finding boundary for Manchester\u2026';el.style.color='var(--amber)';
+  if(!S.homedataKey){el.textContent='No key \u2014 enter key and click Save Key';el.style.color='var(--text3)';return;}
+  el.textContent='\u23f3 Step 1: testing boundary endpoint (public, no auth)\u2026';el.style.color='var(--amber)';
   try{
-    const br=await fetch('https://api.homedata.co.uk/api/boundaries/autocomplete/?q=Manchester',{headers:{'Accept':'application/json'}});
-    if(!br.ok){el.textContent='\u2717 Boundaries HTTP '+br.status;el.style.color='var(--red)';return;}
-    const bd=await br.json();
-    const b=(bd.results||[])[0];
-    if(!b){el.textContent='\u2717 No boundary found';el.style.color='var(--red)';return;}
-    el.textContent='\u23f3 Step 2: live-listings for '+b.name+' (id:'+b.id+')\u2026';el.style.color='var(--amber)';
+    // Step 1: public endpoint — diagnose CORS
+    let bdData=null;
+    try{
+      const br=await fetch('https://api.homedata.co.uk/api/boundaries/autocomplete/?q=Manchester',{signal:AbortSignal.timeout(8000)});
+      if(!br.ok){el.textContent='\u2717 Boundaries HTTP '+br.status;el.style.color='var(--red)';return;}
+      bdData=await br.json();
+    }catch(corsErr){
+      el.textContent='\u26a0 CORS blocked \u2014 browser cannot reach api.homedata.co.uk directly. The search will try via a CORS proxy automatically. This is normal for browser apps.';
+      el.style.color='var(--amber)';return;
+    }
+    const b=(bdData.results||[])[0];
+    if(!b){el.textContent='\u2717 No boundary results';el.style.color='var(--red)';return;}
+    el.textContent='\u23f3 Step 2: testing live-listings with your key\u2026';el.style.color='var(--amber)';
+    // Step 2: authenticated endpoint
     const r=await fetch(
       'https://api.homedata.co.uk/api/live-listings/search/?boundary_id='+b.id+'&transaction_type=Sale&max_price=500000&page_size=3&sort=-added_date',
-      {headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'}}
+      {headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'},signal:AbortSignal.timeout(12000)}
     );
     const txt=await r.text();
     let d;try{d=JSON.parse(txt);}catch(e){el.textContent='\u2717 Non-JSON (HTTP '+r.status+')';el.style.color='var(--red)';return;}
-    if(r.status===401){el.textContent='\u2717 401 \u2014 key format must be: QRryNTjX.your-secret';el.style.color='var(--red)';return;}
-    if(r.status===403){el.textContent='\u2717 403 \u2014 key expired or plan issue';el.style.color='var(--red)';return;}
+    if(r.status===401){el.textContent='\u2717 401 \u2014 key format must be: QRryNTjX.your-secret (with the dot)';el.style.color='var(--red)';return;}
+    if(r.status===403){el.textContent='\u2717 403 \u2014 key expired or plan does not include live-listings';el.style.color='var(--red)';return;}
     if(!r.ok){el.textContent='\u2717 HTTP '+r.status+' \u2014 '+(d.detail||d.message||txt.slice(0,60));el.style.color='var(--red)';return;}
     const rem=r.headers.get('X-RateLimit-Remaining')||'?';
     const sample=(d.results||[])[0];
-    el.textContent='\u2713 Working! '+Number(d.count||0).toLocaleString()+' listings in '+b.name+' \u00b7 '+rem+' calls left'+(sample?' \u00b7 e.g. \u00a3'+Number(sample.latest_price||0).toLocaleString()+' \u2014 '+sample.display_address:'');
+    el.textContent='\u2713 Working! '+Number(d.count||0).toLocaleString()+' live listings in '+b.name+' \u00b7 '+rem+' calls left'+(sample?' \u00b7 e.g. \u00a3'+Number(sample.latest_price||0).toLocaleString()+' \u2014 '+sample.display_address:'');
     el.style.color='var(--green)';
-  }catch(e){el.textContent='\u2717 '+e.message.slice(0,80);el.style.color='var(--red)';}
+  }catch(e){
+    el.textContent=(e.name==='AbortError'||e.name==='TimeoutError')
+      ?'\u2717 Timed out \u2014 may be CORS blocked or slow connection'
+      :'\u2717 '+e.message.slice(0,80);
+    el.style.color='var(--red)';
+  }
 }
 
 async function testApify(){
@@ -1228,42 +1241,59 @@ async function fetchFreeListings(location,budget,minBeds,types,pc,log){
 // Homedata: address/find → properties/uprn
 async function homedataListings(postcode, budget, locationName){
   console.log('[HD] called key:', !!S.homedataKey, 'pc:', postcode, 'loc:', locationName);
-  if(!S.homedataKey || S.homedataUsed >= S.homedataCap){ console.log('[HD] skip - no key or cap'); return []; }
+  if(!S.homedataKey || S.homedataUsed >= S.homedataCap){ console.log('[HD] skip'); return []; }
   const fle=$('free-log');
   const hdLog=msg=>{console.log('[HD]',msg);if(fle){const d=document.createElement('div');d.style.cssText='color:var(--teal);font-size:11px';d.textContent='[HD] '+msg;fle.appendChild(d);fle.scrollTop=9999;}};
   const hdErr=msg=>{console.warn('[HD] ERR:',msg);if(fle){const d=document.createElement('div');d.style.cssText='color:var(--red);font-size:11px';d.textContent='\u2717 Homedata: '+msg;fle.appendChild(d);fle.scrollTop=9999;}};
+
+  // Try direct first, fall back to CORS proxy (corsproxy.io forwards auth headers)
+  async function hdFetch(url, withAuth){
+    const hdrs={'Accept':'application/json'};
+    if(withAuth) hdrs['Authorization']='Api-Key '+S.homedataKey;
+    try{
+      const r=await fetch(url,{headers:hdrs,signal:AbortSignal.timeout(12000)});
+      if(r.ok||r.status===401||r.status===403) return r;
+    }catch(e){ console.log('[HD] direct blocked:',e.message.slice(0,50)); }
+    // CORS proxy fallback
+    try{
+      const r2=await fetch('https://corsproxy.io/?'+encodeURIComponent(url),{headers:hdrs,signal:AbortSignal.timeout(15000)});
+      if(r2.ok||r2.status===401||r2.status===403) return r2;
+    }catch(e){ console.log('[HD] proxy blocked:',e.message.slice(0,50)); }
+    return null;
+  }
+
   try{
     const minBeds=parseInt($('min-beds')?.value)||3;
     const area=postcode.trim().toUpperCase().split(' ')[0];
-    // Step 1: Boundaries Autocomplete — no auth needed per docs
     let boundary=null;
     for(const q of [locationName,area].filter(Boolean)){
-      hdLog('Boundary search: "'+q+'"');
-      const br=await fetch('https://api.homedata.co.uk/api/boundaries/autocomplete/?q='+encodeURIComponent(q),{headers:{'Accept':'application/json'}});
+      hdLog('Boundary: "'+q+'"');
+      const br=await hdFetch('https://api.homedata.co.uk/api/boundaries/autocomplete/?q='+encodeURIComponent(q),false);
+      if(!br){hdErr('Boundaries unreachable (CORS blocked by browser). Try Test Key to diagnose.');continue;}
       if(!br.ok){hdErr('Boundaries HTTP '+br.status);continue;}
       const bd=await br.json();
       const results=bd.results||[];
       hdLog(results.length+' boundaries: '+results.slice(0,3).map(b=>b.name+'('+b.id+')').join(', '));
       if(results.length){boundary=results[0];break;}
     }
-    if(!boundary){hdErr('No boundary found for area: '+area);return [];}
-    hdLog('Using boundary: '+boundary.name+' id='+boundary.id);
-    // Step 2: Live listings — Authorization: Api-Key <key> (exact format from docs)
+    if(!boundary){hdErr('No boundary found. Check postcode/location.');return [];}
+    hdLog('Using: '+boundary.name+' id='+boundary.id);
     const params=new URLSearchParams({boundary_id:boundary.id,transaction_type:'Sale',max_price:budget,sort:'-added_date',page_size:50});
     if(minBeds>=2) params.set('bedrooms',minBeds);
-    const url='https://api.homedata.co.uk/api/live-listings/search/?'+params.toString();
-    hdLog('GET '+url.slice(0,100));
-    const r=await fetch(url,{headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'}});
-    const rem=r.headers.get('X-RateLimit-Remaining')||'?';
+    const listUrl='https://api.homedata.co.uk/api/live-listings/search/?'+params.toString();
+    hdLog('GET '+listUrl.slice(0,90));
+    const r=await hdFetch(listUrl,true);
+    if(!r){hdErr('live-listings unreachable \u2014 Homedata blocks browser CORS. Use Test Key button to diagnose.');return [];}
+    const rem=r.headers?.get?.('X-RateLimit-Remaining')||'?';
     hdLog('HTTP '+r.status+' | calls left: '+rem);
-    if(r.status===401){hdErr('401 Unauthorized — key format must be: QRryNTjX.your-secret');return [];}
-    if(r.status===403){hdErr('403 Forbidden — key expired or plan issue');return [];}
+    if(r.status===401){hdErr('401 \u2014 key must be: QRryNTjX.your-secret (include the dot)');return [];}
+    if(r.status===403){hdErr('403 \u2014 key expired or plan may not include live-listings. Check homedata.co.uk dashboard.');return [];}
     if(!r.ok){const t=await r.text();hdErr('HTTP '+r.status+': '+t.slice(0,80));return [];}
     const d=await r.json();
     spend('hd',1);
     const listings=d.results||[];
     hdLog('Total: '+d.count+' | Returned: '+listings.length);
-    if(!listings.length){hdErr('0 results for '+boundary.name+' at max £'+budget+' / '+minBeds+'+ beds. Try area name like "Chorlton" or "Didsbury".');return [];}
+    if(!listings.length){hdErr('0 results for '+boundary.name+' \u2014 try a broader area name or higher budget');return [];}
     return listings.map(p=>{
       const price=p.latest_price||0;
       const addr=p.display_address||postcode;
