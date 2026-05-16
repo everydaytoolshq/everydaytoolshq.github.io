@@ -196,16 +196,10 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 <div class="topbar">
   <div>
     <div class="logo">Find<em>My</em>NewHome</div>
-    <div class="logo-tag">UK · All Sources · 8 Free APIs · Credit Optimised</div>
+    <div class="logo-tag">UK · Live Listings · Free + API Modes</div>
   </div>
   <div class="pills">
-    <div class="pill"><div class="dot x" id="d-hd"></div><span id="t-hd">Homedata:no key</span></div>
-    <div class="pill"><div class="dot x" id="d-apify"></div><span id="t-apify">Apify:no key</span></div>
     <div class="pill"><div class="dot x" id="d-claude"></div><span id="t-claude">Claude:no key</span></div>
-    <div class="pill"><div class="dot g"></div><span>8 free APIs</span></div>
-    <div class="pill" style="color:var(--green)"><div class="dot g"></div><span id="pill-spent">$0.000 spent</span></div>
-  </div><span id="t-claude">Claude:no key</span></div>
-    
     <div class="pill"><div class="dot x" id="d-hd"></div><span id="t-hd">Homedata:no key</span></div>
     <div class="pill"><div class="dot x" id="d-apify"></div><span id="t-apify">Apify:no key</span></div>
     <div class="pill"><div class="dot g"></div><span>8 free APIs</span></div>
@@ -402,6 +396,7 @@ const S = {
   claudeCap:20, claudeSpent:0,
   homedataCap:100, homedataUsed:0,
   apifyCap:5, apifySpent:0, apifyMax:25,
+  listingMode:'free',
   cache:{}, results:[], area:null, ai:null
 };
 const CACHE_TTL = 6*60*60*1000;
@@ -415,38 +410,31 @@ function cacheKey(pc,budget,types){ return pc.toUpperCase()+'_'+Math.round(budge
 
 // ─── CREDIT TRACKING ────────────────────────────────────────────────────────
 function updateCosts(){
-  const cc=parseFloat($('c-claude-cap').value)||20; S.claudeCap=cc;
-  $('rv-ccap').textContent='$'+cc.toFixed(2);
+  const cc=parseFloat($('c-claude-cap')?.value)||20; S.claudeCap=cc;
+  if($('rv-ccap')) $('rv-ccap').textContent='$'+cc.toFixed(2);
   const cpct=Math.max(0,(cc-S.claudeSpent)/cc*100);
-  $('bar-claude').style.width=cpct+'%';
-  $('bar-claude').className='bar '+(cpct>50?'g':cpct>20?'a':'r');
-  $('det-claude').textContent='$'+(cc-S.claudeSpent).toFixed(3)+' left · ~'+Math.floor((cc-S.claudeSpent)/0.003)+' searches';
-  $('used-claude').textContent='$'+S.claudeSpent.toFixed(3)+' used';
-  const hc=parseInt($('c-hd-cap').value)||100; S.homedataCap=hc;
-  $('rv-hdcap').textContent=hc+' calls';
+  if($('bar-claude')){ $('bar-claude').style.width=cpct+'%'; $('bar-claude').className='bar '+(cpct>50?'g':cpct>20?'a':'r'); }
+  if($('det-claude')) $('det-claude').textContent='$'+(cc-S.claudeSpent).toFixed(3)+' left';
+  if($('used-claude')) $('used-claude').textContent='$'+S.claudeSpent.toFixed(3)+' used';
+  const hc=parseInt($('c-hd-cap')?.value)||100; S.homedataCap=hc;
+  if($('rv-hdcap')) $('rv-hdcap').textContent=hc+' calls';
   const hpct=Math.max(0,(hc-S.homedataUsed)/hc*100);
-  $('bar-hd').style.width=hpct+'%'; $('bar-hd').className='bar '+(hpct>50?'g':hpct>20?'a':'r');
-  $('det-hd').textContent=(hc-S.homedataUsed)+'/'+hc+' remaining';
-  $('used-hd').textContent=S.homedataUsed+' used';
-  const ac=parseFloat($('c-apify-cap').value)||5; const am=parseInt($('c-apify-max').value)||25;
+  if($('bar-hd')){ $('bar-hd').style.width=hpct+'%'; $('bar-hd').className='bar '+(hpct>50?'g':hpct>20?'a':'r'); }
+  if($('det-hd')) $('det-hd').textContent=(hc-S.homedataUsed)+'/'+hc;
+  if($('used-hd')) $('used-hd').textContent=S.homedataUsed+' used';
+  const ac=parseFloat($('c-apify-cap')?.value)||5; const am=parseInt($('c-apify-max')?.value)||25;
   S.apifyCap=ac; S.apifyMax=am;
-  $('rv-acap').textContent='$'+ac.toFixed(2); $('rv-amax').textContent=am+' props';
+  if($('rv-acap')) $('rv-acap').textContent='$'+ac.toFixed(2);
+  if($('rv-amax')) $('rv-amax').textContent=am+' props';
   const apct=Math.max(0,(ac-S.apifySpent)/ac*100);
-  $('bar-apify').style.width=apct+'%'; $('bar-apify').className='bar '+(apct>50?'g':apct>20?'a':'r');
-  const cps=(am*3.45/1000).toFixed(3);
-  $('det-apify').textContent='$'+(ac-S.apifySpent).toFixed(2)+' left · $'+cps+'/search';
-  $('used-apify').textContent='$'+S.apifySpent.toFixed(3)+' used';
+  if($('bar-apify')){ $('bar-apify').style.width=apct+'%'; $('bar-apify').className='bar '+(apct>50?'g':apct>20?'a':'r'); }
+  if($('det-apify')) $('det-apify').textContent='$'+(ac-S.apifySpent).toFixed(2)+' left';
+  if($('used-apify')) $('used-apify').textContent='$'+S.apifySpent.toFixed(3)+' used';
   const tot=S.claudeSpent+S.apifySpent;
-  $('pill-spent').textContent='$'+tot.toFixed(3)+' spent';
+  if($('pill-spent')) $('pill-spent').textContent='$'+tot.toFixed(3)+' spent';
 }
 function spend(t,a){ if(t==='claude')S.claudeSpent+=a; else if(t==='apify')S.apifySpent+=a; else if(t==='hd')S.homedataUsed+=a; updateCosts(); }
-function setDot(id,cls){ const d=$(id); if(d)d.className='dot '+cls; const d2=$('d2-'+id.replace('d-','')); if(d2)d2.className='dot '+cls; }
-function saveKey(t){
-  if(t==='claude'){ S.claudeKey=$('inp-claude').value.trim(); const ok=S.claudeKey.length>20; setDot('d-claude',ok?'g':'x'); $('t-claude').textContent='Claude:'+(ok?'ready':'no key'); }
-  else if(t==='hd'){ S.homedataKey=$('inp-hd').value.trim(); const ok=S.homedataKey.length>5; setDot('d-hd',ok?'g':'x'); $('t-hd').textContent='Homedata:'+(ok?'ready':'no key'); }
-  else if(t==='apify'){ S.apifyKey=$('inp-apify').value.trim(); const ok=S.apifyKey.length>10; setDot('d-apify',ok?'g':'x'); $('t-apify').textContent='Apify:'+(ok?'ready':'no key'); }
-}
-
+function setDot(id,cls){ const d=$(id); if(d)d.className='dot '+cls; }
 // ─── FREE APIs ───────────────────────────────────────────────────────────────
 async function freePostcode(pc){
   const c=pc.replace(/\s+/g,'').toUpperCase();
@@ -592,57 +580,6 @@ async function freeFoodHygiene(lat,lng){
 
 
 // ─── HOMEDATA ─────────────────────────────────────────────────────────────────
-async function homedataListings(postcode,budget){
-  if(!S.homedataKey||S.homedataUsed>=S.homedataCap) return [];
-  try{
-    // Step 1: find addresses/UPRNs for the postcode (fast, 1 call)
-    const r1=await fetch(
-      'https://api.homedata.co.uk/api/address/find/?q='+encodeURIComponent(postcode.trim()),
-      {headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'}}
-    );
-    if(!r1.ok) throw new Error('Homedata address/find HTTP '+r1.status+' — check key format');
-    const d1=await r1.json();
-    const addresses=Array.isArray(d1)?d1:(d1.results||d1.addresses||[]);
-    if(!addresses.length){ console.log('Homedata: no addresses for',postcode); return []; }
-    // Step 2: fetch property details per UPRN in parallel (faster than serial)
-    const uprns=addresses.slice(0,15).map(a=>a.uprn||a.UPRN).filter(Boolean);
-    if(!uprns.length) return [];
-    const fetches=uprns.map(async uprn=>{
-      if(S.homedataUsed>=S.homedataCap) return null;
-      try{
-        const r2=await fetch(
-          'https://api.homedata.co.uk/api/properties/'+uprn+'/',
-          {headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'}}
-        );
-        if(!r2.ok) return null;
-        const p=await r2.json();
-        spend('hd',1);
-        const price=p.estimated_value||p.last_sale_price||p.price||0;
-        if(!price||price>budget) return null;
-        const addrObj=addresses.find(a=>(a.uprn||a.UPRN)==uprn)||{};
-        const pcs=(addrObj.postcode||postcode).replace(/\s/,'').toLowerCase();
-        return{
-          id:'hd-'+uprn,
-          address:addrObj.address||p.display_address||'Property '+uprn,
-          price,type:(p.property_type||'unknown').toLowerCase(),
-          beds:p.bedrooms||0,baths:p.bathrooms||0,
-          sqft:p.floor_area_sqft||null,epc:p.epc_rating||null,tenure:p.tenure||null,
-          chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,
-          description:('EPC:'+(p.epc_rating||'?')+' | '+(p.floor_area_sqm||'?')+'m\xb2 | Beds:'+(p.bedrooms||'?')+(p.last_sale_date?' | Last sold:'+p.last_sale_date:'')).slice(0,400),
-          features:[p.epc_rating?'EPC '+p.epc_rating:'',p.floor_area_sqm?p.floor_area_sqm+'m\xb2':'',p.tenure||''].filter(Boolean),
-          url:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+encodeURIComponent(postcode.split(' ')[0])+'&useLocationIdentifier=false&sortType=6&includeSSTC=false',
-          rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+encodeURIComponent(postcode.split(' ')[0])+'&useLocationIdentifier=false&sortType=6&includeSSTC=false',
-          zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pcs+'/?q='+pcs+'&results_sort=newest_listings',
-          agent:{name:'Homedata',phone:'',branch:'api.homedata.co.uk'},
-          addedDate:'Homedata',reduced:false,source:'homedata',floorArea:p.floor_area_sqm||null,uprn,
-        };
-      }catch(e){return null;}
-    });
-    const results=await Promise.all(fetches);
-    return results.filter(Boolean);
-  }catch(e){console.warn('Homedata:',e.message);return [];}
-}
-
 // ─── APIFY ────────────────────────────────────────────────────────────────────
 async function apifyListings(location, budget){
   if(!S.apifyKey||S.apifySpent>=S.apifyCap) return [];
@@ -686,7 +623,7 @@ async function apifyListings(location, budget){
 }
 
 // ─── SCORE ────────────────────────────────────────────────────────────────────
-function scoreAll(listings,crimeScore,nearby,deprivation){
+function scoreAll(listings,crimeScore,nearby,deprivation,mode){
   const ws=parseInt($('w-safety').value)/10,wi=parseInt($('w-invest').value)/10,
         wt=parseInt($('w-trans').value)/10,wb=parseInt($('w-build').value)/10,
         wl=parseInt($('w-life').value)/10;
@@ -862,13 +799,16 @@ function renderAll(listings,area,ai,opts){
   const totalSpent=S.claudeSpent+S.apifySpent;
   let h='';
   // Source notice
-  if(isReal){
-    const srcParts=[];
-        if(hdCount)srcParts.push(hdCount+' Homedata');
-    if(rmCount)srcParts.push(rmCount+' Rightmove');
-    h+='<div class="notice ok">✅ <b>Real live listings:</b> '+srcParts.join(' + ')+' — all currently for sale, SSTC excluded</div>';
+  const liveCnt=sorted.filter(p=>!['fallback','search-link'].includes(p.source)).length;
+  const searchLinkCnt=sorted.filter(p=>p.source==='search-link').length;
+  if(liveCnt>0){
+    const srcNames={'apify':'Rightmove (Apify)','homedata':'Homedata','rightmove-live':'Rightmove (free)','purplebricks':'Purplebricks','onthemarket':'OnTheMarket'};
+    const srcs=[...new Set(sorted.filter(p=>!['fallback','search-link'].includes(p.source)).map(p=>p.source))];
+    h+='<div class="notice ok">✅ <b>'+liveCnt+' live for-sale listings</b> from '+srcs.map(s=>srcNames[s]||s).join(' + ')+'</div>';
+  } else if(searchLinkCnt>0){
+    h+='<div class="notice info">🔍 <b>Live search links ready</b> — CORS proxies were blocked. Click any card to open Rightmove/Zoopla with your exact filters. Add an Apify key for live listings.</div>';
   } else {
-    h+='<div class="notice warn">⚠️ <b>No listing API keys configured.</b> Select Free Mode or add API keys to get live listings. The area data below is all real.</div>';
+    h+='<div class="notice warn">⚠ Enter a UK postcode and click Search. Use Free Mode to start, or add API keys for guaranteed live listings.</div>';
   }
   h+='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap">'
     +'<div><div style="font-family:\'Playfair Display\',serif;font-size:24px;letter-spacing:-.4px">'+sorted.length+' Properties · '+geo.admin_district+'</div>'
@@ -899,7 +839,7 @@ function renderAll(listings,area,ai,opts){
     const tbc=p.type.includes('detach')?'bd':p.type.includes('bungalow')?'bb':p.type.includes('flat')||p.type.includes('apart')?'ba':'bs';
     const urgColor=p.urgency==='high'?'var(--red)':p.urgency==='med'?'var(--amber)':'var(--green)';
     const srcClass=p.source==='apify'?'apify':p.source==='homedata'?'hd':p.source==='fallback'?'fallback':'live';
-    const srcLabel=p.source==='apify'?'⬤ Rightmove (live)'+(p.reduced?' · PRICE REDUCED':' · '+(p.addedDate||'Recent')):p.source==='homedata'?'⬤ Homedata.co.uk':'⚠ NO KEYS — Register at homedata.co.uk for free live listings';
+    const srcLabel=p.source==='apify'?'● Rightmove live (Apify)'+(p.reduced?' · PRICE REDUCED':' · '+(p.addedDate||'Recent')):p.source==='rightmove-live'?'● Rightmove live (free)'+(p.reduced?' · PRICE REDUCED':' · '+(p.addedDate||'Recent')):p.source==='purplebricks'?'● Purplebricks (free)':p.source==='search-link'?'🔍 Live search — click Rightmove or Zoopla to see all current for-sale':p.source==='homedata'?'● Homedata':p.source==='onthemarket'?'● OnTheMarket':'● Live listing';
     const verdict=isFallback?'Register free at homedata.co.uk for your Homedata API key. You get 250 free API calls per day — enough for dozens of searches. Homedata and Apify provide real listings.':( getVerdict(ai,p)||p.type+' at £'+fmt(p.price)+'. '+(p.chainFree?'Chain-free.':'In chain.')+(p.garden?' Has garden.':'')+( p.epc?' EPC '+p.epc+'.':''));
     const urgText=isFallback?'':getUrgencyText(ai,p);
     const mustTxt=getMust(ai,p);
@@ -918,7 +858,7 @@ function renderAll(listings,area,ai,opts){
       +(!isFallback?'<div class="tags">'+(nearby.gyms?.length?'<span class="tag ok">🏊 '+(nearby.gyms[0]?.tags?.name||'Gym nearby')+'</span>':'<span class="tag ok">🏊 Pool nearby</span>')+(nearby.shops?.length?'<span class="tag ok">🛒 '+(nearby.shops[0]?.tags?.name||'Supermarket')+'</span>':'')+'<span class="tag ok">✈️ MAN ~'+(p.transportScore>=8?'20':'30')+'min</span>'+(p.chainFree?'<span class="tag ok">✓ No Chain</span>':p.chain?'<span class="tag warn">⚠ Chain</span>':'')+(price.avgPrice&&p.price<price.avgPrice?'<span class="tag ok">Below area avg</span>':price.avgPrice&&p.price>price.avgPrice?'<span class="tag warn">Above area avg</span>':'')+(flood.highRisk?'<span class="tag warn">⚠ Flood zone</span>':'')+(deprivation&&deprivation.decile<=4?'<span class="tag warn">⚠ High deprivation</span>':deprivation&&deprivation.decile>=8?'<span class="tag ok">Affluent area</span>':'')+(p.addedDate?'<span class="tag info">'+p.addedDate+'</span>':'')+'<span class="tag live">'+p.source+'</span></div>':'')
       +'<div class="agent-box"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px">'+(isFallback?'Get Real Listings':'Selling Agent')+'</div>'
       +'<div class="agent-name">'+(p.agent?.name||'Agent')+(p.agent?.branch?' · '+p.agent.branch:'')+'</div>'
-      +'<div class="agent-contact">'+(p.agent?.phone&&p.agent.phone!=='See Rightmove'?'📞 <a href="tel:'+p.agent.phone+'">'+p.agent.phone+'</a> &nbsp;·&nbsp; ':'')
+      +'<div class="agent-contact">'+(p.agent?.phone&&p.agent.phone!=='See Rightmove'?'📞 <a href="tel:'+p.agent.phone+'">'+p.agent.phone+'</a> \u00a0·\u00a0 ':'')
       +(isFallback?'<a href="https://homedata.co.uk" target="_blank">homedata.co.uk · apify.com':'<a href="'+p.rightmoveUrl+'" target="_blank">Rightmove ↗</a> · <a href="'+p.zooplaUrl+'" target="_blank">Zoopla ↗</a>')
       +'</div></div>'
       +'<div class="cactions">'+(isFallback?'<button class="abtn pri" onclick="window.open(\'https://homedata.co.uk\',\'_blank\')">Get Homedata Key ↗</button><button class="abtn" onclick="window.open(\''+p.rightmoveUrl+'\',\'_blank\')">Browse Rightmove</button>':'<button class="abtn" onclick="showDetail('+idx+')">Full Report</button><button class="abtn" onclick="window.open(\''+p.rightmoveUrl+'\',\'_blank\')">Rightmove ↗</button><button class="abtn" onclick="window.open(\''+p.zooplaUrl+'\',\'_blank\')">Zoopla ↗</button><button class="abtn pri" onclick="callAgent('+idx+')">📞 Agent</button>')+'</div>'
@@ -1117,32 +1057,6 @@ async function testApify(){
 // FREE PIPELINE: CORS proxies → Rightmove/Purplebricks/YOPA/OTM
 // + Land Registry sold (always works, no key, no proxy)
 // ═══════════════════════════════════════════════════════════════
-const _PROXIES=[
-  u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
-  u=>'https://corsproxy.io/?'+encodeURIComponent(u),
-  u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u),
-];
-
-async function _proxyFetch(url,ms=18000){
-  for(const mk of _PROXIES){
-    try{
-      const ctrl=new AbortController();
-      const t=setTimeout(()=>ctrl.abort(),ms);
-      const r=await fetch(mk(url),{
-        headers:{'Accept':'text/html,application/xml,*/*'},
-        signal:ctrl.signal
-      });
-      clearTimeout(t);
-      if(!r.ok) continue;
-      const txt=await r.text();
-      if(!txt||txt.length<200) continue;
-      if(/Host not in allowlist|Cloudflare|Access denied|error.*blocked/i.test(txt.slice(0,300))) continue;
-      return txt;
-    }catch(e){ continue; }
-  }
-  return null;
-}
-
 function _parseSitemapXml(xml){
   try{
     const doc=new DOMParser().parseFromString(xml,'application/xml');
@@ -1151,17 +1065,8 @@ function _parseSitemapXml(xml){
   }catch(e){ return []; }
 }
 
-function _extractPageModel(html){
-  for(const pat of [/window\.PAGE_MODEL\s*=\s*(\{[\s\S]*?\});\s*\n/,/window\.jsonModel\s*=\s*(\{[\s\S]*?\});\s*\n/]){
-    const m=html.match(pat); if(m){try{return JSON.parse(m[1]);}catch(e){}}
-  }
-  const m3=html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
-  if(m3){try{return JSON.parse(m3[1]);}catch(e){}}
-  return null;
-}
-
 function _extractJsonLd(html){
-  for(const m of html.matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)){
+  for(const m of html.matchAll(/\x3cscript[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)){
     try{
       const d=JSON.parse(m[1]);
       const items=Array.isArray(d)?d:(d['@graph']?d['@graph']:[d]);
@@ -1171,29 +1076,6 @@ function _extractJsonLd(html){
     }catch(e){}
   }
   return null;
-}
-
-function _normRM(p,budget){
-  const price=typeof p.price==='object'?(p.price?.amount||0):parseInt((p.price+'').replace(/[^0-9]/g,''))||0;
-  if(price>0&&price>budget) return null;
-  const id=p.id||p.propertyId||'';
-  const txt=(p.keyFeatures||[]).join(' ')+(p.summary||'');
-  const addr=p.displayAddress||p.address?.displayAddress||'Rightmove listing';
-  const pc=addr.match(/[A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2}/i);
-  const pcs=pc?pc[0].replace(/\s/,'').toLowerCase():'';
-  return{id:'rm-'+id,address:addr,price,
-    type:(p.propertyType||p.propertySubType||'property').toLowerCase(),
-    beds:p.bedrooms||p.bedroomCount||0,baths:p.bathrooms||0,
-    sqft:p.floorAreaSqFt||null,epc:p.epcRating||null,tenure:p.tenure?.tenureType||null,
-    chainFree:p.isChainFree===true||/no chain/i.test(txt),chain:p.isChainFree===false,
-    garden:/garden/i.test(txt),garage:/garage/i.test(txt),parking:/parking/i.test(txt),newBuild:p.newHome===true,
-    description:(p.summary||'').slice(0,500),features:(p.keyFeatures||[]).slice(0,6),
-    url:id?'https://www.rightmove.co.uk/properties/'+id+'#/':'https://www.rightmove.co.uk',
-    rightmoveUrl:id?'https://www.rightmove.co.uk/properties/'+id+'#/':'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+encodeURIComponent(addr.split(',')[0])+'&useLocationIdentifier=false&sortType=6&includeSSTC=false',
-    zooplaUrl:pcs?'https://www.zoopla.co.uk/for-sale/property/'+pcs+'/?q='+pcs+'&results_sort=newest_listings':'https://www.zoopla.co.uk/for-sale/',
-    agent:{name:p.customer?.brandTradingName||'Estate Agent',phone:p.customer?.contactTelephone||'',branch:p.customer?.branchDisplayName||''},
-    addedDate:p.addedOrReduced||'Recent',reduced:/reduc/i.test(p.addedOrReduced||''),
-    source:'rightmove-pm',floorArea:p.floorAreaSqM||null,lat:p.location?.latitude||null,lng:p.location?.longitude||null};
 }
 
 function _normLd(ld,url,src){
@@ -1220,120 +1102,93 @@ function _normLd(ld,url,src){
 
 
 // CORS pipeline: Rightmove PAGE_MODEL + Purplebricks + YOPA + OnTheMarket
-async function fetchFreeListings(location,budget,minBeds,log){
+async function fetchFreeListings(location,budget,minBeds,types,pc,log){
   if(!log) log=()=>{};
   const results=[];
   const locEnc=encodeURIComponent(location);
-  const locSlug=location.toLowerCase().replace(/\s+/g,'-');
-  const locKws=location.toLowerCase().split(/\s+/).filter(w=>w.length>1);
 
-  // 1. Rightmove
-  log('\U0001f3e0 Rightmove: trying via CORS proxy\u2026','amber');
+  // Try Rightmove via CORS proxy
+  log('Rightmove: trying\u2026','amber');
   try{
-    const html=await _proxyFetch('https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+minBeds,22000);
+    const rmUrl='https://www.rightmove.co.uk/property-for-sale/find.html'
+      +'?searchType=SALE&searchLocation='+locEnc
+      +'&useLocationIdentifier=false&sortType=6&includeSSTC=false'
+      +'&maxPrice='+budget+'&minBedrooms='+minBeds;
+    const html=await _proxyFetch(rmUrl,15000);
     if(html){
       const model=_extractPageModel(html);
       const props=model?.results?.properties||model?.properties||[];
-      if(props.length){
-        log('\u2713 Rightmove: '+props.length+' live listings!','green');
-        props.forEach(p=>{const n=_normRM(p,budget);if(n)results.push(n);});
-      } else {
-        log('  Rightmove: page loaded but data is JS-rendered (try Apify key for guaranteed results)','text3');
+      if(props.length>0){
+        log('\u2713 Rightmove: '+props.length+' live for-sale listings!','green');
+        for(const p of props){const n=_normRM(p,budget);if(n)results.push(n);}
+        return results;
       }
-    } else { log('  Rightmove: blocked by proxy \u2014 try Purplebricks/YOPA\u2026','text3'); }
-  }catch(e){ log('  Rightmove error: '+e.message.slice(0,50),'text3'); }
+      log('  Rightmove: proxy reached page but data is JS-rendered','text3');
+    } else { log('  Rightmove: CORS proxy blocked','text3'); }
+  }catch(e){log('  Rightmove error: '+e.message.slice(0,50),'text3');}
 
-  // 2. Purplebricks sitemap
-  log('\U0001f537 Purplebricks: reading public sitemap\u2026','amber');
+  // Try Purplebricks sitemap
+  log('Purplebricks: reading sitemap\u2026','amber');
   try{
-    const pbXml=await _proxyFetch('https://www.purplebricks.co.uk/sitemaps/sitemap-index.xml',12000);
+    const pbXml=await _proxyFetch('https://www.purplebricks.co.uk/sitemaps/sitemap-index.xml',10000);
     if(pbXml){
-      const childMaps=_parseSitemapXml(pbXml);
-      const saleMap=childMaps.find(u=>/property|for-sale|location/i.test(u));
+      const parser=new DOMParser();
+      const doc=parser.parseFromString(pbXml,'application/xml');
+      const childLocs=[...doc.querySelectorAll('loc')].map(l=>l.textContent.trim());
+      const saleMap=childLocs.find(u=>/property|for-sale/i.test(u));
       if(saleMap){
-        const saleXml=await _proxyFetch(saleMap,12000);
+        const saleXml=await _proxyFetch(saleMap,10000);
         if(saleXml){
-          const allUrls=_parseSitemapXml(saleXml);
-          const locUrls=allUrls.filter(u=>locKws.some(w=>u.toLowerCase().includes(w))||u.toLowerCase().includes('manchester')).slice(0,6);
-          log('  '+locUrls.length+' Purplebricks listings in your area','text');
-          for(const propUrl of locUrls){
-            try{
-              const h=await _proxyFetch(propUrl,10000);if(!h) continue;
-              const ld=_extractJsonLd(h);const n=_normLd(ld,propUrl,'Purplebricks');
-              if(n&&(n.price===0||n.price<=budget)) results.push(n);
-            }catch(e){}
+          const doc2=parser.parseFromString(saleXml,'application/xml');
+          const locKws=location.toLowerCase().split(/\s+/).filter(w=>w.length>1);
+          const propUrls=[...doc2.querySelectorAll('loc')]
+            .map(l=>l.textContent.trim())
+            .filter(u=>locKws.some(w=>u.toLowerCase().includes(w)))
+            .slice(0,5);
+          if(propUrls.length){
+            log('  '+propUrls.length+' Purplebricks listings in area','text');
+            const pages=await Promise.allSettled(propUrls.map(u=>_proxyFetch(u,8000)));
+            for(let i=0;i<pages.length;i++){
+              if(pages[i].status!=='fulfilled'||!pages[i].value) continue;
+              for(const m of pages[i].value.matchAll(/\x3cscript[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)){
+                try{
+                  const d=JSON.parse(m[1]);
+                  const items=Array.isArray(d)?d:(d['@graph']?d['@graph']:[d]);
+                  for(const item of items){
+                    if(!/residence|house|property|home|apartment|flat/i.test(item['@type']||'')) continue;
+                    const addr=item.address||{};
+                    const price=parseFloat(item.offers?.price||0);
+                    if(!price||price>budget) continue;
+                    const pcs=(addr.postalCode||'').replace(/\s/,'').toLowerCase();
+                    results.push({
+                      id:'pb-'+propUrls[i].split('/').pop().slice(0,12),
+                      address:[addr.streetAddress,addr.addressLocality,addr.postalCode].filter(Boolean).join(', ')||'Purplebricks listing',
+                      price,type:(item['@type']||'property').replace(/([A-Z])/g,' $1').trim().toLowerCase(),
+                      beds:parseInt(item.numberOfRooms||item.numberOfBedrooms||0)||0,baths:0,
+                      sqft:null,epc:null,tenure:null,chainFree:false,chain:false,
+                      garden:/garden/i.test(item.description||''),garage:/garage/i.test(item.description||''),
+                      parking:/parking/i.test(item.description||''),newBuild:false,
+                      description:(item.description||'').slice(0,400),features:[],
+                      url:propUrls[i],rightmoveUrl:propUrls[i],
+                      zooplaUrl:pcs?'https://www.zoopla.co.uk/for-sale/property/'+pcs+'/?q='+pcs+'&results_sort=newest_listings':'https://www.zoopla.co.uk/for-sale/',
+                      agent:{name:'Purplebricks',phone:'',branch:''},
+                      addedDate:'Recent',reduced:false,source:'purplebricks',floorArea:null,lat:null,lng:null,
+                    });
+                  }
+                }catch(e){}
+              }
+            }
+            if(results.length>0){log('\u2713 Purplebricks: '+results.length+' listings','green');return results;}
           }
         }
       }
-    } else { log('  Purplebricks sitemap: proxy blocked','text3'); }
-  }catch(e){ log('  Purplebricks error: '+e.message.slice(0,40),'text3'); }
+    } else { log('  Purplebricks: sitemap blocked','text3'); }
+  }catch(e){log('  Purplebricks: '+e.message.slice(0,40),'text3');}
 
-  // 3. YOPA
-  log('\U0001f7e1 YOPA: reading sitemap\u2026','amber');
-  try{
-    const yXml=await _proxyFetch('https://www.yopa.co.uk/sitemap-properties.xml',12000)
-            ||await _proxyFetch('https://www.yopa.co.uk/sitemap.xml',12000);
-    if(yXml&&yXml.includes('<loc>')){
-      const yUrls=_parseSitemapXml(yXml).filter(u=>locKws.some(w=>u.toLowerCase().includes(w))).slice(0,5);
-      log('  '+yUrls.length+' YOPA listings in your area','text');
-      for(const yu of yUrls){
-        try{
-          const h=await _proxyFetch(yu,10000);if(!h) continue;
-          const ld=_extractJsonLd(h);const n=_normLd(ld,yu,'YOPA');
-          if(n){
-            const bm=(yu.split('/').pop()||'').match(/(\d+)-bed/);if(bm)n.beds=parseInt(bm[1]);
-            const tm=(yu.split('/').pop()||'').match(/(detached|semi|bungalow|flat|terraced)/i);if(tm)n.type=tm[1].toLowerCase();
-            if(n.price===0||n.price<=budget) results.push(n);
-          }
-        }catch(e){}
-      }
-    } else { log('  YOPA: proxy blocked','text3'); }
-  }catch(e){ log('  YOPA error: '+e.message.slice(0,40),'text3'); }
-
-  // 4. OnTheMarket
-  log('\U0001f7e2 OnTheMarket: trying\u2026','amber');
-  try{
-    const otmHtml=await _proxyFetch('https://www.onthemarket.com/for-sale/property/'+locSlug+'/?max-price='+budget+'&min-beds='+minBeds,15000);
-    if(otmHtml){
-      const model=_extractPageModel(otmHtml);
-      const props=model?.data?.properties||model?.properties||[];
-      if(props.length){
-        log('  \u2713 OnTheMarket: '+props.length+' properties','green');
-        props.slice(0,10).forEach(op=>{
-          const price=parseInt((op.pricing?.formattedPriceQualifier||op.price||'').toString().replace(/[^0-9]/g,''))||0;
-          if(price>budget) return;
-          const id=op.id||'';
-          results.push({id:'otm-'+id,address:op.displayAddress||'OnTheMarket listing',price,
-            type:(op.propertyType||'property').toLowerCase(),beds:op.bedrooms||0,baths:0,
-            sqft:null,epc:null,tenure:null,chainFree:false,chain:false,
-            garden:/garden/i.test(op.summary||''),garage:/garage/i.test(op.summary||''),
-            parking:/parking/i.test(op.summary||''),newBuild:false,
-            description:(op.summary||'').slice(0,400),features:[],
-            url:id?'https://www.onthemarket.com/details/'+id+'/':'https://www.onthemarket.com',
-            rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+minBeds,
-            zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+locSlug+'/?q='+locSlug+'&results_sort=newest_listings',
-            agent:{name:op.agent?.name||'Estate Agent',phone:'',branch:''},
-            addedDate:op.added||'Recent',reduced:false,source:'onthemarket',floorArea:null,lat:null,lng:null});
-        });
-      } else { log('  OnTheMarket: no structured data','text3'); }
-    } else { log('  OnTheMarket: proxy blocked','text3'); }
-  }catch(e){ log('  OnTheMarket error: '+e.message.slice(0,40),'text3'); }
-
-  if(results.length>0){
-    log('\u2713 CORS pipeline: '+results.length+' live listings found!','green');
-  } else {
-    log('\u26a0 All CORS proxies were blocked by estate agents.','amber');
-    log('  Land Registry sold records will still show below.','amber');
-    // Offer Python script download
-    try{
-      const btn=document.createElement('button');
-      btn.textContent='\u2b07 Download Python script (runs locally, always works)';
-      btn.style.cssText='margin-top:5px;padding:5px 10px;background:var(--accent2);color:white;border:none;border-radius:6px;cursor:pointer;font-size:11px;font-family:inherit;width:100%';
-      btn.onclick=downloadPythonScript;
-      $('free-log').appendChild(btn);
-    }catch(e){}
-  }
-  return results;
+  // All blocked — return search-link cards
+  log('\u26a0 Proxies blocked. Showing direct Rightmove/Zoopla/OnTheMarket search links.','amber');
+  log('  Add Apify key for guaranteed live Rightmove data.','text3');
+  return makeSearchCards(location,budget,minBeds,types,pc);
 }
 
 // Homedata: address/find → properties/uprn
