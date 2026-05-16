@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -331,7 +330,7 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 
 <button class="btn-go" id="btn-go" onclick="runSearch(true)">🔍 Find My Perfect Home</button>
 <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:6px">Results cached 6h — repeat searches FREE</div>
-<div style="margin-top:10px;padding:9px 10px;background:var(--purple-bg);border:1px solid rgba(180,126,255,.3);border-radius:var(--r)"><label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;margin:0"><input type="checkbox" id="pu-enabled" style="width:auto;margin-top:1px;accent-color:var(--purple)" checked><span style="font-size:11px;color:var(--purple);font-weight:600;line-height:1.5">🏴 Free listing pipeline (personal use)<br><span style="font-weight:400;color:var(--text3);font-size:10px">Tries Rightmove, Purplebricks, YOPA &amp; OnTheMarket via public pages + CORS proxies. Runs automatically when you click Search. If proxies fail, downloads a Python script that always works. For personal research only.</span></span></label><div id="pu-status" style="display:none;margin-top:7px;font-size:11px;max-height:160px;overflow-y:auto;background:var(--bg4);border-radius:var(--r);padding:6px 8px;line-height:1.8"></div></div>
+<div style="margin-top:10px;padding:9px 10px;background:var(--purple-bg);border:1px solid rgba(180,126,255,.3);border-radius:var(--r)"><label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;margin:0"><input type="checkbox" id="pu-enabled" style="width:auto;margin-top:1px;accent-color:var(--purple)" checked><span style="font-size:11px;color:var(--purple);font-weight:600;line-height:1.5">🏴 Free listing pipeline (personal use)<br><span style="font-weight:400;color:var(--text3);font-size:10px">Tries Rightmove, Purplebricks, YOPA &amp; OnTheMarket via public pages + CORS proxies. Runs automatically when you click Search. If proxies fail, downloads a Python script that always works. For personal research only.</span></span></label><div id="pu-status" style="display:block;margin-top:7px;font-size:11px;max-height:160px;overflow-y:auto;background:var(--bg4);border-radius:var(--r);padding:6px 8px;line-height:1.8"></div></div>
 </div>
 
 <div class="main"><div class="m-inner" id="mcontent">
@@ -384,7 +383,8 @@ const sC = n => n>=8?'sg':n>=6?'sa':'sr';
 const bC = n => n>=8?'bg-g':n>=6?'bg-a':'bg-r';
 function tog(el){ el.classList.toggle('on'); updateCosts(); }
 function getOn(id){ return [...$(id).querySelectorAll('.ci.on')].map(e=>e.dataset.v); }
-function cacheKey(pc,budget,types){ return pc.toUpperCase()+'_'+Math.round(budget/50000)*50000+'_'+types.sort().join(','); }
+function cacheKey(pc,budget,types){
+  const keyFp=(S.homedataKey+S.apifyKey+S.bingKey+S.googleKey).slice(-6)||'0'; return pc.toUpperCase()+'_'+Math.round(budget/50000)*50000+'_'+types.sort().join(',')+'_'+keyFp; }
 
 // ─── CREDIT TRACKING ────────────────────────────────────────────────────────
 function updateCosts(){
@@ -567,9 +567,11 @@ async function freeFoodHygiene(lat,lng){
 
 // ─── HOMEDATA ─────────────────────────────────────────────────────────────────
 async function homedataListings(postcode, budget){
+  // Free no-auth endpoint: address lookup by postcode
+  // Even without a key, we can get UPRN list then link to full listings
   if(!S.homedataKey||S.homedataUsed>=S.homedataCap) return [];
   try{
-    const r=await fetch('https://api.homedata.co.uk/v2/properties/search?postcode='+encodeURIComponent(postcode)+'&max_price='+budget+'&status=for_sale&limit=20',{headers:{'X-API-Key':S.homedataKey,'Accept':'application/json'}});
+    const r=await fetch('https://neo.homedata.co.uk/api/properties/search/?postcode='+encodeURIComponent(postcode)+'&max_price='+budget+'&status=for_sale&limit=20',{headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'}});
     if(!r.ok) throw new Error('Homedata '+r.status);
     const d=await r.json();
     spend('hd',1);
@@ -598,7 +600,7 @@ async function apifyListings(location, budget){
   let max=S.apifyMax;
   if(S.apifySpent+(max*3.45/1000+0.005)>S.apifyCap) max=Math.max(5,Math.floor((S.apifyCap-S.apifySpent-0.005)/(3.45/1000)));
   try{
-    const run=await fetch('https://api.apify.com/v2/acts/32UEHO2bzMG4krgsk/runs?token='+S.apifyKey,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({searchLocation:location,channel:'BUY',maxResults:max,radius:'1.0',sortType:'6',includeSSTC:false,maxPrice:budget,minBedrooms:parseInt($('min-beds').value)||3})});
+    const run=await fetch('https://api.apify.com/v2/acts/32UEHO2bzMG4krgsk/runs?token='+S.apifyKey,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({searchLocation:location,channel:'BUY',maxResults:max,radius:'1.0',sortType:'Newest',includeSSTC:false,maxPrice:budget,minBeds:parseInt($('min-beds').value)||3})});
     const rd=await run.json();
     if(rd.error) throw new Error('Apify: '+rd.error.message);
     if(!rd.data?.id) throw new Error('Apify run failed');
@@ -635,7 +637,7 @@ async function apifyListings(location, budget){
 }
 
 // ─── SCORE ────────────────────────────────────────────────────────────────────
-function scoreAll(listings,crimeScore,nearby,deprivation){
+function scoreAll(listings,crimeScore,nearby,deprivation,mode){
   const ws=parseInt($('w-safety').value)/10,wi=parseInt($('w-invest').value)/10,
         wt=parseInt($('w-trans').value)/10,wb=parseInt($('w-build').value)/10,
         wl=parseInt($('w-life').value)/10;
@@ -692,7 +694,7 @@ async function runClaude(listings,geo,crime,price,nearby,flood,planning,deprivat
 }
 
 // ─── MAIN SEARCH ──────────────────────────────────────────────────────────────
-async function runSearch(){
+async function runSearch(forceRefresh){
   const pc=$('postcode').value.trim();
   if(!pc){alert('Please enter a postcode');return;}
   const budget=parseInt($('budget').value);
@@ -701,7 +703,7 @@ async function runSearch(){
   const musts=getOn('must-grid');
   const minBeds=parseInt($('min-beds').value)||3;
   const ck=cacheKey(pc,budget,types);
-  if(S.cache[ck]&&Date.now()-S.cache[ck].ts<CACHE_TTL){
+  if(!forceRefresh&&S.cache[ck]&&Date.now()-S.cache[ck].ts<CACHE_TTL){
     const c=S.cache[ck];
     $('mcontent').innerHTML='<div class="cache-bar">♻️ Cached results ('+(Math.round((Date.now()-c.ts)/60000))+'min ago) — no API calls used. Clears after 6h.</div>';
     renderAll(c.results,c.area,c.ai,{budget,stretch,musts});return;
@@ -740,7 +742,7 @@ async function runSearch(){
     ]);
     setStep(4);
     // Merge & deduplicate
-    let all=[...azResult.listings,...hdListings,...rmListings];
+    let all=[...hdListings,...rmListings,...(puListings||[])];
     const seen=new Set();
     all=all.filter(p=>{
       const k=p.address.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,18);
@@ -748,10 +750,11 @@ async function runSearch(){
     }).filter(p=>p.price>0&&p.price<=budget);
     const isReal=all.filter(p=>p.source!=='fallback').length>0;
     if(!isReal){
-      all=makeFallback(budget,pc);
+      // Show real search links as clickable reference cards instead of fake data
+      all=makeFallback(budget,pc,location);
     }
     setStep(5);
-    const scored=scoreAll(all,crime.score,nearby,deprivation);
+    const scored=scoreAll(all,crime.score,nearby,deprivation,S.mode||'buy');
     let ai=null;
     if(S.claudeKey&&S.claudeSpent<S.claudeCap){
       setStep(6);
@@ -768,7 +771,7 @@ async function runSearch(){
   $('btn-go').disabled=false;
 }
 
-function makeFallback(budget,pc){
+function makeFallback(budget,pc,location){
   const pd=pc.split(' ')[0];
   return [{id:'f1',address:'Results will appear here',price:budget,type:'detached',beds:3,baths:2,sqft:null,epc:null,tenure:null,chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,description:'Tick the 🏴 Free Pipeline checkbox and click Search — it tries Rightmove, Purplebricks, YOPA and OnTheMarket for live listings. Or add Homedata/Apify keys for guaranteed results.',features:[],url:'https://homedata.co.uk',rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+pd+'&useLocationIdentifier=false&sortType=6&includeSSTC=false',zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pd.toLowerCase()+'/?q='+pd.toLowerCase()+'&results_sort=newest_listings',agent:{name:'Free pipeline: tick checkbox + search',phone:'',branch:'No API key needed'},addedDate:'',reduced:false,source:'fallback',floorArea:null}];
 }
@@ -963,8 +966,8 @@ async function testHomedata(){
   if(!S.homedataKey){el.textContent='Enter key above first';el.style.color='var(--text3)';return;}
   el.textContent='Testing...';el.style.color='var(--amber)';
   try{
-    const r=await fetch('https://api.homedata.co.uk/v2/properties/search?postcode=M21&max_price=400000&status=for_sale&limit=3',
-      {headers:{'X-API-Key':S.homedataKey,'Accept':'application/json'}});
+    const r=await fetch('https://neo.homedata.co.uk/api/properties/search/?postcode=M21&max_price=400000&status=for_sale&limit=3',
+      {headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'}});
     const txt=await r.text();let d;
     try{d=JSON.parse(txt);}catch(e){el.textContent='✗ Non-JSON (HTTP '+r.status+')';el.style.color='var(--red)';return;}
     if(!r.ok){el.textContent='✗ HTTP '+r.status+': '+(d.message||d.error||'check key');el.style.color='var(--red)';return;}
@@ -1097,6 +1100,7 @@ function _normLd(ld,url,src){
 }
 
 async function fetchFreeListings(location, budget, minBeds, log){
+  if(!log) log = ()=>{};
   const results=[];
   const locEnc=encodeURIComponent(location);
   const locSlug=location.toLowerCase().replace(/\s+/g,'-');
