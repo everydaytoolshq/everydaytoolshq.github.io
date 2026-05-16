@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -88,6 +89,10 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 
 .src-strip.hd{background:var(--purple-bg);border-bottom:1px solid rgba(180,126,255,.2);color:var(--purple)}
 .src-strip.apify{background:var(--green-bg);border-bottom:1px solid rgba(62,207,142,.2);color:var(--green)}
+.src-strip.rightmove-pm{background:var(--accent-bg);border-bottom:1px solid rgba(108,142,255,.25);color:var(--accent)}
+.src-strip.pu-purplebricks{background:rgba(160,30,180,.07);border-bottom:1px solid rgba(160,30,180,.2);color:#c060d0}
+.src-strip.pu-yopa{background:rgba(200,140,0,.07);border-bottom:1px solid rgba(200,140,0,.2);color:#b8800a}
+.src-strip.onthemarket{background:rgba(0,140,70,.07);border-bottom:1px solid rgba(0,140,70,.2);color:#4caf7d}
 .src-strip.fallback{background:var(--amber-bg);border-bottom:1px solid rgba(245,166,35,.3);color:var(--amber)}
 .cbody{padding:13px 15px}
 .ctop{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
@@ -205,7 +210,7 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
   <div class="cbox-title"><span>🤖 Claude AI <span style="font-size:9px;color:var(--text3)">~$0.003/search</span></span><span class="cbox-used" id="used-claude">$0.000 used</span></div>
   <label>API Key</label>
   <div class="key-row"><input type="password" id="inp-claude" placeholder="sk-ant-..."><button class="btn-save" onclick="saveKey('claude')">Save</button></div>
-  <div id="status-claude" style="font-size:11px;min-height:15px;color:var(--text3);margin:4px 0 2px"></div><div style="display:flex;gap:4px;margin-bottom:5px"><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testClaude()">Test</button><span style="font-size:10px;color:var(--text3);align-self:center">~$0.00001 test call</span></div>
+  <div id="status-claude" style="font-size:11px;min-height:14px;color:var(--text3);margin:4px 0 2px"></div><div style="display:flex;gap:4px;margin-bottom:4px"><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testClaude()">Test</button><span style="font-size:10px;color:var(--text3);align-self:center">tiny ~$0.00001 call</span></div>
   <label>Budget cap</label>
   <div class="rrow"><input type="range" id="c-claude-cap" min="0.50" max="20" step="0.50" value="20" oninput="updateCosts()"><span class="rv" id="rv-ccap">$20.00</span></div>
   <div class="bar-wrap"><div class="bar g" id="bar-claude" style="width:100%"></div></div>
@@ -216,7 +221,7 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
   <div class="cbox-title"><span>🏠 Homedata.co.uk <span style="font-size:9px;color:var(--text3)">100 free calls</span></span><span class="cbox-used" id="used-hd">0 used</span></div>
   <label>API Key</label>
   <div class="key-row"><input type="password" id="inp-hd" placeholder="KEY.secret..." value="QRryNTjX.0fuJ1GGU07Fmah9ar4rKXEaJu1QI2uvB"><button class="btn-save" onclick="saveKey('hd')">Save</button></div>
-  <div id="status-hd" style="font-size:11px;min-height:15px;color:var(--text3);margin:4px 0 2px"></div><div style="display:flex;gap:4px;margin-bottom:5px"><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testHomedata()">Test</button><span style="font-size:10px;color:var(--text3);align-self:center">Uses 1 call</span></div>
+  <div id="status-hd" style="font-size:11px;min-height:14px;color:var(--text3);margin:4px 0 2px"></div><div style="display:flex;gap:4px;margin-bottom:4px"><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testHomedata()">Test</button><span style="font-size:10px;color:var(--text3);align-self:center">uses 1 call</span></div>
   <label>Call limit</label>
   <div class="rrow"><input type="range" id="c-hd-cap" min="10" max="100" step="1" value="100" oninput="updateCosts()"><span class="rv" id="rv-hdcap">100 calls</span></div>
   <div class="bar-wrap"><div class="bar g" id="bar-hd" style="width:100%"></div></div>
@@ -227,7 +232,7 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
   <div class="cbox-title"><span>🕷 Apify/Rightmove <span style="font-size:9px;color:var(--text3)">$3.45/1000</span></span><span class="cbox-used" id="used-apify">$0.000 used</span></div>
   <label>Apify Token</label>
   <div class="key-row"><input type="password" id="inp-apify" placeholder="apify_api_..."><button class="btn-save" onclick="saveKey('apify')">Save</button></div>
-  <div id="status-apify" style="font-size:11px;min-height:15px;color:var(--text3);margin:4px 0 2px"></div><div style="display:flex;gap:4px;margin-bottom:5px"><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testApify()">Test</button><span style="font-size:10px;color:var(--text3);align-self:center">Free auth check</span></div>
+  <div id="status-apify" style="font-size:11px;min-height:14px;color:var(--text3);margin:4px 0 2px"></div><div style="display:flex;gap:4px;margin-bottom:4px"><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testApify()">Test</button><span style="font-size:10px;color:var(--text3);align-self:center">free auth check</span></div>
   <label>Max results</label>
   <div class="rrow"><input type="range" id="c-apify-max" min="5" max="100" step="5" value="25" oninput="updateCosts()"><span class="rv" id="rv-amax">25 props</span></div>
   <label>Budget cap ($)</label>
@@ -248,7 +253,6 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
   <div class="cost-row"><span>Planning Data Gov</span><span style="color:var(--green);font-weight:600">FREE</span></div>
   
   <div class="cost-row"><span>Homedata (~2 calls)</span><span style="color:var(--green);font-weight:600">FREE tier</span></div>
-  <div class="cost-row"><span>Sitemap pipeline (personal use)</span><span style="color:var(--green);font-weight:600">FREE</span></div>
   <div class="cost-row"><span>Apify (~25 props)</span><span style="color:var(--amber);font-weight:600">~$0.086</span></div>
   <div class="cost-row"><span>Claude AI (1 call)</span><span style="color:var(--amber);font-weight:600">~$0.003</span></div>
   <div class="cost-row"><span>Total</span><span style="color:var(--amber);font-weight:600">~$0.089</span></div>
@@ -256,6 +260,8 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 </div>
 
 <div class="api-grid">
+  <div class="api-item"><div class="dot x" id="d2-claude"></div>Claude AI</div>
+  
   <div class="api-item"><div class="dot x" id="d2-hd"></div>Homedata</div>
   <div class="api-item"><div class="dot x" id="d2-apify"></div>Apify</div>
   <div class="api-item"><div class="dot g"></div>Postcodes.io</div>
@@ -325,22 +331,7 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 
 <button class="btn-go" id="btn-go" onclick="runSearch(true)">🔍 Find My Perfect Home</button>
 <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:6px">Results cached 6h — repeat searches FREE</div>
-
-<div style="margin-top:10px;border:1px solid rgba(180,126,255,.3);border-radius:var(--rlg);padding:10px;background:var(--purple-bg)">
-  <div style="font-size:11px;font-weight:600;color:var(--purple);margin-bottom:5px">🏴 Personal Use Mode</div>
-  <div style="font-size:10px;color:var(--text3);line-height:1.5;margin-bottom:8px">
-    Reads <b style="color:var(--text2)">public XML sitemaps</b> from UK estate agents (Purplebricks, YOPA, Settled, eXp UK). Sitemaps are published for crawler access — legal for personal research. Uses CORS proxies to access from browser.
-  </div>
-  <button id="pu-btn" onclick="runPersonalUse()" style="width:100%;background:linear-gradient(135deg,var(--purple-bg),rgba(180,126,255,.2));color:var(--purple);border:1px solid rgba(180,126,255,.4);padding:8px;border-radius:var(--r);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s">
-    🏴 Personal Use: Scan UK Sitemaps
-  </button>
-  <div id="pu-status" style="display:none;margin-top:8px;font-size:11px;max-height:180px;overflow-y:auto;background:var(--bg4);border-radius:var(--r);padding:7px;line-height:1.7"></div>
-  <div style="font-size:10px;color:var(--text3);margin-top:6px">
-    Sources: Purplebricks · YOPA · Settled · eXp UK<br>
-    Enriches with: Crime data · Land Registry · Flood risk
-  </div>
-</div>
-
+<div style="margin-top:10px;padding:9px 10px;background:var(--purple-bg);border:1px solid rgba(180,126,255,.3);border-radius:var(--r)"><label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;margin:0"><input type="checkbox" id="pu-enabled" style="width:auto;margin-top:1px;accent-color:var(--purple)" checked><span style="font-size:11px;color:var(--purple);font-weight:600;line-height:1.5">🏴 Free listing pipeline (personal use)<br><span style="font-weight:400;color:var(--text3);font-size:10px">Tries Rightmove, Purplebricks, YOPA &amp; OnTheMarket via public pages + CORS proxies. Runs automatically when you click Search. If proxies fail, downloads a Python script that always works. For personal research only.</span></span></label><div id="pu-status" style="display:none;margin-top:7px;font-size:11px;max-height:160px;overflow-y:auto;background:var(--bg4);border-radius:var(--r);padding:6px 8px;line-height:1.8"></div></div>
 </div>
 
 <div class="main"><div class="m-inner" id="mcontent">
@@ -348,7 +339,7 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
   <div class="empty-ico">🏡</div>
   <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text);margin-bottom:8px">Complete UK Property Intelligence</div>
   <div style="font-size:13px;line-height:1.7;max-width:460px;margin:0 auto">
-    <b style="color:var(--teal)">New:</b> Homedata + Apify + Bing Search + 8 genuinely free APIs. No fake properties — if no API keys are set, you get clear instructions to get real data.
+    <b style="color:var(--teal)">New:</b> Homedata + Apify + Free Pipeline + 8 genuinely free APIs. No fake properties — if no API keys are set, you get clear instructions to get real data.
   </div>
   <div class="chips">
     
@@ -381,8 +372,7 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 <script>
 
 const S = {
-  claudeKey:'', homedataKey:'', apifyKey:'',
-  claudeCap:20, claudeSpent:0,
+  claudeKey:'', homedataKey:'', apifyKey:'', claudeCap:20, claudeSpent:0,
   homedataCap:100, homedataUsed:0,
   apifyCap:5, apifySpent:0, apifyMax:25,
   cache:{}, results:[], area:null, ai:null
@@ -394,8 +384,7 @@ const sC = n => n>=8?'sg':n>=6?'sa':'sr';
 const bC = n => n>=8?'bg-g':n>=6?'bg-a':'bg-r';
 function tog(el){ el.classList.toggle('on'); updateCosts(); }
 function getOn(id){ return [...$(id).querySelectorAll('.ci.on')].map(e=>e.dataset.v); }
-function cacheKey(pc,budget,types){
-  const keyFp=(S.homedataKey+S.apifyKey+S.bingKey+S.googleKey).slice(-6)||'0'; return pc.toUpperCase()+'_'+Math.round(budget/50000)*50000+'_'+types.sort().join(',')+'_'+keyFp; }
+function cacheKey(pc,budget,types){ return pc.toUpperCase()+'_'+Math.round(budget/50000)*50000+'_'+types.sort().join(','); }
 
 // ─── CREDIT TRACKING ────────────────────────────────────────────────────────
 function updateCosts(){
@@ -733,9 +722,21 @@ async function runSearch(){
     // Gather real listings from all sources in parallel
     const location=geo.admin_district||pc;
     setStep(3);
-    const [azResult,hdListings,rmListings]= await Promise.all([
+    // ── Setup free pipeline log ──
+    const _puEl=$('pu-status');
+    const _puOn=$('pu-enabled')?.checked!==false;
+    if(_puOn&&_puEl){_puEl.style.display='block';_puEl.innerHTML='';}
+    function _puLog(msg,col='text2'){
+      if(!_puEl)return;
+      const d=document.createElement('div');
+      d.style.color='var(--'+col+')';d.textContent=msg;
+      _puEl.appendChild(d);_puEl.scrollTop=_puEl.scrollHeight;
+    }
+    // ── Run all listing sources in parallel ──
+    const [hdListings,rmListings,puListings]=await Promise.all([
       homedataListings(pc,budget),
       apifyListings(location,budget),
+      _puOn?fetchFreeListings(location,budget,minBeds,_puLog):Promise.resolve([]),
     ]);
     setStep(4);
     // Merge & deduplicate
@@ -745,7 +746,7 @@ async function runSearch(){
       const k=p.address.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,18);
       if(seen.has(k))return false; seen.add(k); return true;
     }).filter(p=>p.price>0&&p.price<=budget);
-    const isReal=all.length>0;
+    const isReal=all.filter(p=>p.source!=='fallback').length>0;
     if(!isReal){
       all=makeFallback(budget,pc);
     }
@@ -769,14 +770,14 @@ async function runSearch(){
 
 function makeFallback(budget,pc){
   const pd=pc.split(' ')[0];
-  return [{id:'f1',address:'Results will appear here',price:budget,type:'detached',beds:3,baths:2,sqft:null,epc:null,tenure:null,chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,description:'Add your Homedata API key. Homedata and Apify provide real listings from estate agents.',features:[],url:'https://homedata.co.uk',rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+pd+'&useLocationIdentifier=false&sortType=6&includeSSTC=false',zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pd.toLowerCase()+'/?q='+pd.toLowerCase()+'&results_sort=newest_listings',agent:{name:'Register at homedata.co.uk',phone:'',branch:'100 free/month'},addedDate:'',reduced:false,source:'fallback',floorArea:null}];
+  return [{id:'f1',address:'Results will appear here',price:budget,type:'detached',beds:3,baths:2,sqft:null,epc:null,tenure:null,chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,description:'Tick the 🏴 Free Pipeline checkbox and click Search — it tries Rightmove, Purplebricks, YOPA and OnTheMarket for live listings. Or add Homedata/Apify keys for guaranteed results.',features:[],url:'https://homedata.co.uk',rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+pd+'&useLocationIdentifier=false&sortType=6&includeSSTC=false',zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pd.toLowerCase()+'/?q='+pd.toLowerCase()+'&results_sort=newest_listings',agent:{name:'Free pipeline: tick checkbox + search',phone:'',branch:'No API key needed'},addedDate:'',reduced:false,source:'fallback',floorArea:null}];
 }
 
 function showLoading(){
   $('mcontent').innerHTML='<div class="loading"><div class="spin"></div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px">Searching all sources...</div><div class="lsteps" id="lsteps">'
     +'<div class="ls" id="ls0"><span>⏳</span> Postcodes.io geocoding <span class="ctag">FREE</span></div>'
     +'<div class="ls" id="ls1"><span>⏳</span> Crime · Prices · Flood · Planning · Deprivation · HPI · OSM (7 free APIs) <span class="ctag">FREE</span></div>'
-    +'<div class="ls" id="ls2"><span>⏳</span> Homedata + Apify live listings <span class="ctag">varies</span></div>'
+    +'<div class="ls" id="ls2"><span>⏳</span> Homedata + Apify + Free pipeline <span class="ctag">varies</span></div>'
     +'<div class="ls" id="ls3"><span>⏳</span> Fetching listings from all sources in parallel <span class="ctag">varies</span></div>'
     +'<div class="ls" id="ls4"><span>⏳</span> Merging · deduplicating · scoring <span class="ctag">FREE</span></div>'
     +'<div class="ls" id="ls5"><span>⏳</span> Claude AI deep analysis (1 call, all data bundled) <span class="ctag">~$0.003</span></div>'
@@ -801,6 +802,7 @@ function renderAll(listings,area,ai,opts){
   const crimeColor=crime.total>200?'var(--red)':crime.total>120?'var(--amber)':'var(--green)';
   const crimeLevel=crime.total>200?'High':crime.total>120?'Moderate':crime.total>60?'Low-Mod':'Low';
     const hdCount=sorted.filter(p=>p.source==='homedata').length;
+  const puCount=sorted.filter(p=>p.source&&p.source!=='fallback'&&(p.source==='rightmove-pm'||p.source==='onthemarket'||(p.source||'').startsWith('pu-'))).length;
   const rmCount=sorted.filter(p=>p.source==='apify').length;
   const isReal=sorted.some(p=>p.source!=='fallback');
   const totalSpent=S.claudeSpent+S.apifySpent;
@@ -808,11 +810,12 @@ function renderAll(listings,area,ai,opts){
   // Source notice
   if(isReal){
     const srcParts=[];
-    if(hdCount)srcParts.push(hdCount+' Homedata');
-    if(rmCount)srcParts.push(rmCount+' Rightmove');
+        if(hdCount)srcParts.push(hdCount+' Homedata');
+    if(rmCount)srcParts.push(rmCount+' Rightmove (Apify)');
+    if(puCount)srcParts.push(puCount+' free pipeline');
     h+='<div class="notice ok">✅ <b>Real live listings:</b> '+srcParts.join(' + ')+' — all currently for sale, SSTC excluded</div>';
   } else {
-    h+='<div class="notice warn">⚠️ <b>No listing API keys configured.</b> Add your <b>Homedata</b> key or Apify token</div>';
+    h+='<div class="notice warn">⚠️ <b>No listing API keys configured.</b> Add your <b>Homedata</b> key or <b>Apify</b> token for reliable live listings. The area data below is all real.</div>';
   }
   h+='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap">'
     +'<div><div style="font-family:\'Playfair Display\',serif;font-size:24px;letter-spacing:-.4px">'+sorted.length+' Properties · '+geo.admin_district+'</div>'
@@ -844,7 +847,7 @@ function renderAll(listings,area,ai,opts){
     const urgColor=p.urgency==='high'?'var(--red)':p.urgency==='med'?'var(--amber)':'var(--green)';
     const srcClass=p.source==='apify'?'apify':p.source==='homedata'?'hd':p.source==='fallback'?'fallback':'live';
     const srcLabel=p.source==='apify'?'⬤ Rightmove (live)'+(p.reduced?' · PRICE REDUCED':' · '+(p.addedDate||'Recent')):p.source==='homedata'?'⬤ Homedata.co.uk':'⚠ NO KEYS — Register at homedata.co.uk for free live listings';
-    const verdict=isFallback?'Register free at homedata.co.uk for your Homedata API key. — enough for dozens of searches. Homedata and Apify provide real listings.':( getVerdict(ai,p)||p.type+' at £'+fmt(p.price)+'. '+(p.chainFree?'Chain-free.':'In chain.')+(p.garden?' Has garden.':'')+( p.epc?' EPC '+p.epc+'.':''));
+    const verdict=isFallback?'Register free at homedata.co.uk for your Homedata API key. You get 250 free API calls per day — enough for dozens of searches. Homedata and Apify provide real listings.':( getVerdict(ai,p)||p.type+' at £'+fmt(p.price)+'. '+(p.chainFree?'Chain-free.':'In chain.')+(p.garden?' Has garden.':'')+( p.epc?' EPC '+p.epc+'.':''));
     const urgText=isFallback?'':getUrgencyText(ai,p);
     const mustTxt=getMust(ai,p);
     const scores=[{l:'Safety',v:p.safetyScore},{l:'Transport',v:p.transportScore},{l:'Schools',v:6},{l:'Invest',v:p.investScore},{l:'Build',v:p.buildScore},{l:'Overall',v:p.overallScore}];
@@ -852,7 +855,7 @@ function renderAll(listings,area,ai,opts){
       +(p.isTopPick?'<div class="pick-badge">⭐ AI TOP PICK — VISIT FIRST</div>':'')
       +'<div class="src-strip '+srcClass+'">'+srcLabel+'</div>'
       +'<div class="cbody">'
-      +'<div class="ctop"><div class="caddr">'+(isFallback?'<span style="font-size:11px;color:var(--amber);font-weight:700;display:block;margin-bottom:3px">⚠ Add a listing API key</span>':'')+p.address+'</div>'
+      +'<div class="ctop"><div class="caddr">'+(isFallback?'<span style="font-size:11px;color:var(--amber);font-weight:700;display:block;margin-bottom:3px">⚠ Click Search — free pipeline running</span>':'')+p.address+'</div>'
       +'<div class="cbadges">'+(isFallback?'':('<span class="badge '+tbc+'">'+p.type+'</span>'+(p.tenure?.toLowerCase().includes('freehold')?'<span class="badge bf">Freehold</span>':'')+(p.chainFree?'<span class="badge bd">No Chain</span>':p.chain?'<span class="badge bs">In Chain</span>':'')+(p.reduced?'<span class="badge" style="border-color:var(--red);color:var(--red);background:var(--red-bg)">Price ↓</span>':'')+(p.newBuild?'<span class="badge ba">New</span>':'')))+'</div></div>'
       +(isFallback?'':'<div class="cmeta"><div class="cprice">£'+fmt(p.price)+'</div><div class="cspecs">'+(p.beds?'<span class="spec">🛏 '+p.beds+'bd</span>':'')+(p.baths?'<span class="spec">🚿 '+p.baths+'ba</span>':'')+(p.sqft?'<span class="spec">📐 '+p.sqft+'sqft</span>':'')+(p.epc?'<span class="spec"><span class="epc e'+p.epc+'">'+p.epc+'</span></span>':'')+(p.garden?'<span class="spec">🌳</span>':'')+(p.garage?'<span class="spec">🚗</span>':'')+'</div></div>'
       +(isFallback?'':'<div class="scores">'+scores.map(s=>'<div class="sc-item"><div class="sc-l">'+s.l+'</div><div class="sc-bw"><div class="sc-b '+bC(s.v||5)+'" style="width:'+((s.v||5)*10)+'%"></div></div><div class="sc-n '+sC(s.v||5)+'">'+(s.v||'?')+'</div></div>').join('')+'</div>'))
@@ -863,7 +866,7 @@ function renderAll(listings,area,ai,opts){
       +'<div class="agent-box"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px">'+(isFallback?'Get Real Listings':'Selling Agent')+'</div>'
       +'<div class="agent-name">'+(p.agent?.name||'Agent')+(p.agent?.branch?' · '+p.agent.branch:'')+'</div>'
       +'<div class="agent-contact">'+(p.agent?.phone&&p.agent.phone!=='See Rightmove'?'📞 <a href="tel:'+p.agent.phone+'">'+p.agent.phone+'</a> &nbsp;·&nbsp; ':'')
-      +(isFallback?'<a href="https://homedata.co.uk" target="_blank">Get Homedata key ↗</a> · 250 API calls/day free':'<a href="'+p.rightmoveUrl+'" target="_blank">Rightmove ↗</a> · <a href="'+p.zooplaUrl+'" target="_blank">Zoopla ↗</a>')
+      +(isFallback?'<a href="https://homedata.co.uk" target="_blank">homedata.co.uk · apify.com':'<a href="'+p.rightmoveUrl+'" target="_blank">Rightmove ↗</a> · <a href="'+p.zooplaUrl+'" target="_blank">Zoopla ↗</a>')
       +'</div></div>'
       +'<div class="cactions">'+(isFallback?'<button class="abtn pri" onclick="window.open(\'https://homedata.co.uk\',\'_blank\')">Get Homedata Key ↗</button><button class="abtn" onclick="window.open(\''+p.rightmoveUrl+'\',\'_blank\')">Browse Rightmove</button>':'<button class="abtn" onclick="showDetail('+idx+')">Full Report</button><button class="abtn" onclick="window.open(\''+p.rightmoveUrl+'\',\'_blank\')">Rightmove ↗</button><button class="abtn" onclick="window.open(\''+p.zooplaUrl+'\',\'_blank\')">Zoopla ↗</button><button class="abtn pri" onclick="callAgent('+idx+')">📞 Agent</button>')+'</div>'
       +'</div></div>';
@@ -941,240 +944,343 @@ function showDetail(idx){
 }
 function callAgent(idx){const p=window._listings?.[idx];if(!p)return;alert('📞 '+(p.agent?.name||'Agent')+'\n\n'+(p.agent?.phone?'Phone: '+p.agent.phone+'\n':'')+(p.agent?.branch?'Branch: '+p.agent.branch+'\n':'')+'\nRightmove: '+p.rightmoveUrl);}
 function closeModal(){$('modal').classList.add('hidden');}
-// ─── PERSONAL USE: SITEMAP PIPELINE ──────────────────────────────────────────
-// Reads public XML sitemaps (published for crawlers, robots.txt allows this)
-// Uses CORS proxies to fetch cross-origin XML from browser context
-// Legal for personal research - no login, no ToS violation, public data only
+async function testClaude(){
+  const el=$('status-claude');if(!el)return;
+  if(!S.claudeKey){el.textContent='Enter key above first';el.style.color='var(--text3)';return;}
+  el.textContent='Testing...';el.style.color='var(--amber)';
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':S.claudeKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:10,messages:[{role:'user',content:'say OK'}]})});
+    const d=await r.json();
+    if(d.error){el.textContent='✗ '+d.error.message.slice(0,80);el.style.color='var(--red)';return;}
+    if(d.content?.[0]?.text){const cost=((d.usage?.input_tokens||0)*0.00025+(d.usage?.output_tokens||0)*0.00125)/1000;spend('claude',cost);
+      el.textContent='✓ Connected · used $'+cost.toFixed(5);el.style.color='var(--green)';}
+  }catch(e){el.textContent='✗ '+e.message.slice(0,80);el.style.color='var(--red)';}
+}
+async function testHomedata(){
+  const el=$('status-hd');if(!el)return;
+  if(!S.homedataKey){el.textContent='Enter key above first';el.style.color='var(--text3)';return;}
+  el.textContent='Testing...';el.style.color='var(--amber)';
+  try{
+    const r=await fetch('https://api.homedata.co.uk/v2/properties/search?postcode=M21&max_price=400000&status=for_sale&limit=3',
+      {headers:{'X-API-Key':S.homedataKey,'Accept':'application/json'}});
+    const txt=await r.text();let d;
+    try{d=JSON.parse(txt);}catch(e){el.textContent='✗ Non-JSON (HTTP '+r.status+')';el.style.color='var(--red)';return;}
+    if(!r.ok){el.textContent='✗ HTTP '+r.status+': '+(d.message||d.error||'check key');el.style.color='var(--red)';return;}
+    const props=(d.properties||d.results||[]);spend('hd',1);
+    el.textContent='✓ Working · '+(d.total||props.length)+' M21 listings available';el.style.color='var(--green)';
+  }catch(e){el.textContent='✗ '+e.message.slice(0,80);el.style.color='var(--red)';}
+}
+async function testApify(){
+  const el=$('status-apify');if(!el)return;
+  if(!S.apifyKey){el.textContent='Enter token above first';el.style.color='var(--text3)';return;}
+  el.textContent='Checking token (free)...';el.style.color='var(--amber)';
+  try{
+    const r=await fetch('https://api.apify.com/v2/users/me?token='+encodeURIComponent(S.apifyKey));
+    const d=await r.json();
+    if(!r.ok||d.error){el.textContent='✗ Invalid token — get one at apify.com/account/integrations';el.style.color='var(--red)';return;}
+    el.textContent='✓ Valid · Plan: '+(d.data?.plan?.id||'free')+' · '+(d.data?.stats?.totalActorRunsCreated||0)+' runs';el.style.color='var(--green)';
+  }catch(e){el.textContent='✗ '+e.message.slice(0,80);el.style.color='var(--red)';}
+}
 
-const CORS_PROXIES = [
-  url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
-  url => 'https://corsproxy.io/?' + encodeURIComponent(url),
-  url => 'https://thingproxy.freeboard.io/fetch/' + url,
+// ─── FREE PROPERTY PIPELINE ──────────────────────────────────────────────────
+// Tries CORS proxies → Rightmove PAGE_MODEL, Purplebricks sitemap,
+// YOPA sitemap, OnTheMarket. For personal research only.
+// If proxies fail (estate agents block them), downloads Python script.
+
+const _PROXIES=[
+  u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
+  u=>'https://corsproxy.io/?'+encodeURIComponent(u),
+  u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u),
+  u=>'https://thingproxy.freeboard.io/fetch/'+u,
 ];
 
-// Sitemap sources - each is a public estate agent with /for-sale/ URLs in sitemap
-const SITEMAP_SOURCES = [
-  {
-    name: 'Purplebricks',
-    index: 'https://www.purplebricks.co.uk/sitemaps/sitemap-index.xml',
-    filters: ['/for-sale/', '/property/'],
-    locationKeywords: ['manchester','salford','didsbury','chorlton','burnage','stretford','withington'],
-  },
-  {
-    name: 'YOPA',
-    index: 'https://www.yopa.co.uk/sitemap.xml',
-    filters: ['/property-for-sale/', '/for-sale/'],
-    locationKeywords: ['manchester','salford','didsbury','chorlton','m20','m21','m14'],
-  },
-  {
-    name: 'Settled',
-    index: 'https://www.settled.co.uk/sitemap.xml',
-    filters: ['/for-sale/', '/property/'],
-    locationKeywords: ['manchester','salford','didsbury','chorlton'],
-  },
-  {
-    name: 'eXp UK',
-    index: 'https://expuk.com/sitemap.xml',
-    filters: ['/for-sale/', '/property/'],
-    locationKeywords: ['manchester','salford','m20','m21'],
-  },
-];
-
-async function proxyFetch(url, retries=3){
-  for(let i=0;i<Math.min(retries, CORS_PROXIES.length);i++){
+async function _proxyFetch(url,ms=18000){
+  for(const mk of _PROXIES){
     try{
-      const proxyUrl = CORS_PROXIES[i](url);
-      const r = await fetch(proxyUrl, {
-        headers:{'Accept':'application/xml,text/xml,text/html,*/*'},
-        signal: (() => { const ac = new AbortController(); setTimeout(()=>ac.abort(), 12000); return ac.signal; })()
+      const ctrl=new AbortController();
+      const t=setTimeout(()=>ctrl.abort(),ms);
+      const r=await fetch(mk(url),{
+        headers:{'Accept':'text/html,application/xml,*/*','Cache-Control':'no-cache'},
+        signal:ctrl.signal
       });
-      if(r.ok){
-        const txt = await r.text();
-        if(txt && txt.length > 50) return txt;
-      }
-    }catch(e){ continue; }
+      clearTimeout(t);
+      if(!r.ok) continue;
+      const txt=await r.text();
+      // Reject sandbox/proxy error responses
+      if(!txt||txt.length<200) continue;
+      if(/Host not in allowlist|error":"blocked|Access denied|Cloudflare/i.test(txt.slice(0,300))) continue;
+      return {txt, proxy:mk(url).split('?')[0]};
+    }catch(e){continue;}
   }
   return null;
 }
 
-function parseXmlUrls(xmlText){
+function _parseSitemapXml(xml){
   try{
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(xmlText, 'text/xml');
-    const locs = doc.querySelectorAll('loc');
-    return [...locs].map(l => l.textContent.trim()).filter(Boolean);
-  }catch(e){ return []; }
+    const doc=new DOMParser().parseFromString(xml,'application/xml');
+    if(doc.querySelector('parsererror')) return [];
+    return[...(doc.querySelectorAll('loc')||[])].map(l=>l.textContent.trim()).filter(Boolean);
+  }catch(e){return[];}
 }
 
-function extractJsonLd(html){
-  // Extract JSON-LD structured data from a property page
-  const matches = html.match(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi) || [];
-  for(const m of matches){
+function _extractPageModel(html){
+  // Rightmove embeds window.PAGE_MODEL = {...}; in page HTML
+  const m=html.match(/window\.PAGE_MODEL\s*=\s*(\{[\s\S]{50,500000}\});?\s*\n/);
+  if(m){try{return JSON.parse(m[1]);}catch(e){}}
+  const m2=html.match(/window\.jsonModel\s*=\s*(\{[\s\S]{50,200000}\});?\s*\n/);
+  if(m2){try{return JSON.parse(m2[1]);}catch(e){}}
+  const m3=html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
+  if(m3){try{return JSON.parse(m3[1]);}catch(e){}}
+  return null;
+}
+
+function _extractJsonLd(html){
+  for(const m of html.matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)){
     try{
-      const json = JSON.parse(m.replace(/<script[^>]+>/i,'').replace(/<\/script>/i,'').trim());
-      const items = Array.isArray(json) ? json : [json];
+      const d=JSON.parse(m[1]);
+      const items=Array.isArray(d)?d:(d['@graph']?d['@graph']:[d]);
       for(const item of items){
-        if(item['@type']&&/residence|house|property|home|apartment/i.test(item['@type'])){
-          return item;
-        }
-      }
-      // Also check @graph
-      if(json['@graph']){
-        const prop = json['@graph'].find(i => /residence|house|property|home/i.test(i['@type']||''));
-        if(prop) return prop;
+        if(item['@type']&&/residence|house|property|home|apartment|flat/i.test(item['@type'])) return item;
       }
     }catch(e){}
-  }
-  return null;
+  }return null;
 }
 
-function normaliseJsonLd(ld, sourceUrl, sourceName){
+function _normRM(p,budget){
+  // Normalise Rightmove PAGE_MODEL property
+  const price=typeof p.price==='object'?(p.price?.amount||0):parseInt((p.price+'').replace(/[^0-9]/g,''))||0;
+  if(price>0&&price>budget) return null;
+  const id=p.id||p.propertyId||'';
+  const txt=(p.keyFeatures||[]).join(' ')+(p.summary||'');
+  const addr=p.displayAddress||p.address?.displayAddress||'Rightmove listing';
+  const pc=addr.match(/[A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2}/i);
+  const pcs=pc?pc[0].replace(/\s/,'').toLowerCase():'';
+  return{id:'rm-'+id,address:addr,price,
+    type:(p.propertyType||p.propertySubType||'property').toLowerCase(),
+    beds:p.bedrooms||p.bedroomCount||0,baths:p.bathrooms||0,
+    sqft:p.floorAreaSqFt||null,epc:p.epcRating||null,tenure:p.tenure?.tenureType||null,
+    chainFree:p.isChainFree===true||/no chain/i.test(txt),chain:p.isChainFree===false,
+    garden:/garden/i.test(txt),garage:/garage/i.test(txt),parking:/parking/i.test(txt),newBuild:p.newHome===true,
+    description:(p.summary||'').slice(0,500),features:(p.keyFeatures||[]).slice(0,6),
+    url:id?'https://www.rightmove.co.uk/properties/'+id+'#/':'https://www.rightmove.co.uk',
+    rightmoveUrl:id?'https://www.rightmove.co.uk/properties/'+id+'#/':'https://www.rightmove.co.uk',
+    zooplaUrl:pcs?'https://www.zoopla.co.uk/for-sale/property/'+pcs+'/?q='+pcs+'&results_sort=newest_listings':'https://www.zoopla.co.uk/for-sale/',
+    agent:{name:p.customer?.brandTradingName||'Estate Agent',phone:p.customer?.contactTelephone||'',branch:p.customer?.branchDisplayName||''},
+    addedDate:p.addedOrReduced||'Recent',reduced:/reduc/i.test(p.addedOrReduced||''),
+    source:'rightmove-pm',floorArea:p.floorAreaSqM||null,
+    lat:p.location?.latitude||null,lng:p.location?.longitude||null};
+}
+
+function _normLd(ld,url,src){
   if(!ld) return null;
-  const addr = ld.address || {};
-  const address = [addr.streetAddress, addr.addressLocality, addr.postalCode].filter(Boolean).join(', ')
-    || ld.name || sourceUrl.split('/').slice(-2).join(' ');
-  const price = ld.offers?.price || ld.price || 0;
-  const beds = ld.numberOfRooms || ld.numberOfBedrooms || 0;
-  const lat = parseFloat(ld.geo?.latitude || ld.latitude || 0);
-  const lng = parseFloat(ld.geo?.longitude || ld.longitude || 0);
-  const pc = addr.postalCode || '';
-  const pcClean = pc.replace(/\s/,'').toLowerCase();
-  return {
-    id: 'pu-'+sourceUrl.split('/').pop(),
-    address: address || 'Address from '+sourceName,
-    price: typeof price==='number' ? price : parseInt((price+'').replace(/[^0-9]/g,''))||0,
-    type: (ld['@type']||'').replace(/([A-Z])/g,' $1').trim().toLowerCase() || 'property',
-    beds: parseInt(beds)||0, baths:0, sqft:null, epc:null, tenure:null,
-    chainFree:false, chain:false,
-    garden:/garden/i.test(ld.description||''),
-    garage:/garage/i.test(ld.description||''),
-    parking:/parking/i.test(ld.description||''),
-    newBuild:/new build/i.test(ld.description||''),
-    description:(ld.description||'').slice(0,500),
-    features:[],
-    url: sourceUrl,
-    rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+addr.addressLocality+'&useLocationIdentifier=false&sortType=6&includeSSTC=false',
-    zooplaUrl:pcClean?'https://www.zoopla.co.uk/for-sale/property/'+pcClean+'/?q='+pcClean+'&results_sort=newest_listings':'https://www.zoopla.co.uk/for-sale/',
-    agent:{name:sourceName,phone:'',branch:'View on '+sourceName},
-    addedDate:'Recent', reduced:false,
-    source:'sitemap-'+sourceName.toLowerCase(),
-    floorArea:null, lat, lng,
-  };
+  const addr=ld.address||{};
+  const address=[addr.streetAddress,addr.addressLocality,addr.postalCode].filter(Boolean).join(', ')||ld.name||src+' listing';
+  const price=parseFloat(ld.offers?.price||ld.price||0);
+  const pcs=(addr.postalCode||'').replace(/\s/,'').toLowerCase();
+  return{id:'pu-'+src.slice(0,2).toLowerCase()+url.split('/').pop().replace(/[^a-z0-9]/gi,'').slice(0,10),
+    address,price,
+    type:(ld['@type']||'property').replace(/([A-Z])/g,' $1').trim().toLowerCase(),
+    beds:parseInt(ld.numberOfRooms||ld.numberOfBedrooms||0)||0,baths:0,
+    sqft:null,epc:null,tenure:null,
+    chainFree:false,chain:false,
+    garden:/garden/i.test(ld.description||''),garage:/garage/i.test(ld.description||''),
+    parking:/parking/i.test(ld.description||''),newBuild:/new build/i.test(ld.description||''),
+    description:(ld.description||'').slice(0,500),features:[],
+    url,rightmoveUrl:url,
+    zooplaUrl:pcs?'https://www.zoopla.co.uk/for-sale/property/'+pcs+'/?q='+pcs+'&results_sort=newest_listings':'https://www.zoopla.co.uk/for-sale/',
+    agent:{name:src,phone:'',branch:'View on '+src},
+    addedDate:'Recent',reduced:false,
+    source:'pu-'+src.toLowerCase().replace(/[^a-z]/g,''),
+    floorArea:null,lat:parseFloat(ld.geo?.latitude||0)||null,lng:parseFloat(ld.geo?.longitude||0)||null};
 }
 
-async function runPersonalUse(){
-  const pc = $('postcode').value.trim();
-  const budget = parseInt($('budget').value) || 300000;
-  const minBeds = parseInt($('min-beds').value) || 3;
-  const btn = $('pu-btn');
-  const statusEl = $('pu-status');
-  if(!pc){ alert('Please enter a postcode/area first'); return; }
-  
-  btn.disabled = true;
-  btn.textContent = '⏳ Scanning sitemaps...';
-  statusEl.style.display = 'block';
-  statusEl.innerHTML = '<div style="color:var(--amber)">🔍 Reading public sitemap data from UK estate agents...</div>';
+async function fetchFreeListings(location, budget, minBeds, log){
+  const results=[];
+  const locEnc=encodeURIComponent(location);
+  const locSlug=location.toLowerCase().replace(/\s+/g,'-');
+  const locKws=location.toLowerCase().split(/\s+/).filter(w=>w.length>1);
+  let proxyWorked=false;
 
-  const location = ($('postcode').value||'Manchester').toLowerCase().replace(/[^a-z0-9]/g,'');
-  const collectedUrls = [];
-  const results = [];
-  let tried = 0, found = 0, enriched = 0;
-
-  for(const source of SITEMAP_SOURCES){
-    statusEl.innerHTML += `<div style="color:var(--text2);font-size:11px">📂 ${source.name}: fetching sitemap index...</div>`;
-    
-    // Fetch index sitemap
-    const indexXml = await proxyFetch(source.index);
-    if(!indexXml){ statusEl.innerHTML += `<div style="color:var(--text3);font-size:11px">  ↳ Could not reach ${source.name}</div>`; continue; }
-    
-    const childSitemaps = parseXmlUrls(indexXml);
-    
-    // Also check if index IS the sitemap (not a sitemap index)
-    const directUrls = childSitemaps.filter(u => source.filters.some(f => u.includes(f)));
-    let propertyUrls = directUrls;
-    
-    if(childSitemaps.length && !directUrls.length){
-      // It's a sitemap index - find child sitemaps for properties
-      const targetChildren = childSitemaps.filter(u => u.endsWith('.xml') && (u.includes('property') || u.includes('for-sale') || u.includes('location')));
-      const toFetch = (targetChildren.length ? targetChildren : childSitemaps).slice(0, 3);
-      
-      for(const childUrl of toFetch){
-        const childXml = await proxyFetch(childUrl.endsWith('.gz') ? childUrl : childUrl);
-        if(!childXml) continue;
-        const childUrls = parseXmlUrls(childXml);
-        const filtered = childUrls.filter(u => source.filters.some(f => u.includes(f)));
-        propertyUrls.push(...filtered);
-      }
+  // ── SOURCE 1: Rightmove PAGE_MODEL ──────────────────────────
+  log('🏠 Trying Rightmove live listings...','amber');
+  const rmSearchUrl='https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+minBeds;
+  const rmRes=await _proxyFetch(rmSearchUrl,22000);
+  if(rmRes){
+    const model=_extractPageModel(rmRes.txt);
+    const props=model?.results?.properties||model?.properties||[];
+    if(props.length>0){
+      proxyWorked=true;
+      log('\u2713 Rightmove: '+props.length+' live properties extracted!','green');
+      for(const p of props){const n=_normRM(p,budget);if(n)results.push(n);}
+    }else if(model){
+      log('  Rightmove: page model found but 0 properties for these filters','text3');
+    }else{
+      log('  Rightmove: page fetched but no embedded data (JS-rendered on this server)','text3');
     }
-    
-    // Filter by location keywords from URL slug
-    const locationUrls = propertyUrls.filter(u => {
-      const uLower = u.toLowerCase();
-      return source.locationKeywords.some(kw => uLower.includes(kw)) || uLower.includes(location);
-    });
-    
-    statusEl.innerHTML += `<div style="color:var(--text2);font-size:11px">  ↳ Found ${locationUrls.length} ${source.name} listings in your area</div>`;
-    
-    // Enrich up to 5 per source with JSON-LD
-    tried += locationUrls.length;
-    for(const propUrl of locationUrls.slice(0, 5)){
-      statusEl.innerHTML += `<div style="color:var(--text3);font-size:10px">  📄 Fetching: ${propUrl.slice(-50)}</div>`;
-      const html = await proxyFetch(propUrl);
-      if(!html) continue;
-      const ld = extractJsonLd(html);
-      const norm = normaliseJsonLd(ld, propUrl, source.name);
-      if(norm && norm.price > 0 && norm.price <= budget){
-        // Enrich with crime data if we have coordinates
-        if(norm.lat && norm.lng){
-          try{
-            const cr = await fetch('https://data.police.uk/api/crimes-at-location?lat='+norm.lat+'&lng='+norm.lng+'&date=2024-09');
-            if(cr.ok){ const crimes=await cr.json(); norm.crimeCount=Array.isArray(crimes)?crimes.length:0; }
-          }catch(e){}
+  }else{
+    log('  Rightmove: all proxies blocked by Rightmove servers','text3');
+  }
+
+  // ── SOURCE 2: Purplebricks sitemap ───────────────────────────
+  log('🔷 Trying Purplebricks public sitemap...','amber');
+  const pbRes=await _proxyFetch('https://www.purplebricks.co.uk/sitemaps/sitemap-index.xml',15000);
+  if(pbRes){
+    proxyWorked=true;
+    const childMaps=_parseSitemapXml(pbRes.txt);
+    log('  Purplebricks: '+childMaps.length+' sitemap sections','text');
+    const propMap=childMaps.find(u=>/property|for-sale|location/i.test(u));
+    if(propMap){
+      const subRes=await _proxyFetch(propMap,15000);
+      if(subRes){
+        const allUrls=_parseSitemapXml(subRes.txt);
+        const locUrls=allUrls.filter(u=>locKws.some(w=>u.toLowerCase().includes(w))||u.toLowerCase().includes('manchester')).slice(0,8);
+        log('  '+locUrls.length+' Purplebricks listings matching your area','text');
+        for(const propUrl of locUrls){
+          const pRes=await _proxyFetch(propUrl,12000);
+          if(!pRes) continue;
+          const ld=_extractJsonLd(pRes.txt);
+          const n=_normLd(ld,propUrl,'Purplebricks');
+          if(n&&(n.price===0||n.price<=budget)) results.push(n);
         }
-        results.push(norm);
-        enriched++;
-        found++;
-        statusEl.innerHTML += `<div style="color:var(--green);font-size:11px">  ✓ Got: ${norm.address} £${fmt(norm.price)}</div>`;
-      } else if(norm && norm.price === 0){
-        // Still add with URL as reference even if no price parsed
-        norm.price = 0;
-        norm.description = norm.description || 'Visit listing for full details';
-        results.push(norm);
-        found++;
       }
     }
+  }else{
+    log('  Purplebricks: sitemap blocked by proxy','text3');
   }
 
-  btn.disabled = false;
-  btn.textContent = '🏴 Personal Use: Scan Sitemaps';
-
-  if(results.length === 0){
-    statusEl.innerHTML += `<div style="color:var(--amber);margin-top:8px">⚠ No results extracted. The CORS proxies may be rate-limited. Try again in 60 seconds, or run the Python script locally for guaranteed results.</div>`;
-    statusEl.innerHTML += `<div style="font-size:11px;color:var(--text3);margin-top:5px">Tip: The Python script in the README always works — copy it to run locally.</div>`;
-    return;
+  // ── SOURCE 3: YOPA sitemap ───────────────────────────────────
+  log('🟡 Trying YOPA public sitemap...','amber');
+  const yopaRes=await _proxyFetch('https://www.yopa.co.uk/sitemap-properties.xml',15000)
+             ||await _proxyFetch('https://www.yopa.co.uk/sitemap.xml',15000);
+  if(yopaRes&&yopaRes.txt.includes('<loc>')){
+    proxyWorked=true;
+    const yUrls=_parseSitemapXml(yopaRes.txt);
+    const locY=yUrls.filter(u=>locKws.some(w=>u.toLowerCase().includes(w))).slice(0,6);
+    log('  YOPA: '+locY.length+' listings in your area','text');
+    for(const yu of locY){
+      const yRes=await _proxyFetch(yu,12000);
+      if(!yRes) continue;
+      const ld=_extractJsonLd(yRes.txt);
+      const n=_normLd(ld,yu,'YOPA');
+      if(n){
+        const bm=(yu.split('/').pop()||'').match(/(\d+)-bed/);if(bm)n.beds=parseInt(bm[1]);
+        const tm=(yu.split('/').pop()||'').match(/(detached|semi|bungalow|flat|terraced)/i);if(tm)n.type=tm[1].toLowerCase();
+        if(n.price===0||n.price<=budget) results.push(n);
+      }
+    }
+  }else{
+    log('  YOPA: sitemap blocked or empty','text3');
   }
 
-  statusEl.innerHTML += `<div style="color:var(--green);font-weight:600;margin-top:6px">✓ Found ${results.length} properties. Adding to results...</div>`;
-
-  // Merge with existing results
-  const existing = S.results || [];
-  const seen = new Set(existing.map(p => p.address.toLowerCase().slice(0,15)));
-  const newProps = results.filter(p => !seen.has(p.address.toLowerCase().slice(0,15)));
-  
-  if(newProps.length){
-    // Score the new properties
-    const crimeScore = S.area?.crime?.score || 7;
-    const nearby = S.area?.nearby || {};
-    const scored = scoreAll(newProps, crimeScore, nearby, null, S.mode||'buy');
-    S.results = [...scored, ...existing].sort((a,b)=>b.overallScore-a.overallScore);
-    window._listings = S.results;
-    renderAll(S.results, S.area||(()=>({geo:{admin_district:'Manchester',latitude:53.44,longitude:-2.24,region:'North West',admin_ward:'',parliamentary_constituency:'',postcode:'M21'},crime:{total:0,breakdown:{},score:7,stops:0},price:{count:0,avgPrice:0,prices:[],trend:0,recent:[]},nearby:{gyms:[],shops:[],schools:[],parks:[],transport:[]},flood:{zones:0,highRisk:false,areas:[]},planning:{count:0,areas:[]},deprivation:null,hpi:null}))(), S.ai, {budget,stretch:parseInt($('stretch').value)||375000,musts:getOn('must-grid')});
-    statusEl.innerHTML += `<div style="color:var(--green);font-weight:600">✓ Added ${newProps.length} new sitemap listings to results above!</div>`;
-  } else {
-    statusEl.innerHTML += `<div style="color:var(--amber)">All found properties already in results.</div>`;
+  // ── RESULT ───────────────────────────────────────────────────
+  if(results.length>0){
+    log('\u2713 Free pipeline found '+results.length+' live properties!','green');
+  }else if(proxyWorked){
+    log('\u26a0 Proxies connected but no properties matched your filters. Try a broader area or higher budget.','amber');
+  }else{
+    // All proxies failed - offer Python script download
+    log('\u26a0 All CORS proxies were blocked by estate agent servers.','red');
+    log('  This is expected \u2014 run the Python script locally for guaranteed results.','amber');
+    const btn=document.createElement('button');
+    btn.textContent='\u2b07 Download Python script (always works)';
+    btn.style.cssText='margin-top:6px;padding:5px 10px;background:var(--accent2);color:white;border:none;border-radius:6px;cursor:pointer;font-size:11px;font-family:inherit;width:100%';
+    btn.onclick=downloadPythonScript;
+    $('pu-status').appendChild(btn);
   }
+  return results;
 }
 
+function downloadPythonScript(){
+  const script=`import requests, re, json, gzip, xml.etree.ElementTree as ET, time, csv
+from bs4 import BeautifulSoup
+from io import BytesIO
+from datetime import datetime
+
+LOCATION = "Manchester"  # Change to your area
+POSTCODES = ["M20","M21","M14","M19","M22","M23"]  # Your target postcodes
+MAX_PRICE = 300000
+MIN_BEDS = 3
+DELAY = 1.5  # Respectful delay between requests
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+}
+
+all_properties = []
+
+def fetch(url):
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=20)
+        r.raise_for_status()
+        if url.endswith('.gz'):
+            with gzip.GzipFile(fileobj=BytesIO(r.content)) as f: return f.read().decode('utf-8')
+        return r.text
+    except Exception as e:
+        print(f"  Error: {e}"); return None
+
+def parse_sitemap(xml, is_index=False):
+    try:
+        root = ET.fromstring(xml)
+        ns = {'s':'http://www.sitemaps.org/schemas/sitemap/0.9'}
+        tag = 's:sitemap' if is_index else 's:url'
+        return [x.find('s:loc',ns).text.strip() for x in root.findall('.//'+tag,ns) if x.find('s:loc',ns) is not None]
+    except: return []
+
+def is_relevant(url):
+    return any(pc.lower() in url.lower() for pc in POSTCODES)
+
+# Rightmove
+print("Rightmove...")
+html = fetch(f"https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation={LOCATION}&maxPrice={MAX_PRICE}&minBedrooms={MIN_BEDS}&includeSSTC=false&sortType=6")
+if html:
+    m = re.search(r'window\\.PAGE_MODEL\\s*=\\s*(\\{.*?\\});', html, re.DOTALL)
+    if m:
+        try:
+            data = json.loads(m.group(1))
+            for p in data.get('results',{}).get('properties',[]):
+                price = p.get('price',{}).get('amount',0)
+                if price <= MAX_PRICE:
+                    all_properties.append({'source':'Rightmove','address':p.get('address',{}).get('displayAddress'),
+                        'price':p.get('price',{}).get('displayPrice'),'bedrooms':p.get('bedrooms'),
+                        'type':p.get('propertyType'),'url':'https://www.rightmove.co.uk/properties/'+str(p.get('id')),
+                        'added':p.get('addedOrReduced')})
+            print(f"  Found {len(all_properties)} properties")
+        except Exception as e: print(f"  Parse error: {e}")
+
+# Purplebricks sitemap
+print("Purplebricks sitemap...")
+idx = fetch("https://www.purplebricks.co.uk/sitemaps/sitemap-index.xml")
+if idx:
+    for child in parse_sitemap(idx, is_index=True):
+        if "property" in child or "sale" in child:
+            sub = fetch(child); time.sleep(DELAY)
+            if sub:
+                for url in parse_sitemap(sub):
+                    if is_relevant(url):
+                        all_properties.append({'source':'Purplebricks','url':url,'address':None,'price':None})
+
+# YOPA sitemap
+print("YOPA sitemap...")
+yopa = fetch("https://www.yopa.co.uk/sitemap-properties.xml")
+if yopa:
+    for url in parse_sitemap(yopa):
+        if is_relevant(url): all_properties.append({'source':'YOPA','url':url,'address':None,'price':None})
+
+# Dedup and save
+unique = list({p['url']:p for p in all_properties if p.get('url')}.values())
+fn = f"properties_{LOCATION}_{datetime.now().strftime('%Y%m%d_%H%M')}.csv"
+with open(fn,'w',newline='',encoding='utf-8') as f:
+    w = csv.DictWriter(f, fieldnames=['source','address','price','bedrooms','type','added','url'])
+    w.writeheader(); w.writerows(unique)
+print(f"Done! {len(unique)} properties saved to {fn}")
+print("Install deps: pip install requests beautifulsoup4")
+`;
+  const blob=new Blob([script],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='find_my_home.py';a.click();
+}
 
 updateCosts();
 
