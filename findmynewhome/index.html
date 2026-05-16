@@ -182,6 +182,9 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 .mode-btn:hover{border-color:var(--border);}
 .mode-btn.mode-active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);}
 .src-strip.rightmove-pm{background:var(--accent-bg);border-bottom:1px solid rgba(108,142,255,.25);color:var(--accent)}
+.src-strip.rightmove-live{background:var(--accent-bg);border-bottom:1px solid rgba(108,142,255,.25);color:var(--accent)}
+.src-strip.purplebricks{background:rgba(160,30,180,.08);border-bottom:1px solid rgba(160,30,180,.2);color:#c060d0}
+.src-strip.search-link{background:var(--teal-bg);border-bottom:1px solid rgba(45,212,191,.2);color:var(--teal)}
 .src-strip.land-registry{background:rgba(245,166,35,.07);border-bottom:1px solid rgba(245,166,35,.2);color:var(--amber)}
 .src-strip.onthemarket{background:rgba(0,140,70,.07);border-bottom:1px solid rgba(0,140,70,.2);color:#4caf7d}
 .src-strip.pu-purplebricks{background:rgba(160,30,180,.08);border-bottom:1px solid rgba(160,30,180,.2);color:#c060d0}
@@ -245,7 +248,8 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
       ✓ ONS Deprivation Index<br>
       ✓ Flood risk (Environment Agency)<br>
       ✓ OpenStreetMap (schools, gyms, parks)<br>
-      ✓ CORS pipeline (Rightmove/PB/YOPA/OTM)
+      ✓ Rightmove + Purplebricks via CORS proxy
+      ✓ Direct search links (Rightmove/Zoopla/OTM)
     </span>
   </div>
 </div>
@@ -588,29 +592,54 @@ async function freeFoodHygiene(lat,lng){
 
 
 // ─── HOMEDATA ─────────────────────────────────────────────────────────────────
-async function homedataListings(postcode, budget){
+async function homedataListings(postcode,budget){
   if(!S.homedataKey||S.homedataUsed>=S.homedataCap) return [];
   try{
-    const r=await fetch('https://api.homedata.co.uk/v2/properties/search?postcode='+encodeURIComponent(postcode)+'&max_price='+budget+'&status=for_sale&limit=20',{headers:{'X-API-Key':S.homedataKey,'Accept':'application/json'}});
-    if(!r.ok) throw new Error('Homedata '+r.status);
-    const d=await r.json();
-    spend('hd',1);
-    return (d.properties||d.results||[]).map(p=>({
-      id:'hd-'+(p.uprn||p.id||Math.random().toString(36).slice(2)),
-      address:p.address||p.display_address||'Address unavailable',
-      price:p.price||p.asking_price||0,
-      type:(p.property_type||p.type||'unknown').toLowerCase(),
-      beds:p.bedrooms||p.beds||0,baths:p.bathrooms||p.baths||0,sqft:p.floor_area_sqft||null,
-      epc:p.epc_rating||null,tenure:p.tenure||null,
-      chainFree:p.chain_free===true||/chain.free/i.test(p.description||''),chain:p.chain_free===false,
-      garden:/garden/i.test(p.description||''),garage:/garage/i.test(p.description||''),parking:/parking/i.test(p.description||''),newBuild:false,
-      description:(p.description||'').slice(0,500),features:p.features||[],
-      url:p.rightmove_url||p.listing_url||('https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+encodeURIComponent(postcode.split(' ')[0])+'&useLocationIdentifier=false&sortType=6&includeSSTC=false'),
-      rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+encodeURIComponent(postcode.split(' ')[0])+'&useLocationIdentifier=false&sortType=6&includeSSTC=false',
-      zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+postcode.replace(/\s/,'').toLowerCase()+'/?q='+postcode.replace(/\s/,'').toLowerCase()+'&results_sort=newest_listings',
-      agent:{name:p.agent_name||'Estate Agent',phone:p.agent_phone||'',branch:p.agent_branch||''},
-      addedDate:p.listed_date||'Recent',reduced:p.price_reduced===true,source:'homedata',floorArea:p.floor_area_sqm||null,uprn:p.uprn||null,
-    })).filter(p=>p.price>0);
+    // Step 1: find addresses/UPRNs for the postcode (fast, 1 call)
+    const r1=await fetch(
+      'https://api.homedata.co.uk/api/address/find/?q='+encodeURIComponent(postcode.trim()),
+      {headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'}}
+    );
+    if(!r1.ok) throw new Error('Homedata address/find HTTP '+r1.status+' — check key format');
+    const d1=await r1.json();
+    const addresses=Array.isArray(d1)?d1:(d1.results||d1.addresses||[]);
+    if(!addresses.length){ console.log('Homedata: no addresses for',postcode); return []; }
+    // Step 2: fetch property details per UPRN in parallel (faster than serial)
+    const uprns=addresses.slice(0,15).map(a=>a.uprn||a.UPRN).filter(Boolean);
+    if(!uprns.length) return [];
+    const fetches=uprns.map(async uprn=>{
+      if(S.homedataUsed>=S.homedataCap) return null;
+      try{
+        const r2=await fetch(
+          'https://api.homedata.co.uk/api/properties/'+uprn+'/',
+          {headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'}}
+        );
+        if(!r2.ok) return null;
+        const p=await r2.json();
+        spend('hd',1);
+        const price=p.estimated_value||p.last_sale_price||p.price||0;
+        if(!price||price>budget) return null;
+        const addrObj=addresses.find(a=>(a.uprn||a.UPRN)==uprn)||{};
+        const pcs=(addrObj.postcode||postcode).replace(/\s/,'').toLowerCase();
+        return{
+          id:'hd-'+uprn,
+          address:addrObj.address||p.display_address||'Property '+uprn,
+          price,type:(p.property_type||'unknown').toLowerCase(),
+          beds:p.bedrooms||0,baths:p.bathrooms||0,
+          sqft:p.floor_area_sqft||null,epc:p.epc_rating||null,tenure:p.tenure||null,
+          chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,
+          description:('EPC:'+(p.epc_rating||'?')+' | '+(p.floor_area_sqm||'?')+'m\xb2 | Beds:'+(p.bedrooms||'?')+(p.last_sale_date?' | Last sold:'+p.last_sale_date:'')).slice(0,400),
+          features:[p.epc_rating?'EPC '+p.epc_rating:'',p.floor_area_sqm?p.floor_area_sqm+'m\xb2':'',p.tenure||''].filter(Boolean),
+          url:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+encodeURIComponent(postcode.split(' ')[0])+'&useLocationIdentifier=false&sortType=6&includeSSTC=false',
+          rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+encodeURIComponent(postcode.split(' ')[0])+'&useLocationIdentifier=false&sortType=6&includeSSTC=false',
+          zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pcs+'/?q='+pcs+'&results_sort=newest_listings',
+          agent:{name:'Homedata',phone:'',branch:'api.homedata.co.uk'},
+          addedDate:'Homedata',reduced:false,source:'homedata',floorArea:p.floor_area_sqm||null,uprn,
+        };
+      }catch(e){return null;}
+    });
+    const results=await Promise.all(fetches);
+    return results.filter(Boolean);
   }catch(e){console.warn('Homedata:',e.message);return [];}
 }
 
@@ -620,7 +649,7 @@ async function apifyListings(location, budget){
   let max=S.apifyMax;
   if(S.apifySpent+(max*3.45/1000+0.005)>S.apifyCap) max=Math.max(5,Math.floor((S.apifyCap-S.apifySpent-0.005)/(3.45/1000)));
   try{
-    const run=await fetch('https://api.apify.com/v2/acts/32UEHO2bzMG4krgsk/runs?token='+S.apifyKey,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({searchLocation:location,channel:'BUY',maxResults:max,radius:'1.0',sortType:'6',includeSSTC:false,maxPrice:budget,minBedrooms:parseInt($('min-beds').value)||3})});
+    const run=await fetch('https://api.apify.com/v2/acts/32UEHO2bzMG4krgsk/runs?token='+S.apifyKey,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({searchLocation:location,channel:'BUY',maxResults:max,radius:'1.0',sortType:'Newest',includeSSTC:false,maxPrice:budget,minBeds:parseInt($('min-beds').value)||3})});
     const rd=await run.json();
     if(rd.error) throw new Error('Apify: '+rd.error.message);
     if(!rd.data?.id) throw new Error('Apify run failed');
@@ -755,24 +784,24 @@ async function runSearch(forceRefresh){
     }
     const isFreeMode=(S.listingMode||'free')==='free';
     const isKeysMode=(S.listingMode||'free')==='keys';
-    // Land Registry always runs (free, no proxy, guaranteed results)
-    const lrListings=await freeSoldListings(pc,budget);
-    if(lrListings.length>0) fLog('✓ Land Registry: '+lrListings.length+' recent sold records loaded','text2');
-    // Free mode: try CORS pipeline
-    const corsListings=isFreeMode?await fetchFreeListings(location,budget,minBeds,fLog):[];
-    // Keys mode: run Homedata + Apify
-    const hdListings=isKeysMode?await homedataListings(pc,budget):[];
-    const rmListings=isKeysMode?await apifyListings(location,budget):[];
+    // Free mode: Rightmove via CORS + Purplebricks + search cards
+    const corsListings=isFreeMode
+      ?await fetchFreeListings(location,budget,minBeds,types,pc,fLog)
+      :[];
+    // Keys mode: Homedata + Apify (run in parallel for speed)
+    const [hdListings,rmListings]=isKeysMode
+      ?await Promise.all([homedataListings(pc,budget),apifyListings(location,budget)])
+      :[[],[]];
     setStep(4);
-    let all=[...hdListings,...rmListings,...corsListings,...lrListings];
+    // Merge: paid first (best data), then free pipeline
+    let all=[...hdListings,...rmListings,...corsListings];
     const seen=new Set();
     all=all.filter(p=>{
       const k=p.address.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,18);
       if(seen.has(k))return false; seen.add(k); return true;
-    }).filter(p=>p.source==='land-registry'?p.price>0:p.price>0&&p.price<=budget);
-    const liveCount=all.filter(p=>!['fallback','land-registry'].includes(p.source)).length;
-    const lrCount=all.filter(p=>p.source==='land-registry').length;
-    const isReal=liveCount>0||lrCount>0;
+    }).filter(p=>p.source==='search-link'?true:p.price>0&&p.price<=budget);
+    const liveCount=all.filter(p=>p.source!=='fallback').length;
+    const isReal=liveCount>0;
     if(!isReal){
       all=makeFallback(budget,pc);
     }
@@ -1188,53 +1217,7 @@ function _normLd(ld,url,src){
 }
 
 // Land Registry SPARQL — always works, no key, no proxy needed
-async function freeSoldListings(pc,budget){
-  try{
-    const area=pc.split(' ')[0].toUpperCase();
-    const q='SELECT ?paon ?street ?postcode ?date ?amount ?ptype WHERE{'
-      +'?t <http://landregistry.data.gov.uk/def/ppi/propertyAddress> ?addr.'
-      +'?addr <http://landregistry.data.gov.uk/def/common/postcode> ?postcode.'
-      +'FILTER(STRSTARTS(STR(?postcode),"'+area+'")).'
-      +'?t <http://landregistry.data.gov.uk/def/ppi/pricePaid> ?amount.'
-      +'?t <http://landregistry.data.gov.uk/def/ppi/transactionDate> ?date.'
-      +'OPTIONAL{?addr <http://landregistry.data.gov.uk/def/ppi/paon> ?paon.}'
-      +'OPTIONAL{?addr <http://landregistry.data.gov.uk/def/ppi/street> ?street.}'
-      +'OPTIONAL{?t <http://landregistry.data.gov.uk/def/ppi/propertyType> ?ptype.}'
-      +'}ORDER BY DESC(?date)LIMIT 40';
-    const r=await fetch('https://landregistry.data.gov.uk/landregistry/query?query='+encodeURIComponent(q)+'&output=json',
-      {headers:{'Accept':'application/json'}});
-    if(!r.ok) return [];
-    const d=await r.json();
-    const rows=d.results?.bindings||[];
-    const seen=new Set();const out=[];
-    for(const row of rows){
-      const price=parseInt(row.amount?.value||0);
-      const addr=[row.paon?.value,row.street?.value].filter(Boolean).join(' ');
-      const postcode=row.postcode?.value||area;
-      const k=(addr+postcode).toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,18);
-      if(!price||seen.has(k)) continue;
-      seen.add(k);
-      const soldDate=(row.date?.value||'').slice(0,10);
-      const ptype=(row.ptype?.value?.split('/').pop()||'residential').toLowerCase();
-      const pcs=postcode.replace(/\s/,'').toLowerCase();
-      out.push({
-        id:'lr-'+Math.random().toString(36).slice(2,8),
-        address:(addr?addr+', ':'')+postcode,price,type:ptype,
-        beds:0,baths:0,sqft:null,epc:null,tenure:null,
-        chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,
-        description:'\xa3'+Number(price).toLocaleString()+' sold on '+soldDate+'. Land Registry record. Use the Rightmove/Zoopla links to find similar properties currently for sale on this street.',
-        features:['Sold '+soldDate,'\xa3'+Number(price).toLocaleString(),'Land Registry public record'],
-        url:'https://www.rightmove.co.uk/house-prices/'+pcs+'.html',
-        rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+encodeURIComponent(postcode)+'&useLocationIdentifier=false&sortType=6&includeSSTC=false',
-        zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pcs+'/?q='+pcs+'&results_sort=newest_listings',
-        agent:{name:'Land Registry public record',phone:'',branch:'Use Rightmove/Zoopla links to find for-sale \u2192'},
-        addedDate:'Sold '+soldDate,reduced:false,source:'land-registry',floorArea:null,
-      });
-      if(out.length>=12) break;
-    }
-    return out;
-  }catch(e){console.warn('freeSoldListings:',e.message);return [];}
-}
+
 
 // CORS pipeline: Rightmove PAGE_MODEL + Purplebricks + YOPA + OnTheMarket
 async function fetchFreeListings(location,budget,minBeds,log){
@@ -1458,6 +1441,122 @@ print(f"Done! {len(unique)} properties saved to {fn}")
   const blob=new Blob([script],{type:'text/plain'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='find_my_home.py';a.click();
 }
+
+// ─── FREE FOR-SALE PIPELINE ──────────────────────────────────────────────────
+// Tries CORS proxy → Rightmove PAGE_MODEL (real live for-sale listings)
+// Falls back to curated Rightmove/Zoopla search link cards (always useful)
+// NO sold data. Only currently for-sale properties.
+
+const _PROXIES=[
+  u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
+  u=>'https://corsproxy.io/?'+encodeURIComponent(u),
+  u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u),
+];
+
+async function _proxyFetch(url,ms=15000){
+  for(const mk of _PROXIES){
+    try{
+      const ctrl=new AbortController();
+      const t=setTimeout(()=>ctrl.abort(),ms);
+      const r=await fetch(mk(url),{signal:ctrl.signal,headers:{'Accept':'text/html,*/*'}});
+      clearTimeout(t);
+      if(!r.ok) continue;
+      const txt=await r.text();
+      if(!txt||txt.length<500||/Host not in allowlist|Access denied/i.test(txt.slice(0,200))) continue;
+      return txt;
+    }catch(e){continue;}
+  }
+  return null;
+}
+
+function _extractPageModel(html){
+  const pats=[/window\.PAGE_MODEL\s*=\s*(\{[\s\S]*?\});\s*\n/,/window\.jsonModel\s*=\s*(\{[\s\S]*?\});\s*\n/];
+  for(const p of pats){const m=html.match(p);if(m){try{return JSON.parse(m[1]);}catch(e){}}}
+  return null;
+}
+
+function _normRM(p,budget){
+  const price=typeof p.price==='object'?(p.price?.amount||0):parseInt((p.price+'').replace(/[^0-9]/g,''))||0;
+  if(!price||price>budget) return null;
+  const id=p.id||p.propertyId||'';
+  const addr=p.displayAddress||p.address?.displayAddress||'';
+  const txt=(p.keyFeatures||[]).join(' ')+(p.summary||'');
+  const pc=addr.match(/[A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2}/i);
+  const pcs=pc?pc[0].replace(/\s/,'').toLowerCase():'';
+  return{
+    id:'rm-'+id,address:addr||'Rightmove listing',price,
+    type:(p.propertyType||p.propertySubType||'property').toLowerCase(),
+    beds:p.bedrooms||p.bedroomCount||0,baths:p.bathrooms||0,
+    sqft:p.floorAreaSqFt||null,epc:p.epcRating||null,
+    tenure:p.tenure?.tenureType||null,
+    chainFree:p.isChainFree===true||/no chain/i.test(txt),
+    chain:p.isChainFree===false,
+    garden:/garden/i.test(txt),garage:/garage/i.test(txt),parking:/parking/i.test(txt),
+    newBuild:p.newHome===true,
+    description:(p.summary||'').slice(0,500),
+    features:(p.keyFeatures||[]).slice(0,6),
+    url:id?'https://www.rightmove.co.uk/properties/'+id+'#/':'https://www.rightmove.co.uk',
+    rightmoveUrl:id?'https://www.rightmove.co.uk/properties/'+id+'#/':'https://www.rightmove.co.uk',
+    zooplaUrl:pcs?'https://www.zoopla.co.uk/for-sale/property/'+pcs+'/?q='+pcs+'&results_sort=newest_listings':'https://www.zoopla.co.uk/for-sale/',
+    agent:{name:p.customer?.brandTradingName||'Estate Agent',phone:p.customer?.contactTelephone||'',branch:p.customer?.branchDisplayName||''},
+    addedDate:p.addedOrReduced||'Recent',
+    reduced:/reduc/i.test(p.addedOrReduced||''),
+    source:'rightmove-live',
+    floorArea:p.floorAreaSqM||null,
+    lat:p.location?.latitude||null,lng:p.location?.longitude||null,
+  };
+}
+
+// Generate curated search-link cards — honest, real, clickable
+function makeSearchCards(location,budget,minBeds,types,pc){
+  const locEnc=encodeURIComponent(location);
+  const pcSlug=(pc.split(' ')[0]).toLowerCase();
+  const beds=minBeds||3;
+  const cards=[
+    {
+      id:'srch-rm',
+      address:'🔍 Rightmove: '+location+' for sale under £'+Number(budget).toLocaleString(),
+      price:0,type:'search link',beds,baths:0,sqft:null,epc:null,tenure:null,
+      chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,
+      description:'Click "View on Rightmove" to see all current for-sale properties matching your filters. Rightmove has 1M+ live UK listings updated daily.',
+      features:['Live Rightmove search','Your exact filters applied','Updates in real time'],
+      url:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+beds,
+      rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+beds,
+      zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pcSlug+'/?q='+pcSlug+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+beds,
+      agent:{name:'Click to open Rightmove live search',phone:'',branch:''},
+      addedDate:'Live search',reduced:false,source:'search-link',floorArea:null,
+    },
+    {
+      id:'srch-zp',
+      address:'🔍 Zoopla: '+location+' for sale under £'+Number(budget).toLocaleString(),
+      price:0,type:'search link',beds,baths:0,sqft:null,epc:null,tenure:null,
+      chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,
+      description:'Click "View on Zoopla" to see all current for-sale properties. Zoopla aggregates listings from hundreds of estate agents.',
+      features:['Live Zoopla search','Your exact filters applied','New listings daily'],
+      url:'https://www.zoopla.co.uk/for-sale/property/'+pcSlug+'/?q='+pcSlug+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+beds,
+      rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+beds,
+      zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pcSlug+'/?q='+pcSlug+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+beds,
+      agent:{name:'Click to open Zoopla live search',phone:'',branch:''},
+      addedDate:'Live search',reduced:false,source:'search-link',floorArea:null,
+    },
+    {
+      id:'srch-otm',
+      address:'🔍 OnTheMarket: '+location+' for sale',
+      price:0,type:'search link',beds,baths:0,sqft:null,epc:null,tenure:null,
+      chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,
+      description:'OnTheMarket often lists properties 24-48 hours before they appear on Rightmove or Zoopla. Good for finding new listings first.',
+      features:['New listings first','24hr exclusive listings','Your filters applied'],
+      url:'https://www.onthemarket.com/for-sale/property/'+location.toLowerCase().replace(/\s+/g,'-')+'/?max-price='+budget+'&min-beds='+beds,
+      rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+beds,
+      zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pcSlug+'/?q='+pcSlug+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+beds,
+      agent:{name:'Click to open OnTheMarket live search',phone:'',branch:''},
+      addedDate:'Live search',reduced:false,source:'search-link',floorArea:null,
+    },
+  ];
+  return cards;
+}
+
+
 
 updateCosts();
 restoreKeys();
