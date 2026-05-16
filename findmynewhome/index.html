@@ -237,12 +237,12 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
   <div style="background:var(--accent-bg);border:1px solid rgba(108,142,255,.2);border-radius:var(--r);padding:8px 10px;margin-bottom:10px;font-size:11px;color:var(--text2)">
     <b style="color:var(--accent)">Free sources used:</b><br>
     <span style="line-height:2">
-      ✓ Land Registry (sold data, always)<br>
+      
       ✓ UK Police crime API<br>
       ✓ ONS Deprivation Index<br>
       ✓ Flood risk (Environment Agency)<br>
       ✓ OpenStreetMap (schools, gyms, parks)<br>
-      ✓ Rightmove + Purplebricks via CORS proxy
+      ✓ Rightmove + Purplebricks via CORS proxy<br>
       ✓ Direct search links (Rightmove/Zoopla/OTM)
     </span>
   </div>
@@ -253,15 +253,15 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
   <div style="background:var(--green-bg);border:1px solid rgba(62,207,142,.2);border-radius:var(--r);padding:8px 10px;margin-bottom:10px;font-size:11px;color:var(--text2)">
     <b style="color:var(--green)">Add at least one key for live listings:</b><br>
     <span style="line-height:2;font-size:10px">
-      Apify: live Rightmove scraper, ~$0.09/25 listings → apify.com<br>      Homedata: property intelligence (EPC, floor area) → homedata.co.uk<br>
-      Apify: ~$0.09/25 listings → apify.com<br>
-      Claude: ~$0.003/analysis → anthropic.com
+      Homedata: live for-sale listings API, 100 free/month → homedata.co.uk<br>
+      Apify: live Rightmove scraper, ~$0.09/25 listings → apify.com<br>
+      Claude: AI analysis, ~$0.003/search → anthropic.com
     </span>
   </div>
 
   <div class="cbox">
     <div class="cbox-title"><span>🏠 Homedata <span style="font-size:9px;color:var(--text3)">100 free/month</span></span><span class="cbox-used" id="used-hd">0 used</span></div>
-    <div style="font-size:10px;color:var(--text3);margin-bottom:4px">Property intelligence: EPC, floor area, UPRN data. <a href="https://homedata.co.uk" target="_blank" style="color:var(--teal)">homedata.co.uk</a> — 100 free/month. <b>Not a for-sale listings API.</b></div>
+    <div style="font-size:10px;color:var(--text3);margin-bottom:4px">Live for-sale listings via <code>/api/live-listings/search/</code>. Search by boundary, price, beds. <a href="https://homedata.co.uk" target="_blank" style="color:var(--teal)">homedata.co.uk</a> — 100 free calls/month.</div>
     <label>API Key</label>
     <div class="key-row"><input type="password" id="inp-hd" placeholder="QRryNTjX.your-secret" style="flex:1"><button onclick="toggleEye('inp-hd')" style="padding:0 8px;background:var(--bg4);border:1px solid var(--border2);border-radius:var(--r);cursor:pointer;font-size:14px" title="Show/hide key">👁</button><button class="btn-save" onclick="saveKey('hd')">Save Key</button></div>
     <div id="status-hd" style="font-size:11px;min-height:14px;color:var(--text3);margin:4px 0 2px"></div>
