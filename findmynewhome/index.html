@@ -209,8 +209,8 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 <div class="cbox">
   <div class="cbox-title"><span>🤖 Claude AI <span style="font-size:9px;color:var(--text3)">~$0.003/search</span></span><span class="cbox-used" id="used-claude">$0.000 used</span></div>
   <label>API Key</label>
-  <div class="key-row"><input type="password" id="inp-claude" placeholder="sk-ant-..."><button class="btn-save" onclick="saveKey('claude')">Save</button></div>
-  <div id="status-claude" style="font-size:11px;min-height:14px;color:var(--text3);margin:4px 0 2px"></div><div style="display:flex;gap:4px;margin-bottom:4px"><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testClaude()">Test</button><span style="font-size:10px;color:var(--text3);align-self:center">tiny ~$0.00001 call</span></div>
+  <div class="key-row"><input type="password" id="inp-claude" placeholder="sk-ant-..."><button class="btn-save" onclick="saveKey('claude')">Save Key</button></div>
+  <div id="status-claude" style="font-size:11px;min-height:14px;color:var(--text3);margin:4px 0 2px"></div><div style="display:flex;gap:4px;margin-bottom:4px"><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testClaude()">Test Key</button><span style="font-size:10px;color:var(--text3);align-self:center">tiny ~$0.00001 call</span></div>
   <label>Budget cap</label>
   <div class="rrow"><input type="range" id="c-claude-cap" min="0.50" max="20" step="0.50" value="20" oninput="updateCosts()"><span class="rv" id="rv-ccap">$20.00</span></div>
   <div class="bar-wrap"><div class="bar g" id="bar-claude" style="width:100%"></div></div>
@@ -220,8 +220,8 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 <div class="cbox">
   <div class="cbox-title"><span>🏠 Homedata.co.uk <span style="font-size:9px;color:var(--text3)">100 free calls</span></span><span class="cbox-used" id="used-hd">0 used</span></div>
   <label>API Key</label>
-  <div class="key-row"><input type="password" id="inp-hd" placeholder="KEY.secret..." value="QRryNTjX.0fuJ1GGU07Fmah9ar4rKXEaJu1QI2uvB"><button class="btn-save" onclick="saveKey('hd')">Save</button></div>
-  <div id="status-hd" style="font-size:11px;min-height:14px;color:var(--text3);margin:4px 0 2px"></div><div style="display:flex;gap:4px;margin-bottom:4px"><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testHomedata()">Test</button><span style="font-size:10px;color:var(--text3);align-self:center">uses 1 call</span></div>
+  <div class="key-row"><input type="password" id="inp-hd" placeholder="KEY.secret..."><button class="btn-save" onclick="saveKey('hd')">Save Key</button></div>
+  <div id="status-hd" style="font-size:11px;min-height:14px;color:var(--text3);margin:4px 0 2px"></div><div style="display:flex;gap:4px;margin-bottom:4px"><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testHomedata()">Test Key</button><span style="font-size:10px;color:var(--text3);align-self:center">uses 1 call</span></div>
   <label>Call limit</label>
   <div class="rrow"><input type="range" id="c-hd-cap" min="10" max="100" step="1" value="100" oninput="updateCosts()"><span class="rv" id="rv-hdcap">100 calls</span></div>
   <div class="bar-wrap"><div class="bar g" id="bar-hd" style="width:100%"></div></div>
@@ -231,8 +231,8 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 <div class="cbox">
   <div class="cbox-title"><span>🕷 Apify/Rightmove <span style="font-size:9px;color:var(--text3)">$3.45/1000</span></span><span class="cbox-used" id="used-apify">$0.000 used</span></div>
   <label>Apify Token</label>
-  <div class="key-row"><input type="password" id="inp-apify" placeholder="apify_api_..."><button class="btn-save" onclick="saveKey('apify')">Save</button></div>
-  <div id="status-apify" style="font-size:11px;min-height:14px;color:var(--text3);margin:4px 0 2px"></div><div style="display:flex;gap:4px;margin-bottom:4px"><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testApify()">Test</button><span style="font-size:10px;color:var(--text3);align-self:center">free auth check</span></div>
+  <div class="key-row"><input type="password" id="inp-apify" placeholder="apify_api_..."><button class="btn-save" onclick="saveKey('apify')">Save Key</button></div>
+  <div id="status-apify" style="font-size:11px;min-height:14px;color:var(--text3);margin:4px 0 2px"></div><div style="display:flex;gap:4px;margin-bottom:4px"><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testApify()">Test Key</button><span style="font-size:10px;color:var(--text3);align-self:center">free auth check</span></div>
   <label>Max results</label>
   <div class="rrow"><input type="range" id="c-apify-max" min="5" max="100" step="5" value="25" oninput="updateCosts()"><span class="rv" id="rv-amax">25 props</span></div>
   <label>Budget cap ($)</label>
@@ -417,9 +417,26 @@ function spend(t,a){ if(t==='claude')S.claudeSpent+=a; else if(t==='apify')S.api
 function setDot(id,cls){ const d=$(id); if(d)d.className='dot '+cls; const d2=$('d2-'+id.replace('d-','')); if(d2)d2.className='dot '+cls; }
 function saveKey(t){
   S.cache={};
-  if(t==='claude'){ S.claudeKey=$('inp-claude').value.trim(); const ok=S.claudeKey.length>20; setDot('d-claude',ok?'g':'x'); $('t-claude').textContent='Claude:'+(ok?'ready':'no key'); if(ok)setTimeout(testClaude,200); }
-  else if(t==='hd'){ S.homedataKey=$('inp-hd').value.trim(); const ok=S.homedataKey.length>5; setDot('d-hd',ok?'g':'x'); $('t-hd').textContent='Homedata:'+(ok?'ready':'no key'); if(ok)setTimeout(testHomedata,200); }
-  else if(t==='apify'){ S.apifyKey=$('inp-apify').value.trim(); const ok=S.apifyKey.length>10; setDot('d-apify',ok?'g':'x'); $('t-apify').textContent='Apify:'+(ok?'ready':'no key'); if(ok)setTimeout(testApify,200); }
+  const exp=Date.now()+6*60*60*1000;
+  if(t==='claude'){
+    S.claudeKey=$('inp-claude').value.trim();
+    const ok=S.claudeKey.length>20;
+    setDot('d-claude',ok?'g':'x');
+    $('t-claude').textContent='Claude:'+(ok?'saved ✓':'no key');
+    if(ok){try{sessionStorage.setItem('fmnh_claude',JSON.stringify({v:S.claudeKey,e:exp}));}catch(e){}}
+  } else if(t==='hd'){
+    S.homedataKey=$('inp-hd').value.trim();
+    const ok=S.homedataKey.length>5;
+    setDot('d-hd',ok?'g':'x');
+    $('t-hd').textContent='Homedata:'+(ok?'saved ✓':'no key');
+    if(ok){try{sessionStorage.setItem('fmnh_hd',JSON.stringify({v:S.homedataKey,e:exp}));}catch(e){}}
+  } else if(t==='apify'){
+    S.apifyKey=$('inp-apify').value.trim();
+    const ok=S.apifyKey.length>10;
+    setDot('d-apify',ok?'g':'x');
+    $('t-apify').textContent='Apify:'+(ok?'saved ✓':'no key');
+    if(ok){try{sessionStorage.setItem('fmnh_apify',JSON.stringify({v:S.apifyKey,e:exp}));}catch(e){}}
+  }
 }
 
 // ─── FREE APIs ───────────────────────────────────────────────────────────────
@@ -470,20 +487,23 @@ async function freePriceHistory(pc){
 }
 
 async function freeSoldListings(pc,budget){
-  // Land Registry SPARQL — always returns real sold properties, no key needed
   try{
     const area=pc.split(" ")[0].toUpperCase();
-    const sparql='SELECT ?paon ?street ?postcode ?date ?amount ?ptype WHERE{'
-      +'?t <http://landregistry.data.gov.uk/def/ppi/propertyAddress> ?addr.'
-      +'?addr <http://landregistry.data.gov.uk/def/common/postcode> ?postcode.'
-      +'FILTER(STRSTARTS(?postcode,"'+area+'")).'
-      +'?t <http://landregistry.data.gov.uk/def/ppi/pricePaid> ?amount.'
-      +'?t <http://landregistry.data.gov.uk/def/ppi/transactionDate> ?date.'
-      +'OPTIONAL{?addr <http://landregistry.data.gov.uk/def/ppi/paon> ?paon.}'
-      +'OPTIONAL{?addr <http://landregistry.data.gov.uk/def/ppi/street> ?street.}'
-      +'OPTIONAL{?t <http://landregistry.data.gov.uk/def/ppi/propertyType> ?ptype.}'
-      +'}ORDER BY DESC(?date)LIMIT 30';
-    const r=await fetch("https://landregistry.data.gov.uk/landregistry/query?query="+encodeURIComponent(sparql)+"&output=json");
+    const q="SELECT ?paon ?street ?postcode ?date ?amount ?ptype WHERE{"
+      +"?t <http://landregistry.data.gov.uk/def/ppi/propertyAddress> ?addr."
+      +"?addr <http://landregistry.data.gov.uk/def/common/postcode> ?postcode."
+      +"FILTER(STRSTARTS(STR(?postcode),\""+area+"\"))."
+      +"?t <http://landregistry.data.gov.uk/def/ppi/pricePaid> ?amount."
+      +"?t <http://landregistry.data.gov.uk/def/ppi/transactionDate> ?date."
+      +"OPTIONAL{?addr <http://landregistry.data.gov.uk/def/ppi/paon> ?paon.}"
+      +"OPTIONAL{?addr <http://landregistry.data.gov.uk/def/ppi/street> ?street.}"
+      +"OPTIONAL{?t <http://landregistry.data.gov.uk/def/ppi/propertyType> ?ptype.}"
+      +"}ORDER BY DESC(?date)LIMIT 40";
+    const r=await fetch(
+      "https://landregistry.data.gov.uk/landregistry/query?query="+encodeURIComponent(q)+"&output=json",
+      {headers:{"Accept":"application/json"}}
+    );
+    if(!r.ok) return [];
     const d=await r.json();
     const rows=d.results?.bindings||[];
     const seen=new Set();
@@ -492,31 +512,31 @@ async function freeSoldListings(pc,budget){
       const price=parseInt(row.amount?.value||0);
       const addr=[row.paon?.value,row.street?.value].filter(Boolean).join(" ");
       const postcode=row.postcode?.value||area;
-      const k=addr.toLowerCase().slice(0,15);
-      if(!price||price>budget*1.15||seen.has(k)) continue;
+      const k=(addr+postcode).toLowerCase().replace(/[^a-z0-9]/g,"").slice(0,18);
+      if(!price||seen.has(k)) continue;
       seen.add(k);
-      const soldDate=row.date?.value?.slice(0,10)||"";
+      const soldDate=(row.date?.value||"").slice(0,10);
       const ptype=(row.ptype?.value?.split("/").pop()||"residential").toLowerCase();
       const pcs=postcode.replace(/\s/,"").toLowerCase();
       out.push({
         id:"lr-"+Math.random().toString(36).slice(2,8),
-        address:addr+", "+postcode,
-        price,type:ptype,
-        beds:0,baths:0,sqft:null,epc:null,tenure:null,
+        address:(addr?addr+", ":"")+postcode,
+        price,type:ptype,beds:0,baths:0,
+        sqft:null,epc:null,tenure:null,
         chainFree:false,chain:false,
         garden:false,garage:false,parking:false,newBuild:false,
-        description:"Sold \xa3"+Number(price).toLocaleString()+" on "+soldDate+". Land Registry record. Use links below to check current for-sale properties in this street.",
-        features:["Sold: "+soldDate,"Land Registry","\xa3"+Number(price).toLocaleString()],
+        description:"£"+Number(price).toLocaleString()+" sold "+soldDate+". Public Land Registry record. Use Rightmove/Zoopla links to find current for-sale properties nearby.",
+        features:["Sold "+soldDate,"Land Registry","£"+Number(price).toLocaleString()],
         url:"https://www.rightmove.co.uk/house-prices/"+pcs+".html",
         rightmoveUrl:"https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation="+encodeURIComponent(postcode)+"&useLocationIdentifier=false&sortType=6&includeSSTC=false",
         zooplaUrl:"https://www.zoopla.co.uk/for-sale/property/"+pcs+"/?q="+pcs+"&results_sort=newest_listings",
-        agent:{name:"Land Registry record",phone:"",branch:"Click links to find current for-sale properties"},
+        agent:{name:"Land Registry public record",phone:"",branch:"Find for-sale via links →"},
         addedDate:"Sold "+soldDate,reduced:false,source:"land-registry",floorArea:null,
       });
-      if(out.length>=10) break;
+      if(out.length>=12) break;
     }
     return out;
-  }catch(e){console.warn("freeSoldListings:",e);return [];}
+  }catch(e){console.warn("freeSoldListings:",e.message);return [];}
 }
 
 async function freeHPI(region){
@@ -617,54 +637,48 @@ async function freeFoodHygiene(lat,lng){
 
 
 // ─── HOMEDATA ─────────────────────────────────────────────────────────────────
-async function homedataListings(postcode, budget){
+async function homedataListings(postcode,budget){
   if(!S.homedataKey||S.homedataUsed>=S.homedataCap) return [];
   try{
-    const pc=postcode.replace(/\s/g,"").toUpperCase();
-    // Step 1: Free address lookup to get UPRNs (no auth needed)
-    const r1=await fetch("https://neo.homedata.co.uk/api/address/postcode/"+pc+"/",{
-      headers:{"Accept":"application/json"}
-    });
-    if(!r1.ok) throw new Error("Homedata postcode "+r1.status);
+    const q=postcode.trim();
+    const r1=await fetch(
+      "https://api.homedata.co.uk/api/address/find/?q="+encodeURIComponent(q),
+      {headers:{"Authorization":"Api-Key "+S.homedataKey,"Accept":"application/json"}}
+    );
+    if(!r1.ok) throw new Error("Homedata address/find HTTP "+r1.status);
     const d1=await r1.json();
-    const addresses=Array.isArray(d1)?d1:(d1.addresses||d1.results||[]);
+    const addresses=Array.isArray(d1)?d1:(d1.results||d1.addresses||[]);
     if(!addresses.length) return [];
-    // Step 2: Fetch property details per UPRN (requires auth)
-    const uprns=addresses.slice(0,15).map(a=>a.uprn||a.UPRN).filter(Boolean);
-    if(!uprns.length) return [];
     const out=[];
-    for(const uprn of uprns){
+    for(const addr of addresses.slice(0,15)){
       if(S.homedataUsed>=S.homedataCap) break;
+      const uprn=addr.uprn||addr.UPRN;
+      if(!uprn) continue;
       try{
-        const r2=await fetch("https://neo.homedata.co.uk/api/properties/"+uprn+"/",{
-          headers:{"Authorization":"Api-Key "+S.homedataKey,"Accept":"application/json"}
-        });
+        const r2=await fetch(
+          "https://api.homedata.co.uk/api/properties/"+uprn+"/",
+          {headers:{"Authorization":"Api-Key "+S.homedataKey,"Accept":"application/json"}}
+        );
         if(!r2.ok) continue;
         const p=await r2.json();
         spend("hd",1);
         const price=p.estimated_value||p.last_sale_price||p.price||0;
         if(!price||price>budget) continue;
-        const addrObj=addresses.find(a=>(a.uprn||a.UPRN)==uprn)||{};
-        const pcs=pc.toLowerCase();
+        const pcs=(addr.postcode||postcode).replace(/\s/,"").toLowerCase();
         out.push({
           id:"hd-"+uprn,
-          address:p.display_address||addrObj.address||"Property "+uprn,
-          price,
-          type:(p.property_type||"unknown").toLowerCase(),
+          address:addr.address||p.display_address||"Property "+uprn,
+          price,type:(p.property_type||"unknown").toLowerCase(),
           beds:p.bedrooms||0,baths:p.bathrooms||0,
-          sqft:p.floor_area_sqft||null,
-          epc:p.epc_rating||null,
-          tenure:p.tenure||null,
-          chainFree:false,chain:false,
-          garden:false,garage:false,parking:false,newBuild:false,
-          description:("EPC:"+( p.epc_rating||"?")+" | "+( p.floor_area_sqm||"?")+"m² | Beds:"+(p.bedrooms||"?")+" | Last sold:"+(p.last_sale_date||"unknown")).slice(0,400),
+          sqft:p.floor_area_sqft||null,epc:p.epc_rating||null,tenure:p.tenure||null,
+          chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,
+          description:("EPC:"+(p.epc_rating||"?")+"|"+(p.floor_area_sqm||"?")+"m²|Beds:"+(p.bedrooms||"?")+"|Sold:"+(p.last_sale_date||"?")).slice(0,400),
           features:[p.epc_rating?"EPC "+p.epc_rating:"",p.floor_area_sqm?p.floor_area_sqm+"m²":"",p.tenure||""].filter(Boolean),
-          url:"https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation="+encodeURIComponent(pc.slice(0,4))+"&useLocationIdentifier=false&sortType=6&includeSSTC=false",
-          rightmoveUrl:"https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation="+encodeURIComponent(pc.slice(0,4))+"&useLocationIdentifier=false&sortType=6&includeSSTC=false",
+          url:"https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation="+encodeURIComponent(postcode.split(" ")[0])+"&useLocationIdentifier=false&sortType=6&includeSSTC=false",
+          rightmoveUrl:"https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation="+encodeURIComponent(postcode.split(" ")[0])+"&useLocationIdentifier=false&sortType=6&includeSSTC=false",
           zooplaUrl:"https://www.zoopla.co.uk/for-sale/property/"+pcs+"/?q="+pcs+"&results_sort=newest_listings",
-          agent:{name:"Homedata intelligence",phone:"",branch:"neo.homedata.co.uk"},
-          addedDate:"Homedata",reduced:false,source:"homedata",
-          floorArea:p.floor_area_sqm||null,uprn:uprn,
+          agent:{name:"Homedata",phone:"",branch:"api.homedata.co.uk"},
+          addedDate:"Homedata",reduced:false,source:"homedata",floorArea:p.floor_area_sqm||null,uprn:uprn,
         });
       }catch(e){continue;}
     }
@@ -831,10 +845,11 @@ async function runSearch(forceRefresh){
     all=all.filter(p=>{
       const k=p.address.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,18);
       if(seen.has(k))return false; seen.add(k); return true;
-    }).filter(p=>p.price>0&&p.price<=budget);
-    const isReal=all.filter(p=>p.source!=='fallback').length>0;
+    }).filter(p=>p.source==='land-registry'?p.price>0:p.price>0&&p.price<=budget);
+    const liveCount=all.filter(p=>!['fallback','land-registry'].includes(p.source)).length;
+    const lrCount=all.filter(p=>p.source==='land-registry').length;
+    const isReal=liveCount>0||lrCount>0;
     if(!isReal){
-      // Show real search links as clickable reference cards instead of fake data
       all=makeFallback(budget,pc,location);
     }
     setStep(5);
@@ -1047,32 +1062,22 @@ async function testClaude(){
 }
 async function testHomedata(){
   const el=$("status-hd");if(!el)return;
-  if(!S.homedataKey){el.textContent="No key saved";el.style.color="var(--text3)";return;}
-  el.textContent="Testing...";el.style.color="var(--amber)";
+  if(!S.homedataKey){el.textContent="No key — enter and click Save Key";el.style.color="var(--text3)";return;}
+  el.textContent="Testing…";el.style.color="var(--amber)";
   try{
-    // Step 1: free postcode lookup
-    const r1=await fetch("https://neo.homedata.co.uk/api/address/postcode/M219WQ/",{
-      headers:{"Accept":"application/json"}
-    });
-    if(!r1.ok){el.textContent="✗ Homedata unreachable ("+r1.status+")";el.style.color="var(--red)";return;}
-    const d1=await r1.json();
-    const addrs=Array.isArray(d1)?d1:(d1.addresses||d1.results||[]);
-    if(!addrs.length){el.textContent="⚠ Connected but no addresses for M21 9WQ";el.style.color="var(--amber)";return;}
-    const uprn=addrs[0]?.uprn||addrs[0]?.UPRN;
-    if(!uprn){el.textContent="⚠ No UPRN returned — check API response format";el.style.color="var(--amber)";return;}
-    // Step 2: authenticated UPRN lookup
-    const r2=await fetch("https://neo.homedata.co.uk/api/properties/"+uprn+"/",{
-      headers:{"Authorization":"Api-Key "+S.homedataKey,"Accept":"application/json"}
-    });
-    if(r2.status===401||r2.status===403){
-      el.textContent="✗ Auth failed ("+r2.status+") — key format must be QRryNTjX.xxxxx";el.style.color="var(--red)";return;
-    }
-    if(!r2.ok){const e=await r2.text();el.textContent="✗ HTTP "+r2.status+" — "+e.slice(0,60);el.style.color="var(--red)";return;}
-    const p=await r2.json();
-    const remaining=r2.headers.get("X-RateLimit-Remaining")||"?";
-    el.textContent="✓ Working! "+( p.display_address||uprn)+" | "+remaining+" calls left this month";
+    const r=await fetch(
+      "https://api.homedata.co.uk/api/address/find/?q=M21+9WQ",
+      {headers:{"Authorization":"Api-Key "+S.homedataKey,"Accept":"application/json"}}
+    );
+    const txt=await r.text();
+    let d;try{d=JSON.parse(txt);}catch(e){el.textContent="✗ Not JSON (HTTP "+r.status+")";el.style.color="var(--red)";return;}
+    if(r.status===401){el.textContent="✗ 401 Unauthorized — wrong key";el.style.color="var(--red)";return;}
+    if(r.status===403){el.textContent="✗ 403 Forbidden — key expired or wrong";el.style.color="var(--red)";return;}
+    if(!r.ok){el.textContent="✗ HTTP "+r.status+" — "+(d.detail||d.message||txt.slice(0,50));el.style.color="var(--red)";return;}
+    const addrs=Array.isArray(d)?d:(d.results||d.addresses||[]);
+    const rem=r.headers.get("X-RateLimit-Remaining")||"?";
+    el.textContent="✓ Working! "+addrs.length+" addresses found · "+rem+"/month remaining";
     el.style.color="var(--green)";
-    spend("hd",1);
   }catch(e){el.textContent="✗ "+e.message.slice(0,80);el.style.color="var(--red)";}
 }
 async function testApify(){
@@ -1387,29 +1392,29 @@ print("Install deps: pip install requests beautifulsoup4")
 }
 
 updateCosts();
-// Auto-save pre-filled keys on page load
-(function initKeys(){
-  const hdInp=$("inp-hd");
-  if(hdInp&&hdInp.value.trim().length>5){
-    S.homedataKey=hdInp.value.trim();
-    setDot("d-hd","g");
-    $("t-hd").textContent="Homedata:ready";
-    setTimeout(testHomedata,1500);
-  }
-  const claudeInp=$("inp-claude");
-  if(claudeInp&&claudeInp.value.trim().length>20){
-    S.claudeKey=claudeInp.value.trim();
-    setDot("d-claude","g");
-    $("t-claude").textContent="Claude:ready";
-  }
-  const apifyInp=$("inp-apify");
-  if(apifyInp&&apifyInp.value.trim().length>10){
-    S.apifyKey=apifyInp.value.trim();
-    setDot("d-apify","g");
-    $("t-apify").textContent="Apify:ready";
-  }
+(function restoreKeys(){
+  const now=Date.now();
+  [['claude','inp-claude','d-claude','t-claude',20],
+   ['hd','inp-hd','d-hd','t-hd',5],
+   ['apify','inp-apify','d-apify','t-apify',10]
+  ].forEach(([t,inp,dot,tag,minLen])=>{
+    try{
+      const raw=sessionStorage.getItem('fmnh_'+t);
+      if(!raw) return;
+      const obj=JSON.parse(raw);
+      if(!obj||obj.e<now){sessionStorage.removeItem('fmnh_'+t);return;}
+      const v=obj.v||'';
+      if(v.length>minLen){
+        if(t==='claude') S.claudeKey=v;
+        else if(t==='hd') S.homedataKey=v;
+        else if(t==='apify') S.apifyKey=v;
+        $(inp).value=v;
+        setDot(dot,'g');
+        $(tag).textContent=t.charAt(0).toUpperCase()+t.slice(1)+':saved ✓';
+      }
+    }catch(e){}
+  });
 })();
-
 </script>
 </body>
 </html>
