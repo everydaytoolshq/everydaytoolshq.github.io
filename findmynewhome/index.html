@@ -213,11 +213,12 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 
 <div class="cbox" style="border-color:rgba(45,212,191,.3)">
   <div class="cbox-title"><span>🏠 Adzuna <span style="font-size:9px;color:var(--green)">FREE 250/day</span></span><span class="cbox-used">free tier</span></div>
-  <div style="font-size:10px;color:var(--text3);margin-bottom:6px">Real UK listings. Register free at <a href="https://developer.adzuna.com/signup" target="_blank" style="color:var(--teal)">developer.adzuna.com</a></div>
+  <div style="font-size:10px;color:var(--text3);margin-bottom:6px">Real UK listings. Register free at <a href="https://developer.adzuna.com/signup" target="_blank" style="color:var(--teal)">developer.adzuna.com</a> · Free 250/day</div>
+  <div id="adzuna-status" style="font-size:11px;color:var(--text3);margin-top:5px;min-height:16px;padding:3px 0"></div>
   <label>App ID</label>
   <div class="key-row"><input type="text" id="inp-az-id" placeholder="your_app_id"></div>
   <label>App Key</label>
-  <div class="key-row"><input type="password" id="inp-az-key" placeholder="your_app_key"><button class="btn-save" onclick="saveKey('adzuna')">Save</button></div>
+  <div class="key-row"><input type="password" id="inp-az-key" placeholder="your_app_key"><button class="btn-save" onclick="saveKey('adzuna')">Save</button><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testAdzuna()">Test</button></div>
 </div>
 
 <div class="cbox">
@@ -330,7 +331,7 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 <label>Lifestyle (gym, shops, green)</label>
 <div class="rrow"><input type="range" id="w-life" min="0" max="10" value="7" oninput="$('rv-wl').textContent=this.value+'/10'"><span class="rv" id="rv-wl">7/10</span></div>
 
-<button class="btn-go" id="btn-go" onclick="runSearch()">🔍 Find My Perfect Home</button>
+<button class="btn-go" id="btn-go" onclick="runSearch(true)">🔍 Find My Perfect Home</button>
 <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:6px">Results cached 6h — repeat searches FREE</div>
 </div>
 
@@ -385,7 +386,14 @@ const sC = n => n>=8?'sg':n>=6?'sa':'sr';
 const bC = n => n>=8?'bg-g':n>=6?'bg-a':'bg-r';
 function tog(el){ el.classList.toggle('on'); updateCosts(); }
 function getOn(id){ return [...$(id).querySelectorAll('.ci.on')].map(e=>e.dataset.v); }
-function cacheKey(pc,budget,types){ return pc.toUpperCase()+'_'+Math.round(budget/50000)*50000+'_'+types.sort().join(','); }
+function cacheKey(pc,budget,types){
+  // Include API key fingerprints so changing keys busts cache
+  const keyFp=(S.adzunaAppId+S.adzunaAppKey+S.homedataKey+S.apifyKey+S.bingKey+S.googleKey).slice(-8)||'nokey';
+  const tenure=$('tenure-filter')?.value||'any';
+  const minBeds=$('min-beds')?.value||'3';
+  const mode=S.mode||'buy';
+  return pc.toUpperCase()+'_'+Math.round(budget/50000)*50000+'_'+types.sort().join(',')+'_'+tenure+'_'+minBeds+'_'+mode+'_'+keyFp;
+}
 
 // ─── CREDIT TRACKING ────────────────────────────────────────────────────────
 function updateCosts(){
@@ -413,9 +421,35 @@ function updateCosts(){
   const tot=S.claudeSpent+S.apifySpent;
   $('pill-spent').textContent='$'+tot.toFixed(3)+' spent';
 }
+async function testAdzuna(){
+  const statusEl=$('adzuna-status');
+  if(!statusEl) return;
+  statusEl.textContent='Testing...';statusEl.style.color='var(--amber)';
+  try{
+    const params=new URLSearchParams({app_id:S.adzunaAppId,app_key:S.adzunaAppKey,where:'Manchester',category:'for-sale',beds_min:1,price_max:500000});
+    const r=await fetch('https://api.adzuna.com/v1/api/property/gb/search/1?'+params.toString());
+    const txt=await r.text();
+    let d;try{d=JSON.parse(txt);}catch(e){statusEl.textContent='✗ Invalid response — check keys';statusEl.style.color='var(--red)';return;}
+    if(!r.ok){
+      const err=d?.error||d?.message||d?.exception||('HTTP '+r.status);
+      statusEl.textContent='✗ '+err;statusEl.style.color='var(--red)';return;
+    }
+    const count=d.count||0;const results=(d.results||[]).length;
+    if(results>0){
+      statusEl.textContent='✓ Working! '+count+' UK listings available ('+results+' returned)';statusEl.style.color='var(--green)';
+    } else if(count===0){
+      statusEl.textContent='⚠ Connected but 0 results — property API may need activation at developer.adzuna.com';statusEl.style.color='var(--amber)';
+    } else {
+      statusEl.textContent='✓ Connected — '+count+' listings in index';statusEl.style.color='var(--green)';
+    }
+  }catch(e){statusEl.textContent='✗ Network error: '+e.message.slice(0,60);statusEl.style.color='var(--red)';}
+}
+
 function spend(t,a){ if(t==='claude')S.claudeSpent+=a; else if(t==='apify')S.apifySpent+=a; else if(t==='hd')S.homedataUsed+=a; updateCosts(); }
 function setDot(id,cls){ const d=$(id); if(d)d.className='dot '+cls; const d2=$('d2-'+id.replace('d-','')); if(d2)d2.className='dot '+cls; }
 function saveKey(t){
+  // Clear cache when any key changes so next search fetches fresh data
+  S.cache={};
   if(t==='claude'){ S.claudeKey=$('inp-claude').value.trim(); const ok=S.claudeKey.length>20; setDot('d-claude',ok?'g':'x'); $('t-claude').textContent='Claude:'+(ok?'ready':'no key'); }
   else if(t==='hd'){ S.homedataKey=$('inp-hd').value.trim(); const ok=S.homedataKey.length>5; setDot('d-hd',ok?'g':'x'); $('t-hd').textContent='Homedata:'+(ok?'ready':'no key'); }
   else if(t==='apify'){ S.apifyKey=$('inp-apify').value.trim(); const ok=S.apifyKey.length>10; setDot('d-apify',ok?'g':'x'); $('t-apify').textContent='Apify:'+(ok?'ready':'no key'); }
@@ -570,58 +604,66 @@ async function freeFoodHygiene(lat,lng){
 
 // ─── ADZUNA — FREE REAL LISTINGS (250 calls/day) ────────────────────────────
 async function adzunaListings(location, budget, minBeds, types){
-  if(!S.adzunaAppId||!S.adzunaAppKey) return {listings:[],source:'no-adzuna'};
+  if(!S.adzunaAppId||!S.adzunaAppKey) return [];
   try{
     const page=1;
-    const url='https://api.adzuna.com/v1/api/property/gb/search/'+page
-      +'?app_id='+encodeURIComponent(S.adzunaAppId)
-      +'&app_key='+encodeURIComponent(S.adzunaAppKey)
-      +'&results_per_page=20'
-      +'&where='+encodeURIComponent(location)
-      +'&maximum_price='+budget
-      +'&minimum_rooms='+minBeds
-      +'&listing_type=buy'
-      +'&category=property-for-sale';
+    // Adzuna property API - official param names from Adzuna documentation
+    const params=new URLSearchParams({
+      app_id: S.adzunaAppId,
+      app_key: S.adzunaAppKey,
+      where: location,
+      category: 'for-sale',
+      beds_min: minBeds,
+      price_max: budget,
+    });
+    const url='https://api.adzuna.com/v1/api/property/gb/search/1?'+params.toString();
     const r=await fetch(url);
-    if(!r.ok) throw new Error('Adzuna error: '+r.status);
-    const d=await r.json();
+    const azText=await r.text();
+    let d;
+    try{d=JSON.parse(azText);}catch(e){throw new Error('Adzuna response invalid (status '+r.status+'): '+azText.slice(0,200));}
+    if(!r.ok){
+      const errMsg=d?.error||d?.message||d?.exception||('HTTP '+r.status);
+      throw new Error('Adzuna API error: '+errMsg+' — check your App ID and App Key at developer.adzuna.com');
+    }
     const results=(d.results||[]);
+    if(results.length===0&&d.count===0){
+      console.log('Adzuna returned 0 results for:',location,'— try a broader location like Manchester or Greater Manchester');
+    }
     const listings=results.map(p=>{
-      const addr=(p.location?.display_name||p.title||'').split(',');
-      const pcMatch=(p.location?.display_name||'').match(/[A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2}/i);
-      const propPc=pcMatch?pcMatch[0].replace(/\s+/g,''):'';
-      return {
+      // Adzuna official field names: title, location.display_name, price_max, beds, redirect_url
+      const azAddr=p.location?.display_name||(p.location?.area||[]).join(', ')||p.title||'Property in '+location;
+      const azPrice=p.price_max||(typeof p.price==='number'?p.price:0);
+      const azBeds=p.beds||p.bedrooms||p.num_bedrooms||0;
+      const azDesc=p.description||p.description_full||'';
+      const azUrl=p.redirect_url||('https://www.adzuna.co.uk');
+      const pcM=(azAddr+' '+azDesc).match(/[A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2}/i);
+      const propPc=pcM?pcM[0].replace(/\s+/g,''):'';
+      const fullTxt=(azAddr+' '+azDesc).toLowerCase();
+      return{
         id:'az-'+(p.id||Math.random().toString(36).slice(2)),
-        address:p.location?.display_name||p.title||'Address unavailable',
-        price:p.price?.value||p.price||0,
-        type:(p.property_type||'unknown').toLowerCase(),
-        beds:p.num_bedrooms||0,
-        baths:p.num_bathrooms||0,
-        sqft:null,
-        epc:null,
-        tenure:null,
-        chainFree:false,
-        chain:false,
-        garden:/garden/i.test(p.description||''),
-        garage:/garage/i.test(p.description||''),
-        parking:/parking/i.test(p.description||''),
-        newBuild:/new build|new home/i.test(p.description||''),
-        description:(p.description||'').slice(0,500),
+        address:azAddr,
+        price:azPrice,
+        type:(p.property_type||p.category?.tag||'unknown').toLowerCase(),
+        beds:azBeds,baths:p.bathrooms||p.num_bathrooms||0,
+        sqft:null,epc:null,tenure:null,
+        chainFree:/no chain/i.test(fullTxt),chain:false,
+        garden:/garden/i.test(fullTxt),
+        garage:/garage/i.test(fullTxt),
+        parking:/parking/i.test(fullTxt),
+        newBuild:/new build|new home/i.test(fullTxt),
+        description:azDesc.slice(0,500)||p.title||'',
         features:[],
-        url:p.redirect_url||('https://www.adzuna.co.uk/property/for-sale/uk/'+p.id),
-        rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+(propPc||location.replace(/ /g,'+'))+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&minBedrooms='+minBeds+'&maxPrice='+budget,
-        zooplaUrl:propPc?'https://www.zoopla.co.uk/for-sale/property/'+propPc.toLowerCase()+'/?q='+propPc.toLowerCase()+'&results_sort=newest_listings&search_source=home':'https://www.zoopla.co.uk/for-sale/property/manchester/?q=manchester&results_sort=newest_listings',
-        agent:{name:p.company?.display_name||'Estate Agent',phone:'',branch:''},
-        addedDate:p.created?new Date(p.created).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'Recent',
-        reduced:false,
-        source:'adzuna',
-        floorArea:null,
-        lat:p.location?.geonames_id?null:null,
-        lng:null,
+        url:azUrl,
+        rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+(propPc||location.split(',')[0].trim().replace(/ /g,'+'))+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&min-bedrooms='+minBeds+'&maxPrice='+budget,
+        zooplaUrl:propPc?'https://www.zoopla.co.uk/for-sale/property/'+propPc.toLowerCase()+'/?q='+propPc.toLowerCase()+'&results_sort=newest_listings':'https://www.zoopla.co.uk/for-sale/property/manchester/?q=manchester&results_sort=newest_listings',
+        agent:{name:p.company?.display_name||p.advertiser||'Estate Agent',phone:p.company?.phone||'',branch:''},
+        addedDate:p.created?new Date(p.created*1000).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'Recent',
+        reduced:/reduc|price.drop/i.test(p.title||''),
+        source:'adzuna',floorArea:null,
       };
     }).filter(p=>p.price>0);
-    return {listings,source:'adzuna',count:listings.length};
-  }catch(e){console.error('Adzuna:',e.message);return {listings:[],source:'adzuna-error',error:e.message};}
+    return listings;
+  }catch(e){console.error('Adzuna:',e.message);return [];}
 }
 
 // ─── HOMEDATA ─────────────────────────────────────────────────────────────────
@@ -759,8 +801,9 @@ async function runSearch(){
   const types=getOn('type-grid');
   const musts=getOn('must-grid');
   const minBeds=parseInt($('min-beds').value)||3;
+  const tenure=$('tenure-filter')?.value||'any';
   const ck=cacheKey(pc,budget,types);
-  if(S.cache[ck]&&Date.now()-S.cache[ck].ts<CACHE_TTL){
+  if(!forceRefresh&&S.cache[ck]&&Date.now()-S.cache[ck].ts<CACHE_TTL){
     const c=S.cache[ck];
     $('mcontent').innerHTML='<div class="cache-bar">♻️ Cached results ('+(Math.round((Date.now()-c.ts)/60000))+'min ago) — no API calls used. Clears after 6h.</div>';
     renderAll(c.results,c.area,c.ai,{budget,stretch,musts});return;
@@ -781,14 +824,14 @@ async function runSearch(){
     // Gather real listings from all sources in parallel
     const location=geo.admin_district||pc;
     setStep(3);
-    const [azResult,hdListings,rmListings]= await Promise.all([
+    const [azListings,hdListings,rmListings]= await Promise.all([
       adzunaListings(location,budget,minBeds,types),
       homedataListings(pc,budget),
       apifyListings(location,budget),
     ]);
     setStep(4);
     // Merge & deduplicate
-    let all=[...azResult.listings,...hdListings,...rmListings];
+    let all=[...azListings,...hdListings,...rmListings];
     const seen=new Set();
     all=all.filter(p=>{
       const k=p.address.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,18);
