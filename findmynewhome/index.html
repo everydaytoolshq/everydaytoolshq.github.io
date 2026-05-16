@@ -1055,7 +1055,7 @@ async function testHomedata(){
     // Step 1: public endpoint — diagnose CORS
     let bdData=null;
     try{
-      const br=await fetch('https://api.homedata.co.uk/api/boundaries/autocomplete/?q=Manchester',{signal:AbortSignal.timeout(8000)});
+      const br=await fetch('https://api.homedata.co.uk/api/boundaries/autocomplete/?q=Manchester',{mode:'cors',headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'},signal:AbortSignal.timeout(8000)});
       if(!br.ok){el.textContent='\u2717 Boundaries HTTP '+br.status;el.style.color='var(--red)';return;}
       bdData=await br.json();
     }catch(corsErr){
@@ -1251,12 +1251,12 @@ async function homedataListings(postcode, budget, locationName){
     const hdrs={'Accept':'application/json'};
     if(withAuth) hdrs['Authorization']='Api-Key '+S.homedataKey;
     try{
-      const r=await fetch(url,{headers:hdrs,signal:AbortSignal.timeout(12000)});
+      const r=await fetch(url,{mode:'cors',headers:hdrs,signal:AbortSignal.timeout(12000)});
       if(r.ok||r.status===401||r.status===403) return r;
     }catch(e){ console.log('[HD] direct blocked:',e.message.slice(0,50)); }
     // CORS proxy fallback
     try{
-      const r2=await fetch('https://corsproxy.io/?'+encodeURIComponent(url),{headers:hdrs,signal:AbortSignal.timeout(15000)});
+      const r2=await fetch('https://corsproxy.io/?'+encodeURIComponent(url),{mode:'cors',headers:hdrs,signal:AbortSignal.timeout(15000)});
       if(r2.ok||r2.status===401||r2.status===403) return r2;
     }catch(e){ console.log('[HD] proxy blocked:',e.message.slice(0,50)); }
     return null;
@@ -1268,7 +1268,7 @@ async function homedataListings(postcode, budget, locationName){
     let boundary=null;
     for(const q of [locationName,area].filter(Boolean)){
       hdLog('Boundary: "'+q+'"');
-      const br=await hdFetch('https://api.homedata.co.uk/api/boundaries/autocomplete/?q='+encodeURIComponent(q),false);
+      const br=await hdFetch('https://api.homedata.co.uk/api/boundaries/autocomplete/?q='+encodeURIComponent(q),true);
       if(!br){hdErr('Boundaries unreachable (CORS blocked by browser). Try Test Key to diagnose.');continue;}
       if(!br.ok){hdErr('Boundaries HTTP '+br.status);continue;}
       const bd=await br.json();
