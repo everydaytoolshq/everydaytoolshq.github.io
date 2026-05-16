@@ -213,6 +213,8 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 <div class="app">
 <div class="sidebar">
 
+<div id="free-log" style="font-size:11px;max-height:140px;overflow-y:auto;background:var(--bg4);border:1px solid var(--border);border-radius:var(--r);padding:6px 8px;line-height:1.8;margin-bottom:10px;display:none"></div>
+
 <!-- ══ MODE SELECTOR ═══════════════════════════════════════════ -->
 <div style="margin-bottom:12px">
   <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:8px;text-transform:uppercase;letter-spacing:.8px">How do you want to search?</div>
@@ -235,7 +237,7 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
   <div style="background:var(--purple-bg);border:1px solid rgba(180,126,255,.25);border-radius:var(--r);padding:9px 10px;margin-bottom:10px">
     <div style="font-size:11px;color:var(--purple);font-weight:600;margin-bottom:4px">🏴 Free Pipeline</div>
     <div style="font-size:10px;color:var(--text3);line-height:1.5">Tries Rightmove &amp; Purplebricks via CORS proxies — <b>often blocked</b> by estate agents. If blocked, shows direct Rightmove/Zoopla/OTM search links with your exact filters. For <b>guaranteed results</b>: use Apify (~£0.07/search) or run the Python script locally.</div>
-    <div id="free-log" style="margin-top:7px;font-size:11px;max-height:160px;overflow-y:auto;background:var(--bg4);border-radius:var(--r);padding:6px 8px;line-height:1.8;display:none"></div>
+
   </div>
   <div style="background:var(--accent-bg);border:1px solid rgba(108,142,255,.2);border-radius:var(--r);padding:8px 10px;margin-bottom:10px;font-size:11px;color:var(--text2)">
     <b style="color:var(--accent)">Free sources used:</b><br>
@@ -1266,7 +1268,8 @@ async function homedataListings(postcode, budget, locationName){
     const minBeds=parseInt($('min-beds')?.value)||3;
     const area=postcode.trim().toUpperCase().split(' ')[0];
     let boundary=null;
-    for(const q of [locationName,area].filter(Boolean)){
+    const bQueries=[locationName,area,postcode.replace(/\s/g,'').slice(0,3)].filter((v,i,a)=>v&&a.indexOf(v)===i);
+    for(const q of bQueries){
       hdLog('Boundary: "'+q+'"');
       const br=await hdFetch('https://api.homedata.co.uk/api/boundaries/autocomplete/?q='+encodeURIComponent(q),true);
       if(!br){hdErr('Boundaries unreachable (CORS blocked by browser). Try Test Key to diagnose.');continue;}
@@ -1279,7 +1282,7 @@ async function homedataListings(postcode, budget, locationName){
     if(!boundary){hdErr('No boundary found. Check postcode/location.');return [];}
     hdLog('Using: '+boundary.name+' id='+boundary.id);
     const params=new URLSearchParams({boundary_id:boundary.id,transaction_type:'Sale',max_price:budget,sort:'-added_date',page_size:50});
-    if(minBeds>=2) params.set('bedrooms',minBeds);
+    // Homedata bedrooms=EXACT not min, so filter client-side
     const listUrl='https://api.homedata.co.uk/api/live-listings/search/?'+params.toString();
     hdLog('GET '+listUrl.slice(0,90));
     const r=await hdFetch(listUrl,true);
@@ -1317,7 +1320,7 @@ async function homedataListings(postcode, budget, locationName){
         addedDate:(p.added_date||'').slice(0,10)||'Recent',
         reduced:/reduc/i.test(status),source:'homedata',floorArea:null,uprn:p.property_uprn||null,lat:null,lng:null,
       };
-    }).filter(p=>p.price>0&&p.price<=budget);
+    }).filter(p=>p.price>0&&p.price<=budget&&(p.beds===0||p.beds>=minBeds));
   }catch(e){
     console.error('[HD] exception:',e);
     if(fle){const d=document.createElement('div');d.style.cssText='color:var(--red);font-size:11px';d.textContent='\u2717 Homedata error: '+e.message.slice(0,120);fle.appendChild(d);}
