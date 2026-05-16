@@ -1044,24 +1044,32 @@ async function testClaude(){
 }
 
 async function testHomedata(){
-  const el=$('status-hd');if(!el)return;
-  if(!S.homedataKey){el.textContent='No key \u2014 enter and click Save Key';el.style.color='var(--text3)';return;}
-  el.textContent='\u23f3 Testing /api/live-listings/search/\u2026';el.style.color='var(--amber)';
+  const el = $('status-hd'); if(!el) return;
+  if(!S.homedataKey){ el.textContent='No key — enter and click Save Key'; el.style.color='var(--text3)'; return; }
+  el.textContent='\u23f3 Step 1: finding boundary\u2026'; el.style.color='var(--amber)';
   try{
-    const r=await fetch(
-      'https://api.homedata.co.uk/api/live-listings/search/?transaction_type=Sale&max_price=500000&page_size=3&sort=-added_date',
+    // Step 1: Boundaries (no auth)
+    const bRes = await fetch('https://api.homedata.co.uk/api/boundaries/autocomplete/?q=Manchester');
+    if(!bRes.ok){ el.textContent='\u2717 Boundaries endpoint HTTP '+bRes.status; el.style.color='var(--red)'; return; }
+    const bData = await bRes.json();
+    const b = (bData.results||[])[0];
+    if(!b){ el.textContent='\u2717 No boundary found'; el.style.color='var(--red)'; return; }
+    el.textContent='\u23f3 Step 2: querying live listings (boundary: '+b.name+' id:'+b.id+')\u2026'; el.style.color='var(--amber)';
+    // Step 2: Live listings
+    const r = await fetch(
+      'https://api.homedata.co.uk/api/live-listings/search/?boundary_id='+b.id+'&transaction_type=Sale&max_price=500000&bedrooms=3&page_size=3&sort=-added_date',
       {headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'}}
     );
-    const txt=await r.text();
-    let d;try{d=JSON.parse(txt);}catch(e){el.textContent='\u2717 Non-JSON (HTTP '+r.status+')';el.style.color='var(--red)';return;}
-    if(r.status===401){el.textContent='\u2717 401 \u2014 wrong key format (QRryNTjX.secret)';el.style.color='var(--red)';return;}
-    if(r.status===403){el.textContent='\u2717 403 \u2014 key expired or plan issue';el.style.color='var(--red)';return;}
-    if(!r.ok){el.textContent='\u2717 HTTP '+r.status+' \u2014 '+(d.detail||d.message||txt.slice(0,60));el.style.color='var(--red)';return;}
-    const rem=r.headers.get('X-RateLimit-Remaining')||'?';
-    const sample=d.results?.[0];
-    el.textContent='\u2713 Working! '+Number(d.count||0).toLocaleString()+' live UK listings \u00b7 '+rem+' calls left'+(sample?' \u00b7 e.g. '+sample.display_address:'');
+    const txt = await r.text();
+    let d; try{d=JSON.parse(txt);}catch(e){el.textContent='\u2717 Non-JSON (HTTP '+r.status+')'; el.style.color='var(--red)'; return;}
+    if(r.status===401){el.textContent='\u2717 401 — wrong key format. Must be: QRryNTjX.your-secret'; el.style.color='var(--red)'; return;}
+    if(r.status===403){el.textContent='\u2717 403 — key expired or plan issue'; el.style.color='var(--red)'; return;}
+    if(!r.ok){el.textContent='\u2717 HTTP '+r.status+' — '+(d.detail||d.message||txt.slice(0,80)); el.style.color='var(--red)'; return;}
+    const rem = r.headers.get('X-RateLimit-Remaining')||'?';
+    const sample = (d.results||[])[0];
+    el.textContent='\u2713 Working! '+Number(d.count||0).toLocaleString()+' listings in '+b.name+' \u00b7 '+rem+' calls left'+(sample?' \u00b7 e.g. \u00a3'+Number(sample.latest_price).toLocaleString()+' '+sample.display_address:'');
     el.style.color='var(--green)';
-  }catch(e){el.textContent='\u2717 '+e.message.slice(0,80);el.style.color='var(--red)';}
+  }catch(e){el.textContent='\u2717 '+e.message.slice(0,80); el.style.color='var(--red)';}
 }
 
 async function testApify(){
@@ -1216,53 +1224,98 @@ async function fetchFreeListings(location,budget,minBeds,types,pc,log){
 }
 
 // Homedata: address/find → properties/uprn
-async function homedataListings(postcode,budget){
-  console.log('[HD] key:',!!S.homedataKey,'postcode:',postcode,'budget:',budget);
-  if(!S.homedataKey||S.homedataUsed>=S.homedataCap) return [];
+async function homedataListings(postcode, budget){
+  console.log('[HD] start — key:', !!S.homedataKey, 'postcode:', postcode);
+  if(!S.homedataKey || S.homedataUsed >= S.homedataCap) return [];
   try{
-    const minBeds=parseInt($('min-beds')?.value)||3;
-    const params=new URLSearchParams({transaction_type:'Sale',max_price:budget,min_price:Math.round(budget*0.3),page_size:50,sort:'-added_date'});
-    if(minBeds>=1) params.set('bedrooms',minBeds);
-    const url='https://api.homedata.co.uk/api/live-listings/search/?'+params.toString();
-    console.log('[HD] GET',url);
-    const r=await fetch(url,{headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'}});
-    console.log('[HD] status:',r.status,'remaining:',r.headers.get('X-RateLimit-Remaining'));
-    if(!r.ok){const t=await r.text();throw new Error('Homedata HTTP '+r.status+': '+t.slice(0,100));}
-    const d=await r.json();
-    spend('hd',1);
-    const all=d.results||[];
-    const area=postcode.trim().toUpperCase().replace(/\s.*/,'');
-    const filtered=all.filter(p=>(p.display_address||'').toUpperCase().includes(area));
-    console.log('[HD] total:',d.count,'returned:',all.length,'area-filtered:',filtered.length);
-    return filtered.map(p=>{
-      const price=p.latest_price||0;
-      const addr=p.display_address||postcode;
-      const pcMatch=addr.match(/[A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2}/i);
-      const pcs=pcMatch?pcMatch[0].replace(/\s/,'').toLowerCase():'';
+    const area = postcode.trim().toUpperCase().replace(/\s.*/, ''); // e.g. "M21"
+    const minBeds = parseInt($('min-beds')?.value) || 3;
+
+    // Step 1: Boundaries Autocomplete — no auth needed, find boundary_id
+    // Use the postcode outcode or full postcode as query
+    const boundaryQuery = area; // e.g. "M21" or use geo.admin_district
+    console.log('[HD] Step 1: find boundary for', boundaryQuery);
+    const bRes = await fetch(
+      'https://api.homedata.co.uk/api/boundaries/autocomplete/?q=' + encodeURIComponent(postcode.replace(/\s/g,'').slice(0,4)),
+      {headers: {'Accept': 'application/json'}}
+    );
+    if(!bRes.ok) throw new Error('Boundaries lookup HTTP ' + bRes.status);
+    const bData = await bRes.json();
+    const boundaries = bData.results || [];
+    console.log('[HD] boundaries found:', boundaries.length, boundaries.slice(0,3).map(b=>b.name+':'+b.id));
+
+    if(!boundaries.length) throw new Error('No boundary found for postcode area ' + area);
+    // Pick the most relevant boundary (prefer smaller admin areas)
+    const boundary = boundaries[0];
+    console.log('[HD] using boundary:', boundary.name, 'id:', boundary.id);
+
+    // Step 2: Live listings search with boundary_id
+    const params = new URLSearchParams({
+      boundary_id: boundary.id,
+      transaction_type: 'Sale',
+      max_price: budget,
+      min_price: Math.round(budget * 0.25), // exclude cheap outliers
+      sort: '-added_date',
+      page_size: 50,
+    });
+    if(minBeds >= 1) params.set('bedrooms', minBeds);
+    const url = 'https://api.homedata.co.uk/api/live-listings/search/?' + params.toString();
+    console.log('[HD] Step 2: GET', url);
+    const r = await fetch(url, {
+      headers: {'Authorization': 'Api-Key ' + S.homedataKey, 'Accept': 'application/json'}
+    });
+    const rem = r.headers.get('X-RateLimit-Remaining') || '?';
+    console.log('[HD] status:', r.status, 'remaining:', rem);
+    if(!r.ok){
+      const t = await r.text();
+      throw new Error('Homedata live-listings HTTP ' + r.status + ': ' + t.slice(0,120));
+    }
+    const d = await r.json();
+    spend('hd', 1);
+    const listings = d.results || [];
+    console.log('[HD] total matching:', d.count, 'returned:', listings.length, '| calls left:', rem);
+
+    return listings.map(p => {
+      const price = p.latest_price || 0;
+      const addr = p.display_address || postcode;
+      const pcMatch = addr.match(/[A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2}/i);
+      const pcs = pcMatch ? pcMatch[0].replace(/\s/,'').toLowerCase() : '';
+      const status = p.latest_status || 'For Sale';
+      const src = p.source || 'Portal';
       return {
-        id:'hd-'+(p.listing_id||p.property_uprn||Math.random().toString(36).slice(2,8)),
-        address:addr,price,
-        type:(p.listing_property_type||'unknown').toLowerCase(),
-        beds:p.bedrooms||0,baths:p.bathrooms||0,
-        sqft:null,epc:null,tenure:null,
-        chainFree:/chain.free|no chain/i.test(p.latest_status||''),
-        chain:/sold.stc|under.offer/i.test(p.latest_status||''),
-        garden:false,garage:false,parking:false,newBuild:false,
-        description:'Status: '+(p.latest_status||'For Sale')+' | Added: '+(p.added_date||'').slice(0,10)+' | Via: '+(p.source||'Portal'),
-        features:[p.latest_status||'For Sale',p.source||'','Added '+(p.added_date||'').slice(0,10)].filter(Boolean),
-        url:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+encodeURIComponent(area)+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget,
-        rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+encodeURIComponent(area)+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget,
-        zooplaUrl:pcs?'https://www.zoopla.co.uk/for-sale/property/'+pcs+'/?q='+pcs+'&results_sort=newest_listings':'https://www.zoopla.co.uk/for-sale/',
-        agent:{name:'Homedata/'+(p.source||'Portal'),phone:'',branch:'api.homedata.co.uk live-listings'},
-        addedDate:(p.added_date||'').slice(0,10)||'Recent',
-        reduced:/reduc/i.test(p.latest_status||''),
-        source:'homedata',floorArea:null,uprn:p.property_uprn||null,lat:null,lng:null,
+        id: 'hd-' + (p.listing_id || p.property_uprn || Math.random().toString(36).slice(2,10)),
+        address: addr,
+        price,
+        type: (p.listing_property_type || 'unknown').toLowerCase(),
+        beds: p.bedrooms || 0,
+        baths: p.bathrooms || 0,
+        sqft: null, epc: null, tenure: null,
+        chainFree: /chain.free|no chain/i.test(status),
+        chain: /sold.stc|under.offer/i.test(status),
+        garden: false, garage: false, parking: false, newBuild: false,
+        description: 'Status: ' + status + ' | Added: ' + (p.added_date||'').slice(0,10) + ' | Via: ' + src + ' | Boundary: ' + boundary.name,
+        features: [
+          status !== 'For Sale' ? status : 'For Sale',
+          src,
+          (p.added_date||'').slice(0,10) ? 'Added ' + (p.added_date||'').slice(0,10) : '',
+        ].filter(Boolean),
+        url: 'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation=' + encodeURIComponent(area) + '&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice=' + budget,
+        rightmoveUrl: 'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation=' + encodeURIComponent(area) + '&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice=' + budget,
+        zooplaUrl: pcs ? 'https://www.zoopla.co.uk/for-sale/property/' + pcs + '/?q=' + pcs + '&results_sort=newest_listings' : 'https://www.zoopla.co.uk/for-sale/',
+        agent: {name: 'Homedata / ' + src, phone: '', branch: boundary.name + ' — api.homedata.co.uk'},
+        addedDate: (p.added_date||'').slice(0,10) || 'Recent',
+        reduced: /reduc/i.test(status),
+        source: 'homedata',
+        floorArea: null,
+        uprn: p.property_uprn || null,
+        lat: null, lng: null,
       };
-    }).filter(p=>p.price>0&&p.price<=budget);
+    }).filter(p => p.price > 0 && p.price <= budget);
+
   }catch(e){
-    console.warn('[HD] error:',e.message);
-    const fle=$('free-log');
-    if(fle){const d=document.createElement('div');d.style.color='var(--red)';d.textContent='\u2717 Homedata: '+e.message.slice(0,100);fle.appendChild(d);}
+    console.warn('[HD] error:', e.message);
+    const fle = $('free-log');
+    if(fle){ const d=document.createElement('div'); d.style.color='var(--red)'; d.textContent='\u2717 Homedata: '+e.message.slice(0,120); fle.appendChild(d); }
     return [];
   }
 }
