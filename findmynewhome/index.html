@@ -910,66 +910,135 @@ async function runFree(){
   }catch(err){setError('free',err.message);}
 }
 
-// ── MODE 2: CLAUDE ────────────────────────────────────────────────────────────
+// ── MODE 2: CLAUDE ──────────────────────────────────────────────────────────
 async function runClaude(){
   const key=getKey('claude');
   if(!key){setError('claude','Save your Claude API key in the left panel first.');return;}
   const{pc,budget,stretch,minBeds,wantInvest}=getParams();
   if(!pc){alert('Enter a postcode');return;}
   switchTab('claude');
-  setLoading('claude','Claude is searching Rightmove and Zoopla right now… (30–60 seconds)');
+  setLoading('claude','Claude is searching Rightmove and Zoopla\u2026 (30\u201390 seconds)');
 
   let area=null;
   loadAreaData(pc).then(a=>{area=a;}).catch(()=>{});
 
   const invBudget=Math.round(budget*0.55);
-  const prompt=`Search the web for properties currently for sale near UK postcode ${pc}.
 
-HOMES: Find houses (detached, semi, bungalow, terraced) for sale now. Max £${fmt(budget)}, mention stretch up to £${fmt(stretch)}. Min ${minBeds} beds. Not sold STC. Search Rightmove and Zoopla. Find at least 5.
-${wantInvest?`FLATS: Also find 1-2 bed flats for buy-to-let under £${fmt(invBudget)} in same area. Find at least 3.`:''}
-
-Return ONLY this JSON (no text before or after):
-{"location":"area name","homes":[{"address":"full address","price":285000,"beds":3,"baths":1,"type":"semi-detached","tenure":"Freehold","chainFree":true,"reduced":false,"addedDate":"Added 2 weeks ago","features":["garden","parking"],"url":"https://www.rightmove.co.uk/properties/XXXXXXXX","portal":"Rightmove","agent":"Agent name","agentPhone":"0161 xxx xxxx","description":"brief description","whyGood":"analysis vs area avg, features, value","score":8}],"topHomeIndex":0,"areaInsight":"area commentary"${wantInvest?`,"flats":[{"address":"full address","price":145000,"beds":2,"type":"flat","tenure":"Leasehold","leaseYears":100,"serviceCharge":"£100/month","estRentalPcm":850,"grossYield":7.0,"chainFree":false,"addedDate":"Added 1 week ago","features":["modern","near tram"],"url":"https://www.rightmove.co.uk/properties/XXXXXXXX","portal":"Rightmove","agent":"Agent","description":"description","whyGood":"investment case"}],"topFlatIndex":0`:',"flats":[]'}}`;
+  // TURN 1: Search (natural language, no JSON pressure - Claude searches better this way)
+  const searchPrompt='You are a UK property search assistant. Search Rightmove.co.uk and Zoopla.co.uk RIGHT NOW for properties for sale near postcode '+pc+'.\n\n'
+    +'Find HOMES (houses): max \u00a3'+fmt(budget)+', '+minBeds+'+ bedrooms, not sold STC.\n'
+    +(wantInvest?'Also find INVESTMENT FLATS: max \u00a3'+fmt(invBudget)+', 1-2 beds, good buy-to-let potential.\n':'')
+    +'\nFor each property list: full address, exact price, beds, baths, type, tenure, chain-free status, date added, key features, exact URL, agent name and phone, brief description.\n'
+    +'Find at least 5 homes'+(wantInvest?' and 3 investment flats':'')+'. Search thoroughly.';
 
   try{
-    let data=null,lastErr='';
-    for(const model of['claude-sonnet-4-5','claude-sonnet-4-20250514','claude-3-5-sonnet-20241022']){
+    const models=['claude-sonnet-4-5','claude-sonnet-4-20250514'];
+    let searchData=null,usedModel='',lastErr='';
+    for(const model of models){
       try{
-        const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model,max_tokens:8000,tools:[{type:'web_search_20250305',name:'web_search'}],messages:[{role:'user',content:prompt}]})});
-        data=await r.json();
-        if(!data.error)break;
-        lastErr=data.error.message;
-        if(data.error.type==='authentication_error')break;
+        const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
+          headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+          body:JSON.stringify({model,max_tokens:6000,tools:[{type:'web_search_20250305',name:'web_search'}],messages:[{role:'user',content:searchPrompt}]})
+        });
+        searchData=await r.json();
+        if(searchData.error){lastErr=searchData.error.message;if(searchData.error.type==='authentication_error')break;continue;}
+        usedModel=model;break;
       }catch(e){lastErr=e.message;}
     }
-    if(!data||data.error)throw new Error(lastErr||'API call failed');
+    if(!searchData||searchData.error)throw new Error('Claude API: '+(lastErr||'check key and credits'));
 
-    const cost=((data.usage?.input_tokens||0)*3+(data.usage?.output_tokens||0)*15)/1000000;
-    addSpent(cost);
+    const cost1=((searchData.usage?.input_tokens||0)*3+(searchData.usage?.output_tokens||0)*15)/1000000;
+    addSpent(cost1);
 
-    let text='';
-    for(const block of data.content||[]){if(block.type==='text')text+=block.text;}
-    const jm=text.match(/\{[\s\S]*\}/);
-    if(!jm)throw new Error('No JSON in response. Raw: '+text.slice(0,300));
-    let result;
-    try{result=JSON.parse(jm[0]);}catch(e){throw new Error('JSON parse error: '+e.message);}
+    let findings='';
+    for(const block of searchData.content||[]){if(block.type==='text')findings+=block.text;}
+    if(!findings||findings.length<50)throw new Error('Claude returned no text. Check key has web search access.');
+
+    setLoading('claude','Properties found \u2014 formatting results\u2026');
+
+    // TURN 2: Format as JSON (no web search, just reformatting what was found)
+    const jsonPrompt='Based on the property search results above, output them as a JSON object.\n\n'
+      +'Output ONLY raw JSON starting with { and ending with }. No explanation, no markdown, no code fences.\n\n'
+      +'Use this exact structure:\n'
+      +'{"location":"area name","homes":[{"address":"full address","price":285000,"beds":3,"baths":1,"type":"semi-detached","tenure":"Freehold","chainFree":true,"reduced":false,"addedDate":"Added 2 weeks ago","features":["garden","parking"],"url":"https://www.rightmove.co.uk/properties/12345678","portal":"Rightmove","agent":"Agent name","agentPhone":"0161 123 4567","description":"brief description","whyGood":"why good value: price vs area avg, features, location","score":8}],"topHomeIndex":0,"areaInsight":"area commentary"'
+      +(wantInvest?',"flats":[{"address":"full address","price":145000,"beds":2,"type":"flat","tenure":"Leasehold","leaseYears":100,"serviceCharge":"\u00a3100/month","estRentalPcm":850,"grossYield":7.0,"chainFree":false,"addedDate":"Added 1 week ago","features":["modern","near tram"],"url":"https://www.rightmove.co.uk/properties/87654321","portal":"Rightmove","agent":"Agent","agentPhone":"","description":"description","whyGood":"investment case with yield"}],"topFlatIndex":0':',"flats":[]')
+      +'}\n\nInclude ALL properties from your search. Use actual data. Empty string for unknown fields.';
+
+    const jsonR=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:usedModel||'claude-sonnet-4-5',max_tokens:6000,
+        messages:[
+          {role:'user',content:searchPrompt},
+          {role:'assistant',content:findings},
+          {role:'user',content:jsonPrompt}
+        ]
+      })
+    });
+    const jsonData=await jsonR.json();
+    if(jsonData.error)throw new Error('Format step: '+jsonData.error.message);
+
+    const cost2=((jsonData.usage?.input_tokens||0)*3+(jsonData.usage?.output_tokens||0)*15)/1000000;
+    addSpent(cost2);
+
+    let jsonText='';
+    for(const block of jsonData.content||[]){if(block.type==='text')jsonText+=block.text;}
+
+    // Parse JSON - multiple fallback strategies
+    let result=null;
+    const jm=jsonText.match(/\{[\s\S]*\}/);
+    if(jm){
+      try{result=JSON.parse(jm[0]);}catch(e){
+        try{result=JSON.parse(jm[0].replace(/,\s*}/g,'}').replace(/,\s*]/g,']'));}catch(e2){}
+      }
+    }
 
     await new Promise(r=>setTimeout(r,300));
+    const totalCost=(cost1+cost2).toFixed(4);
+
+    // If JSON failed, show raw findings - still useful
+    if(!result){
+      let h='';
+      if(area)h+=renderStats(area);
+      h+='<div class="notice warn">\u26a0\ufe0f Claude found properties but could not format as cards ($'+totalCost+'). Raw results below \u2014 copy any Rightmove/Zoopla URL to open the listing:</div>';
+      h+='<div style="background:#fff;border:1px solid #dde;border-radius:8px;padding:16px;white-space:pre-wrap;font-size:12px;color:#3a3a5a;line-height:1.8;max-height:500px;overflow-y:auto">'+esc(findings)+'</div>';
+      setResult('claude',h);
+      return;
+    }
+
     const homes=result.homes||[];
     const flats=result.flats||[];
-    if(!homes.length&&!flats.length)throw new Error('No properties found. Try different postcode or higher budget.');
+
+    if(!homes.length&&!flats.length){
+      let h='';
+      if(area)h+=renderStats(area);
+      h+='<div class="notice warn">\u26a0\ufe0f No properties found for '+esc(pc)+' under \u00a3'+fmt(budget)+' with '+minBeds+'+ beds. Try higher budget or lower bedrooms.</div>';
+      h+='<div style="background:#fff;border:1px solid #dde;border-radius:8px;padding:12px;font-size:12px;color:#888;max-height:300px;overflow-y:auto">'+esc(findings.slice(0,800))+'</div>';
+      setResult('claude',h);
+      return;
+    }
 
     if(homes[result.topHomeIndex])homes[result.topHomeIndex]._top=true;
-    if(flats[result.topFlatIndex])flats[result.topFlatIndex]._top=true;
+    if(flats&&flats[result.topFlatIndex])flats[result.topFlatIndex]._top=true;
 
     let h='';
     if(area)h+=renderStats(area);
-    if(result.areaInsight)h+=`<div class="insight-box">📍 <b>${esc(result.location||'')}</b> — ${esc(result.areaInsight)}</div>`;
-    h+=`<div class="notice ok">✅ ${homes.length} homes found via Claude web search · cost $${cost.toFixed(4)}</div>`;
-    if(homes.length){h+=`<div class="section-head">🏠 Homes (${homes.length})</div><div class="cards">${homes.map(p=>renderCard(p,!!p._top,area?.prices?.avg,false)).join('')}</div>`;}
-    if(flats.length){h+=`<div class="section-head" style="color:#5038a0">💰 Investment Flats (${flats.length})</div><div class="cards">${flats.map(p=>renderCard(p,!!p._top,null,true)).join('')}</div>`;}
+    if(result.areaInsight)h+='<div class="insight-box">\ud83d\udccd <b>'+esc(result.location||'')+'</b> \u2014 '+esc(result.areaInsight)+'</div>';
+    h+='<div class="notice ok">\u2705 '+homes.length+' homes found via Claude web search \u00b7 $'+totalCost+'</div>';
+
+    if(homes.length){
+      h+='<div class="section-head">\ud83c\udfe0 Homes to Buy ('+homes.length+')</div>';
+      h+='<div class="cards">'+homes.map(p=>renderCard(p,!!p._top,area?.prices?.avg,false)).join('')+'</div>';
+    }
+    if(flats&&flats.length){
+      h+='<div class="section-head" style="color:#5038a0">\ud83d\udcb0 Investment Flats ('+flats.length+')</div>';
+      h+='<div class="cards">'+flats.map(p=>renderCard(p,!!p._top,null,true)).join('')+'</div>';
+    }
     setResult('claude',h);
-  }catch(err){setError('claude',err.message);}
+
+  }catch(err){
+    setError('claude',err.message+'<br><br>Fixes: check key valid at console.anthropic.com, check credits, use claude-sonnet-4-5 or claude-sonnet-4-20250514');
+    console.error('Claude:',err);
+  }
 }
 
 // ── MODE 3: HOMEDATA ──────────────────────────────────────────────────────────
@@ -1032,10 +1101,23 @@ async function runHomedata(){
     const rem=lr.headers?.get?.('X-RateLimit-Remaining')||'?';
     L('✓ '+ld.count+' total · '+rem+' calls left','ok');
 
-    const all=(ld.results||[]).filter(p=>(p.bedrooms||0)>=minBeds&&(p.latest_price||0)<=budget);
-    L(all.length+' after '+minBeds+'+ beds filter','ok');
+    const sample2=(ld.results||[])[0];
+    if(sample2)L('API sample: beds='+sample2.bedrooms+' price='+sample2.latest_price+' addr='+(sample2.display_address||'').slice(0,25));
+    const all=(ld.results||[]).filter(p=>{
+      const price=p.latest_price||0;
+      const beds=p.bedrooms||0;
+      if(price>0&&price>budget)return false;
+      if(beds>0&&beds<minBeds)return false;
+      return true;
+    });
+    L(all.length+' match filters','ok');
 
-    if(!all.length){setResult('hd',renderStats(area)+renderLog(logs)+`<div class="notice warn">⚠️ ${ld.count} listings in ${boundary.name} but none match max £${fmt(budget)} + ${minBeds}+ beds. Try lower min beds or higher budget.</div>`);return;}
+    if(!all.length){
+      const rawSample=(ld.results||[])[0];
+      const sampleInfo=rawSample?(' API field check: bedrooms='+rawSample.bedrooms+' latest_price='+rawSample.latest_price):'';
+      setResult('hd',renderStats(area)+renderLog(logs)+'<div class="notice warn">⚠️ '+ld.count+' listings in '+boundary.name+' but all filtered out (max £'+fmt(budget)+', '+minBeds+'+ beds).'+sampleInfo+'<br>The Homedata API may not return bed/price data for all listings. Check log above.</div>');
+      return;
+    }
 
     const homes=all.map(p=>{
       const addr=p.display_address||pc;
@@ -1064,7 +1146,7 @@ async function runApify(){
     const area=await loadAreaData(pc).catch(()=>null);
     const loc=area?.geo?.admin_district||pc;
 
-    const runRes=await fetch('https://api.apify.com/v2/acts/automation-lab~rightmove-scraper/runs?token='+key,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({searchLocation:loc,channel:'BUY',maxResults:25,radius:'1.0',sortType:'Newest',includeSSTC:false,maxPrice:budget,minBeds})});
+    const runRes=await fetch('https://api.apify.com/v2/acts/automation-lab~rightmove-scraper/runs?token='+key,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({searchLocation:loc,channel:'BUY',maxResults:25,radius:1.0,sortType:'6',includeSSTC:false,maxPrice:budget,minBedrooms:minBeds})});
     const runData=await runRes.json();
     if(runData.error)throw new Error('Apify: '+runData.error.message);
     if(!runData.data?.id)throw new Error('Apify run failed to start');
