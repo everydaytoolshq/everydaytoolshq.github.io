@@ -3,1312 +3,713 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FindMyNewHome — AI Property Intelligence</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>FindMyNewHome — Live UK Property Search</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-
+/* ── RESET & BASE ─────────────────────────────────────────────────────────── */
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#09090f;--bg2:#111118;--bg3:#18181f;--bg4:#22222c;
-  --border:#2a2a36;--border2:#3a3a4a;
-  --text:#f0f0f8;--text2:#9090a8;--text3:#5a5a72;
-  --accent:#6c8eff;--accent2:#3d5bcc;--accent-bg:#0d1433;
-  --green:#3ecf8e;--green-bg:#0a2019;
-  --amber:#f5a623;--amber-bg:#211500;
-  --red:#ff5555;--red-bg:#200a0a;
-  --purple:#b47eff;--purple-bg:#1a0f2e;
-  --teal:#2dd4bf;--teal-bg:#071a18;
+  --ink:#0e0e18;--ink2:#1e1e2e;--ink3:#3e3e5e;--ink4:#6e6e9e;
+  --paper:#f6f6fb;--card:#ffffff;
+  --border:#dcdcea;--border2:#c4c4dc;
+  --gold:#b8922a;--gold-l:#fdf5e4;--gold-m:#f0dfa0;
+  --jade:#1a7848;--jade-l:#edf8f2;
+  --ruby:#a81830;--ruby-l:#fef0f2;
+  --sky:#1648a8;--sky-l:#eef2fd;
+  --violet:#5838a8;--violet-l:#f0eefb;
   --r:10px;--rlg:16px;
 }
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:13px 20px;border-bottom:1px solid var(--border);background:rgba(9,9,15,0.97);position:sticky;top:0;z-index:200;gap:8px;flex-wrap:wrap}
-.logo{font-family:'Playfair Display',serif;font-size:19px}.logo em{color:var(--accent);font-style:normal}
-.logo-tag{font-size:10px;color:var(--text3);letter-spacing:1.4px;text-transform:uppercase;margin-top:1px}
-.pills{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
-.pill{display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:20px;border:1px solid var(--border2);font-size:10px;color:var(--text2);background:var(--bg3);white-space:nowrap}
-.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.dot.g{background:var(--green);box-shadow:0 0 5px var(--green)}.dot.a{background:var(--amber)}.dot.x{background:var(--text3)}
-.app{display:grid;grid-template-columns:310px 1fr;height:calc(100vh - 52px)}
-.sidebar{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;padding:14px}
-.main{overflow-y:auto}
-.s-head{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1.2px;padding:5px 0 7px;display:flex;align-items:center;gap:8px;margin-top:14px}
-.s-head:first-child{margin-top:0}
-.s-head::after{content:'';flex:1;height:1px;background:var(--border)}
-label{font-size:11px;color:var(--text2);display:block;margin-bottom:3px;margin-top:7px}
-input[type=text],input[type=password],select{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:6px 9px;border-radius:var(--r);font-size:12px;font-family:inherit;outline:none;transition:border-color .15s}
-input:focus,select:focus{border-color:var(--accent)}
-select option{background:var(--bg3)}
-.rrow{display:flex;align-items:center;gap:7px;margin-top:4px}
-input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
-.rv{font-size:12px;font-weight:600;color:var(--accent);min-width:62px;text-align:right}
-.cg{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:5px}
-.ci{font-size:11px;color:var(--text2);cursor:pointer;padding:5px 7px;border-radius:6px;border:1px solid var(--border);transition:all .15s;user-select:none;line-height:1.2}
-.ci.on{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
-.ci.on.gr{border-color:var(--green);color:var(--green);background:var(--green-bg)}
-.cbox{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:10px;margin-bottom:7px}
-.cbox-title{font-size:11px;font-weight:600;color:var(--text);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
-.cbox-used{font-size:10px;color:var(--text3)}
-.bar-wrap{height:4px;background:var(--bg4);border-radius:2px;margin:4px 0 2px;overflow:hidden}
-.bar{height:100%;border-radius:2px;transition:width .4s}
-.bar.g{background:var(--green)}.bar.a{background:var(--amber)}.bar.r{background:var(--red)}
-.bar-detail{font-size:10px;color:var(--text3)}
-.key-row{display:flex;gap:4px;margin-top:4px}
-.btn-save{background:var(--accent2);color:white;border:none;padding:6px 10px;border-radius:var(--r);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;flex-shrink:0}
-.btn-save:hover{background:var(--accent)}
-.cost-est{background:var(--bg4);border:1px solid var(--border2);border-radius:var(--r);padding:8px 10px;margin:8px 0;font-size:11px}
-.cost-row{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--border);font-size:10px;color:var(--text2)}
-.cost-row:last-child{border-bottom:none;color:var(--amber);font-weight:600;font-size:11px}
-.api-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:7px}
-.api-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3);padding:3px 6px;background:var(--bg3);border-radius:5px;border:1px solid var(--border)}
-.btn-go{width:100%;background:linear-gradient(135deg,var(--accent2),var(--accent));color:white;border:none;padding:12px;border-radius:var(--rlg);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:12px;transition:all .2s}
-.btn-go:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 24px rgba(108,142,255,.35)}
-.btn-go:disabled{opacity:.45;cursor:not-allowed;transform:none}
-.m-inner{padding:20px}
-.empty{text-align:center;padding:60px 30px;color:var(--text2)}
-.empty-ico{font-size:44px;margin-bottom:12px;opacity:.2}
-.chips{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:14px}
-.chip{font-size:10px;padding:3px 9px;border-radius:20px;border:1px solid var(--border2);color:var(--text3)}
-.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px}
-.stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px}
-.stat-l{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px}
-.stat-v{font-size:17px;font-weight:700}
-.stat-s{font-size:9px;color:var(--text3);margin-top:2px}
-.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:14px;overflow-x:auto}
-.tab{padding:8px 13px;font-size:11px;font-weight:500;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;white-space:nowrap}
-.tab.on{color:var(--accent);border-bottom-color:var(--accent)}
-.panel{display:none}.panel.on{display:block}
-.cards{display:flex;flex-direction:column;gap:10px}
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rlg);overflow:hidden;transition:border-color .2s,transform .15s}
-.card:hover{border-color:var(--border2);transform:translateY(-1px)}
-.card.pick{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent2)}
-.card.pick .pick-badge{display:flex}
-.pick-badge{display:none;align-items:center;gap:5px;background:linear-gradient(90deg,var(--accent2),var(--accent));color:white;font-size:10px;font-weight:700;padding:4px 14px;letter-spacing:.8px;text-transform:uppercase}
-.src-strip{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:600;padding:3px 14px;letter-spacing:.4px}
-.src-strip.live{background:var(--green-bg);border-bottom:1px solid rgba(62,207,142,.2);color:var(--green)}
+html,body{height:100%;background:var(--paper)}
+body{font-family:'Instrument Sans',sans-serif;font-size:14px;line-height:1.5;color:var(--ink)}
+a{color:inherit;text-decoration:none}
 
-.src-strip.hd{background:var(--purple-bg);border-bottom:1px solid rgba(180,126,255,.2);color:var(--purple)}
-.src-strip.apify{background:var(--green-bg);border-bottom:1px solid rgba(62,207,142,.2);color:var(--green)}
-.src-strip.fallback{background:var(--amber-bg);border-bottom:1px solid rgba(245,166,35,.3);color:var(--amber)}
-.cbody{padding:13px 15px}
-.ctop{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
-.caddr{font-size:13px;font-weight:600;line-height:1.3}
-.cbadges{display:flex;flex-wrap:wrap;gap:3px;flex-shrink:0}
-.badge{font-size:10px;padding:2px 7px;border-radius:20px;border:1px solid;white-space:nowrap}
-.bd{border-color:var(--green);color:var(--green);background:var(--green-bg)}
-.bs{border-color:var(--amber);color:var(--amber);background:var(--amber-bg)}
-.bb{border-color:var(--purple);color:var(--purple);background:var(--purple-bg)}
-.bt{border-color:var(--text3);color:var(--text3);background:var(--bg3)}
-.ba{border-color:var(--teal);color:var(--teal);background:var(--teal-bg)}
-.bf{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
-.cmeta{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;flex-wrap:wrap}
-.cprice{font-family:'Playfair Display',serif;font-size:23px;font-weight:700}
-.cspecs{display:flex;gap:8px;flex-wrap:wrap}
-.spec{font-size:11px;color:var(--text2)}
-.scores{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:8px}
-.sc-item{text-align:center}
-.sc-l{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
-.sc-bw{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden}
-.sc-b{height:100%;border-radius:2px}
-.sc-n{font-size:11px;font-weight:700;margin-top:2px}
-.sg{color:var(--green)}.sa{color:var(--amber)}.sr{color:var(--red)}
-.bg-g{background:var(--green)}.bg-a{background:var(--amber)}.bg-r{background:var(--red)}
-.verdict{background:var(--bg3);border-radius:var(--r);padding:10px 12px;border-left:3px solid var(--accent);font-size:12px;color:var(--text2);line-height:1.55;margin-bottom:8px}
-.urg{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:var(--r);margin-bottom:8px}
-.urg.high{background:rgba(255,85,85,.07);border:1px solid rgba(255,85,85,.18)}
-.urg.med{background:rgba(245,166,35,.07);border:1px solid rgba(245,166,35,.18)}
-.urg.low{background:rgba(62,207,142,.07);border:1px solid rgba(62,207,142,.18)}
-.urg-lbl{font-size:11px;font-weight:700}
-.urg-sub{font-size:11px;color:var(--text2);flex:1}
-.tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
-.tag{font-size:10px;padding:3px 7px;border-radius:20px;border:1px solid var(--border2);color:var(--text3)}
-.tag.ok{border-color:var(--green);color:var(--green);background:var(--green-bg)}
-.tag.warn{border-color:var(--amber);color:var(--amber);background:var(--amber-bg)}
-.tag.info{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
-.tag.live{border-color:var(--teal);color:var(--teal);background:var(--teal-bg)}
-.cactions{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap}
-.abtn{flex:1;min-width:65px;padding:6px 5px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .15s;text-align:center}
-.abtn:hover{border-color:var(--accent);color:var(--accent)}
-.abtn.pri{background:var(--accent2);border-color:var(--accent2);color:white}
-.abtn.pri:hover{background:var(--accent)}
-.agent-box{background:var(--bg4);border-radius:var(--r);padding:9px 11px;border:1px solid var(--border2);margin-top:7px}
-.agent-name{font-size:12px;font-weight:600}
-.agent-contact{font-size:11px;color:var(--text2);margin-top:3px;line-height:1.8}
-.agent-contact a{color:var(--accent);text-decoration:none}
-.enrich-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:7px}
-.enrich-item{background:var(--bg3);border-radius:7px;padding:6px 8px;border:1px solid var(--border)}
-.enrich-l{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
-.enrich-v{font-size:12px;font-weight:600}
-.loading{text-align:center;padding:50px 20px}
-.spin{width:34px;height:34px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 14px}
+/* ── LAYOUT ── */
+.app{display:grid;grid-template-rows:56px 1fr;height:100vh;overflow:hidden}
+.topbar{background:var(--ink);display:flex;align-items:center;padding:0 20px;gap:16px;flex-shrink:0}
+.logo{font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:white;letter-spacing:-.3px;white-space:nowrap}
+.logo em{color:#d4a030;font-style:normal}
+.logo-sub{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
+.cost-pill{margin-left:auto;font-size:11px;color:rgba(255,255,255,.5);white-space:nowrap}
+.cost-pill b{color:#d4a030}
+.body{display:grid;grid-template-columns:280px 1fr;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{background:white;border-right:1px solid var(--border);overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:0}
+.sb-group{padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid var(--border)}
+.sb-group:last-child{border-bottom:none;margin-bottom:0}
+.sb-label{font-size:10px;font-weight:600;color:var(--ink4);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+label{font-size:12px;font-weight:500;color:var(--ink3);display:block;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+input[type=text],input[type=password],select{width:100%;background:var(--paper);border:1px solid var(--border);color:var(--ink);padding:8px 10px;border-radius:var(--r);font-size:12px;font-family:inherit;outline:none;transition:border .15s}
+input:focus,select:focus{border-color:var(--sky);box-shadow:0 0 0 3px rgba(22,72,168,.07)}
+.range-wrap{display:flex;align-items:center;gap:8px;margin-top:5px}
+input[type=range]{flex:1;accent-color:var(--sky)}
+.rv{font-size:12px;font-weight:600;color:var(--sky);min-width:72px;text-align:right}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px}
+.chip{font-size:11px;color:var(--ink4);cursor:pointer;padding:5px 8px;border-radius:6px;border:1px solid var(--border);transition:all .15s;user-select:none}
+.chip:hover{border-color:var(--border2)}
+.chip.on{border-color:var(--sky);color:var(--sky);background:var(--sky-l)}
+.invest-toggle{display:flex;align-items:center;gap:8px;margin-top:10px;cursor:pointer;font-size:12px;color:var(--ink3)}
+.invest-toggle input{width:auto;margin:0;cursor:pointer;accent-color:var(--gold)}
+.key-wrap{display:flex;gap:4px;margin-top:5px}
+.key-wrap input{flex:1;font-size:11px}
+.btn-icon{background:var(--paper);border:1px solid var(--border);color:var(--ink4);padding:6px 8px;border-radius:var(--r);cursor:pointer;font-size:13px;flex-shrink:0;line-height:1}
+.btn-save{background:var(--jade);border:1px solid var(--jade);color:white;padding:7px 12px;border-radius:var(--r);cursor:pointer;font-size:11px;font-weight:600;font-family:inherit;flex-shrink:0}
+.key-status{font-size:11px;margin-top:5px;min-height:16px}
+.key-status.ok{color:var(--jade)}
+.key-status.err{color:var(--ruby)}
+.btn-go{width:100%;background:var(--ink);color:white;border:none;padding:13px;border-radius:var(--rlg);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-go:hover:not(:disabled){background:#2a2a3e;box-shadow:0 4px 20px rgba(14,14,24,.2)}
+.btn-go:disabled{opacity:.45;cursor:not-allowed}
+.api-note{font-size:10px;color:var(--ink4);line-height:1.5;margin-top:8px;padding:8px;background:var(--paper);border-radius:var(--r);border:1px solid var(--border)}
+
+/* ── MAIN ── */
+.main{overflow-y:auto;background:var(--paper)}
+.main-inner{padding:20px;max-width:960px}
+
+/* Empty / loading / error */
+.empty{text-align:center;padding:80px 20px}
+.empty-icon{font-size:52px;margin-bottom:20px;opacity:.25}
+.empty-h{font-family:'Fraunces',serif;font-size:28px;color:var(--ink);margin-bottom:10px}
+.empty-p{font-size:14px;color:var(--ink4);line-height:1.8;max-width:460px;margin:0 auto}
+.empty-list{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:20px}
+.etag{font-size:11px;padding:4px 12px;border-radius:20px;border:1px solid var(--border2);color:var(--ink4)}
+.etag.g{border-color:#90d0a8;color:var(--jade);background:var(--jade-l)}
+.etag.b{border-color:#a8c0f0;color:var(--sky);background:var(--sky-l)}
+.etag.a{border-color:var(--gold-m);color:var(--gold);background:var(--gold-l)}
+.loading{text-align:center;padding:60px 20px}
+.spinner{width:40px;height:40px;border:2px solid var(--border);border-top-color:var(--sky);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 20px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.lsteps{text-align:left;display:inline-block;margin-top:10px}
-.ls{font-size:12px;padding:3px 0;color:var(--text3);display:flex;align-items:center;gap:8px}
-.ls.done{color:var(--green)}.ls.act{color:var(--text)}
-.ls .ctag{font-size:10px;padding:1px 6px;border-radius:10px;border:1px solid var(--border);color:var(--text3)}
-.ls.done .ctag{border-color:var(--green);color:var(--green)}
-.box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:10px}
-.box h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;color:var(--amber)}
-.box p{font-size:12px;color:var(--text2);line-height:1.6;padding:2px 0}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-.d-row{display:flex;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);font-size:12px}
-.d-row:last-child{border-bottom:none}
-.d-l{color:var(--text2);flex:1}.d-v{font-weight:600}
-.crime-row{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--border)}
-.crime-row:last-child{border-bottom:none}
-.crime-l{font-size:11px;color:var(--text2);flex:1;text-transform:capitalize}
-.crime-bw{width:60px;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden}
-.crime-b{height:100%;border-radius:2px}
-.crime-n{font-size:11px;font-weight:500;min-width:22px;text-align:right;color:var(--text2)}
-.epc{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:3px;font-size:10px;font-weight:700;color:#fff}
-.eA,.eB{background:#00a550}.eC{background:#8dc63f}.eD{background:#f0d500;color:#333}.eE{background:#f7941d}.eF,.eG{background:#ef3d42}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px}
-.overlay.hidden{display:none}
-.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rlg);padding:20px;max-width:640px;width:100%;max-height:90vh;overflow-y:auto}
-.modal-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.modal-t{font-family:'Playfair Display',serif;font-size:18px}
-.modal-x{background:none;border:none;color:var(--text);cursor:pointer;font-size:18px;padding:2px}
-.msec{margin-bottom:14px}
-.msec-l{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.9px;margin-bottom:7px}
-.cache-bar{background:var(--green-bg);border:1px solid rgba(62,207,142,.25);border-radius:var(--r);padding:7px 10px;font-size:11px;color:var(--green);margin-bottom:10px}
-::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-.notice{border-radius:var(--r);padding:9px 12px;font-size:12px;margin-bottom:12px;line-height:1.5}
-.notice.warn{background:var(--amber-bg);border:1px solid rgba(245,166,35,.3);color:var(--amber)}
-.notice.info{background:var(--accent-bg);border:1px solid rgba(108,142,255,.3);color:var(--accent)}
-.notice.ok{background:var(--green-bg);border:1px solid rgba(62,207,142,.25);color:var(--green)}
+.loading-title{font-family:'Fraunces',serif;font-size:22px;color:var(--ink);margin-bottom:8px}
+.loading-sub{font-size:13px;color:var(--ink4);max-width:400px;margin:0 auto}
+.loading-steps{margin-top:20px;text-align:left;display:inline-block;max-width:440px}
+.lstep{font-size:12px;color:var(--ink4);padding:4px 0;display:flex;align-items:center;gap:8px}
+.lstep.active{color:var(--ink);font-weight:500}
+.error-state{text-align:center;padding:60px 20px}
+.error-icon{font-size:40px;margin-bottom:16px}
+.error-title{font-family:'Fraunces',serif;font-size:22px;color:var(--ruby);margin-bottom:8px}
+.error-msg{font-size:13px;color:var(--ink3);background:var(--ruby-l);border:1px solid #f0b0b8;border-radius:var(--r);padding:12px 16px;max-width:560px;margin:0 auto;line-height:1.6}
+.no-results{background:var(--gold-l);border:1px solid var(--gold-m);border-radius:var(--r);padding:16px;color:#7a5c10;margin-bottom:16px}
 
+/* ── AREA BAR ── */
+.area-bar{display:flex;flex-wrap:wrap;gap:0;background:white;border:1px solid var(--border);border-radius:var(--rlg);overflow:hidden;margin-bottom:16px}
+.area-stat{flex:1;min-width:100px;padding:10px 14px;border-right:1px solid var(--border)}
+.area-stat:last-child{border-right:none}
+.as-label{display:block;font-size:9px;font-weight:600;color:var(--ink4);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px}
+.as-val{font-size:14px;font-weight:600;color:var(--ink)}
+.as-val small{font-size:11px;font-weight:400;color:var(--ink4)}
 
-.mode-btn{background:var(--bg3);border:2px solid var(--border2);color:var(--text2);border-radius:var(--r);padding:10px 8px;cursor:pointer;font-family:inherit;text-align:center;transition:all .2s;width:100%}
-.mode-btn:hover{border-color:var(--border);}
-.mode-btn.mode-active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);}
-.src-strip.rightmove-pm{background:var(--accent-bg);border-bottom:1px solid rgba(108,142,255,.25);color:var(--accent)}
-.src-strip.rightmove-live{background:var(--accent-bg);border-bottom:1px solid rgba(108,142,255,.25);color:var(--accent)}
-.src-strip.purplebricks{background:rgba(160,30,180,.08);border-bottom:1px solid rgba(160,30,180,.2);color:#c060d0}
-.src-strip.search-link{background:var(--teal-bg);border-bottom:1px solid rgba(45,212,191,.2);color:var(--teal)}
+/* ── INSIGHT ── */
+.insight-box{background:var(--sky-l);border:1px solid #c0d4f8;border-radius:var(--r);padding:12px 16px;font-size:13px;color:var(--sky);line-height:1.6;margin-bottom:20px}
 
+/* ── SECTION HEADERS ── */
+.section-header{margin-bottom:14px}
+.section-header h2{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:10px}
+.section-header.invest h2{color:var(--violet)}
+.count{font-size:12px;font-weight:500;color:var(--ink4);background:var(--paper);border:1px solid var(--border);border-radius:12px;padding:2px 10px}
+.section-header p{font-size:12px;color:var(--ink4);margin-top:4px}
 
+/* ── CARDS ── */
+.cards{display:flex;flex-direction:column;gap:14px;margin-bottom:28px}
+.card{background:white;border:1px solid var(--border);border-radius:var(--rlg);overflow:hidden;transition:box-shadow .2s,transform .15s}
+.card:hover{box-shadow:0 6px 24px rgba(14,14,24,.08);transform:translateY(-1px)}
+.card-top{border:2px solid var(--gold);box-shadow:0 2px 12px rgba(184,146,42,.15)}
+.card-invest{border-left:3px solid var(--violet)}
 
-.src-strip.land-registry{background:rgba(245,166,35,.07);border-bottom:1px solid rgba(245,166,35,.2);color:var(--amber)}
-.src-strip.onthemarket{background:rgba(0,140,70,.07);border-bottom:1px solid rgba(0,140,70,.2);color:#4caf7d}
-.src-strip.pu-purplebricks{background:rgba(160,30,180,.08);border-bottom:1px solid rgba(160,30,180,.2);color:#c060d0}
-.src-strip.pu-yopa{background:rgba(200,140,0,.07);border-bottom:1px solid rgba(200,140,0,.2);color:#b8800a}
+/* Ribbons */
+.ribbon{font-size:10px;font-weight:600;padding:5px 16px;letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.ribbon-top{background:linear-gradient(90deg,var(--gold-l),#fffff0);color:var(--gold);border-bottom:1px solid var(--gold-m)}
+.ribbon-invest-top{background:var(--violet-l);color:var(--violet);border-bottom:1px solid #c8bef0}
+.ribbon-invest-plain{background:var(--violet-l);color:var(--violet);border-bottom:1px solid #c8bef0;font-size:9px}
+
+.card-inner{padding:14px 18px}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.card-address{font-size:14px;font-weight:600;line-height:1.3;color:var(--ink)}
+.card-badges{display:flex;flex-wrap:wrap;gap:3px;flex-shrink:0}
+.badge{font-size:10px;padding:2px 8px;border-radius:12px;border:1px solid;white-space:nowrap;font-weight:500}
+.badge-green{border-color:#90d0a8;color:var(--jade);background:var(--jade-l)}
+.badge-amber{border-color:var(--gold-m);color:var(--gold);background:var(--gold-l)}
+.badge-red{border-color:#f0b0b8;color:var(--ruby);background:var(--ruby-l)}
+.badge-purple{border-color:#c0b0f0;color:var(--violet);background:var(--violet-l)}
+
+.card-price-row{display:flex;align-items:baseline;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+.card-price{font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:var(--ink)}
+.card-specs{display:flex;gap:10px;flex-wrap:wrap}
+.card-specs span{font-size:12px;color:var(--ink4)}
+
+.card-analysis{background:var(--paper);border-radius:var(--r);padding:10px 13px;border-left:3px solid var(--sky);font-size:12px;color:var(--ink3);line-height:1.7;margin-bottom:10px}
+.card-analysis.invest{border-left-color:var(--violet)}
+
+.card-features{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.feature{font-size:11px;padding:3px 8px;border-radius:12px;background:var(--paper);border:1px solid var(--border);color:var(--ink4)}
+.feature-good{background:var(--jade-l);border-color:#a0d8b0;color:var(--jade)}
+
+.card-desc{font-size:12px;color:var(--ink4);line-height:1.6;margin-bottom:10px}
+
+.card-actions{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.btn-primary{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;background:var(--ink);color:white;border:none;border-radius:var(--r);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .15s}
+.btn-primary:hover{background:var(--ink2)}
+.btn-secondary{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;background:white;color:var(--ink3);border:1px solid var(--border2);border-radius:var(--r);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:all .15s}
+.btn-secondary:hover{border-color:var(--sky);color:var(--sky)}
+
+.score-bar{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--ink4);margin-top:6px;padding-top:10px;border-top:1px solid var(--border)}
+.score-track{flex:1;height:4px;background:var(--paper);border-radius:2px;overflow:hidden}
+.score-fill{height:100%;border-radius:2px;transition:width .4s}
 </style>
 </head>
 <body>
+<div class="app">
 
+<!-- TOP BAR -->
 <div class="topbar">
   <div>
     <div class="logo">Find<em>My</em>NewHome</div>
-    <div class="logo-tag">UK · Live Listings · Free + API Modes</div>
+    <div class="logo-sub">Live UK Property Search</div>
   </div>
-  <div class="pills">
-    <div class="pill"><div class="dot x" id="d-claude"></div><span id="t-claude">Claude:no key</span></div>
-    <div class="pill"><div class="dot x" id="d-hd"></div><span id="t-hd">Homedata:no key</span></div>
-    <div class="pill"><div class="dot x" id="d-apify"></div><span id="t-apify">Apify:no key</span></div>
-    <div class="pill"><div class="dot g"></div><span>8 free APIs</span></div>
-    <div class="pill" style="color:var(--green)"><div class="dot g"></div><span id="pill-spent">$0.000 spent</span></div>
-  </div>
+  <div class="cost-pill">Session cost: <b id="cost-display">$0.0000</b></div>
 </div>
 
-<div class="app">
+<div class="body">
+
+<!-- SIDEBAR -->
 <div class="sidebar">
 
-<div id="free-log" style="font-size:11px;max-height:140px;overflow-y:auto;background:var(--bg4);border:1px solid var(--border);border-radius:var(--r);padding:6px 8px;line-height:1.8;margin-bottom:10px;display:none"></div>
-
-<!-- ══ MODE SELECTOR ═══════════════════════════════════════════ -->
-<div style="margin-bottom:12px">
-  <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:8px;text-transform:uppercase;letter-spacing:.8px">How do you want to search?</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-    <button id="mode-free" class="mode-btn mode-active" onclick="setListingMode('free')">
-      <div style="font-size:16px">🏴</div>
-      <div style="font-size:12px;font-weight:700;margin-top:3px">Free Mode</div>
-      <div style="font-size:10px;color:inherit;opacity:.8;margin-top:2px;line-height:1.3">No API keys needed. Scrapes Rightmove, Purplebricks, YOPA + Land Registry data.</div>
-    </button>
-    <button id="mode-keys" class="mode-btn" onclick="setListingMode('keys')">
-      <div style="font-size:16px">🔑</div>
-      <div style="font-size:12px;font-weight:700;margin-top:3px">API Keys</div>
-      <div style="font-size:10px;color:inherit;opacity:.8;margin-top:2px;line-height:1.3">Enter Homedata, Apify and/or Claude keys for live guaranteed listings + AI analysis.</div>
-    </button>
-  </div>
-</div>
-
-<!-- ══ FREE MODE SECTION ════════════════════════════════════════ -->
-<div id="section-free">
-  <div style="background:var(--purple-bg);border:1px solid rgba(180,126,255,.25);border-radius:var(--r);padding:9px 10px;margin-bottom:10px">
-    <div style="font-size:11px;color:var(--purple);font-weight:600;margin-bottom:4px">🏴 Free Pipeline</div>
-    <div style="font-size:10px;color:var(--text3);line-height:1.5">Tries Rightmove &amp; Purplebricks via CORS proxies — <b>often blocked</b> by estate agents. If blocked, shows direct Rightmove/Zoopla/OTM search links with your exact filters. For <b>guaranteed results</b>: use Apify (~£0.07/search) or run the Python script locally.</div>
-
-  </div>
-  <div style="background:var(--accent-bg);border:1px solid rgba(108,142,255,.2);border-radius:var(--r);padding:8px 10px;margin-bottom:10px;font-size:11px;color:var(--text2)">
-    <b style="color:var(--accent)">Free sources used:</b><br>
-    <span style="line-height:2">
-      
-      ✓ UK Police crime API<br>
-      ✓ ONS Deprivation Index<br>
-      ✓ Flood risk (Environment Agency)<br>
-      ✓ OpenStreetMap (schools, gyms, parks)<br>
-      ✓ Rightmove + Purplebricks via CORS proxy<br>
-      ✓ Direct search links (Rightmove/Zoopla/OTM)
-    </span>
-  </div>
-</div>
-
-<!-- ══ API KEYS SECTION ═════════════════════════════════════════ -->
-<div id="section-keys" style="display:none">
-  <div style="background:var(--green-bg);border:1px solid rgba(62,207,142,.2);border-radius:var(--r);padding:8px 10px;margin-bottom:10px;font-size:11px;color:var(--text2)">
-    <b style="color:var(--green)">Add at least one key for live listings:</b><br>
-    <span style="line-height:2;font-size:10px">
-      Homedata: live for-sale listings API, 100 free/month → homedata.co.uk<br>
-      Apify: live Rightmove scraper, ~$0.09/25 listings → apify.com<br>
-      Claude: AI analysis, ~$0.003/search → anthropic.com
-    </span>
-  </div>
-
-  <div class="cbox">
-    <div class="cbox-title"><span>🏠 Homedata <span style="font-size:9px;color:var(--text3)">100 free/month</span></span><span class="cbox-used" id="used-hd">0 used</span></div>
-    <div style="font-size:10px;color:var(--text3);margin-bottom:4px">Live for-sale listings via <code>/api/live-listings/search/</code>. Search by boundary, price, beds. <a href="https://homedata.co.uk" target="_blank" style="color:var(--teal)">homedata.co.uk</a> — 100 free calls/month.</div>
-    <label>API Key</label>
-    <div class="key-row"><input type="password" id="inp-hd" placeholder="QRryNTjX.your-secret" style="flex:1"><button onclick="toggleEye('inp-hd')" style="padding:0 8px;background:var(--bg4);border:1px solid var(--border2);border-radius:var(--r);cursor:pointer;font-size:14px" title="Show/hide key">👁</button><button class="btn-save" onclick="saveKey('hd')">Save Key</button></div>
-    <div id="status-hd" style="font-size:11px;min-height:14px;color:var(--text3);margin:4px 0 2px"></div>
-    <div style="display:flex;gap:4px;margin-bottom:4px"><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testHomedata()">Test Key</button><span style="font-size:10px;color:var(--text3);align-self:center">runs only when clicked</span></div>
-    <label>Call limit</label>
-    <div class="rrow"><input type="range" id="c-hd-cap" min="10" max="100" step="1" value="100" oninput="updateCosts()"><span class="rv" id="rv-hdcap">100 calls</span></div>
-    <div class="bar-wrap"><div class="bar g" id="bar-hd" style="width:100%"></div></div>
-    <div class="bar-detail" id="det-hd">100/100 remaining</div>
-  </div>
-
-  <div class="cbox">
-    <div class="cbox-title"><span>🕷 Apify/Rightmove <span style="font-size:9px;color:var(--text3)">$3.45/1000 props</span></span><span class="cbox-used" id="used-apify">$0.000 used</span></div>
-    <div style="font-size:10px;color:var(--text3);margin-bottom:4px">Get token at <a href="https://apify.com/account/integrations" target="_blank" style="color:var(--teal)">apify.com</a> → integrations</div>
-    <label>API Token</label>
-    <div class="key-row"><input type="password" id="inp-apify" placeholder="apify_api_..." style="flex:1"><button onclick="toggleEye('inp-apify')" style="padding:0 8px;background:var(--bg4);border:1px solid var(--border2);border-radius:var(--r);cursor:pointer;font-size:14px" title="Show/hide key">👁</button><button class="btn-save" onclick="saveKey('apify')">Save Key</button></div>
-    <div id="status-apify" style="font-size:11px;min-height:14px;color:var(--text3);margin:4px 0 2px"></div>
-    <div style="display:flex;gap:4px;margin-bottom:4px"><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testApify()">Test Key</button><span style="font-size:10px;color:var(--text3);align-self:center">runs only when clicked</span></div>
-    <label>Max results</label>
-    <div class="rrow"><input type="range" id="c-apify-max" min="5" max="100" step="5" value="25" oninput="updateCosts()"><span class="rv" id="rv-amax">25 props</span></div>
-    <label>Budget cap ($)</label>
-    <div class="rrow"><input type="range" id="c-apify-cap" min="0.50" max="5" step="0.50" value="5" oninput="updateCosts()"><span class="rv" id="rv-acap">$5.00</span></div>
-    <div class="bar-wrap"><div class="bar g" id="bar-apify" style="width:100%"></div></div>
-    <div class="bar-detail" id="det-apify">$5.00 remaining</div>
-  </div>
-
-  <div class="cbox">
-    <div class="cbox-title"><span>🤖 Claude AI <span style="font-size:9px;color:var(--text3)">~$0.003/search</span></span><span class="cbox-used" id="used-claude">$0.000 used</span></div>
-    <div style="font-size:10px;color:var(--text3);margin-bottom:4px">Get key at <a href="https://console.anthropic.com" target="_blank" style="color:var(--teal)">console.anthropic.com</a></div>
-    <label>API Key</label>
-    <div class="key-row"><input type="password" id="inp-claude" placeholder="sk-ant-..." style="flex:1"><button onclick="toggleEye('inp-claude')" style="padding:0 8px;background:var(--bg4);border:1px solid var(--border2);border-radius:var(--r);cursor:pointer;font-size:14px" title="Show/hide key">👁</button><button class="btn-save" onclick="saveKey('claude')">Save Key</button></div>
-    <div id="status-claude" style="font-size:11px;min-height:14px;color:var(--text3);margin:4px 0 2px"></div>
-    <div style="display:flex;gap:4px;margin-bottom:4px"><button class="btn-save" style="background:var(--bg4);color:var(--teal);border:1px solid var(--teal)" onclick="testClaude()">Test Key</button><span style="font-size:10px;color:var(--text3);align-self:center">runs only when clicked</span></div>
-    <label>Budget cap</label>
-    <div class="rrow"><input type="range" id="c-claude-cap" min="0.50" max="20" step="0.50" value="20" oninput="updateCosts()"><span class="rv" id="rv-ccap">$20.00</span></div>
-    <div class="bar-wrap"><div class="bar g" id="bar-claude" style="width:100%"></div></div>
-    <div class="bar-detail" id="det-claude">$20.00 remaining</div>
-  </div>
-</div>
-
-<!-- ══ ALWAYS VISIBLE SEARCH PARAMS ═════════════════════════════ -->
-<div class="s-head">Search Area</div>
-<label>Postcode / Area</label>
-<input type="text" id="postcode" value="M21" placeholder="M21, M20, Didsbury...">
-<label>Radius</label>
-<div class="rrow"><input type="range" id="radius" min="0.5" max="15" step="0.5" value="3" oninput="$('rv-r').textContent=this.value+'mi'"><span class="rv" id="rv-r">3mi</span></div>
-
-<div class="s-head">Budget</div>
-<label>Max Budget</label>
-<div class="rrow"><input type="range" id="budget" min="80000" max="600000" step="5000" value="300000" oninput="$('rv-b').textContent='£'+fmt(this.value);updateCosts()"><span class="rv" id="rv-b">£300,000</span></div>
-<label>Stretch Budget</label>
-<div class="rrow"><input type="range" id="stretch" min="80000" max="750000" step="5000" value="375000" oninput="$('rv-s').textContent='£'+fmt(this.value)"><span class="rv" id="rv-s">£375,000</span></div>
-
-<div class="s-head">Property Type</div>
-<div class="cg" id="type-grid">
-  <div class="ci on gr" onclick="tog(this)" data-v="detached">🏠 Detached</div>
-  <div class="ci on gr" onclick="tog(this)" data-v="semi-detached">🏘 Semi</div>
-  <div class="ci on gr" onclick="tog(this)" data-v="bungalow">🏡 Bungalow</div>
-  <div class="ci" onclick="tog(this)" data-v="terraced">🏚 Terraced</div>
-  <div class="ci" onclick="tog(this)" data-v="flat">🏢 Flat/Apt</div>
-</div>
-
-<div class="s-head">Must-Haves</div>
-<div class="cg" id="must-grid">
-  <div class="ci on" onclick="tog(this)" data-v="garden">🌳 Garden</div>
-  <div class="ci on" onclick="tog(this)" data-v="freehold">📜 Freehold</div>
-  <div class="ci on" onclick="tog(this)" data-v="no-chain">🔗 No Chain</div>
-  <div class="ci on" onclick="tog(this)" data-v="low-crime">🛡 Low Crime</div>
-  <div class="ci on" onclick="tog(this)" data-v="airport-link">✈️ Airport</div>
-  <div class="ci on" onclick="tog(this)" data-v="gym-pool">🏊 Gym/Pool</div>
-  <div class="ci" onclick="tog(this)" data-v="garage">🚗 Garage</div>
-  <div class="ci" onclick="tog(this)" data-v="good-schools">🏫 Schools</div>
-</div>
-
-<div class="s-head">Bedrooms</div>
-<select id="min-beds"><option value="2">2+</option><option value="3" selected>3+</option><option value="4">4+</option></select>
-
-<div class="s-head">Score Weights</div>
-<label>Safety</label>
-<div class="rrow"><input type="range" id="w-safety" min="0" max="10" value="9" oninput="$('rv-ws').textContent=this.value+'/10'"><span class="rv" id="rv-ws">9/10</span></div>
-<label>Investment</label>
-<div class="rrow"><input type="range" id="w-invest" min="0" max="10" value="8" oninput="$('rv-wi').textContent=this.value+'/10'"><span class="rv" id="rv-wi">8/10</span></div>
-<label>Transport</label>
-<div class="rrow"><input type="range" id="w-trans" min="0" max="10" value="7" oninput="$('rv-wt').textContent=this.value+'/10'"><span class="rv" id="rv-wt">7/10</span></div>
-<label>Build Quality</label>
-<div class="rrow"><input type="range" id="w-build" min="0" max="10" value="8" oninput="$('rv-wb').textContent=this.value+'/10'"><span class="rv" id="rv-wb">8/10</span></div>
-<label>Lifestyle</label>
-<div class="rrow"><input type="range" id="w-life" min="0" max="10" value="7" oninput="$('rv-wl').textContent=this.value+'/10'"><span class="rv" id="rv-wl">7/10</span></div>
-
-<button class="btn-go" id="btn-go" onclick="runSearch(true)">🔍 Find My Perfect Home</button>
-<div style="font-size:10px;color:var(--text3);text-align:center;margin-top:6px">Results cached 6h — changing mode or keys clears cache</div>
-</div>
-
-<div class="main"><div class="m-inner" id="mcontent">
-<div class="empty">
-  <div class="empty-ico">🏡</div>
-  <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text);margin-bottom:8px">Complete UK Property Intelligence</div>
-  <div style="font-size:13px;line-height:1.7;max-width:460px;margin:0 auto">
-    <b style="color:var(--teal)">New:</b> Homedata + Apify + Free Pipeline + 8 genuinely free APIs. No fake properties — if no API keys are set, you get clear instructions to get real data.
-  </div>
-  <div class="chips">
-    
-    <span class="chip" style="color:var(--green);border-color:var(--green)">✓ Postcodes.io FREE</span>
-    <span class="chip" style="color:var(--green);border-color:var(--green)">✓ UK Police FREE</span>
-    <span class="chip" style="color:var(--green);border-color:var(--green)">✓ Land Registry FREE</span>
-    <span class="chip" style="color:var(--green);border-color:var(--green)">✓ LR HPI FREE</span>
-    <span class="chip" style="color:var(--green);border-color:var(--green)">✓ OpenStreetMap FREE</span>
-    <span class="chip" style="color:var(--green);border-color:var(--green)">✓ Flood Risk (EA) FREE</span>
-    <span class="chip" style="color:var(--green);border-color:var(--green)">✓ ONS Deprivation FREE</span>
-    <span class="chip" style="color:var(--green);border-color:var(--green)">✓ Planning Data FREE</span>
-    <span class="chip" style="color:var(--purple);border-color:var(--purple)">🏠 Homedata 100 free</span>
-    <span class="chip" style="color:var(--amber);border-color:var(--amber)">🕷 Apify ~$0.09</span>
-    <span class="chip" style="color:var(--amber);border-color:var(--amber)">🤖 Claude ~$0.003</span>
-  </div>
-</div>
-</div></div>
-</div>
-
-<div class="overlay hidden" id="modal">
-  <div class="modal">
-    <div class="modal-h">
-      <div class="modal-t" id="modal-title">Property Details</div>
-      <button class="modal-x" onclick="closeModal()">✕</button>
+  <div class="sb-group">
+    <div class="sb-label">Search</div>
+    <label>Postcode</label>
+    <input type="text" id="postcode" value="M21 9WQ" placeholder="M21, M20, M21 9WQ…">
+    <label>Max Budget</label>
+    <div class="range-wrap">
+      <input type="range" id="budget" min="80000" max="600000" step="5000" value="300000"
+        oninput="$('rv-b').textContent='£'+fmt(+this.value)">
+      <span class="rv" id="rv-b">£300,000</span>
     </div>
-    <div id="modal-content"></div>
+    <label>Stretch Budget</label>
+    <div class="range-wrap">
+      <input type="range" id="stretch" min="80000" max="750000" step="5000" value="375000"
+        oninput="$('rv-s').textContent='£'+fmt(+this.value)">
+      <span class="rv" id="rv-s">£375,000</span>
+    </div>
+    <label>Min Bedrooms</label>
+    <select id="min-beds">
+      <option value="2">2+</option>
+      <option value="3" selected>3+</option>
+      <option value="4">4+</option>
+    </select>
   </div>
+
+  <div class="sb-group">
+    <div class="sb-label">Property Type</div>
+    <div class="chips" id="type-grid">
+      <div class="chip on" onclick="tog(this)" data-v="detached">🏠 Detached</div>
+      <div class="chip on" onclick="tog(this)" data-v="semi-detached">🏘 Semi</div>
+      <div class="chip on" onclick="tog(this)" data-v="bungalow">🏡 Bungalow</div>
+      <div class="chip" onclick="tog(this)" data-v="terraced">🏚 Terraced</div>
+    </div>
+    <label class="invest-toggle">
+      <input type="checkbox" id="want-invest" checked>
+      Also find investment flats (buy-to-let)
+    </label>
+  </div>
+
+  <div class="sb-group">
+    <div class="sb-label">Claude API Key</div>
+    <div style="font-size:11px;color:var(--ink4);line-height:1.5;margin-bottom:8px">
+      Claude uses real-time web search to find actual for-sale listings on Rightmove and Zoopla.
+    </div>
+    <div class="key-wrap">
+      <input type="password" id="key-input" placeholder="sk-ant-api03-…">
+      <button class="btn-icon" onclick="toggleEye()">👁</button>
+      <button class="btn-save" onclick="saveKey()">Save</button>
+    </div>
+    <div class="key-status" id="key-status"></div>
+    <div class="api-note">
+      Get a key at <a href="https://console.anthropic.com" target="_blank" style="color:var(--sky)">console.anthropic.com</a><br>
+      Cost: ~$0.03–0.10 per search<br>
+      Keys stored in session only (not saved to disk)
+    </div>
+  </div>
+
+  <div class="sb-group">
+    <button class="btn-go" id="btn-search" onclick="runSearch()" disabled>
+      <span>🔍</span> Find My Perfect Home
+    </button>
+  </div>
+
+</div>
+
+<!-- MAIN -->
+<div class="main">
+<div class="main-inner">
+<div id="results">
+  <div class="empty">
+    <div class="empty-icon">🏡</div>
+    <div class="empty-h">Find your perfect home</div>
+    <div class="empty-p">
+      Enter your postcode, set your budget and bedrooms,
+      save your Claude API key, then click <strong>Find My Perfect Home</strong>.<br><br>
+      Claude searches Rightmove and Zoopla right now and returns
+      real current listings with analysis tailored to your criteria.
+    </div>
+    <div class="empty-list">
+      <span class="etag g">✓ Real live listings</span>
+      <span class="etag g">✓ Investment flat analysis</span>
+      <span class="etag g">✓ Crime, flood &amp; deprivation data</span>
+      <span class="etag g">✓ Land Registry sold prices</span>
+      <span class="etag b">Requires Claude API key</span>
+      <span class="etag a">~$0.03–0.10 per search</span>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+</div>
 </div>
 
 <script>
-function toggleEye(id){const el=$(id);if(el)el.type=el.type==='password'?'text':'password';}
+'use strict';
 
-const S={
-  claudeKey:'',homedataKey:'',apifyKey:'',
-  claudeCap:20,claudeSpent:0,
-  homedataCap:100,homedataUsed:0,
-  apifyCap:5,apifySpent:0,apifyMax:25,
-  listingMode:'free',
-  cache:{},results:[],area:null,ai:null
-};
-const CACHE_TTL=6*60*60*1000;
-const $=id=>document.getElementById(id);
-const fmt=n=>Number(n).toLocaleString();
-const sC=n=>n>=8?'sg':n>=6?'sa':'sr';
-const bC=n=>n>=8?'bg-g':n>=6?'bg-a':'bg-r';
-function tog(el){el.classList.toggle('on');updateCosts();}
-function getOn(id){return[...($(id)||{querySelectorAll:()=>[]}).querySelectorAll('.ci.on')].map(e=>e.dataset.v);}
-function cacheKey(pc,budget,types){return pc.toUpperCase()+'_'+Math.round(budget/50000)*50000+'_'+types.sort().join(',');}
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let CLAUDE_KEY = '';
+let TOTAL_COST = 0;
 
-// ─── UI LOG ──────────────────────────────────────────────────────────────────
-function uiLog(msg,col='text2'){
-  const fle=$('search-log');
-  if(!fle)return;
-  const d=document.createElement('div');
-  d.style.color='var(--'+col+')';d.textContent=msg;
-  fle.appendChild(d);fle.scrollTop=9999;
-  fle.style.display='block';
-}
-function uiLogClear(){
-  const fle=$('search-log');
-  if(fle){fle.innerHTML='';fle.style.display='none';}
+const $ = id => document.getElementById(id);
+const fmt = n => Number(n).toLocaleString('en-GB');
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+// ── KEY PERSISTENCE ───────────────────────────────────────────────────────────
+function saveKey() {
+  const v = $('key-input').value.trim();
+  if (v.length < 20) { showKeyStatus('Too short — check your key', 'err'); return; }
+  CLAUDE_KEY = v;
+  try { sessionStorage.setItem('fmnh_k', JSON.stringify({ v, e: Date.now() + 8*3600000 })); } catch(e) {}
+  showKeyStatus('✓ Key saved', 'ok');
+  $('btn-search').disabled = false;
 }
 
-// ─── CREDIT TRACKING ─────────────────────────────────────────────────────────
-function updateCosts(){
-  const cc=parseFloat($('c-claude-cap')?.value)||20;S.claudeCap=cc;
-  if($('rv-ccap'))$('rv-ccap').textContent='$'+cc.toFixed(2);
-  const cpct=Math.max(0,(cc-S.claudeSpent)/cc*100);
-  if($('bar-claude')){$('bar-claude').style.width=cpct+'%';$('bar-claude').className='bar '+(cpct>50?'g':cpct>20?'a':'r');}
-  if($('det-claude'))$('det-claude').textContent='$'+(cc-S.claudeSpent).toFixed(3)+' left';
-  if($('used-claude'))$('used-claude').textContent='$'+S.claudeSpent.toFixed(3)+' used';
-  const hc=parseInt($('c-hd-cap')?.value)||100;S.homedataCap=hc;
-  if($('rv-hdcap'))$('rv-hdcap').textContent=hc+' calls';
-  const hpct=Math.max(0,(hc-S.homedataUsed)/hc*100);
-  if($('bar-hd')){$('bar-hd').style.width=hpct+'%';$('bar-hd').className='bar '+(hpct>50?'g':hpct>20?'a':'r');}
-  if($('det-hd'))$('det-hd').textContent=(hc-S.homedataUsed)+'/'+hc;
-  if($('used-hd'))$('used-hd').textContent=S.homedataUsed+' used';
-  const ac=parseFloat($('c-apify-cap')?.value)||5;const am=parseInt($('c-apify-max')?.value)||25;
-  S.apifyCap=ac;S.apifyMax=am;
-  if($('rv-acap'))$('rv-acap').textContent='$'+ac.toFixed(2);
-  if($('rv-amax'))$('rv-amax').textContent=am+' props';
-  const apct=Math.max(0,(ac-S.apifySpent)/ac*100);
-  if($('bar-apify')){$('bar-apify').style.width=apct+'%';$('bar-apify').className='bar '+(apct>50?'g':apct>20?'a':'r');}
-  if($('det-apify'))$('det-apify').textContent='$'+(ac-S.apifySpent).toFixed(2)+' left';
-  if($('used-apify'))$('used-apify').textContent='$'+S.apifySpent.toFixed(3)+' used';
-  const tot=S.claudeSpent+S.apifySpent;
-  if($('pill-spent'))$('pill-spent').textContent='$'+tot.toFixed(3)+' spent';
-}
-function spend(t,a){if(t==='claude')S.claudeSpent+=a;else if(t==='apify')S.apifySpent+=a;else if(t==='hd')S.homedataUsed+=a;updateCosts();}
-function setDot(id,cls){const d=$(id);if(d)d.className='dot '+cls;}
-
-// ─── FREE APIs ────────────────────────────────────────────────────────────────
-async function freePostcode(pc){
-  const c=pc.replace(/\s+/g,'').toUpperCase();
-  let r=await fetch('https://api.postcodes.io/postcodes/'+c);
-  let d=await r.json();
-  if(d.status===200)return d.result;
-  // Try autocomplete for partial postcodes
-  const r2=await fetch('https://api.postcodes.io/postcodes/'+c+'/autocomplete');
-  const d2=await r2.json();
-  if(d2.result&&d2.result.length){
-    const r3=await fetch('https://api.postcodes.io/postcodes/'+d2.result[0]);
-    const d3=await r3.json();
-    return d3.result;
-  }
-  throw new Error('Postcode not found: '+pc+' — try a full UK postcode like M3 4BH');
-}
-
-async function freeCrime(lat,lng){try{const[r1,r2]=await Promise.allSettled([fetch('https://data.police.uk/api/crimes-street/all-crime?lat='+lat+'&lng='+lng+'&date=2024-09').then(r=>r.json()),fetch('https://data.police.uk/api/stops-street?lat='+lat+'&lng='+lng+'&date=2024-09').then(r=>r.json())]);const crimes=r1.status==='fulfilled'&&Array.isArray(r1.value)?r1.value:[];const stops=r2.status==='fulfilled'&&Array.isArray(r2.value)?r2.value:[];const bk={};crimes.forEach(c=>{const cat=c.category.replace(/-/g,' ');bk[cat]=(bk[cat]||0)+1;});const total=crimes.length;const score=total>200?2:total>120?5:total>60?7:total>30?8:9;return{total,breakdown:bk,score,stops:stops.length};}catch(e){return{total:0,breakdown:{},score:7,stops:0};}}
-async function freePriceHistory(pc){try{const area=pc.split(' ')[0].replace(/\s/g,'').toUpperCase();const sparql='SELECT ?paon ?street ?date ?amount ?ptype WHERE{?t <http://landregistry.data.gov.uk/def/ppi/propertyAddress> ?addr.?addr <http://landregistry.data.gov.uk/def/common/postcode> "'+area+'"^^<http://www.w3.org/2001/XMLSchema#string>.?t <http://landregistry.data.gov.uk/def/ppi/pricePaid> ?amount.?t <http://landregistry.data.gov.uk/def/ppi/transactionDate> ?date.OPTIONAL{?t <http://landregistry.data.gov.uk/def/ppi/propertyType> ?ptype}}ORDER BY DESC(?date)LIMIT 60';const r=await fetch('https://landregistry.data.gov.uk/landregistry/query?query='+encodeURIComponent(sparql)+'&output=json');const d=await r.json();const rows=d.results?.bindings||[];const prices=rows.map(x=>parseInt(x.amount?.value||0)).filter(p=>p>0);const avg=prices.length?Math.round(prices.reduce((a,b)=>a+b,0)/prices.length):0;const trend=prices.length>9?Math.round((prices.slice(0,5).reduce((a,b)=>a+b,0)/5-prices.slice(-5).reduce((a,b)=>a+b,0)/5)/(prices.slice(-5).reduce((a,b)=>a+b,0)/5)*100):0;const recent=rows.slice(0,8).map(r=>({addr:[r.paon?.value,r.street?.value].filter(Boolean).join(' '),date:r.date?.value?.slice(0,10),price:parseInt(r.amount?.value||0),type:r.ptype?.value?.split('/').pop()||''}));return{count:rows.length,avgPrice:avg,prices,trend,recent};}catch(e){return{count:0,avgPrice:0,prices:[],trend:0,recent:[]};}}
-async function freeHPI(){try{const loc=encodeURIComponent('http://landregistry.data.gov.uk/id/region/greater-manchester');const r=await fetch('https://landregistry.data.gov.uk/app/ukhpi/api/data.json?from=2023-01-01&to=2024-12-01&location='+loc);const d=await r.json();if(!d||!d.data)return null;const entries=Object.values(d.data).flat().filter(e=>e.averagePrice);if(!entries.length)return null;const latest=entries[entries.length-1];const oldest=entries[0];const yearGrowth=oldest.averagePrice?Math.round((latest.averagePrice-oldest.averagePrice)/oldest.averagePrice*100):0;return{avgPrice:latest.averagePrice,yearGrowth,date:latest.date||'2024'};}catch(e){return null;}}
-async function freeNearby(lat,lng){try{const d=0.045;const bbox=(lat-d)+','+(lng-d)+','+(lat+d)+','+(lng+d);const qs={gyms:'[out:json][timeout:15];(node["leisure"="sports_centre"]('+bbox+');node["amenity"="swimming_pool"]('+bbox+');way["leisure"="sports_centre"]('+bbox+'););out center 8;',shops:'[out:json][timeout:15];(node["shop"="supermarket"]('+bbox+');node["shop"="convenience"]["brand"]('+bbox+'););out center 8;',schools:'[out:json][timeout:10];(node["amenity"="school"]('+bbox+');node["amenity"="college"]('+bbox+'););out center 6;',parks:'[out:json][timeout:10];(way["leisure"="park"]('+bbox+'););out center 5;',transport:'[out:json][timeout:10];(node["railway"="tram_stop"]('+bbox+');node["railway"="station"]('+bbox+');node["highway"="bus_stop"]["name"]('+bbox+'););out center 12;',hospitals:'[out:json][timeout:8];(node["amenity"="hospital"]('+bbox+');node["amenity"="doctors"]('+bbox+'););out center 5;'};const results={};await Promise.allSettled(Object.entries(qs).map(async([key,q])=>{try{const r=await fetch('https://overpass-api.de/api/interpreter?data='+encodeURIComponent(q));const data=await r.json();results[key]=(data.elements||[]).slice(0,10);}catch(e){results[key]=[];}}));return results;}catch(e){return{gyms:[],shops:[],schools:[],parks:[],transport:[],hospitals:[]};}}
-async function freeFloodRisk(lat,lng){try{const r=await fetch('https://environment.data.gov.uk/flood-monitoring/id/floodAreas?lat='+lat+'&long='+lng+'&dist=1');const d=await r.json();const items=d.items||[];return{zones:items.length,highRisk:items.some(i=>i.description?.toLowerCase().includes('high')||i.riverOrSea),areas:items.slice(0,3).map(i=>i.description||i.label||'Flood zone')};}catch(e){return{zones:0,highRisk:false,areas:[]};}}
-async function freePlanningRisk(lat,lng){try{const r=await fetch('https://www.planning.data.gov.uk/entity.json?geometry_reference='+lat+','+lng+'&dataset=conservation-area,listed-building,tree-preservation-zone&limit=10');const d=await r.json();return{count:d.count||0,areas:(d.entities||[]).slice(0,4).map(e=>e.name||e.dataset||'Planning area')};}catch(e){return{count:0,areas:[]};}}
-async function freeDeprivation(lat,lng){try{const r=await fetch('https://services3.arcgis.com/ivmBBrHfQfDnDf8Q/arcgis/rest/services/Indices_of_Multiple_Deprivation_(IMD)_2019/FeatureServer/0/query?geometry='+lng+'%2C'+lat+'&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&outFields=IMDDecil%2CLSOAcode11%2CIMD2019&f=json&returnGeometry=false');const d=await r.json();const feat=d.features?.[0]?.attributes;if(!feat)return null;return{decile:feat.IMDDecil,score:feat.IMD2019,label:feat.IMDDecil<=2?'Very deprived':feat.IMDDecil<=4?'Deprived':feat.IMDDecil<=6?'Average':feat.IMDDecil<=8?'Affluent':'Very affluent'};}catch(e){return null;}}
-
-
-// ─── HOMEDATA ─────────────────────────────────────────────────────────────────
-// Uses postcodes.io geo data to find the RIGHT boundary, not postcode text search
-async function homedataListings(postcode, budget, geo){
-  if(!S.homedataKey||S.homedataUsed>=S.homedataCap){
-    uiLog('[HD] skip — no key or cap reached','text3');
-    return [];
-  }
-  uiLog('[HD] Starting Homedata search…','teal');
-  const minBeds=parseInt($('min-beds')?.value)||3;
-
-  // Try direct fetch first, then CORS proxy fallback
-  async function hdFetch(url, auth){
-    const hdrs={'Accept':'application/json'};
-    if(auth) hdrs['Authorization']='Api-Key '+S.homedataKey;
-    // Direct
-    try{
-      const r=await fetch(url,{mode:'cors',headers:hdrs,signal:AbortSignal.timeout(12000)});
-      if(r.status!==0) return r;
-    }catch(e){uiLog('[HD] direct blocked, trying proxy…','text3');}
-    // CORS proxy (forwards headers)
-    try{
-      const r2=await fetch('https://corsproxy.io/?'+encodeURIComponent(url),{mode:'cors',headers:hdrs,signal:AbortSignal.timeout(15000)});
-      return r2;
-    }catch(e){return null;}
-  }
-
-  // Step 1: Find boundary using ward/district names from geo (postcodes.io data)
-  // This is more reliable than searching by postcode text
-  let boundary=null;
-  const searchTerms=[];
-  if(geo){
-    // Use actual admin names from postcodes.io - most precise
-    if(geo.admin_ward) searchTerms.push(geo.admin_ward);
-    if(geo.admin_district) searchTerms.push(geo.admin_district);
-    if(geo.parliamentary_constituency) searchTerms.push(geo.parliamentary_constituency);
-  }
-  // Also try outcode e.g. "M3" from postcode
-  const outcode=postcode.trim().toUpperCase().split(' ')[0];
-  searchTerms.push(outcode);
-
-  for(const term of searchTerms){
-    if(boundary) break;
-    uiLog('[HD] Boundary search: "'+term+'"','teal');
-    const br=await hdFetch('https://api.homedata.co.uk/api/boundaries/autocomplete/?q='+encodeURIComponent(term), true);
-    if(!br){uiLog('[HD] Boundaries unreachable (CORS/network)','text3');continue;}
-    if(!br.ok){uiLog('[HD] Boundaries HTTP '+br.status,'red');continue;}
-    let bd;
-    try{bd=await br.json();}catch(e){uiLog('[HD] Boundaries non-JSON','red');continue;}
-    const results=(bd.results||[]);
-    uiLog('[HD] '+results.length+' boundaries: '+results.slice(0,3).map(b=>b.name+'('+b.id+')').join(', '),'teal');
-    if(results.length) boundary=results[0];
-  }
-
-  if(!boundary){
-    uiLog('[HD] No boundary found. Check your Homedata plan includes live-listings.','red');
-    return [];
-  }
-  uiLog('[HD] Using: '+boundary.name+' (id:'+boundary.id+')','teal');
-
-  // Step 2: Live listings — NO bedrooms filter (it's exact match not min, filter client-side)
-  const params=new URLSearchParams({
-    boundary_id:boundary.id,
-    transaction_type:'Sale',
-    max_price:budget,
-    sort:'-added_date',
-    page_size:50,
-  });
-
-  const listUrl='https://api.homedata.co.uk/api/live-listings/search/?'+params.toString();
-  uiLog('[HD] Fetching listings…','teal');
-  const r=await hdFetch(listUrl, true);
-
-  if(!r){uiLog('[HD] live-listings unreachable — CORS or network issue','red');return [];}
-  const rem=r.headers?.get?.('X-RateLimit-Remaining')||'?';
-  uiLog('[HD] HTTP '+r.status+' | '+rem+' calls left','teal');
-
-  if(r.status===401){uiLog('[HD] 401 — wrong key format. Must be: QRryNTjX.your-secret','red');return [];}
-  if(r.status===403){uiLog('[HD] 403 — key may not have live-listings access. Check homedata.co.uk/account','red');return [];}
-  if(!r.ok){let t='';try{t=await r.text();}catch(e){}uiLog('[HD] HTTP '+r.status+': '+t.slice(0,80),'red');return [];}
-
-  let d;try{d=await r.json();}catch(e){uiLog('[HD] Non-JSON response','red');return [];}
-  spend('hd',1);
-  const all=d.results||[];
-  uiLog('[HD] API total: '+d.count+' | page returned: '+all.length,'teal');
-
-  // Filter client-side for minBeds (API bedrooms param is exact not min)
-  const filtered=all.filter(p=>(p.bedrooms||0)>=minBeds);
-  uiLog('[HD] After '+minBeds+'+ beds filter: '+filtered.length,'teal');
-
-  if(!filtered.length){
-    uiLog('[HD] 0 results after filtering. API returned '+all.length+' total (all beds) in '+boundary.name+'.','amber');
-    uiLog('[HD] Try: lower min-beds, raise budget, or different area','amber');
-    return [];
-  }
-
-  return filtered.map(p=>{
-    const price=p.latest_price||0;
-    const addr=p.display_address||postcode;
-    const pcm=addr.match(/[A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2}/i);
-    const pcs=pcm?pcm[0].replace(/\s/,'').toLowerCase():'';
-    const status=p.latest_status||'For Sale';
-    const portal=p.source||'Portal';
-    return {
-      id:'hd-'+(p.listing_id||p.property_uprn||Math.random().toString(36).slice(2,10)),
-      address:addr,price,
-      type:(p.listing_property_type||'unknown').toLowerCase(),
-      beds:p.bedrooms||0,baths:p.bathrooms||0,
-      sqft:null,epc:null,tenure:null,
-      chainFree:/chain.free|no chain/i.test(status),
-      chain:/sold.stc|under.offer/i.test(status),
-      garden:false,garage:false,parking:false,newBuild:false,
-      description:status+' · Added '+(p.added_date||'').slice(0,10)+' · via '+portal+' · '+boundary.name,
-      features:[status,portal,(p.added_date||'').slice(0,10)?'Added '+(p.added_date||'').slice(0,10):''].filter(Boolean),
-      url:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+encodeURIComponent(outcode)+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget,
-      rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+encodeURIComponent(outcode)+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget,
-      zooplaUrl:pcs?'https://www.zoopla.co.uk/for-sale/property/'+pcs+'/?q='+pcs+'&results_sort=newest_listings':'https://www.zoopla.co.uk/for-sale/',
-      agent:{name:'Homedata · '+portal,phone:'',branch:boundary.name},
-      addedDate:(p.added_date||'').slice(0,10)||'Recent',
-      reduced:/reduc/i.test(status),source:'homedata',
-      floorArea:null,uprn:p.property_uprn||null,lat:null,lng:null,
-    };
-  }).filter(p=>p.price>0&&p.price<=budget);
-}
-
-// ─── APIFY ────────────────────────────────────────────────────────────────────
-async function apifyListings(location,budget,geo){
-  if(!S.apifyKey||S.apifySpent>=S.apifyCap){uiLog('[Apify] skip — no key','text3');return [];}
-  const minBeds=parseInt($('min-beds')?.value)||3;
-  let max=S.apifyMax;
-  if(S.apifySpent+(max*3.45/1000+0.005)>S.apifyCap) max=Math.max(5,Math.floor((S.apifyCap-S.apifySpent-0.005)/(3.45/1000)));
-  uiLog('[Apify] Starting — location: '+location,'teal');
-  try{
-    const run=await fetch('https://api.apify.com/v2/acts/automation-lab~rightmove-scraper/runs?token='+S.apifyKey,{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({searchLocation:location,channel:'BUY',maxResults:max,radius:'1.0',sortType:'Newest',includeSSTC:false,maxPrice:budget,minBeds})
-    });
-    const rd=await run.json();
-    if(rd.error) throw new Error('Apify: '+rd.error.message);
-    if(!rd.data?.id) throw new Error('Apify run failed to start');
-    const runId=rd.data.id,dsId=rd.data.defaultDatasetId;
-    uiLog('[Apify] Run started: '+runId,'teal');
-    let status='RUNNING',attempts=0;
-    while(status==='RUNNING'&&attempts<35){
-      await new Promise(r=>setTimeout(r,3000));
-      const sr=await fetch('https://api.apify.com/v2/actor-runs/'+runId+'?token='+S.apifyKey);
-      const sd=await sr.json();
-      status=sd.data?.status||'FAILED';
-      attempts++;
-      if(attempts%5===0) uiLog('[Apify] Still running… ('+attempts*3+'s)','text3');
+function loadKey() {
+  try {
+    const r = sessionStorage.getItem('fmnh_k');
+    if (!r) return;
+    const o = JSON.parse(r);
+    if (o.e > Date.now() && o.v) {
+      CLAUDE_KEY = o.v;
+      $('key-input').value = o.v;
+      showKeyStatus('✓ Key loaded from session', 'ok');
+      $('btn-search').disabled = false;
     }
-    if(status!=='SUCCEEDED') throw new Error('Apify '+status+' after '+attempts*3+'s');
-    const ir=await fetch('https://api.apify.com/v2/datasets/'+dsId+'/items?token='+S.apifyKey+'&limit='+max);
-    const items=await ir.json();
-    const cost=((Array.isArray(items)?items.length:0)*3.45/1000)+0.005;
-    spend('apify',cost);
-    uiLog('[Apify] Got '+( Array.isArray(items)?items.length:0)+' listings','teal');
-    return (Array.isArray(items)?items:[]).map(p=>{
-      const propId=p.id||p.propertyId||'';
-      const features=p.keyFeatures||p.features||[];
-      const fullText=(features.join(' ')+(p.summary||p.description||'')).toLowerCase();
-      const priceVal=typeof p.price==='object'?(p.price?.amount||0):(p.price||0);
-      const pcMatch=(p.displayAddress||'').match(/[A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2}/i);
-      const propPc=pcMatch?pcMatch[0].replace(/\s+/g,''):'';
-      return{
-        id:propId,address:p.displayAddress||'Address unavailable',price:priceVal,
-        type:(p.propertySubType||p.propertyType||'unknown').toLowerCase(),
-        beds:p.bedrooms||0,baths:p.bathrooms||0,sqft:p.floorAreaSqFt||null,
-        epc:p.epcRating||null,
-        tenure:p.tenure?.tenureType||(typeof p.tenure==='string'?p.tenure:null)||(/freehold/i.test(fullText)?'Freehold':/leasehold/i.test(fullText)?'Leasehold':null),
-        chainFree:p.isChainFree===true||/chain.free|no chain/i.test(fullText),
-        chain:p.isChainFree===false,
-        garden:/garden/i.test(fullText),garage:/garage/i.test(fullText),
-        parking:/parking/i.test(fullText),newBuild:p.newHome===true||/new build/i.test(fullText),
-        description:(p.summary||p.description||'').slice(0,600),features:features.slice(0,8),
-        url:propId?'https://www.rightmove.co.uk/properties/'+propId+'#/':'https://www.rightmove.co.uk',
-        rightmoveUrl:propId?'https://www.rightmove.co.uk/properties/'+propId+'#/':'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+(propPc||location.replace(/ /g,'+'))+'&useLocationIdentifier=false&sortType=6&includeSSTC=false',
-        zooplaUrl:propPc?'https://www.zoopla.co.uk/for-sale/property/'+propPc.toLowerCase()+'/?q='+propPc.toLowerCase()+'&results_sort=newest_listings':'https://www.zoopla.co.uk/for-sale/',
-        agent:{name:p.customer?.brandTradingName||'Estate Agent',phone:p.customer?.contactTelephone||'',branch:p.customer?.branchDisplayName||''},
-        addedDate:p.addedOrReduced||'Recent',reduced:/reduc|price.drop/i.test(p.addedOrReduced||''),
-        source:'apify',floorArea:p.floorAreaSqM||null,
-      };
-    }).filter(p=>p.price>0);
-  }catch(e){
-    uiLog('[Apify] Error: '+e.message.slice(0,80),'red');
-    return [];
+  } catch(e) {}
+}
+
+function showKeyStatus(msg, type) {
+  const el = $('key-status');
+  el.textContent = msg;
+  el.className = 'key-status ' + type;
+}
+
+function toggleEye() {
+  const el = $('key-input');
+  el.type = el.type === 'password' ? 'text' : 'password';
+}
+
+// ── FREE AREA APIs ────────────────────────────────────────────────────────────
+async function geocode(pc) {
+  const c = pc.replace(/\s+/g,'').toUpperCase();
+  let r = await fetch('https://api.postcodes.io/postcodes/' + c);
+  let d = await r.json();
+  if (d.status === 200) return d.result;
+  const r2 = await fetch('https://api.postcodes.io/postcodes/' + c + '/autocomplete');
+  const d2 = await r2.json();
+  if (d2.result?.length) {
+    const r3 = await fetch('https://api.postcodes.io/postcodes/' + d2.result[0]);
+    return (await r3.json()).result;
   }
+  throw new Error('Postcode not found: ' + pc);
 }
 
-
-// ─── FREE PIPELINE + SEARCH CARDS ────────────────────────────────────────────
-const _PROXIES=[
-  u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
-  u=>'https://corsproxy.io/?'+encodeURIComponent(u),
-  u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u),
-];
-
-async function _proxyFetch(url,ms=15000){
-  for(const mk of _PROXIES){
-    try{
-      const ctrl=new AbortController();
-      const t=setTimeout(()=>ctrl.abort(),ms);
-      const r=await fetch(mk(url),{signal:ctrl.signal,headers:{'Accept':'text/html,*/*'}});
-      clearTimeout(t);
-      if(!r.ok)continue;
-      const txt=await r.text();
-      if(!txt||txt.length<500||/Host not in allowlist|Access denied/i.test(txt.slice(0,200)))continue;
-      return txt;
-    }catch(e){continue;}
-  }
-  return null;
+async function getCrime(lat, lng) {
+  try {
+    const r = await fetch(`https://data.police.uk/api/crimes-street/all-crime?lat=${lat}&lng=${lng}&date=2024-09`);
+    const data = await r.json();
+    if (!Array.isArray(data)) return { total:0, breakdown:{}, score:7 };
+    const bk = {};
+    data.forEach(c => { const k = c.category.replace(/-/g,' '); bk[k] = (bk[k]||0)+1; });
+    const total = data.length;
+    const score = total>200?2 : total>120?4 : total>60?6 : total>30?8 : 9;
+    return { total, breakdown: bk, score };
+  } catch(e) { return { total:0, breakdown:{}, score:7 }; }
 }
 
-function _extractPageModel(html){
-  const pats=[/window\.PAGE_MODEL\s*=\s*(\{[\s\S]*?\});\s*\n/,/window\.jsonModel\s*=\s*(\{[\s\S]*?\});\s*\n/];
-  for(const p of pats){const m=html.match(p);if(m){try{return JSON.parse(m[1]);}catch(e){}}}
-  return null;
+async function getSoldPrices(pc) {
+  try {
+    const area = pc.split(' ')[0].toUpperCase();
+    const q = `SELECT ?date ?amount WHERE{?t <http://landregistry.data.gov.uk/def/ppi/propertyAddress> ?a.?a <http://landregistry.data.gov.uk/def/common/postcode> "${area}"^^<http://www.w3.org/2001/XMLSchema#string>.?t <http://landregistry.data.gov.uk/def/ppi/pricePaid> ?amount.?t <http://landregistry.data.gov.uk/def/ppi/transactionDate> ?date}ORDER BY DESC(?date)LIMIT 60`;
+    const r = await fetch('https://landregistry.data.gov.uk/landregistry/query?query='+encodeURIComponent(q)+'&output=json');
+    const d = await r.json();
+    const prices = (d.results?.bindings||[]).map(x=>parseInt(x.amount?.value||0)).filter(p=>p>0);
+    const avg = prices.length ? Math.round(prices.reduce((a,b)=>a+b,0)/prices.length) : 0;
+    return { count: prices.length, avg, min: prices.length?Math.min(...prices):0, max: prices.length?Math.max(...prices):0 };
+  } catch(e) { return { count:0, avg:0, min:0, max:0 }; }
 }
 
-function _normRM(p,budget){
-  const price=typeof p.price==='object'?(p.price?.amount||0):parseInt((p.price+'').replace(/[^0-9]/g,''))||0;
-  if(!price||price>budget)return null;
-  const id=p.id||p.propertyId||'';
-  const addr=p.displayAddress||p.address?.displayAddress||'';
-  const txt=(p.keyFeatures||[]).join(' ')+(p.summary||'');
-  const pc=addr.match(/[A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2}/i);
-  const pcs=pc?pc[0].replace(/\s/,'').toLowerCase():'';
-  return{
-    id:'rm-'+id,address:addr||'Rightmove listing',price,
-    type:(p.propertyType||p.propertySubType||'property').toLowerCase(),
-    beds:p.bedrooms||p.bedroomCount||0,baths:p.bathrooms||0,
-    sqft:p.floorAreaSqFt||null,epc:p.epcRating||null,tenure:p.tenure?.tenureType||null,
-    chainFree:p.isChainFree===true||/no chain/i.test(txt),chain:p.isChainFree===false,
-    garden:/garden/i.test(txt),garage:/garage/i.test(txt),parking:/parking/i.test(txt),newBuild:p.newHome===true,
-    description:(p.summary||'').slice(0,500),features:(p.keyFeatures||[]).slice(0,6),
-    url:id?'https://www.rightmove.co.uk/properties/'+id+'#/':'https://www.rightmove.co.uk',
-    rightmoveUrl:id?'https://www.rightmove.co.uk/properties/'+id+'#/':'https://www.rightmove.co.uk',
-    zooplaUrl:pcs?'https://www.zoopla.co.uk/for-sale/property/'+pcs+'/?q='+pcs+'&results_sort=newest_listings':'https://www.zoopla.co.uk/for-sale/',
-    agent:{name:p.customer?.brandTradingName||'Estate Agent',phone:p.customer?.contactTelephone||'',branch:p.customer?.branchDisplayName||''},
-    addedDate:p.addedOrReduced||'Recent',reduced:/reduc/i.test(p.addedOrReduced||''),
-    source:'rightmove-live',floorArea:p.floorAreaSqM||null,
-    lat:p.location?.latitude||null,lng:p.location?.longitude||null,
-  };
+async function getFlood(lat, lng) {
+  try {
+    const r = await fetch(`https://environment.data.gov.uk/flood-monitoring/id/floodAreas?lat=${lat}&long=${lng}&dist=1`);
+    const d = await r.json();
+    const items = d.items||[];
+    return { zones: items.length, high: items.some(i=>i.riverOrSea||/high/i.test(i.description||'')) };
+  } catch(e) { return { zones:0, high:false }; }
 }
 
-// Make direct Rightmove/Zoopla/OTM search link cards — always useful
-function makeSearchCards(location,budget,minBeds,pc){
-  const locEnc=encodeURIComponent(location);
-  const pcSlug=(pc.split(' ')[0]).toLowerCase();
-  const beds=minBeds||3;
-  return[
-    {id:'srch-rm',address:'🔍 Rightmove: '+location+' for sale under £'+Number(budget).toLocaleString(),
-     price:0,type:'search link',beds,baths:0,sqft:null,epc:null,tenure:null,
-     chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,
-     description:'Click to open Rightmove with your exact filters: '+location+', max £'+Number(budget).toLocaleString()+', '+beds+'+ beds. Rightmove has 1M+ live UK listings.',
-     features:['Live Rightmove search','Your exact filters applied'],
-     url:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+beds,
-     rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+beds,
-     zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pcSlug+'/?q='+pcSlug+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+beds,
-     agent:{name:'Click to open live Rightmove search',phone:'',branch:''},
-     addedDate:'Live',reduced:false,source:'search-link',floorArea:null},
-    {id:'srch-zp',address:'🔍 Zoopla: '+location+' for sale under £'+Number(budget).toLocaleString(),
-     price:0,type:'search link',beds,baths:0,sqft:null,epc:null,tenure:null,
-     chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,
-     description:'Click to open Zoopla with your exact filters. Aggregates hundreds of estate agents across the UK.',
-     features:['Live Zoopla search','Hundreds of agents'],
-     url:'https://www.zoopla.co.uk/for-sale/property/'+pcSlug+'/?q='+pcSlug+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+beds,
-     rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+beds,
-     zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pcSlug+'/?q='+pcSlug+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+beds,
-     agent:{name:'Click to open live Zoopla search',phone:'',branch:''},
-     addedDate:'Live',reduced:false,source:'search-link',floorArea:null},
-    {id:'srch-otm',address:'🔍 OnTheMarket: '+location+' for sale',
-     price:0,type:'search link',beds,baths:0,sqft:null,epc:null,tenure:null,
-     chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,
-     description:'OnTheMarket lists properties 24-48 hours before Rightmove or Zoopla. Best for catching new listings first.',
-     features:['24hr head start on new listings'],
-     url:'https://www.onthemarket.com/for-sale/property/'+location.toLowerCase().replace(/\s+/g,'-')+'/?max-price='+budget+'&min-beds='+beds,
-     rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+beds,
-     zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pcSlug+'/?q='+pcSlug+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+beds,
-     agent:{name:'Click to open OnTheMarket search',phone:'',branch:''},
-     addedDate:'Live',reduced:false,source:'search-link',floorArea:null},
-  ];
+async function getDeprivation(lat, lng) {
+  try {
+    const r = await fetch(`https://services3.arcgis.com/ivmBBrHfQfDnDf8Q/arcgis/rest/services/Indices_of_Multiple_Deprivation_(IMD)_2019/FeatureServer/0/query?geometry=${lng}%2C${lat}&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&outFields=IMDDecil%2CIMD2019&f=json&returnGeometry=false`);
+    const d = await r.json();
+    const f = d.features?.[0]?.attributes;
+    if (!f) return null;
+    return { decile: f.IMDDecil, label: f.IMDDecil<=2?'Very deprived':f.IMDDecil<=4?'Deprived':f.IMDDecil<=6?'Average':f.IMDDecil<=8?'Affluent':'Very affluent' };
+  } catch(e) { return null; }
 }
 
-async function fetchFreeListings(location,budget,minBeds,pc){
-  const results=[];
-  const locEnc=encodeURIComponent(location);
-  uiLog('Free: trying Rightmove via CORS proxy…','amber');
-  try{
-    const rmUrl='https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+minBeds;
-    const html=await _proxyFetch(rmUrl,15000);
-    if(html){
-      const model=_extractPageModel(html);
-      const props=model?.results?.properties||model?.properties||[];
-      if(props.length>0){
-        uiLog('✓ Rightmove: '+props.length+' live listings!','green');
-        for(const p of props){const n=_normRM(p,budget);if(n)results.push(n);}
-        return results;
-      }
-      uiLog('  Rightmove: proxy reached but data JS-rendered','text3');
-    }else{uiLog('  Rightmove: CORS proxy blocked (normal in 2026)','text3');}
-  }catch(e){uiLog('  Rightmove proxy error: '+e.message.slice(0,40),'text3');}
+// ── MAIN SEARCH ───────────────────────────────────────────────────────────────
+async function runSearch() {
+  if (!CLAUDE_KEY) { showKeyStatus('Enter and save your Claude API key first', 'err'); return; }
 
-  if(results.length) return results;
-  // Always fall back to search cards — these ARE useful
-  uiLog('Free: showing direct search links (Rightmove/Zoopla/OTM)','amber');
-  uiLog('  Tip: Add Apify token for scraped live listings','text3');
-  return makeSearchCards(location,budget,minBeds,pc);
-}
+  const pc       = $('postcode').value.trim();
+  const budget   = parseInt($('budget').value);
+  const stretch  = parseInt($('stretch').value);
+  const minBeds  = parseInt($('min-beds').value) || 3;
+  const wantInv  = $('want-invest').checked;
 
+  if (!pc) { alert('Please enter a postcode'); return; }
 
-// ─── SCORE ────────────────────────────────────────────────────────────────────
-function scoreAll(listings,crimeScore,nearby,deprivation){
-  const ws=parseInt($('w-safety').value)/10,wi=parseInt($('w-invest').value)/10,
-        wt=parseInt($('w-trans').value)/10,wb=parseInt($('w-build').value)/10,
-        wl=parseInt($('w-life').value)/10;
-  const wTotal=ws+wi+wt+wb+wl||1;
-  const depScore=deprivation?Math.min(10,deprivation.decile||5):5;
-  const blendedSafety=Math.round((crimeScore*0.7+depScore*0.3)*10)/10;
-  return listings.map(p=>{
-    const txt=(p.description+' '+(p.features||[]).join(' ')).toLowerCase();
-    const trans=/metrolink|tram|train|station/.test(txt)?9:/bus/.test(txt)?7:6;
-    const invest=p.type.includes('detach')?9:p.type.includes('bungalow')?8:p.type.includes('semi')?7:6;
-    const build=p.newBuild?9:/victorian|edwardian|1930|1920/.test(txt)?7:/1960|1970|1950/.test(txt)?6:7;
-    const life=Math.min(10,(nearby.gyms?.length>0?2:0)+(nearby.shops?.length>2?2:0)+(nearby.parks?.length>0?1:0)+(nearby.transport?.length>3?1:0)+4);
-    const overall=Math.round((blendedSafety*ws+invest*wi+trans*wt+build*wb+life*wl)/wTotal*10)/10;
-    const urgency=p.reduced?'high':p.addedDate?.toLowerCase().includes('today')||/^[12] day/.test(p.addedDate||'')?'high':/week|[3-7] day/.test(p.addedDate||'')?'med':'low';
-    return{...p,safetyScore:blendedSafety,transportScore:trans,investScore:invest,buildScore:build,lifeScore:life,overallScore:overall,urgency};
-  }).sort((a,b)=>b.overallScore-a.overallScore);
-}
+  $('btn-search').disabled = true;
+  showResults('loading');
 
-// ─── CLAUDE ───────────────────────────────────────────────────────────────────
-async function runClaude(listings,geo,crime,price,nearby,flood,planning,deprivation,hpi,opts){
-  if(!S.claudeKey||S.claudeSpent>=S.claudeCap)return null;
-  const{budget,stretch,musts}=opts;
-  const gymList=nearby.gyms?.map(g=>g.tags?.name).filter(Boolean).slice(0,4).join(', ')||'Check locally';
-  const transportList=nearby.transport?.map(t=>t.tags?.name||t.tags?.ref).filter(Boolean).slice(0,5).join(', ')||'Bus network';
-  const recentSales=price.recent.slice(0,5).map(r=>r.addr+' £'+fmt(r.price)+' ('+r.date+')').join('; ');
-  const sources=[...new Set(listings.map(p=>p.source))].join(', ');
-  const prompt='You are a top UK property analyst. Analyse these properties and area data. Respond ONLY in valid JSON.\n\n'
-    +'BUYER: Budget £'+fmt(budget)+' | Stretch £'+fmt(stretch)+' | Musts: '+musts.join(', ')+' | Area: '+geo.admin_district+', '+geo.admin_ward+'\n'
-    +'Crime: '+crime.total+' incidents | Score: '+crime.score+'/10\n'
-    +(deprivation?'Deprivation: '+deprivation.label+' (decile '+deprivation.decile+')\n':'')
-    +'Flood: '+flood.zones+' zones 1km | High: '+(flood.highRisk?'YES':'No')+'\n'
-    +'Land Registry avg: £'+fmt(price.avgPrice)+' ('+price.count+' sales) | Trend: '+(price.trend>0?'+':'')+price.trend+'%\n'
-    +(hpi?'HPI Manchester: £'+fmt(hpi.avgPrice)+', '+hpi.yearGrowth+'% since 2023\n':'')
-    +'Recent sales: '+recentSales+'\n'
-    +'OSM: Gyms: '+gymList+' | Transport: '+transportList+'\n\n'
-    +'PROPERTIES:\n'+listings.slice(0,10).map((p,i)=>'#'+(i+1)+' '+p.address+' £'+fmt(p.price)+' | '+p.type+' '+p.beds+'bed | EPC:'+(p.epc||'?')+' | Chain-free:'+(p.chainFree?'YES':'NO')+(p.reduced?' | REDUCED':'')).join('\n')
-    +'\n\nJSON format: {"topPickId":"address","topPickVerdict":"4 sentences why","verdicts":{"address":"full verdict"},"visitOrder":["addresses"],"visitUrgency":{"address":"reason"},"mustHaveScore":{"address":"X/10"},"stretchCase":"ROI case","redFlags":["risk1"],"marketOutlook":"2025-2027","chainRisk":"HIGH/MED/LOW","floodVerdict":"analysis","investmentRanking":["best to worst"]}';
-  try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':S.claudeKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:3000,messages:[{role:'user',content:prompt}]})});
-    const data=await r.json();
-    const cost=((data.usage?.input_tokens||0)*3+(data.usage?.output_tokens||0)*15)/1000000;
-    spend('claude',cost);
-    return JSON.parse((data.content?.[0]?.text||'').replace(/```json|```/g,'').trim());
-  }catch(e){console.error('Claude:',e);return null;}
-}
+  // Run area APIs and Claude search in parallel
+  let geo=null, crime=null, prices=null, flood=null, dep=null;
+  const areaPromise = geocode(pc)
+    .then(g => { geo = g; return Promise.all([getCrime(g.latitude,g.longitude), getSoldPrices(pc), getFlood(g.latitude,g.longitude), getDeprivation(g.latitude,g.longitude)]); })
+    .then(([c,p,f,d]) => { crime=c; prices=p; flood=f; dep=d; })
+    .catch(e => console.warn('Area APIs partial fail:', e));
 
-// ─── MAIN SEARCH ──────────────────────────────────────────────────────────────
-async function runSearch(forceRefresh){
-  const pc=$('postcode').value.trim();
-  if(!pc){alert('Please enter a UK postcode (e.g. M3 or M21 9WQ)');return;}
-  const budget=parseInt($('budget').value);
-  const stretch=parseInt($('stretch').value);
-  const types=getOn('type-grid');
-  const musts=getOn('must-grid');
-  const minBeds=parseInt($('min-beds').value)||3;
-  const ck=pc.toUpperCase()+'_'+budget+'_'+minBeds+'_'+(S.listingMode||'free');
+  const claudePromise = searchWithClaude(pc, budget, stretch, minBeds, wantInv);
 
-  if(!forceRefresh&&S.cache[ck]&&Date.now()-S.cache[ck].ts<CACHE_TTL){
-    const cached=S.cache[ck];
-    $('mcontent').innerHTML='<div class="cache-bar">♻️ Cached ('+(Math.round((Date.now()-cached.ts)/60000))+'min ago) — click Search again to refresh</div>';
-    renderAll(cached.results,cached.area,cached.ai,{budget,stretch,musts});
+  const [, claudeResult] = await Promise.allSettled([areaPromise, claudePromise]);
+  $('btn-search').disabled = false;
+
+  if (claudeResult.status === 'rejected') {
+    showResults('error', claudeResult.reason?.message || 'Unknown error');
     return;
   }
+  renderAll(claudeResult.value, geo, crime, prices, flood, dep, budget, wantInv);
+}
 
-  $('btn-go').disabled=true;
-  uiLogClear();
-  showLoading();
+async function searchWithClaude(pc, budget, stretch, minBeds, wantInvest) {
+  // Build the prompt - precise, structured, no ambiguity
+  const budgetInvest = Math.round(budget * 0.55);
+  
+  const prompt = `Search the web for properties currently for sale in the UK near postcode ${pc}.
 
-  try{
-    setStep(0);
-    uiLog('Geocoding '+pc+'…','text2');
-    const geo=await freePostcode(pc);
-    uiLog('✓ '+geo.admin_ward+', '+geo.admin_district,'green');
-    setStep(1);
+SEARCH 1 — HOMES TO BUY:
+Find houses (detached, semi-detached, bungalows, terraced) currently for sale:
+- Near postcode ${pc} and surrounding postcodes
+- Max price: £${fmt(budget)} (mention anything up to £${fmt(stretch)} as stretch options)
+- Minimum ${minBeds} bedrooms
+- NOT sold STC, NOT under offer
+Search Rightmove and Zoopla. Find at least 5 properties.
 
-    const[crime,price,nearby,flood,planning,deprivation,hpi]=await Promise.all([
-      freeCrime(geo.latitude,geo.longitude),
-      freePriceHistory(pc),
-      freeNearby(geo.latitude,geo.longitude),
-      freeFloodRisk(geo.latitude,geo.longitude),
-      freePlanningRisk(geo.latitude,geo.longitude),
-      freeDeprivation(geo.latitude,geo.longitude),
-      freeHPI(),
-    ]);
-    uiLog('✓ 7 free APIs loaded','green');
-    setStep(2);
+${wantInvest ? `SEARCH 2 — INVESTMENT FLATS:
+Also search for 1-2 bedroom flats/apartments for sale:
+- Same area near ${pc}
+- Max price: £${budgetInvest.toLocaleString('en-GB')} (lower budget = better yield)
+- Currently for sale, not sold STC
+- Good buy-to-let potential (near transport, city centre, universities)
+Find at least 3 flats.` : ''}
 
-    const location=geo.admin_district||pc;
-    const isFree=(S.listingMode||'free')==='free';
-    const isKeys=(S.listingMode||'free')==='keys';
+For EVERY property found return this exact JSON structure. Return ONLY a JSON object, no markdown, no explanation before or after:
 
-    let realListings=[];
-
-    if(isFree){
-      uiLog('Free mode: trying CORS proxy scrape…','amber');
-      realListings=await fetchFreeListings(location,budget,minBeds,pc);
-    } else {
-      // Keys mode: run HD and Apify in parallel
-      const[hdResults,apifyResults]=await Promise.all([
-        homedataListings(pc,budget,geo),
-        apifyListings(location,budget,geo),
-      ]);
-      realListings=[...hdResults,...apifyResults];
-      uiLog('Keys: '+hdResults.length+' HD + '+apifyResults.length+' Apify listings','teal');
+{
+  "searchDate": "today's date",
+  "location": "area name resolved from ${pc}",
+  "homes": [
+    {
+      "address": "full street address and postcode",
+      "price": 285000,
+      "beds": 3,
+      "baths": 1,
+      "type": "semi-detached",
+      "tenure": "Freehold or Leasehold or unknown",
+      "chainFree": true,
+      "reduced": false,
+      "addedDate": "Added today / Added 3 weeks ago / Reduced 2 days ago",
+      "features": ["South-facing garden", "Off-road parking", "Recently refurbished"],
+      "url": "https://www.rightmove.co.uk/properties/XXXXXXXX",
+      "portal": "Rightmove",
+      "agent": "Estate agent name",
+      "agentPhone": "0161 xxx xxxx or empty string",
+      "description": "2-3 sentence description from the listing",
+      "whyGood": "Your specific analysis: price vs area average, condition, location advantages, any concerns",
+      "score": 8
     }
-
-    setStep(3);
-
-    // Always add search cards as fallback navigation
-    const navCards=makeSearchCards(location,budget,minBeds,pc);
-
-    // Merge, dedup, filter
-    let all=[...realListings,...navCards];
-    const seen=new Set();
-    all=all.filter(p=>{
-      const k=(p.address||'').toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,20);
-      if(seen.has(k))return false;seen.add(k);return true;
-    }).filter(p=>p.source==='search-link'?true:p.price>0&&p.price<=budget);
-
-    const realCount=all.filter(p=>!['fallback','search-link'].includes(p.source)).length;
-    if(!realCount&&!all.some(p=>p.source==='search-link')){
-      // Absolute fallback
-      all=[...navCards,{
-        id:'fb1',address:'No listings found — check filters',price:budget,type:'detached',beds:minBeds,baths:2,
-        sqft:null,epc:null,tenure:null,chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,
-        description:isKeys?'Homedata returned 0 listings. Try: lower min beds, raise budget, or check your Homedata plan includes /api/live-listings/search/.':'Free CORS proxies blocked. Use the search links above to browse live listings on Rightmove and Zoopla.',
-        features:[],url:'https://homedata.co.uk',rightmoveUrl:'https://www.rightmove.co.uk',zooplaUrl:'https://www.zoopla.co.uk',
-        agent:{name:'homedata.co.uk · apify.com',phone:'',branch:''},addedDate:'',reduced:false,source:'fallback',floorArea:null
-      }];
+  ],
+  "topHomeIndex": 0,
+  "areaInsight": "2-3 sentences about this area: price trends, transport, investment case, any issues",
+  ${wantInvest ? `"flats": [
+    {
+      "address": "full address",
+      "price": 145000,
+      "beds": 2,
+      "type": "flat",
+      "tenure": "Leasehold",
+      "leaseYears": 125,
+      "serviceCharge": "£120/month or unknown",
+      "estRentalPcm": 900,
+      "grossYield": 7.4,
+      "chainFree": false,
+      "addedDate": "Added 1 week ago",
+      "features": ["Modern kitchen", "Near tram stop"],
+      "url": "https://www.rightmove.co.uk/properties/XXXXXXXX",
+      "portal": "Rightmove",
+      "agent": "Agent name",
+      "description": "Brief description",
+      "whyGood": "Investment case: yield calculation, rental demand, risks"
     }
+  ],
+  "topFlatIndex": 0` : '"flats": []'}
+}`;
 
-    setStep(4);
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': CLAUDE_KEY,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 8000,
+      tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
 
-    // Score real listings only
-    const realL=all.filter(p=>!['search-link','fallback'].includes(p.source));
-    const navL=all.filter(p=>p.source==='search-link');
-    const fbL=all.filter(p=>p.source==='fallback');
+  const data = await response.json();
 
-    const scoredReal=realL.length?scoreAll(realL,crime.score,nearby,deprivation):[];
-    const scoredNav=navL.map(p=>({...p,safetyScore:0,transportScore:0,investScore:0,buildScore:0,lifeScore:0,overallScore:0,urgency:'low'}));
-    const scoredFb=fbL.map(p=>({...p,safetyScore:0,transportScore:0,investScore:0,buildScore:0,lifeScore:0,overallScore:0,urgency:'low'}));
-    const scored=[...scoredReal,...scoredNav,...scoredFb];
+  if (data.error) throw new Error('Claude API: ' + data.error.message);
 
-    let ai=null;
-    if(S.claudeKey&&S.claudeSpent<S.claudeCap&&scoredReal.length){
-      setStep(5);
-      uiLog('Running Claude AI analysis…','amber');
-      ai=await runClaude(scored.slice(0,10),geo,crime,price,nearby,flood,planning,deprivation,hpi,{budget,stretch,musts});
-      if(ai) uiLog('✓ Claude analysis complete','green');
-    }
+  // Track cost
+  const cost = ((data.usage?.input_tokens||0)*3 + (data.usage?.output_tokens||0)*15) / 1000000;
+  TOTAL_COST += cost;
+  $('cost-display').textContent = '$' + TOTAL_COST.toFixed(4);
 
-    setStep(6);
-    const area={geo,crime,price,nearby,flood,planning,deprivation,hpi};
-    S.cache[ck]={ts:Date.now(),results:scored,area,ai};
-    S.results=scored;S.area=area;S.ai=ai;
-    renderAll(scored,area,ai,{budget,stretch,musts});
-
-  }catch(err){
-    console.error('runSearch error:',err);
-    uiLog('Search error: '+err.message,'red');
-    $('mcontent').innerHTML='<div class="empty"><div class="empty-ico">⚠️</div>'
-      +'<div style="font-family:\'Playfair Display\',serif;font-size:20px;margin-bottom:8px">Search failed</div>'
-      +'<div style="font-size:13px;color:var(--text2);margin-bottom:10px">'+err.message+'</div>'
-      +'<div style="font-size:11px;color:var(--text3);line-height:2">'
-      +'• Check postcode is valid (e.g. <b>M21</b> or <b>M21 9WQ</b>)<br>'
-      +'• Open F12 console for details<br>'
-      +'• Check the search log panel (above mode buttons)</div></div>';
+  // Extract text (response may contain tool_use blocks + text blocks)
+  let text = '';
+  for (const block of data.content || []) {
+    if (block.type === 'text') text += block.text;
   }
-  $('btn-go').disabled=false;
-}
 
-function showLoading(){
-  $('mcontent').innerHTML='<div class="loading"><div class="spin"></div>'
-    +'<div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px">Searching all sources…</div>'
-    +'<div class="lsteps" id="lsteps">'
-    +'<div class="ls" id="ls0"><span>⏳</span> Geocoding postcode <span class="ctag">FREE</span></div>'
-    +'<div class="ls" id="ls1"><span>⏳</span> Crime · Prices · Flood · Planning · Deprivation (6 APIs) <span class="ctag">FREE</span></div>'
-    +'<div class="ls" id="ls2"><span>⏳</span> Fetching listings <span class="ctag">varies</span></div>'
-    +'<div class="ls" id="ls3"><span>⏳</span> Merging · deduplicating <span class="ctag">FREE</span></div>'
-    +'<div class="ls" id="ls4"><span>⏳</span> Scoring properties <span class="ctag">FREE</span></div>'
-    +'<div class="ls" id="ls5"><span>⏳</span> Claude AI analysis <span class="ctag">~$0.003</span></div>'
-    +'<div class="ls" id="ls6"><span>⏳</span> Building report <span class="ctag">FREE</span></div>'
-    +'</div></div>';
-}
-function setStep(n){
-  for(let i=0;i<n;i++){const e=$('ls'+i);if(e){e.className='ls done';const s=e.querySelector('span');if(s)s.textContent='✓';}}
-  const c=$('ls'+n);if(c){c.className='ls act';const s=c.querySelector('span');if(s)s.textContent='⟳';}
-}
-
-
-// ─── RENDER ───────────────────────────────────────────────────────────────────
-function getVerdict(ai,p){if(!ai?.verdicts)return null;return ai.verdicts[p.address]||ai.verdicts[p.id]||Object.entries(ai.verdicts).find(([k])=>p.address.toLowerCase().includes(k.toLowerCase().split(',')[0].trim()))?.[1]||null;}
-function getUrgencyText(ai,p){if(ai?.visitUrgency){const v=ai.visitUrgency[p.address]||ai.visitUrgency[p.id]||Object.entries(ai.visitUrgency||{}).find(([k])=>p.address.toLowerCase().includes(k.toLowerCase().split(',')[0].trim()))?.[1];if(v)return v;}return p.urgency==='high'?'Recently listed or reduced — expect competition':p.urgency==='med'?'On market a short while — book soon':'Has been available — room to negotiate';}
-function getMust(ai,p){if(!ai?.mustHaveScore)return'';return ai.mustHaveScore[p.address]||ai.mustHaveScore[p.id]||Object.entries(ai.mustHaveScore).find(([k])=>p.address.toLowerCase().includes(k.toLowerCase().split(',')[0].trim()))?.[1]||'';}
-
-function renderAll(listings,area,ai,opts){
-  const{budget,stretch,musts}=opts;
-  const{geo,crime,price,nearby,flood,planning,deprivation,hpi}=area;
-  let sorted=[...listings];
-  if(ai?.topPickId){
-    sorted=sorted.sort((a,b)=>{const n=ai.topPickId.toLowerCase().split(',')[0].trim();return((b.address+b.id).toLowerCase().includes(n)?1:0)-((a.address+a.id).toLowerCase().includes(n)?1:0);});
-    if(sorted.length)sorted[0].isTopPick=true;
+  // Parse JSON
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error('Claude did not return JSON. Response: ' + text.slice(0,200));
+  
+  try {
+    return JSON.parse(jsonMatch[0]);
+  } catch(e) {
+    throw new Error('Could not parse Claude response as JSON: ' + e.message);
   }
-  const crimeColor=crime.total>200?'var(--red)':crime.total>120?'var(--amber)':'var(--green)';
-  const crimeLevel=crime.total>200?'High':crime.total>120?'Moderate':crime.total>60?'Low-Mod':'Low';
-  const totalSpent=S.claudeSpent+S.apifySpent;
-  const realCnt=sorted.filter(p=>!['fallback','search-link'].includes(p.source)).length;
-  let h='';
+}
 
-  // Notice
-  if(realCnt>0){
-    const srcMap={apify:'Rightmove (Apify)',homedata:'Homedata','rightmove-live':'Rightmove (free)',purplebricks:'Purplebricks'};
-    const srcs=[...new Set(sorted.filter(p=>!['fallback','search-link'].includes(p.source)).map(p=>p.source))].map(x=>srcMap[x]||x);
-    h+='<div class="notice ok">✅ <b>'+realCnt+' live listings</b> from '+srcs.join(' + ')+'</div>';
-  } else if((S.listingMode||'free')==='keys'){
-    const msg=S.homedataKey||S.apifyKey
-      ?'No listings returned. Check the search log above for [HD] details. Try: lower min beds, raise budget, or check Homedata plan.'
-      :'Add a Homedata or Apify key to get live listings.';
-    h+='<div class="notice warn">⚠ <b>Keys mode: </b>'+msg+'</div>';
+// ── RENDER RESULTS ────────────────────────────────────────────────────────────
+function renderAll(result, geo, crime, prices, flood, dep, budget, wantInvest) {
+  let html = '';
+
+  // ── Area stats bar ──
+  if (geo) {
+    const crimeCol = crime.score>=8?'#1e8050':crime.score>=5?'#b8942a':'#b02040';
+    const crimeLabel = crime.score>=8?'Low':crime.score>=5?'Moderate':'High';
+    const floodCol = flood.high?'#b02040':flood.zones>0?'#b8942a':'#1e8050';
+    const floodLabel = flood.high?'High Risk':flood.zones>0?'Low–Med':'None';
+    const depCol = dep?(dep.decile>=7?'#1e8050':dep.decile>=4?'#b8942a':'#b02040'):'#888';
+
+    html += `<div class="area-bar">
+      <div class="area-stat"><span class="as-label">Area</span><span class="as-val">${geo.admin_ward||geo.admin_district}</span></div>
+      <div class="area-stat"><span class="as-label">Crime</span><span class="as-val" style="color:${crimeCol}">${crimeLabel} <small>(${crime.total})</small></span></div>
+      <div class="area-stat"><span class="as-label">Avg Sold</span><span class="as-val">£${prices.avg?fmt(prices.avg):'N/A'}</span></div>
+      <div class="area-stat"><span class="as-label">Flood</span><span class="as-val" style="color:${floodCol}">${floodLabel}</span></div>
+      <div class="area-stat"><span class="as-label">Deprivation</span><span class="as-val" style="color:${depCol}">${dep?dep.label+' (D'+dep.decile+')':'N/A'}</span></div>
+    </div>`;
+  }
+
+  // ── Area insight ──
+  if (result.areaInsight) {
+    html += `<div class="insight-box">📍 <strong>${result.location||geo?.admin_district||'Area'}</strong> — ${esc(result.areaInsight)}</div>`;
+  }
+
+  // ── Homes ──
+  const homes = result.homes || [];
+  if (homes.length) {
+    html += `<div class="section-header">
+      <h2>🏠 Homes to Buy <span class="count">${homes.length} found</span></h2>
+      <p>Real current listings · Searched ${result.searchDate||'today'}</p>
+    </div>`;
+    html += `<div class="cards">`;
+    homes.forEach((p, i) => {
+      html += renderCard(p, i === result.topHomeIndex, prices?.avg, false);
+    });
+    html += `</div>`;
   } else {
-    h+='<div class="notice info">🔍 <b>Free mode: </b>CORS proxies blocked by Rightmove. Click the search cards below to browse live listings on Rightmove/Zoopla/OnTheMarket. Add Apify for scraped data.</div>';
+    html += `<div class="no-results">
+      <p>No homes found matching your criteria in this search.</p>
+      <p>Try raising the budget or lowering min bedrooms.</p>
+    </div>`;
   }
 
-  h+='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap">'
-    +'<div><div style="font-family:\'Playfair Display\',serif;font-size:24px;letter-spacing:-.4px">'+sorted.length+' Properties · '+geo.admin_district+'</div>'
-    +'<div style="font-size:11px;color:var(--text2);margin-top:3px">'+(geo.admin_ward||'')+' · '+(geo.region||'')+' · weighted scoring</div></div>'
-    +'<div style="font-size:10px;color:var(--text2);text-align:right">Claude: $'+S.claudeSpent.toFixed(3)+' · Apify: $'+S.apifySpent.toFixed(3)+' · HD: '+S.homedataUsed+'<br><span style="color:var(--green)">Free APIs: $0.000</span></div></div>';
-
-  h+='<div class="stats">'
-    +'<div class="stat"><div class="stat-l">Crime</div><div class="stat-v" style="color:'+crimeColor+'">'+crimeLevel+'</div><div class="stat-s">'+crime.total+' incidents</div></div>'
-    +'<div class="stat"><div class="stat-l">Avg Sold</div><div class="stat-v" style="color:var(--accent)">£'+(price.avgPrice?Math.round(price.avgPrice/1000)+'k':'N/A')+'</div><div class="stat-s">Land Registry</div></div>'
-    +'<div class="stat"><div class="stat-l">Budget</div><div class="stat-v" style="color:var(--green)">£'+Math.round(budget/1000)+'k</div><div class="stat-s">Stretch: £'+Math.round(stretch/1000)+'k</div></div>'
-    +'<div class="stat"><div class="stat-l">Deprivation</div><div class="stat-v" style="color:'+(deprivation?(deprivation.decile<=4?'var(--red)':deprivation.decile<=6?'var(--amber)':'var(--green)'):'var(--text2)')+'">'+( deprivation?'D'+deprivation.decile:'N/A')+'</div><div class="stat-s">ONS IMD 2019</div></div>'
-    +'<div class="stat"><div class="stat-l">Flood Risk</div><div class="stat-v" style="color:'+(flood.highRisk?'var(--red)':flood.zones>0?'var(--amber)':'var(--green)')+'">'+( flood.highRisk?'High':flood.zones>0?'Low':'None')+'</div><div class="stat-s">'+flood.zones+' zones 1km</div></div>'
-    +'<div class="stat"><div class="stat-l">Spent</div><div class="stat-v" style="color:'+(totalSpent<0.5?'var(--green)':'var(--amber)')+'">$'+totalSpent.toFixed(2)+'</div><div class="stat-s">This session</div></div>'
-    +'</div>';
-
-  h+='<div class="tabs">'
-    +'<div class="tab on" onclick="swTab(\'listings\',this)">🏠 Listings</div>'
-    +'<div class="tab" onclick="swTab(\'area\',this)">📊 Area</div>'
-    +'<div class="tab" onclick="swTab(\'nearby\',this)">🗺 Nearby</div>'
-    +(ai?'<div class="tab" onclick="swTab(\'ai\',this)">🤖 AI Report</div>':'')
-    +'</div>';
-
-  // LISTINGS PANEL
-  h+='<div class="panel on" id="t-listings"><div class="cards">';
-  sorted.forEach((p,idx)=>{
-    const isFallback=p.source==='fallback';
-    const isNav=p.source==='search-link';
-    const isReal=!isFallback&&!isNav;
-    const srcClass={apify:'apify',homedata:'hd',fallback:'fallback','search-link':'search-link','rightmove-live':'apify',purplebricks:'hd'}[p.source]||'live';
-    const srcLabel=p.source==='apify'?'● Rightmove live (Apify) · '+(p.addedDate||'Recent')+(p.reduced?' · PRICE REDUCED':'')
-      :p.source==='homedata'?'● Homedata live · '+(p.addedDate||'Recent')
-      :p.source==='search-link'?'🔍 Click to open live search'
-      :p.source==='rightmove-live'?'● Rightmove (free) · '+(p.addedDate||'Recent')
-      :p.source==='purplebricks'?'● Purplebricks · '+(p.addedDate||'Recent')
-      :p.source==='fallback'?'ℹ No listings found'
-      :'● Live listing';
-    const tbc=p.type.includes('detach')?'bd':p.type.includes('bungalow')?'bb':p.type.includes('flat')||p.type.includes('apart')?'ba':'bs';
-    const urgColor=p.urgency==='high'?'var(--red)':p.urgency==='med'?'var(--amber)':'var(--green)';
-    const verdict=isNav?p.description:isFallback?p.description:(getVerdict(ai,p)||p.type+' at £'+fmt(p.price)+'.'+(p.chainFree?' Chain-free.':'')+(p.garden?' Has garden.':''));
-    const scores=[{l:'Safety',v:p.safetyScore},{l:'Transport',v:p.transportScore},{l:'Invest',v:p.investScore},{l:'Build',v:p.buildScore},{l:'Overall',v:p.overallScore}];
-
-    h+='<div class="card '+(p.isTopPick?'pick':'')+'">';
-    if(p.isTopPick) h+='<div class="pick-badge">⭐ AI TOP PICK</div>';
-    h+='<div class="src-strip '+srcClass+'">'+srcLabel+'</div>';
-    h+='<div class="cbody">';
-    h+='<div class="ctop"><div class="caddr">'+p.address+'</div>';
-    h+='<div class="cbadges">'+(isReal?(
-      '<span class="badge '+tbc+'">'+p.type+'</span>'
-      +(p.tenure?.toLowerCase().includes('freehold')?'<span class="badge bf">Freehold</span>':'')
-      +(p.chainFree?'<span class="badge bd">No Chain</span>':p.chain?'<span class="badge bs">In Chain</span>':'')
-      +(p.reduced?'<span class="badge" style="border-color:var(--red);color:var(--red);background:var(--red-bg)">Price↓</span>':'')
-      +(p.newBuild?'<span class="badge ba">New</span>':'')
-    ):'')+'</div></div>';
-
-    if(isReal){
-      h+='<div class="cmeta"><div class="cprice">£'+fmt(p.price)+'</div><div class="cspecs">'
-        +(p.beds?'<span class="spec">🛏 '+p.beds+'bd</span>':'')
-        +(p.baths?'<span class="spec">🚿 '+p.baths+'ba</span>':'')
-        +(p.sqft?'<span class="spec">📐 '+p.sqft+'sqft</span>':'')
-        +(p.epc?'<span class="spec"><span class="epc e'+p.epc+'">'+p.epc+'</span></span>':'')
-        +(p.garden?'<span class="spec">🌳</span>':'')
-        +(p.garage?'<span class="spec">🚗</span>':'')
-        +'</div></div>';
-      h+='<div class="scores">'+scores.map(s=>'<div class="sc-item"><div class="sc-l">'+s.l+'</div><div class="sc-bw"><div class="sc-b '+bC(s.v||5)+'" style="width:'+((s.v||5)*10)+'%"></div></div><div class="sc-n '+sC(s.v||5)+'">'+(s.v||'?')+'</div></div>').join('')+'</div>';
-      if(p.urgency) h+='<div class="urg '+(p.urgency||'low')+'"><div class="urg-lbl" style="color:'+urgColor+'">'+(p.urgency==='high'?'⚡ Visit ASAP':p.urgency==='med'?'📅 This week':'🕐 Flexible')+'</div><div class="urg-sub">'+getUrgencyText(ai,p)+'</div></div>';
-    }
-
-    h+='<div class="verdict">'+(isReal?'<b>AI:</b> ':'')+verdict+'</div>';
-
-    const mustTxt=isReal?getMust(ai,p):'';
-    if(mustTxt) h+='<div style="font-size:11px;color:var(--text2);margin-bottom:7px;padding:5px 9px;background:var(--bg3);border-radius:7px">✓ '+mustTxt+'</div>';
-
-    if(isReal){
-      h+='<div class="tags">'
-        +(nearby.gyms?.length?'<span class="tag ok">🏊 '+(nearby.gyms[0]?.tags?.name||'Gym')+'</span>':'')
-        +(nearby.shops?.length?'<span class="tag ok">🛒 '+(nearby.shops[0]?.tags?.name||'Supermarket')+'</span>':'')
-        +'<span class="tag ok">✈️ MAN ~'+(p.transportScore>=8?'20':'30')+'min</span>'
-        +(p.chainFree?'<span class="tag ok">✓ No Chain</span>':p.chain?'<span class="tag warn">⚠ Chain</span>':'')
-        +(price.avgPrice&&p.price<price.avgPrice?'<span class="tag ok">Below avg</span>':price.avgPrice&&p.price>price.avgPrice?'<span class="tag warn">Above avg</span>':'')
-        +(flood.highRisk?'<span class="tag warn">⚠ Flood</span>':'')
-        +(p.addedDate?'<span class="tag info">'+p.addedDate+'</span>':'')
-        +'<span class="tag live">'+p.source+'</span></div>';
-    }
-
-    h+='<div class="agent-box"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px">'
-      +(isFallback?'Find Listings':isNav?'Open Live Search':'Selling Agent')+'</div>';
-    if(isReal){
-      h+='<div class="agent-name">'+(p.agent?.name||'Agent')+(p.agent?.branch?' · '+p.agent.branch:'')+'</div>';
-      h+='<div class="agent-contact">'+(p.agent?.phone&&p.agent.phone!=='See Rightmove'?'📞 <a href="tel:'+p.agent.phone+'">'+p.agent.phone+'</a> · ':'')
-        +'<a href="'+p.rightmoveUrl+'" target="_blank">Rightmove ↗</a> · <a href="'+p.zooplaUrl+'" target="_blank">Zoopla ↗</a></div>';
-    }
-    h+='</div>';
-
-    h+='<div class="cactions">';
-    if(isFallback){
-      h+='<button class="abtn pri" onclick="window.open(\'https://homedata.co.uk\',\'_blank\')">Get Homedata Key ↗</button>';
-      h+='<button class="abtn" onclick="window.open(\'https://apify.com\',\'_blank\')">Get Apify Token ↗</button>';
-    } else if(isNav){
-      h+='<button class="abtn pri" style="flex:2" onclick="window.open(\''+p.url+'\',\'_blank\')">Open Live Search ↗</button>';
-      h+='<button class="abtn" onclick="window.open(\''+p.rightmoveUrl+'\',\'_blank\')">Rightmove ↗</button>';
-      h+='<button class="abtn" onclick="window.open(\''+p.zooplaUrl+'\',\'_blank\')">Zoopla ↗</button>';
-    } else {
-      h+='<button class="abtn" onclick="showDetail('+idx+')">Full Report</button>';
-      h+='<button class="abtn" onclick="window.open(\''+p.rightmoveUrl+'\',\'_blank\')">Rightmove ↗</button>';
-      h+='<button class="abtn" onclick="window.open(\''+p.zooplaUrl+'\',\'_blank\')">Zoopla ↗</button>';
-      h+='<button class="abtn pri" onclick="callAgent('+idx+')">📞 Agent</button>';
-    }
-    h+='</div></div></div>';
-  });
-  h+='</div></div>';
-
-  // AREA PANEL
-  const crimeRows=Object.entries(crime.breakdown||{}).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  const maxC=crimeRows[0]?.[1]||1;
-  h+='<div class="panel" id="t-area">';
-  h+='<div class="two-col">'
-    +'<div class="box" style="margin-bottom:0"><h4>Location</h4>'
-    +[['Region',geo.region||'N/A'],['Ward',geo.admin_ward||'N/A'],['Council',geo.admin_district||'N/A'],['Constituency',geo.parliamentary_constituency||'N/A']]
-      .map(([l,v])=>'<div class="d-row"><span class="d-l">'+l+'</span><span class="d-v">'+v+'</span></div>').join('')+'</div>'
-    +'<div class="box" style="margin-bottom:0"><h4>Land Registry</h4>'
-    +[['Transactions',price.count],['Avg sold','£'+(price.avgPrice?fmt(price.avgPrice):'N/A')],['Trend',(price.trend>0?'+':'')+price.trend+'%']]
-      .map(([l,v])=>'<div class="d-row"><span class="d-l">'+l+'</span><span class="d-v">'+v+'</span></div>').join('')
-    +price.recent.slice(0,3).map(r=>'<div style="font-size:11px;color:var(--text2);padding:2px 0">'+(r.addr||'–')+' · £'+fmt(r.price)+' · '+r.date+'</div>').join('')+'</div></div>';
-  h+=(deprivation?'<div class="box" style="margin-top:10px"><h4>Deprivation (ONS IMD 2019)</h4><p>Decile: <b>'+deprivation.decile+'/10</b> ('+deprivation.label+')</p></div>':'');
-  h+='<div class="box" style="margin-top:10px"><h4>Crime — UK Police · '+crime.total+' incidents · Score: '+crime.score+'/10</h4>';
-  crimeRows.forEach(([cat,n])=>{h+='<div class="crime-row"><div class="crime-l">'+cat+'</div><div class="crime-bw"><div class="crime-b" style="width:'+Math.round(n/maxC*100)+'%;background:'+(n>maxC*.5?'var(--red)':n>maxC*.25?'var(--amber)':'var(--green)')+'"></div></div><div class="crime-n">'+n+'</div></div>';});
-  h+='</div><div class="box"><h4>Flood Risk</h4><p>Zones: <b>'+flood.zones+'</b> within 1km | High risk: <b style="color:'+(flood.highRisk?'var(--red)':'var(--green)')+'">'+(flood.highRisk?'YES':'No')+'</b>'+(flood.areas.length?' | '+flood.areas.join(', '):'')+'</p></div>';
-  h+=(hpi?'<div class="box"><h4>HM Land Registry HPI</h4><p>Avg: £'+fmt(hpi.avgPrice)+' | Growth: '+(hpi.yearGrowth>0?'+':'')+hpi.yearGrowth+'% since 2023</p></div>':'');
-  h+='</div>';
-
-  // NEARBY PANEL
-  h+='<div class="panel" id="t-nearby">';
-  h+='<div class="box"><h4>🏊 Gyms & Pools</h4>'+(nearby.gyms?.length?nearby.gyms.map(g=>'<p style="font-size:12px;color:var(--text2);padding:2px 0">• '+(g.tags?.name||'Sports Centre')+'</p>').join(''):'<p style="font-size:12px;color:var(--text2)">None OSM-tagged nearby. Known: David Lloyd Didsbury, Manchester Aquatics Centre, Withington Baths</p>')+'</div>';
-  h+='<div class="box"><h4>🛒 Supermarkets</h4>'+(nearby.shops?.length?nearby.shops.map(s=>'<p style="font-size:12px;color:var(--text2);padding:2px 0">• '+(s.tags?.name||'Supermarket')+'</p>').join(''):'<p style="font-size:12px;color:var(--text2)">Aldi, Tesco, Lidl, Waitrose in area</p>')+'</div>';
-  h+='<div class="box"><h4>🚆 Transport</h4>'+(nearby.transport?.length?nearby.transport.slice(0,8).map(t=>'<p style="font-size:12px;color:var(--text2);padding:2px 0">• '+(t.tags?.name||t.tags?.ref||'Stop')+'</p>').join(''):'<p style="font-size:12px;color:var(--text2)">Bus/tram network in area</p>')+'</div>';
-  h+='<div class="box"><h4>🏫 Schools</h4>'+(nearby.schools?.length?nearby.schools.map(s=>'<p style="font-size:12px;color:var(--text2);padding:2px 0">• '+(s.tags?.name||'School')+'</p>').join(''):'<p style="font-size:12px;color:var(--text2)">Check ofsted.gov.uk for ratings</p>')+'</div>';
-  h+='<div class="box"><h4>🌳 Parks</h4>'+(nearby.parks?.length?nearby.parks.map(p=>'<p style="font-size:12px;color:var(--text2);padding:2px 0">• '+(p.tags?.name||'Park')+'</p>').join(''):'<p style="font-size:12px;color:var(--text2)">Green space in area</p>')+'</div>';
-  h+='</div>';
-
-  if(ai){
-    h+='<div class="panel" id="t-ai"><div class="box" style="border-color:var(--accent)"><h4 style="color:var(--accent)">🤖 Claude AI Report · $'+S.claudeSpent.toFixed(3)+'</h4><pre style="font-size:11px;color:var(--text2);white-space:pre-wrap;overflow-x:auto">'+JSON.stringify(ai,null,2)+'</pre></div></div>';
+  // ── Investment flats ──
+  const flats = result.flats || [];
+  if (wantInvest && flats.length) {
+    html += `<div class="section-header invest">
+      <h2>💰 Investment Flats <span class="count">${flats.length} found</span></h2>
+      <p>Buy-to-let opportunities with rental yield analysis</p>
+    </div>`;
+    html += `<div class="cards">`;
+    flats.forEach((p, i) => {
+      html += renderCard(p, i === result.topFlatIndex, null, true);
+    });
+    html += `</div>`;
+  } else if (wantInvest) {
+    html += `<div class="no-results"><p>No investment flats found in this search. Try a different area or lower the investment budget.</p></div>`;
   }
 
-  $('mcontent').innerHTML=h;
-  window._listings=sorted;window._area=area;window._ai=ai;
+  showResults('done', html);
 }
 
-function swTab(name,el){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
-  el.classList.add('on');
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
-  const t=$('t-'+name);if(t)t.classList.add('on');
+function renderCard(p, isTop, areaAvg, isInvest) {
+  const belowAvg = areaAvg && p.price && p.price < areaAvg;
+  const aboveAvg = areaAvg && p.price && p.price > areaAvg * 1.1;
+  const priceDiffPct = areaAvg && p.price ? Math.round((p.price - areaAvg) / areaAvg * 100) : null;
+
+  const badges = [];
+  if (p.tenure?.toLowerCase().includes('freehold')) badges.push(['Freehold','green']);
+  if (p.chainFree) badges.push(['No Chain','green']);
+  if (p.reduced) badges.push(['Reduced','amber']);
+  if (belowAvg && priceDiffPct) badges.push([Math.abs(priceDiffPct)+'% below avg','green']);
+  if (aboveAvg && priceDiffPct) badges.push([priceDiffPct+'% above avg','red']);
+  if (isInvest && p.grossYield) badges.push([p.grossYield+'% yield','purple']);
+
+  let html = `<div class="card${isTop?' card-top':''}${isInvest?' card-invest':''}">`;
+
+  // Ribbon
+  if (isTop && !isInvest) html += `<div class="ribbon ribbon-top">⭐ AI Top Pick — Best Match</div>`;
+  else if (isTop && isInvest) html += `<div class="ribbon ribbon-invest-top">⭐ Best Investment Pick</div>`;
+  else if (isInvest) html += `<div class="ribbon ribbon-invest-plain">💰 Investment Flat</div>`;
+
+  html += `<div class="card-inner">`;
+
+  // Address + badges
+  html += `<div class="card-head">
+    <div class="card-address">${esc(p.address||'Address not available')}</div>
+    <div class="card-badges">${badges.map(([t,c])=>`<span class="badge badge-${c}">${t}</span>`).join('')}</div>
+  </div>`;
+
+  // Price + specs
+  html += `<div class="card-price-row">
+    <div class="card-price">£${fmt(p.price||0)}</div>
+    <div class="card-specs">
+      ${p.beds ? `<span>🛏 ${p.beds} bed</span>` : ''}
+      ${p.baths ? `<span>🚿 ${p.baths} bath</span>` : ''}
+      ${p.type ? `<span>🏡 ${esc(p.type)}</span>` : ''}
+      ${p.addedDate ? `<span>📅 ${esc(p.addedDate)}</span>` : ''}
+      ${isInvest && p.estRentalPcm ? `<span>💷 ~£${fmt(p.estRentalPcm)}/mo rent</span>` : ''}
+      ${isInvest && p.leaseYears ? `<span>📋 ${p.leaseYears}yr lease</span>` : ''}
+    </div>
+  </div>`;
+
+  // Analysis box
+  if (p.whyGood) {
+    html += `<div class="card-analysis${isInvest?' invest':''}">${esc(p.whyGood)}</div>`;
+  }
+
+  // Features
+  if (p.features?.length) {
+    html += `<div class="card-features">`;
+    p.features.forEach(f => {
+      const good = /garden|freehold|chain.free|park|refurb|modern|new|transport|tram|train/i.test(f);
+      html += `<span class="feature${good?' feature-good':''}">${esc(f)}</span>`;
+    });
+    html += `</div>`;
+  }
+
+  // Description
+  if (p.description) {
+    html += `<p class="card-desc">${esc(p.description)}</p>`;
+  }
+
+  // Investment extras
+  if (isInvest && p.serviceCharge && p.serviceCharge !== 'unknown') {
+    html += `<p class="card-desc">Service charge: <strong>${esc(p.serviceCharge)}</strong></p>`;
+  }
+
+  // Actions
+  html += `<div class="card-actions">`;
+  if (p.url) {
+    html += `<a href="${esc(p.url)}" target="_blank" class="btn-primary">View on ${esc(p.portal||'Portal')} ↗</a>`;
+  }
+  if (p.agent) {
+    const agentInfo = `Agent: ${p.agent}${p.agentPhone ? '\\nPhone: '+p.agentPhone : ''}`;
+    html += `<button class="btn-secondary" onclick="alert('${esc(agentInfo)}')">📞 ${esc(p.agent)}</button>`;
+  }
+  // Also add Zoopla link
+  const zpArea = (p.address||'').match(/[A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2}/i)?.[0]?.replace(/\s/,'').toLowerCase();
+  if (zpArea) {
+    html += `<a href="https://www.zoopla.co.uk/for-sale/property/${zpArea}/?q=${zpArea}" target="_blank" class="btn-secondary">Zoopla ↗</a>`;
+  }
+  html += `</div>`;
+
+  // Score bar
+  if (p.score) {
+    const w = Math.round(p.score * 10);
+    const col = p.score>=8?'#1e8050':p.score>=6?'#b8942a':'#b02040';
+    html += `<div class="score-bar"><span>Match score:</span><div class="score-track"><div class="score-fill" style="width:${w}%;background:${col}"></div></div><span style="color:${col};font-weight:600">${p.score}/10</span></div>`;
+  }
+
+  html += `</div></div>`;
+  return html;
 }
 
-function showDetail(idx){
-  const p=window._listings?.[idx];if(!p||p.source==='fallback'||p.source==='search-link')return;
-  const ai=window._ai;
-  $('modal-title').textContent=p.address;
-  let mc='<div class="msec"><div class="msec-l">Price & Specs</div>';
-  [['Price','£'+fmt(p.price),'color:var(--accent)'],['Type',p.type],['Beds',(p.beds||'?')+''],['Baths',(p.baths||'?')+''],['Floor Area',(p.floorArea?p.floorArea+'m²':'N/A')],['EPC',(p.epc||'N/A')],['Tenure',(p.tenure||'Unknown')],['Chain-free',p.chainFree?'Yes ✓':'No',p.chainFree?'color:var(--green)':'color:var(--amber)'],['Source',p.source,'color:var(--teal)'],['Added',p.addedDate||'Recent']].forEach(([l,v,st])=>{mc+='<div class="d-row"><span class="d-l">'+l+'</span><span class="d-v" style="'+(st||'')+'">'+v+'</span></div>';});
-  mc+='</div>';
-  if(p.features?.length){mc+='<div class="msec"><div class="msec-l">Features</div><div style="background:var(--bg3);border-radius:var(--r);padding:10px 12px">'+p.features.map(f=>'<div style="font-size:12px;color:var(--green);padding:2px 0">✓ '+f+'</div>').join('')+'</div></div>';}
-  const verdict=getVerdict(ai,p)||'Add Claude key for AI verdict.';
-  mc+='<div class="msec"><div class="msec-l">AI Verdict</div><div style="font-size:12px;color:var(--text2);line-height:1.7;background:var(--bg3);border-radius:var(--r);padding:10px 12px;border-left:3px solid var(--accent)">'+verdict+'</div></div>';
-  if(p.description){mc+='<div class="msec"><div class="msec-l">Description</div><div style="font-size:12px;color:var(--text2);line-height:1.6;background:var(--bg3);border-radius:var(--r);padding:10px 12px">'+p.description+'</div></div>';}
-  mc+='<div class="msec"><div class="msec-l">Agent</div><div class="agent-box" style="margin:0"><div class="agent-name">'+(p.agent?.name||'Agent')+(p.agent?.branch?' · '+p.agent.branch:'')+'</div><div class="agent-contact">'+(p.agent?.phone?'📞 <a href="tel:'+p.agent.phone+'">'+p.agent.phone+'</a><br>':'')+'<a href="'+p.rightmoveUrl+'" target="_blank">Rightmove ↗</a> · <a href="'+p.zooplaUrl+'" target="_blank">Zoopla ↗</a></div></div></div>';
-  mc+='<div style="display:flex;gap:7px;margin-top:12px;flex-wrap:wrap"><button class="abtn pri" onclick="callAgent('+idx+');closeModal()">📞 Agent</button><button class="abtn" onclick="window.open(\''+p.rightmoveUrl+'\',\'_blank\')">Rightmove ↗</button><button class="abtn" onclick="window.open(\''+p.zooplaUrl+'\',\'_blank\')">Zoopla ↗</button><button class="abtn" onclick="closeModal()">Close</button></div>';
-  $('modal-content').innerHTML=mc;
-  $('modal').classList.remove('hidden');
-}
-function callAgent(idx){const p=window._listings?.[idx];if(!p)return;alert('📞 '+(p.agent?.name||'Agent')+'\n\n'+(p.agent?.phone?'Phone: '+p.agent.phone+'\n':'')+(p.agent?.branch?'Branch: '+p.agent.branch+'\n':'')+'\nRightmove: '+p.rightmoveUrl);}
-function closeModal(){$('modal').classList.add('hidden');}
-
-// ─── MODE & KEY MANAGEMENT ────────────────────────────────────────────────────
-S.listingMode='free';
-
-function setListingMode(mode){
-  S.listingMode=mode;S.cache={};
-  const mc=$('mcontent');
-  if(mc)mc.innerHTML='<div class="empty"><div class="empty-ico">'+(mode==='free'?'🏴':'🔑')+'</div>'
-    +'<div style="font-family:\'Playfair Display\',serif;font-size:22px;margin-bottom:8px">'+(mode==='free'?'Free Mode':'API Keys Mode')+'</div>'
-    +'<div style="font-size:12px;color:var(--text2)">'+(mode==='free'?'Enter a UK postcode and click Search. Uses CORS proxies — if blocked, shows direct Rightmove/Zoopla/OTM links.':'Enter postcode and click Search. Uses Homedata live-listings API and/or Apify Rightmove scraper.')+'</div></div>';
-  const freeBtn=$('mode-free');const keysBtn=$('mode-keys');
-  const freeSection=$('section-free');const keysSection=$('section-keys');
-  if(freeBtn)freeBtn.classList.toggle('mode-active',mode==='free');
-  if(keysBtn)keysBtn.classList.toggle('mode-active',mode==='keys');
-  if(freeSection)freeSection.style.display=mode==='free'?'block':'none';
-  if(keysSection)keysSection.style.display=mode==='keys'?'block':'none';
-  uiLogClear();
-}
-
-function saveKey(t){
-  S.cache={};
-  const exp=Date.now()+6*60*60*1000;
-  const configs={
-    claude:{inp:'inp-claude',dot:'d-claude',tag:'t-claude',minLen:20,sKey:'fmnh_claude',storeKey:'claudeKey'},
-    hd:{inp:'inp-hd',dot:'d-hd',tag:'t-hd',minLen:5,sKey:'fmnh_hd',storeKey:'homedataKey'},
-    apify:{inp:'inp-apify',dot:'d-apify',tag:'t-apify',minLen:10,sKey:'fmnh_apify',storeKey:'apifyKey'},
-  };
-  const cfg=configs[t];if(!cfg)return;
-  const val=$(cfg.inp)?.value.trim()||'';
-  const ok=val.length>=cfg.minLen;
-  S[cfg.storeKey]=ok?val:'';
-  setDot(cfg.dot,ok?'g':'x');
-  $(cfg.tag).textContent=t.charAt(0).toUpperCase()+t.slice(1)+':'+(ok?'saved ✓':'no key');
-  const stEl=$('status-'+t);
-  if(ok){
-    try{sessionStorage.setItem(cfg.sKey,JSON.stringify({v:val,e:exp}));}catch(e){}
-    if(stEl){stEl.textContent='✓ Key saved — active 6hrs';stEl.style.color='var(--green)';}
-  }else if(stEl){stEl.textContent='Too short — check format';stEl.style.color='var(--red)';}
-}
-
-function restoreKeys(){
-  const now=Date.now();
-  [['claude','inp-claude','d-claude','t-claude',20,'fmnh_claude','claudeKey'],
-   ['hd','inp-hd','d-hd','t-hd',5,'fmnh_hd','homedataKey'],
-   ['apify','inp-apify','d-apify','t-apify',10,'fmnh_apify','apifyKey']
-  ].forEach(([t,inp,dot,tag,minLen,sKey,storeKey])=>{
-    try{
-      const raw=sessionStorage.getItem(sKey);if(!raw)return;
-      const obj=JSON.parse(raw);if(!obj||obj.e<now){sessionStorage.removeItem(sKey);return;}
-      if(obj.v&&obj.v.length>=minLen){
-        S[storeKey]=obj.v;const el=$(inp);if(el)el.value=obj.v;
-        setDot(dot,'g');$(tag).textContent=t.charAt(0).toUpperCase()+t.slice(1)+':saved ✓';
-      }
-    }catch(e){}
-  });
-}
-
-async function testClaude(){
-  const el=$('status-claude');if(!el)return;
-  if(!S.claudeKey){el.textContent='Save a key first';el.style.color='var(--text3)';return;}
-  el.textContent='⏳ Testing…';el.style.color='var(--amber)';
-  try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':S.claudeKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:10,messages:[{role:'user',content:'OK'}]})});
-    const d=await r.json();
-    if(d.error){el.textContent='✗ '+d.error.message.slice(0,80);el.style.color='var(--red)';return;}
-    if(d.content?.[0]?.text){const cost=((d.usage?.input_tokens||0)*0.00025+(d.usage?.output_tokens||0)*0.00125)/1000;spend('claude',cost);el.textContent='✓ Connected · $'+cost.toFixed(5);el.style.color='var(--green)';}
-  }catch(e){el.textContent='✗ '+e.message.slice(0,60);el.style.color='var(--red)';}
-}
-
-async function testHomedata(){
-  const el=$('status-hd');if(!el)return;
-  if(!S.homedataKey){el.textContent='No key — enter and click Save Key';el.style.color='var(--text3)';return;}
-  el.textContent='⏳ Step 1: boundary (Salford)…';el.style.color='var(--amber)';
-  try{
-    // Test with a known working query
-    const br=await fetch('https://api.homedata.co.uk/api/boundaries/autocomplete/?q=Salford',{mode:'cors',headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'},signal:AbortSignal.timeout(10000)});
-    if(!br.ok){
-      if(br.status===401){el.textContent='✗ 401 — wrong key format. Must be: QRryNTjX.your-secret';el.style.color='var(--red)';return;}
-      if(br.status===403){el.textContent='✗ 403 — key lacks permission or browser CORS block. Try via proxy…';el.style.color='var(--amber)';}
-      else{el.textContent='✗ Boundaries HTTP '+br.status;el.style.color='var(--red)';return;}
-    }
-    const bd=await br.json();
-    const b=(bd.results||[])[0];
-    if(!b){el.textContent='✗ No boundary found for Salford';el.style.color='var(--red)';return;}
-    el.textContent='⏳ Step 2: live-listings for '+b.name+' (id:'+b.id+')…';el.style.color='var(--amber)';
-    const r=await fetch('https://api.homedata.co.uk/api/live-listings/search/?boundary_id='+b.id+'&transaction_type=Sale&max_price=500000&page_size=3&sort=-added_date',{mode:'cors',headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'},signal:AbortSignal.timeout(12000)});
-    const txt=await r.text();
-    let d;try{d=JSON.parse(txt);}catch(e){el.textContent='✗ Non-JSON (HTTP '+r.status+')';el.style.color='var(--red)';return;}
-    if(r.status===401){el.textContent='✗ 401 — check key format: QRryNTjX.your-secret';el.style.color='var(--red)';return;}
-    if(r.status===403){el.textContent='✗ 403 — plan may not include live-listings. Check homedata.co.uk account.';el.style.color='var(--red)';return;}
-    if(!r.ok){el.textContent='✗ HTTP '+r.status+' — '+(d.detail||d.message||txt.slice(0,60));el.style.color='var(--red)';return;}
-    const rem=r.headers.get('X-RateLimit-Remaining')||'?';
-    const sample=(d.results||[])[0];
-    el.textContent='✓ Working! '+Number(d.count||0).toLocaleString()+' listings in '+b.name+' · '+rem+' calls left'+(sample?' · e.g. £'+Number(sample.latest_price||0).toLocaleString()+' — '+sample.display_address:'');
-    el.style.color='var(--green)';
-  }catch(e){
-    el.textContent=(e.name==='AbortError'||e.name==='TimeoutError')?'✗ Timeout — may be CORS blocked':'✗ '+e.message.slice(0,80);
-    el.style.color='var(--red)';
+// ── UI HELPERS ────────────────────────────────────────────────────────────────
+function showResults(state, content) {
+  const el = $('results');
+  if (state === 'loading') {
+    el.innerHTML = `<div class="loading">
+      <div class="spinner"></div>
+      <div class="loading-title">Claude is searching for properties…</div>
+      <div class="loading-sub">Searching Rightmove and Zoopla in real-time. This takes 30–60 seconds.</div>
+      <div class="loading-steps">
+        <div id="ls1" class="lstep active">⟳ Geocoding postcode + loading area data (crime, flood, prices)</div>
+        <div id="ls2" class="lstep">◦ Claude searching web for matching for-sale properties</div>
+        <div id="ls3" class="lstep">◦ Processing results and building cards</div>
+      </div>
+    </div>`;
+    // Animate steps
+    setTimeout(() => { const e=$('ls2'); if(e){e.className='lstep active';e.textContent='⟳ Claude searching Rightmove and Zoopla live…';}}, 4000);
+    setTimeout(() => { const e=$('ls3'); if(e){e.className='lstep active';e.textContent='⟳ Analysing properties against your criteria…';}}, 20000);
+  } else if (state === 'error') {
+    el.innerHTML = `<div class="error-state">
+      <div class="error-icon">⚠️</div>
+      <div class="error-title">Search failed</div>
+      <div class="error-msg">${esc(content)}</div>
+      <p style="margin-top:12px;font-size:13px;color:#666">Common fixes: check your Claude API key is valid at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>, check your account has credits, or try again.</p>
+    </div>`;
+  } else {
+    el.innerHTML = content;
   }
 }
 
-async function testApify(){
-  const el=$('status-apify');if(!el)return;
-  if(!S.apifyKey){el.textContent='Save a key first';el.style.color='var(--text3)';return;}
-  el.textContent='⏳ Checking token…';el.style.color='var(--amber)';
-  try{
-    const r=await fetch('https://api.apify.com/v2/users/me?token='+encodeURIComponent(S.apifyKey));
-    const d=await r.json();
-    if(!r.ok||d.error){el.textContent='✗ Invalid token — get one at apify.com/account/integrations';el.style.color='var(--red)';return;}
-    el.textContent='✓ Valid · Plan: '+(d.data?.plan?.id||'free')+' · '+( d.data?.stats?.totalActorRunsCreated||0)+' runs';el.style.color='var(--green)';
-  }catch(e){el.textContent='✗ '+e.message.slice(0,60);el.style.color='var(--red)';}
-}
-
-function downloadPythonScript(){
-  const script='# UK Property Finder - local scraper (no CORS restrictions)\n# pip install requests beautifulsoup4\nimport requests,json,csv\nfrom datetime import datetime\n\nLOCATION="Manchester"\nMAX_PRICE=300000\nMIN_BEDS=3\nHEADERS={"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}\n\ndef rightmove_search():\n    url="https://www.rightmove.co.uk/property-for-sale/find.html"\n    params={"searchType":"SALE","searchLocation":LOCATION,"maxPrice":MAX_PRICE,"minBedrooms":MIN_BEDS,"includeSSTC":"false","sortType":"6"}\n    r=requests.get(url,params=params,headers=HEADERS,timeout=20)\n    import re\n    m=re.search(r\'window\\.PAGE_MODEL\\s*=\\s*(\\{.*?\\});\',r.text,re.DOTALL)\n    if not m: print("No PAGE_MODEL found"); return []\n    data=json.loads(m.group(1))\n    props=data.get("results",{}).get("properties",[])\n    return [{"source":"Rightmove","address":p.get("address",{}).get("displayAddress"),"price":p.get("price",{}).get("amount"),"beds":p.get("bedrooms"),"url":"https://www.rightmove.co.uk/properties/"+str(p.get("id"))} for p in props if p.get("price",{}).get("amount",999999)<=MAX_PRICE]\n\nresults=rightmove_search()\nprint(f"{len(results)} properties found")\nfn=f"properties_{datetime.now().strftime(\'%Y%m%d_%H%M\')}.csv"\nwith open(fn,"w",newline="",encoding="utf-8") as f:\n    w=csv.DictWriter(f,fieldnames=["source","address","price","beds","url"])\n    w.writeheader();w.writerows(results)\nprint(f"Saved to {fn}")\n';
-  const blob=new Blob([script],{type:'text/plain'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='find_my_home.py';a.click();
-}
-
-updateCosts();
-restoreKeys();
+// Init
+loadKey();
 
 </script>
 </body>
