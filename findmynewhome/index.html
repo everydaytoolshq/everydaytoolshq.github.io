@@ -394,59 +394,75 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
   </div>
 </div>
 
-<script>function toggleEye(id){const el=$(id);if(el)el.type=el.type==='password'?'text':'password';}
+<script>
+function toggleEye(id){const el=$(id);if(el)el.type=el.type==='password'?'text':'password';}
 
-
-const S = {
-  claudeKey:'', homedataKey:'', apifyKey:'',
-  claudeCap:20, claudeSpent:0,
-  homedataCap:100, homedataUsed:0,
-  apifyCap:5, apifySpent:0, apifyMax:25,
+const S={
+  claudeKey:'',homedataKey:'',apifyKey:'',
+  claudeCap:20,claudeSpent:0,
+  homedataCap:100,homedataUsed:0,
+  apifyCap:5,apifySpent:0,apifyMax:25,
   listingMode:'free',
-  cache:{}, results:[], area:null, ai:null
+  cache:{},results:[],area:null,ai:null
 };
-const CACHE_TTL = 6*60*60*1000;
-const $ = id => document.getElementById(id);
-const fmt = n => Number(n).toLocaleString();
-const sC = n => n>=8?'sg':n>=6?'sa':'sr';
-const bC = n => n>=8?'bg-g':n>=6?'bg-a':'bg-r';
-function tog(el){ el.classList.toggle('on'); updateCosts(); }
-function getOn(id){ return [...$(id).querySelectorAll('.ci.on')].map(e=>e.dataset.v); }
-function cacheKey(pc,budget,types){ return pc.toUpperCase()+'_'+Math.round(budget/50000)*50000+'_'+types.sort().join(','); }
+const CACHE_TTL=6*60*60*1000;
+const $=id=>document.getElementById(id);
+const fmt=n=>Number(n).toLocaleString();
+const sC=n=>n>=8?'sg':n>=6?'sa':'sr';
+const bC=n=>n>=8?'bg-g':n>=6?'bg-a':'bg-r';
+function tog(el){el.classList.toggle('on');updateCosts();}
+function getOn(id){return[...($(id)||{querySelectorAll:()=>[]}).querySelectorAll('.ci.on')].map(e=>e.dataset.v);}
+function cacheKey(pc,budget,types){return pc.toUpperCase()+'_'+Math.round(budget/50000)*50000+'_'+types.sort().join(',');}
 
-// ─── CREDIT TRACKING ────────────────────────────────────────────────────────
-function updateCosts(){
-  const cc=parseFloat($('c-claude-cap')?.value)||20; S.claudeCap=cc;
-  if($('rv-ccap')) $('rv-ccap').textContent='$'+cc.toFixed(2);
-  const cpct=Math.max(0,(cc-S.claudeSpent)/cc*100);
-  if($('bar-claude')){ $('bar-claude').style.width=cpct+'%'; $('bar-claude').className='bar '+(cpct>50?'g':cpct>20?'a':'r'); }
-  if($('det-claude')) $('det-claude').textContent='$'+(cc-S.claudeSpent).toFixed(3)+' left';
-  if($('used-claude')) $('used-claude').textContent='$'+S.claudeSpent.toFixed(3)+' used';
-  const hc=parseInt($('c-hd-cap')?.value)||100; S.homedataCap=hc;
-  if($('rv-hdcap')) $('rv-hdcap').textContent=hc+' calls';
-  const hpct=Math.max(0,(hc-S.homedataUsed)/hc*100);
-  if($('bar-hd')){ $('bar-hd').style.width=hpct+'%'; $('bar-hd').className='bar '+(hpct>50?'g':hpct>20?'a':'r'); }
-  if($('det-hd')) $('det-hd').textContent=(hc-S.homedataUsed)+'/'+hc;
-  if($('used-hd')) $('used-hd').textContent=S.homedataUsed+' used';
-  const ac=parseFloat($('c-apify-cap')?.value)||5; const am=parseInt($('c-apify-max')?.value)||25;
-  S.apifyCap=ac; S.apifyMax=am;
-  if($('rv-acap')) $('rv-acap').textContent='$'+ac.toFixed(2);
-  if($('rv-amax')) $('rv-amax').textContent=am+' props';
-  const apct=Math.max(0,(ac-S.apifySpent)/ac*100);
-  if($('bar-apify')){ $('bar-apify').style.width=apct+'%'; $('bar-apify').className='bar '+(apct>50?'g':apct>20?'a':'r'); }
-  if($('det-apify')) $('det-apify').textContent='$'+(ac-S.apifySpent).toFixed(2)+' left';
-  if($('used-apify')) $('used-apify').textContent='$'+S.apifySpent.toFixed(3)+' used';
-  const tot=S.claudeSpent+S.apifySpent;
-  if($('pill-spent')) $('pill-spent').textContent='$'+tot.toFixed(3)+' spent';
+// ─── UI LOG ──────────────────────────────────────────────────────────────────
+function uiLog(msg,col='text2'){
+  const fle=$('search-log');
+  if(!fle)return;
+  const d=document.createElement('div');
+  d.style.color='var(--'+col+')';d.textContent=msg;
+  fle.appendChild(d);fle.scrollTop=9999;
+  fle.style.display='block';
 }
-function spend(t,a){ if(t==='claude')S.claudeSpent+=a; else if(t==='apify')S.apifySpent+=a; else if(t==='hd')S.homedataUsed+=a; updateCosts(); }
-function setDot(id,cls){ const d=$(id); if(d)d.className='dot '+cls; }
-// ─── FREE APIs ───────────────────────────────────────────────────────────────
+function uiLogClear(){
+  const fle=$('search-log');
+  if(fle){fle.innerHTML='';fle.style.display='none';}
+}
+
+// ─── CREDIT TRACKING ─────────────────────────────────────────────────────────
+function updateCosts(){
+  const cc=parseFloat($('c-claude-cap')?.value)||20;S.claudeCap=cc;
+  if($('rv-ccap'))$('rv-ccap').textContent='$'+cc.toFixed(2);
+  const cpct=Math.max(0,(cc-S.claudeSpent)/cc*100);
+  if($('bar-claude')){$('bar-claude').style.width=cpct+'%';$('bar-claude').className='bar '+(cpct>50?'g':cpct>20?'a':'r');}
+  if($('det-claude'))$('det-claude').textContent='$'+(cc-S.claudeSpent).toFixed(3)+' left';
+  if($('used-claude'))$('used-claude').textContent='$'+S.claudeSpent.toFixed(3)+' used';
+  const hc=parseInt($('c-hd-cap')?.value)||100;S.homedataCap=hc;
+  if($('rv-hdcap'))$('rv-hdcap').textContent=hc+' calls';
+  const hpct=Math.max(0,(hc-S.homedataUsed)/hc*100);
+  if($('bar-hd')){$('bar-hd').style.width=hpct+'%';$('bar-hd').className='bar '+(hpct>50?'g':hpct>20?'a':'r');}
+  if($('det-hd'))$('det-hd').textContent=(hc-S.homedataUsed)+'/'+hc;
+  if($('used-hd'))$('used-hd').textContent=S.homedataUsed+' used';
+  const ac=parseFloat($('c-apify-cap')?.value)||5;const am=parseInt($('c-apify-max')?.value)||25;
+  S.apifyCap=ac;S.apifyMax=am;
+  if($('rv-acap'))$('rv-acap').textContent='$'+ac.toFixed(2);
+  if($('rv-amax'))$('rv-amax').textContent=am+' props';
+  const apct=Math.max(0,(ac-S.apifySpent)/ac*100);
+  if($('bar-apify')){$('bar-apify').style.width=apct+'%';$('bar-apify').className='bar '+(apct>50?'g':apct>20?'a':'r');}
+  if($('det-apify'))$('det-apify').textContent='$'+(ac-S.apifySpent).toFixed(2)+' left';
+  if($('used-apify'))$('used-apify').textContent='$'+S.apifySpent.toFixed(3)+' used';
+  const tot=S.claudeSpent+S.apifySpent;
+  if($('pill-spent'))$('pill-spent').textContent='$'+tot.toFixed(3)+' spent';
+}
+function spend(t,a){if(t==='claude')S.claudeSpent+=a;else if(t==='apify')S.apifySpent+=a;else if(t==='hd')S.homedataUsed+=a;updateCosts();}
+function setDot(id,cls){const d=$(id);if(d)d.className='dot '+cls;}
+
+// ─── FREE APIs ────────────────────────────────────────────────────────────────
 async function freePostcode(pc){
   const c=pc.replace(/\s+/g,'').toUpperCase();
   let r=await fetch('https://api.postcodes.io/postcodes/'+c);
   let d=await r.json();
-  if(d.status===200) return d.result;
+  if(d.status===200)return d.result;
+  // Try autocomplete for partial postcodes
   const r2=await fetch('https://api.postcodes.io/postcodes/'+c+'/autocomplete');
   const d2=await r2.json();
   if(d2.result&&d2.result.length){
@@ -454,157 +470,174 @@ async function freePostcode(pc){
     const d3=await r3.json();
     return d3.result;
   }
-  throw new Error('Postcode not found — try a full postcode like M21 9WQ');
+  throw new Error('Postcode not found: '+pc+' — try a full UK postcode like M3 4BH');
 }
 
-async function freeCrime(lat,lng){
-  try{
-    const [r1,r2]=await Promise.allSettled([
-      fetch('https://data.police.uk/api/crimes-street/all-crime?lat='+lat+'&lng='+lng+'&date=2024-09').then(r=>r.json()),
-      fetch('https://data.police.uk/api/stops-street?lat='+lat+'&lng='+lng+'&date=2024-09').then(r=>r.json()),
-    ]);
-    const crimes=r1.status==='fulfilled'&&Array.isArray(r1.value)?r1.value:[];
-    const stops=r2.status==='fulfilled'&&Array.isArray(r2.value)?r2.value:[];
-    const bk={};
-    crimes.forEach(c=>{const cat=c.category.replace(/-/g,' ');bk[cat]=(bk[cat]||0)+1;});
-    const total=crimes.length;
-    const score=total>200?2:total>120?5:total>60?7:total>30?8:9;
-    return {total,breakdown:bk,score,stops:stops.length};
-  }catch(e){return {total:0,breakdown:{},score:7,stops:0};}
-}
-
-async function freePriceHistory(pc){
-  try{
-    const area=pc.split(' ')[0].replace(/\s/g,'').toUpperCase();
-    const sparql='SELECT ?paon ?street ?date ?amount ?ptype WHERE{?t <http://landregistry.data.gov.uk/def/ppi/propertyAddress> ?addr.?addr <http://landregistry.data.gov.uk/def/common/postcode> "'+area+'"^^<http://www.w3.org/2001/XMLSchema#string>.?t <http://landregistry.data.gov.uk/def/ppi/pricePaid> ?amount.?t <http://landregistry.data.gov.uk/def/ppi/transactionDate> ?date.OPTIONAL{?t <http://landregistry.data.gov.uk/def/ppi/propertyType> ?ptype}}ORDER BY DESC(?date)LIMIT 60';
-    const r=await fetch('https://landregistry.data.gov.uk/landregistry/query?query='+encodeURIComponent(sparql)+'&output=json');
-    const d=await r.json();
-    const rows=d.results?.bindings||[];
-    const prices=rows.map(x=>parseInt(x.amount?.value||0)).filter(p=>p>0);
-    const avg=prices.length?Math.round(prices.reduce((a,b)=>a+b,0)/prices.length):0;
-    const trend=prices.length>9?Math.round((prices.slice(0,5).reduce((a,b)=>a+b,0)/5-prices.slice(-5).reduce((a,b)=>a+b,0)/5)/(prices.slice(-5).reduce((a,b)=>a+b,0)/5)*100):0;
-    const recent=rows.slice(0,8).map(r=>({addr:[r.paon?.value,r.street?.value].filter(Boolean).join(' '),date:r.date?.value?.slice(0,10),price:parseInt(r.amount?.value||0),type:r.ptype?.value?.split('/').pop()||''}));
-    return {count:rows.length,avgPrice:avg,prices,trend,recent};
-  }catch(e){return {count:0,avgPrice:0,prices:[],trend:0,recent:[]};}
-}
-
-async function freeHPI(region){
-  // HM Land Registry UK House Price Index - free JSON API
-  try{
-    const loc=encodeURIComponent('http://landregistry.data.gov.uk/id/region/greater-manchester');
-    const r=await fetch('https://landregistry.data.gov.uk/app/ukhpi/api/data.json?from=2023-01-01&to=2024-12-01&location='+loc);
-    const d=await r.json();
-    if(!d||!d.data) return null;
-    const entries=Object.values(d.data).flat().filter(e=>e.averagePrice);
-    if(!entries.length) return null;
-    const latest=entries[entries.length-1];
-    const oldest=entries[0];
-    const yearGrowth=oldest.averagePrice?Math.round((latest.averagePrice-oldest.averagePrice)/oldest.averagePrice*100):0;
-    return {avgPrice:latest.averagePrice,yearGrowth,date:latest.date||'2024'};
-  }catch(e){return null;}
-}
-
-async function freeNearby(lat,lng){
-  try{
-    const d=0.045;
-    const bbox=(lat-d)+','+(lng-d)+','+(lat+d)+','+(lng+d);
-    const qs={
-      gyms:'[out:json][timeout:15];(node["leisure"="sports_centre"]('+bbox+');node["amenity"="swimming_pool"]('+bbox+');way["leisure"="sports_centre"]('+bbox+'););out center 8;',
-      shops:'[out:json][timeout:15];(node["shop"="supermarket"]('+bbox+');node["shop"="convenience"]["brand"]('+bbox+'););out center 8;',
-      schools:'[out:json][timeout:10];(node["amenity"="school"]('+bbox+');node["amenity"="college"]('+bbox+'););out center 6;',
-      parks:'[out:json][timeout:10];(way["leisure"="park"]('+bbox+'););out center 5;',
-      transport:'[out:json][timeout:10];(node["railway"="tram_stop"]('+bbox+');node["railway"="station"]('+bbox+');node["highway"="bus_stop"]["name"]('+bbox+'););out center 12;',
-      hospitals:'[out:json][timeout:8];(node["amenity"="hospital"]('+bbox+');node["amenity"="doctors"]('+bbox+'););out center 5;',
-      ev:'[out:json][timeout:8];(node["amenity"="charging_station"]('+bbox+'););out center 6;',
-    };
-    const results={};
-    await Promise.allSettled(Object.entries(qs).map(async([key,q])=>{
-      try{const r=await fetch('https://overpass-api.de/api/interpreter?data='+encodeURIComponent(q));const data=await r.json();results[key]=(data.elements||[]).slice(0,10);}
-      catch(e){results[key]=[];}
-    }));
-    return results;
-  }catch(e){return {gyms:[],shops:[],schools:[],parks:[],transport:[],hospitals:[],ev:[]};}
-}
-
-async function freeFloodRisk(lat,lng){
-  try{
-    const r=await fetch('https://environment.data.gov.uk/flood-monitoring/id/floodAreas?lat='+lat+'&long='+lng+'&dist=1');
-    const d=await r.json();
-    const items=d.items||[];
-    return {zones:items.length,highRisk:items.some(i=>i.description?.toLowerCase().includes('high')||i.riverOrSea),areas:items.slice(0,3).map(i=>i.description||i.label||'Flood zone')};
-  }catch(e){return {zones:0,highRisk:false,areas:[]};}
-}
-
-async function freePlanningRisk(lat,lng){
-  try{
-    const r=await fetch('https://www.planning.data.gov.uk/entity.json?geometry_reference='+lat+','+lng+'&dataset=conservation-area,listed-building,tree-preservation-zone&limit=10');
-    const d=await r.json();
-    return {count:d.count||0,areas:(d.entities||[]).slice(0,4).map(e=>e.name||e.dataset||'Planning area')};
-  }catch(e){return {count:0,areas:[]};}
-}
-
-async function freeDeprivation(lat,lng){
-  // ONS Indices of Multiple Deprivation via ArcGIS open service
-  try{
-    const r=await fetch('https://services3.arcgis.com/ivmBBrHfQfDnDf8Q/arcgis/rest/services/Indices_of_Multiple_Deprivation_(IMD)_2019/FeatureServer/0/query?geometry='+lng+'%2C'+lat+'&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&outFields=IMDDecil%2CLSOAcode11%2CIMD2019&f=json&returnGeometry=false');
-    const d=await r.json();
-    const feat=d.features?.[0]?.attributes;
-    if(!feat) return null;
-    return {decile:feat.IMDDecil,score:feat.IMD2019,label:feat.IMDDecil<=2?'Very deprived':feat.IMDDecil<=4?'Deprived':feat.IMDDecil<=6?'Average':feat.IMDDecil<=8?'Affluent':'Very affluent'};
-  }catch(e){return null;}
-}
-
-async function freeTfGM(lat,lng){
-  // TfGM real-time Metrolink stops
-  try{
-    const r=await fetch('https://odata.tfgm.com/odata/Metrolinks?$top=5&$format=json');
-    const d=await r.json();
-    if(!d.value) return [];
-    // Find closest stops (approximate distance)
-    return d.value.slice(0,5).map(s=>({name:s.TLAREF||s.Id,line:s.Line||'Metrolink'}));
-  }catch(e){return [];}
-}
-
-async function freeEV(lat,lng){
-  // Open Charge Map - EV charging near property
-  try{
-    const r=await fetch('https://api.openchargemap.io/v3/poi/?output=json&latitude='+lat+'&longitude='+lng+'&distance=0.5&distanceunit=Miles&maxresults=5&compact=true&verbose=false');
-    const d=await r.json();
-    return Array.isArray(d)?d.length:0;
-  }catch(e){return 0;}
-}
-
-async function freeFoodHygiene(lat,lng){
-  // Food Standards Agency open API - restaurants/pubs near property
-  try{
-    const r=await fetch('https://api.ratings.food.gov.uk/Establishments?latitude='+lat+'&longitude='+lng+'&maxDistanceLimit=0.5&pageSize=5&sortOptionKey=distance',{headers:{'x-api-version':'2','Accept':'application/json'}});
-    const d=await r.json();
-    return {count:d.establishments?.length||0,establishments:(d.establishments||[]).slice(0,3).map(e=>e.BusinessName||'Restaurant')};
-  }catch(e){return {count:0,establishments:[]};}
-}
-
+async function freeCrime(lat,lng){try{const[r1,r2]=await Promise.allSettled([fetch('https://data.police.uk/api/crimes-street/all-crime?lat='+lat+'&lng='+lng+'&date=2024-09').then(r=>r.json()),fetch('https://data.police.uk/api/stops-street?lat='+lat+'&lng='+lng+'&date=2024-09').then(r=>r.json())]);const crimes=r1.status==='fulfilled'&&Array.isArray(r1.value)?r1.value:[];const stops=r2.status==='fulfilled'&&Array.isArray(r2.value)?r2.value:[];const bk={};crimes.forEach(c=>{const cat=c.category.replace(/-/g,' ');bk[cat]=(bk[cat]||0)+1;});const total=crimes.length;const score=total>200?2:total>120?5:total>60?7:total>30?8:9;return{total,breakdown:bk,score,stops:stops.length};}catch(e){return{total:0,breakdown:{},score:7,stops:0};}}
+async function freePriceHistory(pc){try{const area=pc.split(' ')[0].replace(/\s/g,'').toUpperCase();const sparql='SELECT ?paon ?street ?date ?amount ?ptype WHERE{?t <http://landregistry.data.gov.uk/def/ppi/propertyAddress> ?addr.?addr <http://landregistry.data.gov.uk/def/common/postcode> "'+area+'"^^<http://www.w3.org/2001/XMLSchema#string>.?t <http://landregistry.data.gov.uk/def/ppi/pricePaid> ?amount.?t <http://landregistry.data.gov.uk/def/ppi/transactionDate> ?date.OPTIONAL{?t <http://landregistry.data.gov.uk/def/ppi/propertyType> ?ptype}}ORDER BY DESC(?date)LIMIT 60';const r=await fetch('https://landregistry.data.gov.uk/landregistry/query?query='+encodeURIComponent(sparql)+'&output=json');const d=await r.json();const rows=d.results?.bindings||[];const prices=rows.map(x=>parseInt(x.amount?.value||0)).filter(p=>p>0);const avg=prices.length?Math.round(prices.reduce((a,b)=>a+b,0)/prices.length):0;const trend=prices.length>9?Math.round((prices.slice(0,5).reduce((a,b)=>a+b,0)/5-prices.slice(-5).reduce((a,b)=>a+b,0)/5)/(prices.slice(-5).reduce((a,b)=>a+b,0)/5)*100):0;const recent=rows.slice(0,8).map(r=>({addr:[r.paon?.value,r.street?.value].filter(Boolean).join(' '),date:r.date?.value?.slice(0,10),price:parseInt(r.amount?.value||0),type:r.ptype?.value?.split('/').pop()||''}));return{count:rows.length,avgPrice:avg,prices,trend,recent};}catch(e){return{count:0,avgPrice:0,prices:[],trend:0,recent:[]};}}
+async function freeHPI(){try{const loc=encodeURIComponent('http://landregistry.data.gov.uk/id/region/greater-manchester');const r=await fetch('https://landregistry.data.gov.uk/app/ukhpi/api/data.json?from=2023-01-01&to=2024-12-01&location='+loc);const d=await r.json();if(!d||!d.data)return null;const entries=Object.values(d.data).flat().filter(e=>e.averagePrice);if(!entries.length)return null;const latest=entries[entries.length-1];const oldest=entries[0];const yearGrowth=oldest.averagePrice?Math.round((latest.averagePrice-oldest.averagePrice)/oldest.averagePrice*100):0;return{avgPrice:latest.averagePrice,yearGrowth,date:latest.date||'2024'};}catch(e){return null;}}
+async function freeNearby(lat,lng){try{const d=0.045;const bbox=(lat-d)+','+(lng-d)+','+(lat+d)+','+(lng+d);const qs={gyms:'[out:json][timeout:15];(node["leisure"="sports_centre"]('+bbox+');node["amenity"="swimming_pool"]('+bbox+');way["leisure"="sports_centre"]('+bbox+'););out center 8;',shops:'[out:json][timeout:15];(node["shop"="supermarket"]('+bbox+');node["shop"="convenience"]["brand"]('+bbox+'););out center 8;',schools:'[out:json][timeout:10];(node["amenity"="school"]('+bbox+');node["amenity"="college"]('+bbox+'););out center 6;',parks:'[out:json][timeout:10];(way["leisure"="park"]('+bbox+'););out center 5;',transport:'[out:json][timeout:10];(node["railway"="tram_stop"]('+bbox+');node["railway"="station"]('+bbox+');node["highway"="bus_stop"]["name"]('+bbox+'););out center 12;',hospitals:'[out:json][timeout:8];(node["amenity"="hospital"]('+bbox+');node["amenity"="doctors"]('+bbox+'););out center 5;'};const results={};await Promise.allSettled(Object.entries(qs).map(async([key,q])=>{try{const r=await fetch('https://overpass-api.de/api/interpreter?data='+encodeURIComponent(q));const data=await r.json();results[key]=(data.elements||[]).slice(0,10);}catch(e){results[key]=[];}}));return results;}catch(e){return{gyms:[],shops:[],schools:[],parks:[],transport:[],hospitals:[]};}}
+async function freeFloodRisk(lat,lng){try{const r=await fetch('https://environment.data.gov.uk/flood-monitoring/id/floodAreas?lat='+lat+'&long='+lng+'&dist=1');const d=await r.json();const items=d.items||[];return{zones:items.length,highRisk:items.some(i=>i.description?.toLowerCase().includes('high')||i.riverOrSea),areas:items.slice(0,3).map(i=>i.description||i.label||'Flood zone')};}catch(e){return{zones:0,highRisk:false,areas:[]};}}
+async function freePlanningRisk(lat,lng){try{const r=await fetch('https://www.planning.data.gov.uk/entity.json?geometry_reference='+lat+','+lng+'&dataset=conservation-area,listed-building,tree-preservation-zone&limit=10');const d=await r.json();return{count:d.count||0,areas:(d.entities||[]).slice(0,4).map(e=>e.name||e.dataset||'Planning area')};}catch(e){return{count:0,areas:[]};}}
+async function freeDeprivation(lat,lng){try{const r=await fetch('https://services3.arcgis.com/ivmBBrHfQfDnDf8Q/arcgis/rest/services/Indices_of_Multiple_Deprivation_(IMD)_2019/FeatureServer/0/query?geometry='+lng+'%2C'+lat+'&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&outFields=IMDDecil%2CLSOAcode11%2CIMD2019&f=json&returnGeometry=false');const d=await r.json();const feat=d.features?.[0]?.attributes;if(!feat)return null;return{decile:feat.IMDDecil,score:feat.IMD2019,label:feat.IMDDecil<=2?'Very deprived':feat.IMDDecil<=4?'Deprived':feat.IMDDecil<=6?'Average':feat.IMDDecil<=8?'Affluent':'Very affluent'};}catch(e){return null;}}
 
 
 // ─── HOMEDATA ─────────────────────────────────────────────────────────────────
+// Uses postcodes.io geo data to find the RIGHT boundary, not postcode text search
+async function homedataListings(postcode, budget, geo){
+  if(!S.homedataKey||S.homedataUsed>=S.homedataCap){
+    uiLog('[HD] skip — no key or cap reached','text3');
+    return [];
+  }
+  uiLog('[HD] Starting Homedata search…','teal');
+  const minBeds=parseInt($('min-beds')?.value)||3;
+
+  // Try direct fetch first, then CORS proxy fallback
+  async function hdFetch(url, auth){
+    const hdrs={'Accept':'application/json'};
+    if(auth) hdrs['Authorization']='Api-Key '+S.homedataKey;
+    // Direct
+    try{
+      const r=await fetch(url,{mode:'cors',headers:hdrs,signal:AbortSignal.timeout(12000)});
+      if(r.status!==0) return r;
+    }catch(e){uiLog('[HD] direct blocked, trying proxy…','text3');}
+    // CORS proxy (forwards headers)
+    try{
+      const r2=await fetch('https://corsproxy.io/?'+encodeURIComponent(url),{mode:'cors',headers:hdrs,signal:AbortSignal.timeout(15000)});
+      return r2;
+    }catch(e){return null;}
+  }
+
+  // Step 1: Find boundary using ward/district names from geo (postcodes.io data)
+  // This is more reliable than searching by postcode text
+  let boundary=null;
+  const searchTerms=[];
+  if(geo){
+    // Use actual admin names from postcodes.io - most precise
+    if(geo.admin_ward) searchTerms.push(geo.admin_ward);
+    if(geo.admin_district) searchTerms.push(geo.admin_district);
+    if(geo.parliamentary_constituency) searchTerms.push(geo.parliamentary_constituency);
+  }
+  // Also try outcode e.g. "M3" from postcode
+  const outcode=postcode.trim().toUpperCase().split(' ')[0];
+  searchTerms.push(outcode);
+
+  for(const term of searchTerms){
+    if(boundary) break;
+    uiLog('[HD] Boundary search: "'+term+'"','teal');
+    const br=await hdFetch('https://api.homedata.co.uk/api/boundaries/autocomplete/?q='+encodeURIComponent(term), true);
+    if(!br){uiLog('[HD] Boundaries unreachable (CORS/network)','text3');continue;}
+    if(!br.ok){uiLog('[HD] Boundaries HTTP '+br.status,'red');continue;}
+    let bd;
+    try{bd=await br.json();}catch(e){uiLog('[HD] Boundaries non-JSON','red');continue;}
+    const results=(bd.results||[]);
+    uiLog('[HD] '+results.length+' boundaries: '+results.slice(0,3).map(b=>b.name+'('+b.id+')').join(', '),'teal');
+    if(results.length) boundary=results[0];
+  }
+
+  if(!boundary){
+    uiLog('[HD] No boundary found. Check your Homedata plan includes live-listings.','red');
+    return [];
+  }
+  uiLog('[HD] Using: '+boundary.name+' (id:'+boundary.id+')','teal');
+
+  // Step 2: Live listings — NO bedrooms filter (it's exact match not min, filter client-side)
+  const params=new URLSearchParams({
+    boundary_id:boundary.id,
+    transaction_type:'Sale',
+    max_price:budget,
+    sort:'-added_date',
+    page_size:50,
+  });
+
+  const listUrl='https://api.homedata.co.uk/api/live-listings/search/?'+params.toString();
+  uiLog('[HD] Fetching listings…','teal');
+  const r=await hdFetch(listUrl, true);
+
+  if(!r){uiLog('[HD] live-listings unreachable — CORS or network issue','red');return [];}
+  const rem=r.headers?.get?.('X-RateLimit-Remaining')||'?';
+  uiLog('[HD] HTTP '+r.status+' | '+rem+' calls left','teal');
+
+  if(r.status===401){uiLog('[HD] 401 — wrong key format. Must be: QRryNTjX.your-secret','red');return [];}
+  if(r.status===403){uiLog('[HD] 403 — key may not have live-listings access. Check homedata.co.uk/account','red');return [];}
+  if(!r.ok){let t='';try{t=await r.text();}catch(e){}uiLog('[HD] HTTP '+r.status+': '+t.slice(0,80),'red');return [];}
+
+  let d;try{d=await r.json();}catch(e){uiLog('[HD] Non-JSON response','red');return [];}
+  spend('hd',1);
+  const all=d.results||[];
+  uiLog('[HD] API total: '+d.count+' | page returned: '+all.length,'teal');
+
+  // Filter client-side for minBeds (API bedrooms param is exact not min)
+  const filtered=all.filter(p=>(p.bedrooms||0)>=minBeds);
+  uiLog('[HD] After '+minBeds+'+ beds filter: '+filtered.length,'teal');
+
+  if(!filtered.length){
+    uiLog('[HD] 0 results after filtering. API returned '+all.length+' total (all beds) in '+boundary.name+'.','amber');
+    uiLog('[HD] Try: lower min-beds, raise budget, or different area','amber');
+    return [];
+  }
+
+  return filtered.map(p=>{
+    const price=p.latest_price||0;
+    const addr=p.display_address||postcode;
+    const pcm=addr.match(/[A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2}/i);
+    const pcs=pcm?pcm[0].replace(/\s/,'').toLowerCase():'';
+    const status=p.latest_status||'For Sale';
+    const portal=p.source||'Portal';
+    return {
+      id:'hd-'+(p.listing_id||p.property_uprn||Math.random().toString(36).slice(2,10)),
+      address:addr,price,
+      type:(p.listing_property_type||'unknown').toLowerCase(),
+      beds:p.bedrooms||0,baths:p.bathrooms||0,
+      sqft:null,epc:null,tenure:null,
+      chainFree:/chain.free|no chain/i.test(status),
+      chain:/sold.stc|under.offer/i.test(status),
+      garden:false,garage:false,parking:false,newBuild:false,
+      description:status+' · Added '+(p.added_date||'').slice(0,10)+' · via '+portal+' · '+boundary.name,
+      features:[status,portal,(p.added_date||'').slice(0,10)?'Added '+(p.added_date||'').slice(0,10):''].filter(Boolean),
+      url:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+encodeURIComponent(outcode)+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget,
+      rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+encodeURIComponent(outcode)+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget,
+      zooplaUrl:pcs?'https://www.zoopla.co.uk/for-sale/property/'+pcs+'/?q='+pcs+'&results_sort=newest_listings':'https://www.zoopla.co.uk/for-sale/',
+      agent:{name:'Homedata · '+portal,phone:'',branch:boundary.name},
+      addedDate:(p.added_date||'').slice(0,10)||'Recent',
+      reduced:/reduc/i.test(status),source:'homedata',
+      floorArea:null,uprn:p.property_uprn||null,lat:null,lng:null,
+    };
+  }).filter(p=>p.price>0&&p.price<=budget);
+}
+
 // ─── APIFY ────────────────────────────────────────────────────────────────────
-async function apifyListings(location, budget){
-  console.log('[Apify] key:',!!S.apifyKey,'loc:',location,'budget:',budget,'spent:',S.apifySpent,'cap:',S.apifyCap);
-  if(!S.apifyKey||S.apifySpent>=S.apifyCap) return [];
+async function apifyListings(location,budget,geo){
+  if(!S.apifyKey||S.apifySpent>=S.apifyCap){uiLog('[Apify] skip — no key','text3');return [];}
+  const minBeds=parseInt($('min-beds')?.value)||3;
   let max=S.apifyMax;
   if(S.apifySpent+(max*3.45/1000+0.005)>S.apifyCap) max=Math.max(5,Math.floor((S.apifyCap-S.apifySpent-0.005)/(3.45/1000)));
+  uiLog('[Apify] Starting — location: '+location,'teal');
   try{
-    const run=await fetch('https://api.apify.com/v2/acts/automation-lab~rightmove-scraper/runs?token='+S.apifyKey,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({searchLocation:location,channel:'BUY',maxResults:max,radius:'1.0',sortType:'Newest',includeSSTC:false,maxPrice:budget,minBeds:parseInt($('min-beds').value)||3})});
+    const run=await fetch('https://api.apify.com/v2/acts/automation-lab~rightmove-scraper/runs?token='+S.apifyKey,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({searchLocation:location,channel:'BUY',maxResults:max,radius:'1.0',sortType:'Newest',includeSSTC:false,maxPrice:budget,minBeds})
+    });
     const rd=await run.json();
     if(rd.error) throw new Error('Apify: '+rd.error.message);
-    if(!rd.data?.id) throw new Error('Apify run failed');
-    const runId=rd.data.id, dsId=rd.data.defaultDatasetId;
+    if(!rd.data?.id) throw new Error('Apify run failed to start');
+    const runId=rd.data.id,dsId=rd.data.defaultDatasetId;
+    uiLog('[Apify] Run started: '+runId,'teal');
     let status='RUNNING',attempts=0;
-    while(status==='RUNNING'&&attempts<35){await new Promise(r=>setTimeout(r,3000));const sr=await fetch('https://api.apify.com/v2/actor-runs/'+runId+'?token='+S.apifyKey);const sd=await sr.json();status=sd.data?.status||'FAILED';attempts++;}
-    if(status!=='SUCCEEDED') throw new Error('Apify timed out');
+    while(status==='RUNNING'&&attempts<35){
+      await new Promise(r=>setTimeout(r,3000));
+      const sr=await fetch('https://api.apify.com/v2/actor-runs/'+runId+'?token='+S.apifyKey);
+      const sd=await sr.json();
+      status=sd.data?.status||'FAILED';
+      attempts++;
+      if(attempts%5===0) uiLog('[Apify] Still running… ('+attempts*3+'s)','text3');
+    }
+    if(status!=='SUCCEEDED') throw new Error('Apify '+status+' after '+attempts*3+'s');
     const ir=await fetch('https://api.apify.com/v2/datasets/'+dsId+'/items?token='+S.apifyKey+'&limit='+max);
     const items=await ir.json();
-    const actualCost=((Array.isArray(items)?items.length:0)*3.45/1000)+0.005;
-    spend('apify',actualCost);
+    const cost=((Array.isArray(items)?items.length:0)*3.45/1000)+0.005;
+    spend('apify',cost);
+    uiLog('[Apify] Got '+( Array.isArray(items)?items.length:0)+' listings','teal');
     return (Array.isArray(items)?items:[]).map(p=>{
       const propId=p.id||p.propertyId||'';
       const features=p.keyFeatures||p.features||[];
@@ -612,795 +645,33 @@ async function apifyListings(location, budget){
       const priceVal=typeof p.price==='object'?(p.price?.amount||0):(p.price||0);
       const pcMatch=(p.displayAddress||'').match(/[A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2}/i);
       const propPc=pcMatch?pcMatch[0].replace(/\s+/g,''):'';
-      return {
+      return{
         id:propId,address:p.displayAddress||'Address unavailable',price:priceVal,
-        type:(p.propertySubType||p.propertyType||'unknown').toLowerCase(),beds:p.bedrooms||0,baths:p.bathrooms||0,sqft:p.floorAreaSqFt||null,
-        epc:p.epcRating||null,tenure:p.tenure?.tenureType||(typeof p.tenure==='string'?p.tenure:null)||(/freehold/i.test(fullText)?'Freehold':/leasehold/i.test(fullText)?'Leasehold':null),
-        chainFree:p.isChainFree===true||/chain.free|no chain/i.test(fullText),chain:p.isChainFree===false,
-        garden:/garden/i.test(fullText),garage:/garage/i.test(fullText),parking:/parking/i.test(fullText),newBuild:p.newHome===true||/new build/i.test(fullText),
+        type:(p.propertySubType||p.propertyType||'unknown').toLowerCase(),
+        beds:p.bedrooms||0,baths:p.bathrooms||0,sqft:p.floorAreaSqFt||null,
+        epc:p.epcRating||null,
+        tenure:p.tenure?.tenureType||(typeof p.tenure==='string'?p.tenure:null)||(/freehold/i.test(fullText)?'Freehold':/leasehold/i.test(fullText)?'Leasehold':null),
+        chainFree:p.isChainFree===true||/chain.free|no chain/i.test(fullText),
+        chain:p.isChainFree===false,
+        garden:/garden/i.test(fullText),garage:/garage/i.test(fullText),
+        parking:/parking/i.test(fullText),newBuild:p.newHome===true||/new build/i.test(fullText),
         description:(p.summary||p.description||'').slice(0,600),features:features.slice(0,8),
-        url:propId?('https://www.rightmove.co.uk/properties/'+propId+'#/'):(p.propertyUrl?'https://www.rightmove.co.uk'+p.propertyUrl:'https://www.rightmove.co.uk'),
-        rightmoveUrl:propId?('https://www.rightmove.co.uk/properties/'+propId+'#/'):('https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+(propPc||location.replace(/ /g,'+'))+'&useLocationIdentifier=false&sortType=6&includeSSTC=false'),
-        zooplaUrl:propPc?('https://www.zoopla.co.uk/for-sale/property/'+propPc.toLowerCase()+'/?q='+propPc.toLowerCase()+'&results_sort=newest_listings'):'https://www.zoopla.co.uk/for-sale/property/manchester/?q=manchester&results_sort=newest_listings',
+        url:propId?'https://www.rightmove.co.uk/properties/'+propId+'#/':'https://www.rightmove.co.uk',
+        rightmoveUrl:propId?'https://www.rightmove.co.uk/properties/'+propId+'#/':'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+(propPc||location.replace(/ /g,'+'))+'&useLocationIdentifier=false&sortType=6&includeSSTC=false',
+        zooplaUrl:propPc?'https://www.zoopla.co.uk/for-sale/property/'+propPc.toLowerCase()+'/?q='+propPc.toLowerCase()+'&results_sort=newest_listings':'https://www.zoopla.co.uk/for-sale/',
         agent:{name:p.customer?.brandTradingName||'Estate Agent',phone:p.customer?.contactTelephone||'',branch:p.customer?.branchDisplayName||''},
-        addedDate:p.addedOrReduced||'Recent',reduced:/reduc|price.drop/i.test(p.addedOrReduced||''),source:'apify',floorArea:p.floorAreaSqM||null,
+        addedDate:p.addedOrReduced||'Recent',reduced:/reduc|price.drop/i.test(p.addedOrReduced||''),
+        source:'apify',floorArea:p.floorAreaSqM||null,
       };
     }).filter(p=>p.price>0);
   }catch(e){
-    console.error('Apify error:',e.message);
-    const fle=$('free-log');
-    if(fle){const d=document.createElement('div');d.style.color='var(--red)';d.textContent='✗ Apify: '+e.message.slice(0,80);fle.appendChild(d);}
-    return [];
-  }
-}
-
-// ─── SCORE ────────────────────────────────────────────────────────────────────
-function scoreAll(listings,crimeScore,nearby,deprivation,mode){
-  const ws=parseInt($('w-safety').value)/10,wi=parseInt($('w-invest').value)/10,
-        wt=parseInt($('w-trans').value)/10,wb=parseInt($('w-build').value)/10,
-        wl=parseInt($('w-life').value)/10;
-  const wTotal=ws+wi+wt+wb+wl||1;
-  const depScore=deprivation?Math.min(10,deprivation.decile||5):5;
-  const blendedSafety=Math.round((crimeScore*0.7+depScore*0.3)*10)/10;
-  return listings.map(p=>{
-    const txt=(p.description+' '+(p.features||[]).join(' ')).toLowerCase();
-    const trans=/metrolink|tram|train|station/.test(txt)?9:/bus/.test(txt)?7:6;
-    const invest=p.type.includes('detach')?9:p.type.includes('bungalow')?8:p.type.includes('semi')?7:6;
-    const build=p.newBuild?9:/victorian|edwardian|1930|1920/.test(txt)?7:/1960|1970|1950/.test(txt)?6:7;
-    const life=Math.min(10,(nearby.gyms?.length>0?2:0)+(nearby.shops?.length>2?2:0)+(nearby.parks?.length>0?1:0)+(nearby.transport?.length>3?1:0)+4);
-    const overall=Math.round((blendedSafety*ws+invest*wi+trans*wt+build*wb+life*wl)/wTotal*10)/10;
-    const urgency=p.reduced?'high':p.addedDate?.toLowerCase().includes('today')||/^[12] day/.test(p.addedDate||'')?'high':/week|[3-7] day/.test(p.addedDate||'')?'med':'low';
-    return {...p,safetyScore:blendedSafety,transportScore:trans,investScore:invest,buildScore:build,lifeScore:life,overallScore:overall,urgency};
-  }).sort((a,b)=>b.overallScore-a.overallScore);
-}
-
-// ─── CLAUDE ───────────────────────────────────────────────────────────────────
-async function runClaude(listings,geo,crime,price,nearby,flood,planning,deprivation,hpi,opts){
-  if(!S.claudeKey||S.claudeSpent>=S.claudeCap) return null;
-  const {budget,stretch,musts}=opts;
-  const gymList=nearby.gyms?.map(g=>g.tags?.name).filter(Boolean).slice(0,4).join(', ')||'Check locally';
-  const transportList=nearby.transport?.map(t=>t.tags?.name||t.tags?.ref).filter(Boolean).slice(0,5).join(', ')||'Bus network';
-  const recentSales=price.recent.slice(0,5).map(r=>r.addr+' £'+fmt(r.price)+' ('+r.date+')').join('; ');
-  const sources=[...new Set(listings.map(p=>p.source))].join(', ');
-  const isRealListings=listings.some(p=>p.source!=='fallback');
-
-  const prompt='You are a top Greater Manchester property analyst. Give DETAILED, SPECIFIC, HONEST analysis. Every sentence must add value. No padding.\n\n'
-    +'BUYER: Budget £'+fmt(budget)+' | Stretch £'+fmt(stretch)+' | Must-haves: '+musts.join(', ')+' | Area: '+geo.admin_district+', '+geo.admin_ward+'\n\n'
-    +'AREA DATA:\n'
-    +'Crime (Police API Sep 2024): '+crime.total+' incidents | Score: '+crime.score+'/10 | Stop & search: '+crime.stops+'\n'
-    +'Top crimes: '+Object.entries(crime.breakdown).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([k,v])=>k+':'+v).join(', ')+'\n'
-    +(deprivation?'Deprivation (ONS IMD 2019): '+deprivation.label+' (decile '+deprivation.decile+'/10)\n':'')
-    +'Flood risk: '+flood.zones+' zones within 1km | High risk: '+(flood.highRisk?'YES':'No')+'\n'
-    +'Planning: '+planning.count+' designations nearby ('+planning.areas.join(', ')+')\n'
-    +'Land Registry: Avg £'+fmt(price.avgPrice)+' ('+price.count+' sales) | Trend: '+(price.trend>0?'+':'')+price.trend+'%\n'
-    +(hpi?'HM Land Registry HPI Greater Manchester: £'+fmt(hpi.avgPrice)+', '+hpi.yearGrowth+'% growth since 2023\n':'')
-    +'Recent sales: '+recentSales+'\n'
-    +'OSM Nearby: Gyms: '+gymList+' | Transport: '+transportList+'\n'
-    +'Sources: '+sources+(isRealListings?' (REAL current listings)':' (example data)')+'\n\n'
-    +'PROPERTIES:\n'
-    +listings.slice(0,12).map((p,i)=>'#'+(i+1)+' '+p.address+'\n  £'+fmt(p.price)+' | '+p.type+' | '+p.beds+'bed/'+p.baths+'bath | EPC:'+(p.epc||'?')+' | Tenure:'+(p.tenure||'?')+'\n  Chain-free:'+(p.chainFree?'YES':'NO')+' | Garden:'+(p.garden?'yes':'no')+' | Garage:'+(p.garage?'yes':'no')+' | Added:'+(p.addedDate||'recent')+(p.reduced?' | PRICE REDUCED':'')+'\n  '+(p.features||[]).slice(0,4).join(', ')+'\n  '+((p.description||'').slice(0,180))).join('\n\n')
-    +'\n\nRespond ONLY in valid JSON, no markdown:\n'
-    +'{"topPickId":"id or address start","topPickVerdict":"4 sentences: why #1, price vs £'+fmt(price.avgPrice)+' avg, investment % case, specific viewing checklist","verdicts":{"ADDRESS_OR_ID":"Full paragraph: price vs market, investment case, crime/flood/deprivation context, build soundproofing, EPC bill estimate, chain risk, urgency signal, viewing checklist"},"visitOrder":["addresses most urgent first"],"visitUrgency":{"ADDRESS_OR_ID":"Specific reason — days on market, price reduction, competition level"},"mustHaveScore":{"ADDRESS_OR_ID":"X/10 must-haves met. Missing: list specific ones"},"stretchCase":"ROI argument for £'+fmt(stretch)+' vs £'+fmt(budget)+' — cite % growth, 5yr projection, what extra unlocks","stretchWarning":"Risks of stretching — mortgage stress, renovation, EPC upgrade costs","redFlags":["Manchester structural risk for '+( geo.admin_ward||'this area')+' — subsidence/drainage/foundation type","Survey item for property types found","EPC warning with estimated annual bills for D/E ratings","Chain/legal risk based on chain status","Flood/planning risk from real data"],"soundproofingGuide":"Per build type: Victorian brick vs 1950s-70s cavity vs new build — what to test, questions to ask agent","marketOutlook":"Manchester South 2025-2027: % forecasts by sub-area, airport Metrolink effect, best exit strategy","gymVerdict":"Closest pool gym to each property using OSM data + David Lloyd Didsbury/Manchester Aquatics Centre/Virgin Active Chorlton/Withington Baths","chainRisk":"HIGH/MED/LOW + chain-free proportion explanation","floodVerdict":"Flood risk for this specific area — implications for mortgage and insurance","deprivationVerdict":"What the ONS deprivation score means in practice for this neighbourhood","investmentRanking":["best to worst for pure ROI — one reason each"]}';
-
-  try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':S.claudeKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,messages:[{role:'user',content:prompt}]})});
-    const data=await r.json();
-    const cost=((data.usage?.input_tokens||0)*3+(data.usage?.output_tokens||0)*15)/1000000;
-    spend('claude',cost);
-    return JSON.parse((data.content?.[0]?.text||'').replace(/```json|```/g,'').trim());
-  }catch(e){console.error('Claude:',e);return null;}
-}
-
-// ─── MAIN SEARCH ──────────────────────────────────────────────────────────────
-async function runSearch(forceRefresh){
-  const pc=$('postcode').value.trim();
-  if(!pc){alert('Please enter a postcode');return;}
-  const budget=parseInt($('budget').value);
-  const stretch=parseInt($('stretch').value);
-  const types=getOn('type-grid');
-  const musts=getOn('must-grid');
-  const minBeds=parseInt($('min-beds').value)||3;
-  const ck=cacheKey(pc,budget,types);
-  if(!forceRefresh&&S.cache[ck]&&Date.now()-S.cache[ck].ts<CACHE_TTL){
-    const c=S.cache[ck];
-    $('mcontent').innerHTML='<div class="cache-bar">♻️ Cached results ('+(Math.round((Date.now()-c.ts)/60000))+'min ago) — no API calls used. Clears after 6h.</div>';
-    renderAll(c.results,c.area,c.ai,{budget,stretch,musts});return;
-  }
-  $('btn-go').disabled=true; showLoading();
-  try{
-    setStep(0); const geo=await freePostcode(pc); setStep(1);
-    const [crime,price,nearby,flood,planning,deprivation,hpi]= await Promise.all([
-      freeCrime(geo.latitude,geo.longitude),
-      freePriceHistory(pc),
-      freeNearby(geo.latitude,geo.longitude),
-      freeFloodRisk(geo.latitude,geo.longitude),
-      freePlanningRisk(geo.latitude,geo.longitude),
-      freeDeprivation(geo.latitude,geo.longitude),
-      freeHPI('greater-manchester'),
-    ]);
-    setStep(2);
-    // Gather real listings from all sources in parallel
-    const location=geo.admin_district||pc;
-    setStep(3);
-    // Mode-aware listing sources
-    const freeLogEl=$('free-log');
-    if(freeLogEl){freeLogEl.innerHTML='<div style="color:var(--text3);font-size:10px">⏳ Searching...</div>';freeLogEl.style.display='block';freeLogEl.style.minHeight='44px';}
-    function fLog(msg,col='text2'){
-      if(!freeLogEl)return;
-      const d=document.createElement('div');
-      d.style.color='var(--'+col+')';d.textContent=msg;
-      freeLogEl.appendChild(d);freeLogEl.scrollTop=freeLogEl.scrollHeight;
-    }
-    const isFreeMode=(S.listingMode||'free')==='free';
-    const isKeysMode=(S.listingMode||'free')==='keys';
-    // Free mode: Rightmove via CORS + Purplebricks + search cards
-    const corsListings=isFreeMode
-      ?await fetchFreeListings(location,budget,minBeds,types,pc,fLog)
-      :[];
-    const [hdListings,rmListings]=isKeysMode
-      ?await Promise.all([homedataListings(pc,budget,location),apifyListings(location,budget)])
-      :[[],[]];
-    const navCards=makeSearchCards(location,budget,minBeds,types,pc);
-    setStep(4);
-    let all=[...hdListings,...rmListings,...corsListings,...navCards];
-    const seen=new Set();
-    all=all.filter(p=>{
-      const k=p.address.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,18);
-      if(seen.has(k))return false; seen.add(k); return true;
-    }).filter(p=>p.source==='search-link'?true:p.price>0&&p.price<=budget);
-    const realCount=all.filter(p=>!['fallback','search-link'].includes(p.source)).length;
-    const isReal=realCount>0||all.some(p=>p.source==='search-link');
-    if(!isReal){
-      all=makeFallback(budget,pc);
-    }
-    setStep(5);
-    const realL=all.filter(p=>p.source!=='search-link');
-    const navL=all.filter(p=>p.source==='search-link');
-    const scoredReal=scoreAll(realL,crime.score,nearby,deprivation,S.mode||'buy');
-    const scoredNav=navL.map(p=>({...p,score:{safety:0,transport:0,schools:0,invest:0,build:0,overall:0},verdict:'search',urgency:'Click to browse live properties',flags:[]}));
-    const scored=[...scoredReal,...scoredNav];
-    let ai=null;
-    if(S.claudeKey&&S.claudeSpent<S.claudeCap){
-      setStep(6);
-      ai=await runClaude(scored.slice(0,12),geo,crime,price,nearby,flood,planning,deprivation,hpi,{budget,stretch,musts});
-    }
-    setStep(7);
-    const area={geo,crime,price,nearby,flood,planning,deprivation,hpi};
-    S.cache[ck]={ts:Date.now(),results:scored,area,ai};
-    S.results=scored; S.area=area; S.ai=ai;
-    renderAll(scored,area,ai,{budget,stretch,musts});
-  }catch(err){
-    console.error('runSearch error:',err);
-    $('mcontent').innerHTML='<div class="empty"><div class="empty-ico">⚠️</div><div style="font-family:\'Playfair Display\',serif;font-size:20px;color:var(--text);margin-bottom:8px">Search error</div><div style="font-size:13px;color:var(--text2);margin-bottom:10px">'+err.message+'</div><div style="font-size:11px;color:var(--text3);line-height:1.8">• Check postcode is valid (e.g. <b>M21</b>)<br>• Open F12 DevTools console for full details<br>• Free mode always shows search link cards<br>• Keys mode needs Apify token saved</div></div>';
-  }
-  $('btn-go').disabled=false;
-}
-
-function makeFallback(budget,pc){
-  const pd=pc.split(' ')[0];
-  return [{id:'f1',address:'Results will appear here',price:budget,type:'detached',beds:3,baths:2,sqft:null,epc:null,tenure:null,chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,description:'Add a Homedata key (100 free/month at homedata.co.uk) or Apify token for live listings.',features:[],url:'https://homedata.co.uk',rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+pd+'&useLocationIdentifier=false&sortType=6&includeSSTC=false',zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pd.toLowerCase()+'/?q='+pd.toLowerCase()+'&results_sort=newest_listings',agent:{name:'homedata.co.uk · apify.com',phone:'',branch:'100 free Homedata calls/month'},addedDate:'',reduced:false,source:'fallback',floorArea:null}];
-}
-
-function showLoading(){
-  $('mcontent').innerHTML='<div class="loading"><div class="spin"></div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px">Searching all sources...</div><div class="lsteps" id="lsteps">'
-    +'<div class="ls" id="ls0"><span>⏳</span> Postcodes.io geocoding <span class="ctag">FREE</span></div>'
-    +'<div class="ls" id="ls1"><span>⏳</span> Crime · Prices · Flood · Planning · Deprivation · HPI · OSM (7 free APIs) <span class="ctag">FREE</span></div>'
-    +'<div class="ls" id="ls2"><span>⏳</span> Loading listings... <span class="ctag">varies</span></div>'
-    +'<div class="ls" id="ls3"><span>⏳</span> Fetching listings from all sources in parallel <span class="ctag">varies</span></div>'
-    +'<div class="ls" id="ls4"><span>⏳</span> Merging · deduplicating · scoring <span class="ctag">FREE</span></div>'
-    +'<div class="ls" id="ls5"><span>⏳</span> Claude AI deep analysis (1 call, all data bundled) <span class="ctag">~$0.003</span></div>'
-    +'<div class="ls" id="ls6"><span>⏳</span> Building your report <span class="ctag">FREE</span></div>'
-    +'</div></div>';
-}
-function setStep(n){
-  for(let i=0;i<n;i++){const e=$('ls'+i);if(e){e.className='ls done';e.querySelector('span').textContent='✓';}}
-  const c=$('ls'+n);if(c){c.className='ls act';c.querySelector('span').textContent='⟳';}
-}
-
-// ─── RENDER ───────────────────────────────────────────────────────────────────
-function getVerdict(ai,p){if(!ai?.verdicts)return null;return ai.verdicts[p.address]||ai.verdicts[p.id]||Object.entries(ai.verdicts).find(([k])=>p.address.toLowerCase().includes(k.toLowerCase().split(',')[0].trim()))?.[1]||null;}
-function getUrgencyText(ai,p){if(ai?.visitUrgency){const v=ai.visitUrgency[p.address]||ai.visitUrgency[p.id]||Object.entries(ai.visitUrgency).find(([k])=>p.address.toLowerCase().includes(k.toLowerCase().split(',')[0].trim()))?.[1];if(v)return v;}return p.urgency==='high'?'Recently listed or price reduced — expect competing offers quickly':p.urgency==='med'?'On market a short while — book this week':'Has been available — room to negotiate on price';}
-function getMust(ai,p){if(!ai?.mustHaveScore)return '';return ai.mustHaveScore[p.address]||ai.mustHaveScore[p.id]||Object.entries(ai.mustHaveScore).find(([k])=>p.address.toLowerCase().includes(k.toLowerCase().split(',')[0].trim()))?.[1]||'';}
-
-function renderAll(listings,area,ai,opts){
-  const {budget,stretch,musts}=opts;
-  const {geo,crime,price,nearby,flood,planning,deprivation,hpi}=area;
-  let sorted=[...listings];
-  if(ai?.topPickId){sorted=sorted.sort((a,b)=>{const n=ai.topPickId.toLowerCase().split(',')[0].trim();return ((b.address+b.id).toLowerCase().includes(n)?1:0)-((a.address+a.id).toLowerCase().includes(n)?1:0);});if(sorted.length)sorted[0].isTopPick=true;}
-  const crimeColor=crime.total>200?'var(--red)':crime.total>120?'var(--amber)':'var(--green)';
-  const crimeLevel=crime.total>200?'High':crime.total>120?'Moderate':crime.total>60?'Low-Mod':'Low';
-    const hdCount=sorted.filter(p=>p.source==='homedata').length;
-  const rmCount=sorted.filter(p=>p.source==='apify').length;
-  const isReal=sorted.some(p=>p.source!=='fallback');
-  const totalSpent=S.claudeSpent+S.apifySpent;
-  let h='';
-  // Source notice
-  const realCnt=sorted.filter(p=>!['fallback','search-link'].includes(p.source)).length;
-  const hasnav=sorted.some(p=>p.source==='search-link');
-  if(realCnt>0){
-    const srcMap={'apify':'Rightmove (Apify)','homedata':'Homedata','rightmove-live':'Rightmove (free)','purplebricks':'Purplebricks'};
-    const srcs=[...new Set(sorted.filter(p=>!['fallback','search-link'].includes(p.source)).map(p=>p.source))].map(x=>srcMap[x]||x);
-    h+='<div class="notice ok">✅ <b>'+realCnt+' live listings</b> from '+srcs.join(' + ')+'</div>';
-  } else if(S.listingMode==='keys'){
-    const msg=S.apifyKey?'Apify returned 0 results — try area name like Manchester not full postcode. Check F12 console.':S.homedataKey?'Homedata returned 0 listings for this area. Check F12 console for [HD] logs — boundary may not match.':'Add a Homedata key (100 free/month) or Apify token for live listings.';
-    h+='<div class="notice warn">⚠ <b>Keys mode: </b>'+msg+'</div>';
-  } else {
-    h+='<div class="notice info">🔍 <b>Free mode: </b>CORS proxies blocked. Click the Rightmove/Zoopla/OnTheMarket cards below. Add an Apify key for scraped results.</div>';
-  }
-  h+='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap">'
-    +'<div><div style="font-family:\'Playfair Display\',serif;font-size:24px;letter-spacing:-.4px">'+sorted.length+' Properties · '+geo.admin_district+'</div>'
-    +'<div style="font-size:11px;color:var(--text2);margin-top:3px">'+(geo.admin_ward||'')+' · '+(geo.region||'')+' · weighted AI scoring</div></div>'
-    +'<div style="font-size:10px;color:var(--text2);text-align:right">Claude: $'+S.claudeSpent.toFixed(3)+' · Apify: $'+S.apifySpent.toFixed(3)+' · HD: '+S.homedataUsed+'<br><span style="color:var(--green)">Free APIs: $0.000</span></div>'
-    +'</div>';
-  h+='<div class="stats">'
-    +'<div class="stat"><div class="stat-l">Crime</div><div class="stat-v" style="color:'+crimeColor+'">'+crimeLevel+'</div><div class="stat-s">'+crime.total+' incidents</div></div>'
-    +'<div class="stat"><div class="stat-l">Avg Sold</div><div class="stat-v" style="color:var(--accent)">£'+(price.avgPrice?Math.round(price.avgPrice/1000)+'k':'N/A')+'</div><div class="stat-s">Land Registry</div></div>'
-    +'<div class="stat"><div class="stat-l">Budget</div><div class="stat-v" style="color:var(--green)">£'+Math.round(budget/1000)+'k</div><div class="stat-s">Stretch: £'+Math.round(stretch/1000)+'k</div></div>'
-    +'<div class="stat"><div class="stat-l">Deprivation</div><div class="stat-v" style="color:'+(deprivation?(deprivation.decile<=4?'var(--red)':deprivation.decile<=6?'var(--amber)':'var(--green)'):'var(--text2)')+'">'+( deprivation?'D'+deprivation.decile:'N/A')+'</div><div class="stat-s">ONS IMD 2019</div></div>'
-    +'<div class="stat"><div class="stat-l">Flood Risk</div><div class="stat-v" style="color:'+(flood.highRisk?'var(--red)':flood.zones>0?'var(--amber)':'var(--green)')+'">'+( flood.highRisk?'High':flood.zones>0?'Low':'None')+'</div><div class="stat-s">'+flood.zones+' zones 1km</div></div>'
-    +'<div class="stat"><div class="stat-l">Spent</div><div class="stat-v" style="color:'+(totalSpent<0.5?'var(--green)':'var(--amber)')+'">$'+totalSpent.toFixed(2)+'</div><div class="stat-s">This session</div></div>'
-    +'</div>';
-  h+='<div class="tabs">'
-    +'<div class="tab on" onclick="swTab(\'listings\',this)">🏠 Listings</div>'
-    +'<div class="tab" onclick="swTab(\'visit\',this)">📅 Visit Order</div>'
-    +'<div class="tab" onclick="swTab(\'invest\',this)">📈 Investment</div>'
-    +'<div class="tab" onclick="swTab(\'budget\',this)">💰 Budget</div>'
-    +'<div class="tab" onclick="swTab(\'area\',this)">📊 Area Intel</div>'
-    +'<div class="tab" onclick="swTab(\'nearby\',this)">🗺 Nearby</div>'
-    +(ai?'<div class="tab" onclick="swTab(\'aireport\',this)">🤖 AI</div>':'')
-    +'</div>';
-  // LISTINGS
-  h+='<div class="panel on" id="t-listings"><div class="cards">';
-  sorted.forEach((p,idx)=>{
-    const isFallback=p.source==='fallback';
-    const isNavCard=p.source==='search-link';
-    const tbc=p.type.includes('detach')?'bd':p.type.includes('bungalow')?'bb':p.type.includes('flat')||p.type.includes('apart')?'ba':'bs';
-    const urgColor=p.urgency==='high'?'var(--red)':p.urgency==='med'?'var(--amber)':'var(--green)';
-    const srcClass={'apify':'apify','homedata':'hd','fallback':'fallback','search-link':'search-link','rightmove-live':'apify','purplebricks':'hd'}[p.source]||'live';
-    const srcLabel=p.source==='apify'?'● Rightmove live (Apify)'+(p.reduced?' · PRICE REDUCED':' · '+(p.addedDate||'Recent')):p.source==='homedata'?'● Homedata live listing · '+(p.addedDate||'Recent'):p.source==='search-link'?'🔍 Click to open live search — see all for-sale with your filters':p.source==='purplebricks'?'● Purplebricks':p.source==='rightmove-live'?'● Rightmove (free)':(p.addedDate||'● Live listing');
-    const verdict=isNavCard?p.description:isFallback?'Add a Homedata key (100 free/month) or Apify token for live listings.':( getVerdict(ai,p)||p.type+' at £'+fmt(p.price)+'. '+(p.chainFree?'Chain-free.':'In chain.')+(p.garden?' Has garden.':'')+( p.epc?' EPC '+p.epc+'.':''));
-    const urgText=(isFallback||isNavCard)?'':getUrgencyText(ai,p);
-    const mustTxt=getMust(ai,p);
-    const scores=[{l:'Safety',v:p.safetyScore},{l:'Transport',v:p.transportScore},{l:'Schools',v:6},{l:'Invest',v:p.investScore},{l:'Build',v:p.buildScore},{l:'Overall',v:p.overallScore}];
-    h+='<div class="card '+(p.isTopPick?'pick':'')+'">'
-      +(p.isTopPick?'<div class="pick-badge">⭐ AI TOP PICK — VISIT FIRST</div>':'')
-      +'<div class="src-strip '+srcClass+'">'+srcLabel+'</div>'
-      +'<div class="cbody">'
-      +'<div class="ctop"><div class="caddr">'+p.address+'</div>'
-      +'<div class="cbadges">'+(isFallback||isNavCard?'':('<span class="badge '+tbc+'">'+p.type+'</span>'+(p.tenure?.toLowerCase().includes('freehold')?'<span class="badge bf">Freehold</span>':'')+(p.chainFree?'<span class="badge bd">No Chain</span>':p.chain?'<span class="badge bs">In Chain</span>':'')+(p.reduced?'<span class="badge" style="border-color:var(--red);color:var(--red);background:var(--red-bg)">Price ↓</span>':'')+(p.newBuild?'<span class="badge ba">New</span>':'')))+'</div></div>'
-      +(isFallback||isNavCard?'':'<div class="cmeta"><div class="cprice">£'+fmt(p.price)+'</div><div class="cspecs">'+(p.beds?'<span class="spec">🛏 '+p.beds+'bd</span>':'')+(p.baths?'<span class="spec">🚿 '+p.baths+'ba</span>':'')+(p.sqft?'<span class="spec">📐 '+p.sqft+'sqft</span>':'')+(p.epc?'<span class="spec"><span class="epc e'+p.epc+'">'+p.epc+'</span></span>':'')+(p.garden?'<span class="spec">🌳</span>':'')+(p.garage?'<span class="spec">🚗</span>':'')+'</div></div>'
-      +(isFallback||isNavCard?'':'<div class="scores">'+scores.map(s=>'<div class="sc-item"><div class="sc-l">'+s.l+'</div><div class="sc-bw"><div class="sc-b '+bC(s.v||5)+'" style="width:'+((s.v||5)*10)+'%"></div></div><div class="sc-n '+sC(s.v||5)+'">'+(s.v||'?')+'</div></div>').join('')+'</div>'))
-      +(isFallback||isNavCard||!p.urgency?'':'<div class="urg '+(p.urgency||'low')+'"><div class="urg-lbl" style="color:'+urgColor+'">'+(p.urgency==='high'?'⚡ Visit ASAP':p.urgency==='med'?'📅 This week':'🕐 Flexible')+'</div><div class="urg-sub">'+urgText+'</div></div>')
-      +'<div class="verdict">'+(isFallback?'':('<b>AI:</b> '))+verdict+'</div>'
-      +(mustTxt&&!isFallback&&!isNavCard?'<div style="font-size:11px;color:var(--text2);margin-bottom:7px;padding:5px 9px;background:var(--bg3);border-radius:7px">✓ '+mustTxt+'</div>':'')
-      +((!isFallback&&!isNavCard)?'<div class="tags">'+(nearby.gyms?.length?'<span class="tag ok">🏊 '+(nearby.gyms[0]?.tags?.name||'Gym nearby')+'</span>':'<span class="tag ok">🏊 Pool nearby</span>')+(nearby.shops?.length?'<span class="tag ok">🛒 '+(nearby.shops[0]?.tags?.name||'Supermarket')+'</span>':'')+'<span class="tag ok">✈️ MAN ~'+(p.transportScore>=8?'20':'30')+'min</span>'+(p.chainFree?'<span class="tag ok">✓ No Chain</span>':p.chain?'<span class="tag warn">⚠ Chain</span>':'')+(price.avgPrice&&p.price<price.avgPrice?'<span class="tag ok">Below area avg</span>':price.avgPrice&&p.price>price.avgPrice?'<span class="tag warn">Above area avg</span>':'')+(flood.highRisk?'<span class="tag warn">⚠ Flood zone</span>':'')+(deprivation&&deprivation.decile<=4?'<span class="tag warn">⚠ High deprivation</span>':deprivation&&deprivation.decile>=8?'<span class="tag ok">Affluent area</span>':'')+(p.addedDate?'<span class="tag info">'+p.addedDate+'</span>':'')+'<span class="tag live">'+p.source+'</span></div>':'')
-      +'<div class="agent-box"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px">'+(isFallback?'Get Real Listings':isNavCard?'Open Live Search':'Selling Agent')+'</div>'
-      +'<div class="agent-name">'+(p.agent?.name||'Agent')+(p.agent?.branch?' · '+p.agent.branch:'')+'</div>'
-      +'<div class="agent-contact">'+(p.agent?.phone&&p.agent.phone!=='See Rightmove'?'📞 <a href="tel:'+p.agent.phone+'">'+p.agent.phone+'</a> \u00a0·\u00a0 ':'')
-      +(isFallback?'<a href="https://homedata.co.uk" target="_blank">homedata.co.uk · apify.com':'<a href="'+p.rightmoveUrl+'" target="_blank">Rightmove ↗</a> · <a href="'+p.zooplaUrl+'" target="_blank">Zoopla ↗</a>')
-      +'</div></div>'
-      +'<div class="cactions">'+(isFallback?'<button class="abtn pri" onclick="window.open(\'https://homedata.co.uk\',\'_blank\')">Get Homedata Key ↗</button><button class="abtn" onclick="window.open(\'https://apify.com\',\'_blank\')">Apify Token ↗</button>':isNavCard?'<button class="abtn pri" style="flex:2" onclick="window.open(\''+p.url+'\',\'_blank\')">Open Live Search ↗</button><button class="abtn" onclick="window.open(\''+p.rightmoveUrl+'\',\'_blank\')">Rightmove ↗</button><button class="abtn" onclick="window.open(\''+p.zooplaUrl+'\',\'_blank\')">Zoopla ↗</button>':'<button class="abtn" onclick="showDetail('+idx+')">Full Report</button><button class="abtn" onclick="window.open(\''+p.rightmoveUrl+'\',\'_blank\')">Rightmove ↗</button><button class="abtn" onclick="window.open(\''+p.zooplaUrl+'\',\'_blank\')">Zoopla ↗</button><button class="abtn pri" onclick="callAgent('+idx+')">📞 Agent</button>')+'</div>'
-      +'</div></div>';
-  });
-  h+='</div></div>';
-  // VISIT ORDER
-  const visitOrder=ai?.visitOrder||sorted.map(p=>p.address);
-  const visitSorted=visitOrder.map(a=>sorted.find(p=>p.address.toLowerCase().includes(a.toLowerCase().split(',')[0].trim())||( p.id&&a.includes(p.id)))).filter(Boolean);
-  const remaining=sorted.filter(p=>!visitSorted.find(q=>q.id===p.id)&&p.source!=='fallback');
-  h+='<div class="panel" id="t-visit"><div style="font-family:\'Playfair Display\',serif;font-size:20px;margin-bottom:5px">Viewing Schedule</div><div style="font-size:12px;color:var(--text2);margin-bottom:14px">'+(ai?'AI-ranked by urgency, competition & your priorities':'Ranked by urgency')+'</div>';
-  [...visitSorted,...remaining].forEach((p,i)=>{if(!p||p.source==='fallback')return;const uc=p.urgency==='high'?'var(--red)':p.urgency==='med'?'var(--amber)':'var(--green)';h+='<div class="box" style="border-left:3px solid '+uc+';padding-left:16px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><div style="font-size:20px;font-weight:700;color:'+uc+';font-family:\'Playfair Display\',serif">#'+(i+1)+'</div><div><div style="font-size:13px;font-weight:600">'+p.address+'</div><div style="font-size:11px;color:var(--text2)">£'+fmt(p.price)+' · '+p.type+' · '+(p.urgency==='high'?'⚡ URGENT':p.urgency==='med'?'📅 This week':'🕐 Flexible')+'</div></div></div><p>'+getUrgencyText(ai,p)+'</p><div style="font-size:11px;color:var(--text3);margin-top:6px">Agent: <span style="color:var(--accent)">'+(p.agent?.name||'Agent')+'</span>'+(p.agent?.phone?' · '+p.agent.phone:'')+' · <a href="'+p.rightmoveUrl+'" target="_blank" style="color:var(--accent)">Rightmove ↗</a></div></div>';});
-  h+='</div>';
-  // INVESTMENT
-  h+='<div class="panel" id="t-invest">';
-  if(ai?.investmentRanking){h+='<div class="box" style="border-color:var(--green)"><h4 style="color:var(--green)">Investment Ranking (AI)</h4>';ai.investmentRanking.forEach((item,i)=>{h+='<p style="padding:5px 0;border-bottom:1px solid var(--border)"><b style="color:var(--green)">#'+(i+1)+'</b> '+item+'</p>';});h+='</div>';}
-  h+=(ai?.marketOutlook?'<div class="box"><h4>Market Outlook 2025-2027</h4><p>'+ai.marketOutlook+'</p></div>':'');
-  h+=(hpi?'<div class="box" style="border-color:var(--teal)"><h4 style="color:var(--teal)">HM Land Registry HPI — Greater Manchester</h4><p>Average price: <b>£'+fmt(hpi.avgPrice)+'</b> | Growth since 2023: <b>'+(hpi.yearGrowth>0?'+':'')+hpi.yearGrowth+'%</b></p></div>':'');
-  h+=(ai?.floodVerdict?'<div class="box"><h4>Flood Risk</h4><p>'+ai.floodVerdict+'</p></div>':'');
-  h+=(ai?.deprivationVerdict?'<div class="box"><h4>Area Deprivation (ONS IMD 2019)</h4><p>'+ai.deprivationVerdict+'</p></div>':'');
-  h+='</div>';
-  // BUDGET
-  h+='<div class="panel" id="t-budget">';
-  h+='<div class="box"><h4>At £'+fmt(budget)+'</h4><p>'+sorted.filter(p=>p.source!=='fallback').length+' real properties found. Area average £'+(price.avgPrice?fmt(price.avgPrice):'N/A')+' (Land Registry). Trend: '+(price.trend>0?'+':'')+price.trend+'%.</p></div>';
-  h+=(ai?.stretchCase?'<div class="box" style="border-color:var(--amber)"><h4>Stretch to £'+fmt(stretch)+'</h4><p>'+ai.stretchCase+'</p></div>':'');
-  h+=(ai?.stretchWarning?'<div class="box" style="border-color:var(--red)"><h4 style="color:var(--red)">Stretch Warning</h4><p>'+ai.stretchWarning+'</p></div>':'');
-  h+=(ai?.redFlags?'<div class="box" style="border-color:var(--red)"><h4 style="color:var(--red)">⚠ Red Flags — Check at Every Viewing</h4>'+ai.redFlags.map(f=>'<p style="padding:3px 0">• '+f+'</p>').join('')+'</div>':'');
-  h+=(ai?.soundproofingGuide?'<div class="box"><h4 style="color:var(--purple)">🔇 Soundproofing by Build Type</h4><p>'+ai.soundproofingGuide+'</p></div>':'');
-  h+=(ai?.chainRisk?'<div class="box"><h4>🔗 Chain Risk: '+ai.chainRisk.split(' ')[0]+'</h4><p>'+ai.chainRisk+'</p></div>':'');
-  h+='</div>';
-  // AREA
-  const crimeRows=Object.entries(crime.breakdown||{}).sort((a,b)=>b[1]-a[1]).slice(0,10);
-  const maxC=crimeRows[0]?.[1]||1;
-  h+='<div class="panel" id="t-area">';
-  h+='<div class="two-col"><div class="box" style="margin-bottom:0"><h4>Location (Postcodes.io)</h4>'+[['Region',geo.region||'N/A'],['Ward',geo.admin_ward||'N/A'],['Council',geo.admin_district||'N/A'],['Constituency',geo.parliamentary_constituency||'N/A']].map(([l,v])=>'<div class="d-row"><span class="d-l">'+l+'</span><span class="d-v">'+v+'</span></div>').join('')+'</div>'
-    +'<div class="box" style="margin-bottom:0"><h4>Land Registry</h4>'+[['Transactions',price.count],['Avg sold','£'+(price.avgPrice?fmt(price.avgPrice):'N/A')],['Trend',(price.trend>0?'+':'')+price.trend+'%'],['Range',price.prices.length?'£'+fmt(Math.min(...price.prices))+'–£'+fmt(Math.max(...price.prices)):'N/A']].map(([l,v])=>'<div class="d-row"><span class="d-l">'+l+'</span><span class="d-v">'+v+'</span></div>').join('')+price.recent.slice(0,4).map(r=>'<div style="font-size:11px;color:var(--text2);padding:2px 0">'+(r.addr||'–')+' · <b>£'+fmt(r.price)+'</b> · '+r.date+'</div>').join('')+'</div></div>';
-  h+=(deprivation?'<div class="box" style="margin-top:10px;border-color:'+(deprivation.decile<=4?'var(--red)':deprivation.decile>=8?'var(--green)':'var(--border)')+'"><h4>ONS Deprivation Index (IMD 2019)</h4><p>Decile: <b>'+deprivation.decile+'/10</b> ('+deprivation.label+') · Score: '+deprivation.score+'</p></div>':'');
-  h+='<div class="box" style="margin-top:10px"><h4>Crime — UK Police API (Sep 2024) · Total: '+crime.total+' · Stops: '+crime.stops+' · Score: '+crime.score+'/10</h4>';
-  crimeRows.forEach(([cat,n])=>{h+='<div class="crime-row"><div class="crime-l">'+cat+'</div><div class="crime-bw"><div class="crime-b" style="width:'+Math.round(n/maxC*100)+'%;background:'+(n>maxC*.5?'var(--red)':n>maxC*.25?'var(--amber)':'var(--green)')+'"></div></div><div class="crime-n">'+n+'</div></div>';});
-  h+='</div><div class="box"><h4>Flood Risk (Environment Agency)</h4><p>Zones within 1km: <b>'+flood.zones+'</b> | High risk: <b style="color:'+(flood.highRisk?'var(--red)':'var(--green)')+'">'+(flood.highRisk?'YES':'No')+'</b>'+(flood.areas.length?' | '+flood.areas.join(', '):'')+'</p></div>';
-  h+='<div class="box"><h4>Planning Designations</h4><p>'+planning.count+' nearby'+(planning.areas.length?' — '+planning.areas.join(', '):'')+'</p></div>';
-  h+='</div>';
-  // NEARBY
-  h+='<div class="panel" id="t-nearby">';
-  h+='<div class="box"><h4>🏊 Gyms & Pools (OSM)</h4>'+(nearby.gyms?.length?nearby.gyms.map(g=>'<p style="padding:2px 0;font-size:12px;color:var(--text2)">• <b style="color:var(--text)">'+(g.tags?.name||'Sports Centre')+'</b>'+(g.tags?.sport?' — '+g.tags.sport:'')+'</p>').join(''):'<p style="font-size:12px;color:var(--text2)">None OSM-tagged in immediate area.</p>')+(ai?.gymVerdict?'<div style="margin-top:9px;padding:8px;background:var(--bg4);border-radius:8px;font-size:12px;color:var(--text2)">'+ai.gymVerdict+'</div>':'<p style="font-size:12px;color:var(--text2);margin-top:6px">Known: David Lloyd Didsbury, Manchester Aquatics Centre (Olympic), Withington Baths, Virgin Active Chorlton</p>')+'</div>';
-  h+='<div class="box"><h4>🛒 Supermarkets (OSM)</h4>'+(nearby.shops?.length?nearby.shops.map(s=>'<p style="padding:2px 0;font-size:12px;color:var(--text2)">• <b style="color:var(--text)">'+(s.tags?.name||'Supermarket')+'</b></p>').join(''):'<p style="font-size:12px;color:var(--text2)">Aldi, Tesco, Lidl, Waitrose, M&S in M20/M21</p>')+'</div>';
-  h+='<div class="box"><h4>🚆 Transport (OSM)</h4>'+(nearby.transport?.length?nearby.transport.slice(0,8).map(t=>'<p style="padding:2px 0;font-size:12px;color:var(--text2)">• <b style="color:var(--text)">'+(t.tags?.name||t.tags?.ref||'Stop')+'</b>'+(t.tags?.railway?' ('+t.tags.railway+')':'')+'</p>').join(''):'<p style="font-size:12px;color:var(--text2)">Bus/tram network in area</p>')+'<div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:2">East Didsbury Metrolink → MAN: <b style="color:var(--green)">~20min</b><br>West Didsbury: ~28min | Chorlton: ~30min</div></div>';
-  h+='<div class="box"><h4>🏫 Schools (OSM)</h4>'+(nearby.schools?.length?nearby.schools.map(s=>'<p style="padding:2px 0;font-size:12px;color:var(--text2)">• '+(s.tags?.name||'School')+'</p>').join(''):'<p style="font-size:12px;color:var(--text2)">Check ofsted.gov.uk for ratings</p>')+'</div>';
-  h+='<div class="box"><h4>🏥 Healthcare (OSM)</h4>'+(nearby.hospitals?.length?nearby.hospitals.map(s=>'<p style="padding:2px 0;font-size:12px;color:var(--text2)">• '+(s.tags?.name||'Healthcare')+'</p>').join(''):'<p style="font-size:12px;color:var(--text2)">Search nhs.uk/service-search for GPs</p>')+'</div>';
-  h+='<div class="box"><h4>🌳 Parks (OSM) + ⚡ EV Charging</h4>'+(nearby.parks?.length?nearby.parks.map(p=>'<p style="padding:2px 0;font-size:12px;color:var(--text2)">• '+(p.tags?.name||'Park')+'</p>').join(''):'<p style="font-size:12px;color:var(--text2)">Green space in area</p>')+(nearby.ev?.length?'<p style="font-size:12px;color:var(--text2);margin-top:6px">⚡ EV charging points: '+nearby.ev.length+' nearby</p>':'')+'</div>';
-  h+='</div>';
-  if(ai){h+='<div class="panel" id="t-aireport"><div class="box" style="border-color:var(--accent)"><h4 style="color:var(--accent)">🤖 Claude AI Report — 1 call · cost: $'+S.claudeSpent.toFixed(3)+'</h4><pre style="font-size:11px;color:var(--text2);white-space:pre-wrap;line-height:1.6;overflow-x:auto">'+JSON.stringify(ai,null,2)+'</pre></div></div>';}
-  $('mcontent').innerHTML=h;
-  window._listings=sorted; window._area=area; window._ai=ai;
-}
-
-function swTab(name,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));const t=$('t-'+name);if(t)t.classList.add('on');}
-
-function showDetail(idx){
-  const p=window._listings?.[idx]; if(!p||p.source==='fallback')return;
-  const ai=window._ai;
-  const verdict=getVerdict(ai,p)||'Add Claude key for full AI verdict.';
-  const mustTxt=getMust(ai,p)||'Add Claude key for must-have scoring.';
-  $('modal-title').textContent=p.address;
-  let mc='<div class="msec"><div class="msec-l">Price & Specs</div>';
-  [['Price','£'+fmt(p.price),'color:var(--accent)'],['Type',p.type,''],['Beds',(p.beds||'?')+''],['Baths',(p.baths||'?')+''],['Floor Area',(p.floorArea?p.floorArea+'m²':'N/A')],['EPC',(p.epc||'N/A')],['Tenure',(p.tenure||'Unknown')],['Chain-free',p.chainFree?'Yes ✓':'No',p.chainFree?'color:var(--green)':'color:var(--amber)'],['Garden',p.garden?'Yes':'No'],['Garage',p.garage?'Yes':'No'],['Source',p.source,'color:var(--teal)'],['Added',p.addedDate||'Recent'],['Price Reduced',p.reduced?'YES':'No',p.reduced?'color:var(--red)':'']].forEach(([l,v,st])=>{mc+='<div class="d-row"><span class="d-l">'+l+'</span><span class="d-v" style="'+(st||'')+'">'+v+'</span></div>';});
-  mc+='</div>';
-  if(p.features?.length){mc+='<div class="msec"><div class="msec-l">Key Features</div><div style="background:var(--bg3);border-radius:var(--r);padding:10px 12px">'+p.features.map(f=>'<div style="font-size:12px;color:var(--green);padding:2px 0">✓ '+f+'</div>').join('')+'</div></div>';}
-  mc+='<div class="msec"><div class="msec-l">AI Full Verdict</div><div style="font-size:12px;color:var(--text2);line-height:1.7;background:var(--bg3);border-radius:var(--r);padding:10px 12px;border-left:3px solid var(--accent)">'+verdict+'</div></div>';
-  mc+='<div class="msec"><div class="msec-l">Must-Haves Check</div><div style="font-size:12px;color:var(--text2);background:var(--bg3);border-radius:var(--r);padding:10px 12px">'+mustTxt+'</div></div>';
-  if(p.description){mc+='<div class="msec"><div class="msec-l">Listing Description</div><div style="font-size:12px;color:var(--text2);line-height:1.6;background:var(--bg3);border-radius:var(--r);padding:10px 12px">'+p.description+'</div></div>';}
-  mc+='<div class="msec"><div class="msec-l">Selling Agent</div><div class="agent-box" style="margin:0"><div class="agent-name" style="font-size:13px">'+(p.agent?.name||'Agent')+(p.agent?.branch?' · '+p.agent.branch:'')+'</div><div class="agent-contact" style="font-size:12px;line-height:2">'+(p.agent?.phone?'📞 <a href="tel:'+p.agent.phone+'">'+p.agent.phone+'</a><br>':'')+'<a href="'+p.rightmoveUrl+'" target="_blank">Rightmove ↗</a> · <a href="'+p.zooplaUrl+'" target="_blank">Zoopla ↗</a></div></div></div>';
-  mc+='<div style="display:flex;gap:7px;margin-top:12px;flex-wrap:wrap"><button class="abtn pri" onclick="callAgent('+idx+');closeModal()">📞 Call Agent</button><button class="abtn" onclick="window.open(\''+p.rightmoveUrl+'\',\'_blank\')">Rightmove ↗</button><button class="abtn" onclick="window.open(\''+p.zooplaUrl+'\',\'_blank\')">Zoopla ↗</button><button class="abtn" onclick="closeModal()">Close</button></div>';
-  $('modal-content').innerHTML=mc;
-  $('modal').classList.remove('hidden');
-}
-function callAgent(idx){const p=window._listings?.[idx];if(!p)return;alert('📞 '+(p.agent?.name||'Agent')+'\n\n'+(p.agent?.phone?'Phone: '+p.agent.phone+'\n':'')+(p.agent?.branch?'Branch: '+p.agent.branch+'\n':'')+'\nRightmove: '+p.rightmoveUrl);}
-function closeModal(){$('modal').classList.add('hidden');}
-// ═══════════════════════════════════════════════════════════════
-// MODE SYSTEM: 'free' or 'keys'
-// free  = CORS proxy pipeline + Land Registry (no API keys needed)
-// keys  = Homedata + Apify + Claude (requires at least one key)
-// ═══════════════════════════════════════════════════════════════
-S.listingMode = 'free'; // default
-
-function setListingMode(mode){
-  S.listingMode = mode;
-  S.cache = {};
-  const mc=$('mcontent');
-  if(mc) mc.innerHTML='<div class="empty"><div class="empty-ico">'+(mode==='free'?'🏴':'🔑')+'</div><div style="font-family:\'Playfair Display\',serif;font-size:22px;margin-bottom:8px">'+(mode==='free'?'Free Mode':'API Keys Mode')+'</div><div style="font-size:12px;color:var(--text2)">'+(mode==='free'?'Enter postcode + click Search. Uses CORS proxies — if blocked shows Rightmove/Zoopla/OTM direct links.':'Enter postcode + click Search. Runs Apify (live Rightmove) and/or Homedata (property data).')+'</div></div>';
-  const freeBtn = $('mode-free');
-  const keysBtn = $('mode-keys');
-  const freeSection = $('section-free');
-  const keysSection = $('section-keys');
-  if(freeBtn){ freeBtn.classList.toggle('mode-active', mode==='free'); }
-  if(keysBtn){ keysBtn.classList.toggle('mode-active', mode==='keys'); }
-  if(freeSection){ freeSection.style.display = mode==='free' ? 'block' : 'none'; }
-  if(keysSection){ keysSection.style.display = mode==='keys' ? 'block' : 'none'; }
-}
-
-// ═══════════════════════════════════════════════════════════════
-// KEY MANAGEMENT: save to sessionStorage (6hr), restore on load
-// ═══════════════════════════════════════════════════════════════
-function saveKey(t){
-  S.cache = {};
-  const exp = Date.now() + 6*60*60*1000;
-  const configs = {
-    claude: { inp:'inp-claude', dot:'d-claude', tag:'t-claude', minLen:20, sKey:'fmnh_claude', storeKey:'claudeKey' },
-    hd:     { inp:'inp-hd',     dot:'d-hd',     tag:'t-hd',     minLen:5,  sKey:'fmnh_hd',     storeKey:'homedataKey' },
-    apify:  { inp:'inp-apify',  dot:'d-apify',  tag:'t-apify',  minLen:10, sKey:'fmnh_apify',  storeKey:'apifyKey' },
-  };
-  const cfg = configs[t];
-  if(!cfg) return;
-  const val = $(cfg.inp)?.value.trim() || '';
-  const ok = val.length >= cfg.minLen;
-  S[cfg.storeKey] = ok ? val : '';
-  setDot(cfg.dot, ok ? 'g' : 'x');
-  $(cfg.tag).textContent = t.charAt(0).toUpperCase()+t.slice(1)+':'+(ok ? 'saved \u2713' : 'no key');
-  const stEl=$('status-'+t);
-  if(ok){
-    try{sessionStorage.setItem(cfg.sKey,JSON.stringify({v:val,e:exp}));}catch(e){}
-    if(stEl){stEl.textContent='✓ Key saved — active 6hrs';stEl.style.color='var(--green)';}
-  }else if(stEl){
-    stEl.textContent='Too short — check format';stEl.style.color='var(--red)';
-  }
-}
-
-function restoreKeys(){
-  const now = Date.now();
-  [['claude','inp-claude','d-claude','t-claude',20,'fmnh_claude','claudeKey'],
-   ['hd','inp-hd','d-hd','t-hd',5,'fmnh_hd','homedataKey'],
-   ['apify','inp-apify','d-apify','t-apify',10,'fmnh_apify','apifyKey']
-  ].forEach(([t,inp,dot,tag,minLen,sKey,storeKey])=>{
-    try{
-      const raw = sessionStorage.getItem(sKey);
-      if(!raw) return;
-      const obj = JSON.parse(raw);
-      if(!obj || obj.e < now){ sessionStorage.removeItem(sKey); return; }
-      if(obj.v && obj.v.length >= minLen){
-        S[storeKey] = obj.v;
-        const el = $(inp); if(el) el.value = obj.v;
-        setDot(dot,'g');
-        $(tag).textContent = t.charAt(0).toUpperCase()+t.slice(1)+':saved \u2713';
-      }
-    }catch(e){}
-  });
-}
-
-// ═══════════════════════════════════════════════════════════════
-// TEST FUNCTIONS (only run when user clicks "Test Key")
-// ═══════════════════════════════════════════════════════════════
-async function testClaude(){
-  const el = $('status-claude'); if(!el) return;
-  if(!S.claudeKey){ el.textContent='Save a key first'; el.style.color='var(--text3)'; return; }
-  el.textContent='\u23f3 Testing\u2026'; el.style.color='var(--amber)';
-  try{
-    const r = await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':S.claudeKey,
-               'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:10,messages:[{role:'user',content:'OK'}]})
-    });
-    const d = await r.json();
-    if(d.error){ el.textContent='\u2717 '+d.error.message.slice(0,80); el.style.color='var(--red)'; return; }
-    if(d.content?.[0]?.text){
-      const cost=((d.usage?.input_tokens||0)*0.00025+(d.usage?.output_tokens||0)*0.00125)/1000;
-      spend('claude',cost);
-      el.textContent='\u2713 Connected \u00b7 used $'+cost.toFixed(5); el.style.color='var(--green)';
-    }
-  }catch(e){ el.textContent='\u2717 '+e.message.slice(0,60); el.style.color='var(--red)'; }
-}
-
-async function testHomedata(){
-  const el=$('status-hd');if(!el)return;
-  if(!S.homedataKey){el.textContent='No key \u2014 enter key and click Save Key';el.style.color='var(--text3)';return;}
-  el.textContent='\u23f3 Step 1: testing boundary endpoint (public, no auth)\u2026';el.style.color='var(--amber)';
-  try{
-    // Step 1: public endpoint — diagnose CORS
-    let bdData=null;
-    try{
-      const br=await fetch('https://api.homedata.co.uk/api/boundaries/autocomplete/?q=Manchester',{mode:'cors',headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'},signal:AbortSignal.timeout(8000)});
-      if(!br.ok){el.textContent='\u2717 Boundaries HTTP '+br.status;el.style.color='var(--red)';return;}
-      bdData=await br.json();
-    }catch(corsErr){
-      el.textContent='\u26a0 CORS blocked \u2014 browser cannot reach api.homedata.co.uk directly. The search will try via a CORS proxy automatically. This is normal for browser apps.';
-      el.style.color='var(--amber)';return;
-    }
-    const b=(bdData.results||[])[0];
-    if(!b){el.textContent='\u2717 No boundary results';el.style.color='var(--red)';return;}
-    el.textContent='\u23f3 Step 2: testing live-listings with your key\u2026';el.style.color='var(--amber)';
-    // Step 2: authenticated endpoint
-    const r=await fetch(
-      'https://api.homedata.co.uk/api/live-listings/search/?boundary_id='+b.id+'&transaction_type=Sale&max_price=500000&page_size=3&sort=-added_date',
-      {headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'},signal:AbortSignal.timeout(12000)}
-    );
-    const txt=await r.text();
-    let d;try{d=JSON.parse(txt);}catch(e){el.textContent='\u2717 Non-JSON (HTTP '+r.status+')';el.style.color='var(--red)';return;}
-    if(r.status===401){el.textContent='\u2717 401 \u2014 key format must be: QRryNTjX.your-secret (with the dot)';el.style.color='var(--red)';return;}
-    if(r.status===403){el.textContent='\u2717 403 \u2014 key expired or plan does not include live-listings';el.style.color='var(--red)';return;}
-    if(!r.ok){el.textContent='\u2717 HTTP '+r.status+' \u2014 '+(d.detail||d.message||txt.slice(0,60));el.style.color='var(--red)';return;}
-    const rem=r.headers.get('X-RateLimit-Remaining')||'?';
-    const sample=(d.results||[])[0];
-    el.textContent='\u2713 Working! '+Number(d.count||0).toLocaleString()+' live listings in '+b.name+' \u00b7 '+rem+' calls left'+(sample?' \u00b7 e.g. \u00a3'+Number(sample.latest_price||0).toLocaleString()+' \u2014 '+sample.display_address:'');
-    el.style.color='var(--green)';
-  }catch(e){
-    el.textContent=(e.name==='AbortError'||e.name==='TimeoutError')
-      ?'\u2717 Timed out \u2014 may be CORS blocked or slow connection'
-      :'\u2717 '+e.message.slice(0,80);
-    el.style.color='var(--red)';
-  }
-}
-
-async function testApify(){
-  const el = $('status-apify'); if(!el) return;
-  if(!S.apifyKey){ el.textContent='Save a key first'; el.style.color='var(--text3)'; return; }
-  el.textContent='\u23f3 Checking token\u2026'; el.style.color='var(--amber)';
-  try{
-    const r = await fetch('https://api.apify.com/v2/users/me?token='+encodeURIComponent(S.apifyKey));
-    const d = await r.json();
-    if(!r.ok||d.error){ el.textContent='\u2717 Invalid token \u2014 get one at apify.com/account/integrations'; el.style.color='var(--red)'; return; }
-    el.textContent='\u2713 Valid \u00b7 Plan: '+(d.data?.plan?.id||'free')+' \u00b7 '+( d.data?.stats?.totalActorRunsCreated||0)+' runs'; el.style.color='var(--green)';
-  }catch(e){ el.textContent='\u2717 '+e.message.slice(0,60); el.style.color='var(--red)'; }
-}
-
-// ═══════════════════════════════════════════════════════════════
-// FREE PIPELINE: CORS proxies → Rightmove/Purplebricks/YOPA/OTM
-// + Land Registry sold (always works, no key, no proxy)
-// ═══════════════════════════════════════════════════════════════
-function _parseSitemapXml(xml){
-  try{
-    const doc=new DOMParser().parseFromString(xml,'application/xml');
-    if(doc.querySelector('parsererror')) return [];
-    return [...doc.querySelectorAll('loc')].map(l=>l.textContent.trim()).filter(Boolean);
-  }catch(e){ return []; }
-}
-
-function _extractJsonLd(html){
-  for(const m of html.matchAll(/\x3cscript[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)){
-    try{
-      const d=JSON.parse(m[1]);
-      const items=Array.isArray(d)?d:(d['@graph']?d['@graph']:[d]);
-      for(const item of items){
-        if(item['@type']&&/residence|house|property|home|apartment|flat/i.test(item['@type'])) return item;
-      }
-    }catch(e){}
-  }
-  return null;
-}
-
-function _normLd(ld,url,src){
-  if(!ld) return null;
-  const addr=ld.address||{};
-  const address=[addr.streetAddress,addr.addressLocality,addr.postalCode].filter(Boolean).join(', ')||ld.name||src+' listing';
-  const price=parseFloat(ld.offers?.price||ld.price||0);
-  const pcs=(addr.postalCode||'').replace(/\s/,'').toLowerCase();
-  return{id:'pu-'+src.slice(0,2).toLowerCase()+url.split('/').pop().replace(/[^a-z0-9]/gi,'').slice(0,10),
-    address,price,type:(ld['@type']||'property').replace(/([A-Z])/g,' $1').trim().toLowerCase(),
-    beds:parseInt(ld.numberOfRooms||ld.numberOfBedrooms||0)||0,baths:0,
-    sqft:null,epc:null,tenure:null,chainFree:false,chain:false,
-    garden:/garden/i.test(ld.description||''),garage:/garage/i.test(ld.description||''),
-    parking:/parking/i.test(ld.description||''),newBuild:/new build/i.test(ld.description||''),
-    description:(ld.description||'').slice(0,500),features:[],
-    url,rightmoveUrl:url,
-    zooplaUrl:pcs?'https://www.zoopla.co.uk/for-sale/property/'+pcs+'/?q='+pcs+'&results_sort=newest_listings':'https://www.zoopla.co.uk/for-sale/',
-    agent:{name:src,phone:'',branch:'View on '+src},addedDate:'Recent',reduced:false,
-    source:'pu-'+src.toLowerCase().replace(/[^a-z]/g,''),floorArea:null,
-    lat:parseFloat(ld.geo?.latitude||0)||null,lng:parseFloat(ld.geo?.longitude||0)||null};
-}
-
-// Land Registry SPARQL — always works, no key, no proxy needed
-
-
-// CORS pipeline: Rightmove PAGE_MODEL + Purplebricks + YOPA + OnTheMarket
-async function fetchFreeListings(location,budget,minBeds,types,pc,log){
-  console.log('[Free] location:',location,'budget:',budget,'pc:',pc);
-  if(!log) log=()=>{};
-  const results=[];
-  const locEnc=encodeURIComponent(location);
-
-  // Try Rightmove via CORS proxy
-  log('Rightmove: trying\u2026','amber');
-  try{
-    const rmUrl='https://www.rightmove.co.uk/property-for-sale/find.html'
-      +'?searchType=SALE&searchLocation='+locEnc
-      +'&useLocationIdentifier=false&sortType=6&includeSSTC=false'
-      +'&maxPrice='+budget+'&minBedrooms='+minBeds;
-    const html=await _proxyFetch(rmUrl,15000);
-    if(html){
-      const model=_extractPageModel(html);
-      const props=model?.results?.properties||model?.properties||[];
-      if(props.length>0){
-        log('\u2713 Rightmove: '+props.length+' live for-sale listings!','green');
-        for(const p of props){const n=_normRM(p,budget);if(n)results.push(n);}
-        return results;
-      }
-      log('  Rightmove: proxy reached page but data is JS-rendered','text3');
-    } else { log('  Rightmove: CORS proxy blocked','text3'); }
-  }catch(e){log('  Rightmove error: '+e.message.slice(0,50),'text3');}
-
-  // Try Purplebricks sitemap
-  log('Purplebricks: reading sitemap\u2026','amber');
-  try{
-    const pbXml=await _proxyFetch('https://www.purplebricks.co.uk/sitemaps/sitemap-index.xml',10000);
-    if(pbXml){
-      const parser=new DOMParser();
-      const doc=parser.parseFromString(pbXml,'application/xml');
-      const childLocs=[...doc.querySelectorAll('loc')].map(l=>l.textContent.trim());
-      const saleMap=childLocs.find(u=>/property|for-sale/i.test(u));
-      if(saleMap){
-        const saleXml=await _proxyFetch(saleMap,10000);
-        if(saleXml){
-          const doc2=parser.parseFromString(saleXml,'application/xml');
-          const locKws=location.toLowerCase().split(/\s+/).filter(w=>w.length>1);
-          const propUrls=[...doc2.querySelectorAll('loc')]
-            .map(l=>l.textContent.trim())
-            .filter(u=>locKws.some(w=>u.toLowerCase().includes(w)))
-            .slice(0,5);
-          if(propUrls.length){
-            log('  '+propUrls.length+' Purplebricks listings in area','text');
-            const pages=await Promise.allSettled(propUrls.map(u=>_proxyFetch(u,8000)));
-            for(let i=0;i<pages.length;i++){
-              if(pages[i].status!=='fulfilled'||!pages[i].value) continue;
-              for(const m of pages[i].value.matchAll(/\x3cscript[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)){
-                try{
-                  const d=JSON.parse(m[1]);
-                  const items=Array.isArray(d)?d:(d['@graph']?d['@graph']:[d]);
-                  for(const item of items){
-                    if(!/residence|house|property|home|apartment|flat/i.test(item['@type']||'')) continue;
-                    const addr=item.address||{};
-                    const price=parseFloat(item.offers?.price||0);
-                    if(!price||price>budget) continue;
-                    const pcs=(addr.postalCode||'').replace(/\s/,'').toLowerCase();
-                    results.push({
-                      id:'pb-'+propUrls[i].split('/').pop().slice(0,12),
-                      address:[addr.streetAddress,addr.addressLocality,addr.postalCode].filter(Boolean).join(', ')||'Purplebricks listing',
-                      price,type:(item['@type']||'property').replace(/([A-Z])/g,' $1').trim().toLowerCase(),
-                      beds:parseInt(item.numberOfRooms||item.numberOfBedrooms||0)||0,baths:0,
-                      sqft:null,epc:null,tenure:null,chainFree:false,chain:false,
-                      garden:/garden/i.test(item.description||''),garage:/garage/i.test(item.description||''),
-                      parking:/parking/i.test(item.description||''),newBuild:false,
-                      description:(item.description||'').slice(0,400),features:[],
-                      url:propUrls[i],rightmoveUrl:propUrls[i],
-                      zooplaUrl:pcs?'https://www.zoopla.co.uk/for-sale/property/'+pcs+'/?q='+pcs+'&results_sort=newest_listings':'https://www.zoopla.co.uk/for-sale/',
-                      agent:{name:'Purplebricks',phone:'',branch:''},
-                      addedDate:'Recent',reduced:false,source:'purplebricks',floorArea:null,lat:null,lng:null,
-                    });
-                  }
-                }catch(e){}
-              }
-            }
-            if(results.length>0){log('\u2713 Purplebricks: '+results.length+' listings','green');return results;}
-          }
-        }
-      }
-    } else { log('  Purplebricks: sitemap blocked','text3'); }
-  }catch(e){log('  Purplebricks: '+e.message.slice(0,40),'text3');}
-
-  // All blocked — return search-link cards
-  log('\u26a0 Proxies blocked. Showing direct Rightmove/Zoopla/OnTheMarket search links.','amber');
-  log('  Add Apify key for guaranteed live Rightmove data.','text3');
-  return makeSearchCards(location,budget,minBeds,types,pc);
-}
-
-// Homedata: address/find → properties/uprn
-async function homedataListings(postcode, budget, locationName){
-  console.log('[HD] called key:', !!S.homedataKey, 'pc:', postcode, 'loc:', locationName);
-  if(!S.homedataKey || S.homedataUsed >= S.homedataCap){ console.log('[HD] skip'); return []; }
-  const fle=$('free-log');
-  const hdLog=msg=>{console.log('[HD]',msg);if(fle){const d=document.createElement('div');d.style.cssText='color:var(--teal);font-size:11px';d.textContent='[HD] '+msg;fle.appendChild(d);fle.scrollTop=9999;}};
-  const hdErr=msg=>{console.warn('[HD] ERR:',msg);if(fle){const d=document.createElement('div');d.style.cssText='color:var(--red);font-size:11px';d.textContent='\u2717 Homedata: '+msg;fle.appendChild(d);fle.scrollTop=9999;}};
-
-  // Try direct first, fall back to CORS proxy (corsproxy.io forwards auth headers)
-  async function hdFetch(url, withAuth){
-    const hdrs={'Accept':'application/json'};
-    if(withAuth) hdrs['Authorization']='Api-Key '+S.homedataKey;
-    try{
-      const r=await fetch(url,{mode:'cors',headers:hdrs,signal:AbortSignal.timeout(12000)});
-      if(r.ok||r.status===401||r.status===403) return r;
-    }catch(e){ console.log('[HD] direct blocked:',e.message.slice(0,50)); }
-    // CORS proxy fallback
-    try{
-      const r2=await fetch('https://corsproxy.io/?'+encodeURIComponent(url),{mode:'cors',headers:hdrs,signal:AbortSignal.timeout(15000)});
-      if(r2.ok||r2.status===401||r2.status===403) return r2;
-    }catch(e){ console.log('[HD] proxy blocked:',e.message.slice(0,50)); }
-    return null;
-  }
-
-  try{
-    const minBeds=parseInt($('min-beds')?.value)||3;
-    const area=postcode.trim().toUpperCase().split(' ')[0];
-    let boundary=null;
-    const bQueries=[locationName,area,postcode.replace(/\s/g,'').slice(0,3)].filter((v,i,a)=>v&&a.indexOf(v)===i);
-    for(const q of bQueries){
-      hdLog('Boundary: "'+q+'"');
-      const br=await hdFetch('https://api.homedata.co.uk/api/boundaries/autocomplete/?q='+encodeURIComponent(q),true);
-      if(!br){hdErr('Boundaries unreachable (CORS blocked by browser). Try Test Key to diagnose.');continue;}
-      if(!br.ok){hdErr('Boundaries HTTP '+br.status);continue;}
-      const bd=await br.json();
-      const results=bd.results||[];
-      hdLog(results.length+' boundaries: '+results.slice(0,3).map(b=>b.name+'('+b.id+')').join(', '));
-      if(results.length){boundary=results[0];break;}
-    }
-    if(!boundary){hdErr('No boundary found. Check postcode/location.');return [];}
-    hdLog('Using: '+boundary.name+' id='+boundary.id);
-    const params=new URLSearchParams({boundary_id:boundary.id,transaction_type:'Sale',max_price:budget,sort:'-added_date',page_size:50});
-    // Homedata bedrooms=EXACT not min, so filter client-side
-    const listUrl='https://api.homedata.co.uk/api/live-listings/search/?'+params.toString();
-    hdLog('GET '+listUrl.slice(0,90));
-    const r=await hdFetch(listUrl,true);
-    if(!r){hdErr('live-listings unreachable \u2014 Homedata blocks browser CORS. Use Test Key button to diagnose.');return [];}
-    const rem=r.headers?.get?.('X-RateLimit-Remaining')||'?';
-    hdLog('HTTP '+r.status+' | calls left: '+rem);
-    if(r.status===401){hdErr('401 \u2014 key must be: QRryNTjX.your-secret (include the dot)');return [];}
-    if(r.status===403){hdErr('403 \u2014 key expired or plan may not include live-listings. Check homedata.co.uk dashboard.');return [];}
-    if(!r.ok){const t=await r.text();hdErr('HTTP '+r.status+': '+t.slice(0,80));return [];}
-    const d=await r.json();
-    spend('hd',1);
-    const listings=d.results||[];
-    hdLog('Total: '+d.count+' | Returned: '+listings.length);
-    if(!listings.length){hdErr('0 results for '+boundary.name+' \u2014 try a broader area name or higher budget');return [];}
-    return listings.map(p=>{
-      const price=p.latest_price||0;
-      const addr=p.display_address||postcode;
-      const pcm=addr.match(/[A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2}/i);
-      const pcs=pcm?pcm[0].replace(/\s/,'').toLowerCase():'';
-      const status=p.latest_status||'For Sale';
-      const portal=p.source||'Portal';
-      return {
-        id:'hd-'+(p.listing_id||p.property_uprn||Math.random().toString(36).slice(2,10)),
-        address:addr,price,
-        type:(p.listing_property_type||'unknown').toLowerCase(),
-        beds:p.bedrooms||0,baths:p.bathrooms||0,sqft:null,epc:null,tenure:null,
-        chainFree:/chain.free|no chain/i.test(status),chain:/sold.stc|under.offer/i.test(status),
-        garden:false,garage:false,parking:false,newBuild:false,
-        description:status+' \u00b7 Added '+(p.added_date||'').slice(0,10)+' \u00b7 via '+portal+' \u00b7 '+boundary.name,
-        features:[status,portal,(p.added_date||'').slice(0,10)?'Added '+(p.added_date||'').slice(0,10):''].filter(Boolean),
-        url:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+encodeURIComponent(area)+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget,
-        rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+encodeURIComponent(area)+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget,
-        zooplaUrl:pcs?'https://www.zoopla.co.uk/for-sale/property/'+pcs+'/?q='+pcs+'&results_sort=newest_listings':'https://www.zoopla.co.uk/for-sale/',
-        agent:{name:'Homedata \u00b7 '+portal,phone:'',branch:boundary.name},
-        addedDate:(p.added_date||'').slice(0,10)||'Recent',
-        reduced:/reduc/i.test(status),source:'homedata',floorArea:null,uprn:p.property_uprn||null,lat:null,lng:null,
-      };
-    }).filter(p=>p.price>0&&p.price<=budget&&(p.beds===0||p.beds>=minBeds));
-  }catch(e){
-    console.error('[HD] exception:',e);
-    if(fle){const d=document.createElement('div');d.style.cssText='color:var(--red);font-size:11px';d.textContent='\u2717 Homedata error: '+e.message.slice(0,120);fle.appendChild(d);}
+    uiLog('[Apify] Error: '+e.message.slice(0,80),'red');
     return [];
   }
 }
 
 
-function downloadPythonScript(){
-  const script=`# UK Property Finder - run locally for guaranteed results
-# pip install requests beautifulsoup4
-import requests,re,json,gzip,xml.etree.ElementTree as ET,time,csv
-from io import BytesIO
-from datetime import datetime
-
-LOCATION="Manchester"
-POSTCODES=["M20","M21","M14","M19"]
-MAX_PRICE=300000
-MIN_BEDS=3
-HEADERS={"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/135.0 Safari/537.36","Accept":"text/html,application/xhtml+xml,*/*;q=0.8"}
-
-def fetch(url):
-    try:
-        r=requests.get(url,headers=HEADERS,timeout=20)
-        r.raise_for_status()
-        if url.endswith('.gz'):
-            with gzip.GzipFile(fileobj=BytesIO(r.content)) as f: return f.read().decode('utf-8')
-        return r.text
-    except Exception as e: print(f"  Error: {e}"); return None
-
-def parse_sitemap(xml,is_index=False):
-    try:
-        root=ET.fromstring(xml)
-        ns={'s':'http://www.sitemaps.org/schemas/sitemap/0.9'}
-        tag='s:sitemap' if is_index else 's:url'
-        return [x.find('s:loc',ns).text.strip() for x in root.findall('.//'+tag,ns) if x.find('s:loc',ns) is not None]
-    except: return []
-
-results=[]
-print("Rightmove PAGE_MODEL...")
-html=fetch(f"https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation={LOCATION}&maxPrice={MAX_PRICE}&minBedrooms={MIN_BEDS}&includeSSTC=false&sortType=6")
-if html:
-    m=re.search(r'window\\.PAGE_MODEL\\s*=\\s*(\\{.*?\\});',html,re.DOTALL)
-    if m:
-        try:
-            data=json.loads(m.group(1))
-            for p in data.get('results',{}).get('properties',[]):
-                if p.get('price',{}).get('amount',999999)<=MAX_PRICE:
-                    results.append({'source':'Rightmove','address':p.get('address',{}).get('displayAddress'),'price':p.get('price',{}).get('displayPrice'),'beds':p.get('bedrooms'),'type':p.get('propertyType'),'url':'https://www.rightmove.co.uk/properties/'+str(p.get('id')),'added':p.get('addedOrReduced')})
-            print(f"  {len(results)} properties")
-        except Exception as e: print(f"  Error: {e}")
-    else: print("  No PAGE_MODEL (may be JS-rendered)")
-
-print("Purplebricks sitemap...")
-idx=fetch("https://www.purplebricks.co.uk/sitemaps/sitemap-index.xml")
-if idx:
-    for child in parse_sitemap(idx,is_index=True):
-        if 'property' in child or 'sale' in child:
-            sub=fetch(child); time.sleep(1)
-            if sub:
-                for url in parse_sitemap(sub):
-                    if any(pc.lower() in url.lower() for pc in POSTCODES):
-                        results.append({'source':'Purplebricks','url':url,'address':None,'price':None})
-
-fn=f"properties_{LOCATION}_{datetime.now().strftime('%Y%m%d_%H%M')}.csv"
-unique=list({p['url']:p for p in results if p.get('url')}.values())
-with open(fn,'w',newline='',encoding='utf-8') as f:
-    w=csv.DictWriter(f,fieldnames=['source','address','price','beds','type','added','url'])
-    w.writeheader();w.writerows(unique)
-print(f"Done! {len(unique)} properties saved to {fn}")
-`;
-  const blob=new Blob([script],{type:'text/plain'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='find_my_home.py';a.click();
-}
-
-// ─── FREE FOR-SALE PIPELINE ──────────────────────────────────────────────────
-// Tries CORS proxy → Rightmove PAGE_MODEL (real live for-sale listings)
-// Falls back to curated Rightmove/Zoopla search link cards (always useful)
-// NO sold data. Only currently for-sale properties.
-
+// ─── FREE PIPELINE + SEARCH CARDS ────────────────────────────────────────────
 const _PROXIES=[
   u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
   u=>'https://corsproxy.io/?'+encodeURIComponent(u),
@@ -1414,9 +685,9 @@ async function _proxyFetch(url,ms=15000){
       const t=setTimeout(()=>ctrl.abort(),ms);
       const r=await fetch(mk(url),{signal:ctrl.signal,headers:{'Accept':'text/html,*/*'}});
       clearTimeout(t);
-      if(!r.ok) continue;
+      if(!r.ok)continue;
       const txt=await r.text();
-      if(!txt||txt.length<500||/Host not in allowlist|Access denied/i.test(txt.slice(0,200))) continue;
+      if(!txt||txt.length<500||/Host not in allowlist|Access denied/i.test(txt.slice(0,200)))continue;
       return txt;
     }catch(e){continue;}
   }
@@ -1431,7 +702,7 @@ function _extractPageModel(html){
 
 function _normRM(p,budget){
   const price=typeof p.price==='object'?(p.price?.amount||0):parseInt((p.price+'').replace(/[^0-9]/g,''))||0;
-  if(!price||price>budget) return null;
+  if(!price||price>budget)return null;
   const id=p.id||p.propertyId||'';
   const addr=p.displayAddress||p.address?.displayAddress||'';
   const txt=(p.keyFeatures||[]).join(' ')+(p.summary||'');
@@ -1441,76 +712,600 @@ function _normRM(p,budget){
     id:'rm-'+id,address:addr||'Rightmove listing',price,
     type:(p.propertyType||p.propertySubType||'property').toLowerCase(),
     beds:p.bedrooms||p.bedroomCount||0,baths:p.bathrooms||0,
-    sqft:p.floorAreaSqFt||null,epc:p.epcRating||null,
-    tenure:p.tenure?.tenureType||null,
-    chainFree:p.isChainFree===true||/no chain/i.test(txt),
-    chain:p.isChainFree===false,
-    garden:/garden/i.test(txt),garage:/garage/i.test(txt),parking:/parking/i.test(txt),
-    newBuild:p.newHome===true,
-    description:(p.summary||'').slice(0,500),
-    features:(p.keyFeatures||[]).slice(0,6),
+    sqft:p.floorAreaSqFt||null,epc:p.epcRating||null,tenure:p.tenure?.tenureType||null,
+    chainFree:p.isChainFree===true||/no chain/i.test(txt),chain:p.isChainFree===false,
+    garden:/garden/i.test(txt),garage:/garage/i.test(txt),parking:/parking/i.test(txt),newBuild:p.newHome===true,
+    description:(p.summary||'').slice(0,500),features:(p.keyFeatures||[]).slice(0,6),
     url:id?'https://www.rightmove.co.uk/properties/'+id+'#/':'https://www.rightmove.co.uk',
     rightmoveUrl:id?'https://www.rightmove.co.uk/properties/'+id+'#/':'https://www.rightmove.co.uk',
     zooplaUrl:pcs?'https://www.zoopla.co.uk/for-sale/property/'+pcs+'/?q='+pcs+'&results_sort=newest_listings':'https://www.zoopla.co.uk/for-sale/',
     agent:{name:p.customer?.brandTradingName||'Estate Agent',phone:p.customer?.contactTelephone||'',branch:p.customer?.branchDisplayName||''},
-    addedDate:p.addedOrReduced||'Recent',
-    reduced:/reduc/i.test(p.addedOrReduced||''),
-    source:'rightmove-live',
-    floorArea:p.floorAreaSqM||null,
+    addedDate:p.addedOrReduced||'Recent',reduced:/reduc/i.test(p.addedOrReduced||''),
+    source:'rightmove-live',floorArea:p.floorAreaSqM||null,
     lat:p.location?.latitude||null,lng:p.location?.longitude||null,
   };
 }
 
-// Generate curated search-link cards — honest, real, clickable
-function makeSearchCards(location,budget,minBeds,types,pc){
+// Make direct Rightmove/Zoopla/OTM search link cards — always useful
+function makeSearchCards(location,budget,minBeds,pc){
   const locEnc=encodeURIComponent(location);
   const pcSlug=(pc.split(' ')[0]).toLowerCase();
   const beds=minBeds||3;
-  const cards=[
-    {
-      id:'srch-rm',
-      address:'🔍 Rightmove: '+location+' for sale under £'+Number(budget).toLocaleString(),
-      price:0,type:'search link',beds,baths:0,sqft:null,epc:null,tenure:null,
-      chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,
-      description:'Click "View on Rightmove" to see all current for-sale properties matching your filters. Rightmove has 1M+ live UK listings updated daily.',
-      features:['Live Rightmove search','Your exact filters applied','Updates in real time'],
-      url:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+beds,
-      rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+beds,
-      zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pcSlug+'/?q='+pcSlug+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+beds,
-      agent:{name:'Click to open Rightmove live search',phone:'',branch:''},
-      addedDate:'Live search',reduced:false,source:'search-link',floorArea:null,
-    },
-    {
-      id:'srch-zp',
-      address:'🔍 Zoopla: '+location+' for sale under £'+Number(budget).toLocaleString(),
-      price:0,type:'search link',beds,baths:0,sqft:null,epc:null,tenure:null,
-      chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,
-      description:'Click "View on Zoopla" to see all current for-sale properties. Zoopla aggregates listings from hundreds of estate agents.',
-      features:['Live Zoopla search','Your exact filters applied','New listings daily'],
-      url:'https://www.zoopla.co.uk/for-sale/property/'+pcSlug+'/?q='+pcSlug+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+beds,
-      rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+beds,
-      zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pcSlug+'/?q='+pcSlug+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+beds,
-      agent:{name:'Click to open Zoopla live search',phone:'',branch:''},
-      addedDate:'Live search',reduced:false,source:'search-link',floorArea:null,
-    },
-    {
-      id:'srch-otm',
-      address:'🔍 OnTheMarket: '+location+' for sale',
-      price:0,type:'search link',beds,baths:0,sqft:null,epc:null,tenure:null,
-      chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,
-      description:'OnTheMarket often lists properties 24-48 hours before they appear on Rightmove or Zoopla. Good for finding new listings first.',
-      features:['New listings first','24hr exclusive listings','Your filters applied'],
-      url:'https://www.onthemarket.com/for-sale/property/'+location.toLowerCase().replace(/\s+/g,'-')+'/?max-price='+budget+'&min-beds='+beds,
-      rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+beds,
-      zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pcSlug+'/?q='+pcSlug+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+beds,
-      agent:{name:'Click to open OnTheMarket live search',phone:'',branch:''},
-      addedDate:'Live search',reduced:false,source:'search-link',floorArea:null,
-    },
+  return[
+    {id:'srch-rm',address:'🔍 Rightmove: '+location+' for sale under £'+Number(budget).toLocaleString(),
+     price:0,type:'search link',beds,baths:0,sqft:null,epc:null,tenure:null,
+     chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,
+     description:'Click to open Rightmove with your exact filters: '+location+', max £'+Number(budget).toLocaleString()+', '+beds+'+ beds. Rightmove has 1M+ live UK listings.',
+     features:['Live Rightmove search','Your exact filters applied'],
+     url:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+beds,
+     rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+beds,
+     zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pcSlug+'/?q='+pcSlug+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+beds,
+     agent:{name:'Click to open live Rightmove search',phone:'',branch:''},
+     addedDate:'Live',reduced:false,source:'search-link',floorArea:null},
+    {id:'srch-zp',address:'🔍 Zoopla: '+location+' for sale under £'+Number(budget).toLocaleString(),
+     price:0,type:'search link',beds,baths:0,sqft:null,epc:null,tenure:null,
+     chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,
+     description:'Click to open Zoopla with your exact filters. Aggregates hundreds of estate agents across the UK.',
+     features:['Live Zoopla search','Hundreds of agents'],
+     url:'https://www.zoopla.co.uk/for-sale/property/'+pcSlug+'/?q='+pcSlug+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+beds,
+     rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+beds,
+     zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pcSlug+'/?q='+pcSlug+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+beds,
+     agent:{name:'Click to open live Zoopla search',phone:'',branch:''},
+     addedDate:'Live',reduced:false,source:'search-link',floorArea:null},
+    {id:'srch-otm',address:'🔍 OnTheMarket: '+location+' for sale',
+     price:0,type:'search link',beds,baths:0,sqft:null,epc:null,tenure:null,
+     chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,
+     description:'OnTheMarket lists properties 24-48 hours before Rightmove or Zoopla. Best for catching new listings first.',
+     features:['24hr head start on new listings'],
+     url:'https://www.onthemarket.com/for-sale/property/'+location.toLowerCase().replace(/\s+/g,'-')+'/?max-price='+budget+'&min-beds='+beds,
+     rightmoveUrl:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+beds,
+     zooplaUrl:'https://www.zoopla.co.uk/for-sale/property/'+pcSlug+'/?q='+pcSlug+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+beds,
+     agent:{name:'Click to open OnTheMarket search',phone:'',branch:''},
+     addedDate:'Live',reduced:false,source:'search-link',floorArea:null},
   ];
-  return cards;
+}
+
+async function fetchFreeListings(location,budget,minBeds,pc){
+  const results=[];
+  const locEnc=encodeURIComponent(location);
+  uiLog('Free: trying Rightmove via CORS proxy…','amber');
+  try{
+    const rmUrl='https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+minBeds;
+    const html=await _proxyFetch(rmUrl,15000);
+    if(html){
+      const model=_extractPageModel(html);
+      const props=model?.results?.properties||model?.properties||[];
+      if(props.length>0){
+        uiLog('✓ Rightmove: '+props.length+' live listings!','green');
+        for(const p of props){const n=_normRM(p,budget);if(n)results.push(n);}
+        return results;
+      }
+      uiLog('  Rightmove: proxy reached but data JS-rendered','text3');
+    }else{uiLog('  Rightmove: CORS proxy blocked (normal in 2026)','text3');}
+  }catch(e){uiLog('  Rightmove proxy error: '+e.message.slice(0,40),'text3');}
+
+  if(results.length) return results;
+  // Always fall back to search cards — these ARE useful
+  uiLog('Free: showing direct search links (Rightmove/Zoopla/OTM)','amber');
+  uiLog('  Tip: Add Apify token for scraped live listings','text3');
+  return makeSearchCards(location,budget,minBeds,pc);
 }
 
 
+// ─── SCORE ────────────────────────────────────────────────────────────────────
+function scoreAll(listings,crimeScore,nearby,deprivation){
+  const ws=parseInt($('w-safety').value)/10,wi=parseInt($('w-invest').value)/10,
+        wt=parseInt($('w-trans').value)/10,wb=parseInt($('w-build').value)/10,
+        wl=parseInt($('w-life').value)/10;
+  const wTotal=ws+wi+wt+wb+wl||1;
+  const depScore=deprivation?Math.min(10,deprivation.decile||5):5;
+  const blendedSafety=Math.round((crimeScore*0.7+depScore*0.3)*10)/10;
+  return listings.map(p=>{
+    const txt=(p.description+' '+(p.features||[]).join(' ')).toLowerCase();
+    const trans=/metrolink|tram|train|station/.test(txt)?9:/bus/.test(txt)?7:6;
+    const invest=p.type.includes('detach')?9:p.type.includes('bungalow')?8:p.type.includes('semi')?7:6;
+    const build=p.newBuild?9:/victorian|edwardian|1930|1920/.test(txt)?7:/1960|1970|1950/.test(txt)?6:7;
+    const life=Math.min(10,(nearby.gyms?.length>0?2:0)+(nearby.shops?.length>2?2:0)+(nearby.parks?.length>0?1:0)+(nearby.transport?.length>3?1:0)+4);
+    const overall=Math.round((blendedSafety*ws+invest*wi+trans*wt+build*wb+life*wl)/wTotal*10)/10;
+    const urgency=p.reduced?'high':p.addedDate?.toLowerCase().includes('today')||/^[12] day/.test(p.addedDate||'')?'high':/week|[3-7] day/.test(p.addedDate||'')?'med':'low';
+    return{...p,safetyScore:blendedSafety,transportScore:trans,investScore:invest,buildScore:build,lifeScore:life,overallScore:overall,urgency};
+  }).sort((a,b)=>b.overallScore-a.overallScore);
+}
+
+// ─── CLAUDE ───────────────────────────────────────────────────────────────────
+async function runClaude(listings,geo,crime,price,nearby,flood,planning,deprivation,hpi,opts){
+  if(!S.claudeKey||S.claudeSpent>=S.claudeCap)return null;
+  const{budget,stretch,musts}=opts;
+  const gymList=nearby.gyms?.map(g=>g.tags?.name).filter(Boolean).slice(0,4).join(', ')||'Check locally';
+  const transportList=nearby.transport?.map(t=>t.tags?.name||t.tags?.ref).filter(Boolean).slice(0,5).join(', ')||'Bus network';
+  const recentSales=price.recent.slice(0,5).map(r=>r.addr+' £'+fmt(r.price)+' ('+r.date+')').join('; ');
+  const sources=[...new Set(listings.map(p=>p.source))].join(', ');
+  const prompt='You are a top UK property analyst. Analyse these properties and area data. Respond ONLY in valid JSON.\n\n'
+    +'BUYER: Budget £'+fmt(budget)+' | Stretch £'+fmt(stretch)+' | Musts: '+musts.join(', ')+' | Area: '+geo.admin_district+', '+geo.admin_ward+'\n'
+    +'Crime: '+crime.total+' incidents | Score: '+crime.score+'/10\n'
+    +(deprivation?'Deprivation: '+deprivation.label+' (decile '+deprivation.decile+')\n':'')
+    +'Flood: '+flood.zones+' zones 1km | High: '+(flood.highRisk?'YES':'No')+'\n'
+    +'Land Registry avg: £'+fmt(price.avgPrice)+' ('+price.count+' sales) | Trend: '+(price.trend>0?'+':'')+price.trend+'%\n'
+    +(hpi?'HPI Manchester: £'+fmt(hpi.avgPrice)+', '+hpi.yearGrowth+'% since 2023\n':'')
+    +'Recent sales: '+recentSales+'\n'
+    +'OSM: Gyms: '+gymList+' | Transport: '+transportList+'\n\n'
+    +'PROPERTIES:\n'+listings.slice(0,10).map((p,i)=>'#'+(i+1)+' '+p.address+' £'+fmt(p.price)+' | '+p.type+' '+p.beds+'bed | EPC:'+(p.epc||'?')+' | Chain-free:'+(p.chainFree?'YES':'NO')+(p.reduced?' | REDUCED':'')).join('\n')
+    +'\n\nJSON format: {"topPickId":"address","topPickVerdict":"4 sentences why","verdicts":{"address":"full verdict"},"visitOrder":["addresses"],"visitUrgency":{"address":"reason"},"mustHaveScore":{"address":"X/10"},"stretchCase":"ROI case","redFlags":["risk1"],"marketOutlook":"2025-2027","chainRisk":"HIGH/MED/LOW","floodVerdict":"analysis","investmentRanking":["best to worst"]}';
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':S.claudeKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:3000,messages:[{role:'user',content:prompt}]})});
+    const data=await r.json();
+    const cost=((data.usage?.input_tokens||0)*3+(data.usage?.output_tokens||0)*15)/1000000;
+    spend('claude',cost);
+    return JSON.parse((data.content?.[0]?.text||'').replace(/```json|```/g,'').trim());
+  }catch(e){console.error('Claude:',e);return null;}
+}
+
+// ─── MAIN SEARCH ──────────────────────────────────────────────────────────────
+async function runSearch(forceRefresh){
+  const pc=$('postcode').value.trim();
+  if(!pc){alert('Please enter a UK postcode (e.g. M3 or M21 9WQ)');return;}
+  const budget=parseInt($('budget').value);
+  const stretch=parseInt($('stretch').value);
+  const types=getOn('type-grid');
+  const musts=getOn('must-grid');
+  const minBeds=parseInt($('min-beds').value)||3;
+  const ck=pc.toUpperCase()+'_'+budget+'_'+minBeds+'_'+(S.listingMode||'free');
+
+  if(!forceRefresh&&S.cache[ck]&&Date.now()-S.cache[ck].ts<CACHE_TTL){
+    const cached=S.cache[ck];
+    $('mcontent').innerHTML='<div class="cache-bar">♻️ Cached ('+(Math.round((Date.now()-cached.ts)/60000))+'min ago) — click Search again to refresh</div>';
+    renderAll(cached.results,cached.area,cached.ai,{budget,stretch,musts});
+    return;
+  }
+
+  $('btn-go').disabled=true;
+  uiLogClear();
+  showLoading();
+
+  try{
+    setStep(0);
+    uiLog('Geocoding '+pc+'…','text2');
+    const geo=await freePostcode(pc);
+    uiLog('✓ '+geo.admin_ward+', '+geo.admin_district,'green');
+    setStep(1);
+
+    const[crime,price,nearby,flood,planning,deprivation,hpi]=await Promise.all([
+      freeCrime(geo.latitude,geo.longitude),
+      freePriceHistory(pc),
+      freeNearby(geo.latitude,geo.longitude),
+      freeFloodRisk(geo.latitude,geo.longitude),
+      freePlanningRisk(geo.latitude,geo.longitude),
+      freeDeprivation(geo.latitude,geo.longitude),
+      freeHPI(),
+    ]);
+    uiLog('✓ 7 free APIs loaded','green');
+    setStep(2);
+
+    const location=geo.admin_district||pc;
+    const isFree=(S.listingMode||'free')==='free';
+    const isKeys=(S.listingMode||'free')==='keys';
+
+    let realListings=[];
+
+    if(isFree){
+      uiLog('Free mode: trying CORS proxy scrape…','amber');
+      realListings=await fetchFreeListings(location,budget,minBeds,pc);
+    } else {
+      // Keys mode: run HD and Apify in parallel
+      const[hdResults,apifyResults]=await Promise.all([
+        homedataListings(pc,budget,geo),
+        apifyListings(location,budget,geo),
+      ]);
+      realListings=[...hdResults,...apifyResults];
+      uiLog('Keys: '+hdResults.length+' HD + '+apifyResults.length+' Apify listings','teal');
+    }
+
+    setStep(3);
+
+    // Always add search cards as fallback navigation
+    const navCards=makeSearchCards(location,budget,minBeds,pc);
+
+    // Merge, dedup, filter
+    let all=[...realListings,...navCards];
+    const seen=new Set();
+    all=all.filter(p=>{
+      const k=(p.address||'').toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,20);
+      if(seen.has(k))return false;seen.add(k);return true;
+    }).filter(p=>p.source==='search-link'?true:p.price>0&&p.price<=budget);
+
+    const realCount=all.filter(p=>!['fallback','search-link'].includes(p.source)).length;
+    if(!realCount&&!all.some(p=>p.source==='search-link')){
+      // Absolute fallback
+      all=[...navCards,{
+        id:'fb1',address:'No listings found — check filters',price:budget,type:'detached',beds:minBeds,baths:2,
+        sqft:null,epc:null,tenure:null,chainFree:false,chain:false,garden:false,garage:false,parking:false,newBuild:false,
+        description:isKeys?'Homedata returned 0 listings. Try: lower min beds, raise budget, or check your Homedata plan includes /api/live-listings/search/.':'Free CORS proxies blocked. Use the search links above to browse live listings on Rightmove and Zoopla.',
+        features:[],url:'https://homedata.co.uk',rightmoveUrl:'https://www.rightmove.co.uk',zooplaUrl:'https://www.zoopla.co.uk',
+        agent:{name:'homedata.co.uk · apify.com',phone:'',branch:''},addedDate:'',reduced:false,source:'fallback',floorArea:null
+      }];
+    }
+
+    setStep(4);
+
+    // Score real listings only
+    const realL=all.filter(p=>!['search-link','fallback'].includes(p.source));
+    const navL=all.filter(p=>p.source==='search-link');
+    const fbL=all.filter(p=>p.source==='fallback');
+
+    const scoredReal=realL.length?scoreAll(realL,crime.score,nearby,deprivation):[];
+    const scoredNav=navL.map(p=>({...p,safetyScore:0,transportScore:0,investScore:0,buildScore:0,lifeScore:0,overallScore:0,urgency:'low'}));
+    const scoredFb=fbL.map(p=>({...p,safetyScore:0,transportScore:0,investScore:0,buildScore:0,lifeScore:0,overallScore:0,urgency:'low'}));
+    const scored=[...scoredReal,...scoredNav,...scoredFb];
+
+    let ai=null;
+    if(S.claudeKey&&S.claudeSpent<S.claudeCap&&scoredReal.length){
+      setStep(5);
+      uiLog('Running Claude AI analysis…','amber');
+      ai=await runClaude(scored.slice(0,10),geo,crime,price,nearby,flood,planning,deprivation,hpi,{budget,stretch,musts});
+      if(ai) uiLog('✓ Claude analysis complete','green');
+    }
+
+    setStep(6);
+    const area={geo,crime,price,nearby,flood,planning,deprivation,hpi};
+    S.cache[ck]={ts:Date.now(),results:scored,area,ai};
+    S.results=scored;S.area=area;S.ai=ai;
+    renderAll(scored,area,ai,{budget,stretch,musts});
+
+  }catch(err){
+    console.error('runSearch error:',err);
+    uiLog('Search error: '+err.message,'red');
+    $('mcontent').innerHTML='<div class="empty"><div class="empty-ico">⚠️</div>'
+      +'<div style="font-family:\'Playfair Display\',serif;font-size:20px;margin-bottom:8px">Search failed</div>'
+      +'<div style="font-size:13px;color:var(--text2);margin-bottom:10px">'+err.message+'</div>'
+      +'<div style="font-size:11px;color:var(--text3);line-height:2">'
+      +'• Check postcode is valid (e.g. <b>M21</b> or <b>M21 9WQ</b>)<br>'
+      +'• Open F12 console for details<br>'
+      +'• Check the search log panel (above mode buttons)</div></div>';
+  }
+  $('btn-go').disabled=false;
+}
+
+function showLoading(){
+  $('mcontent').innerHTML='<div class="loading"><div class="spin"></div>'
+    +'<div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px">Searching all sources…</div>'
+    +'<div class="lsteps" id="lsteps">'
+    +'<div class="ls" id="ls0"><span>⏳</span> Geocoding postcode <span class="ctag">FREE</span></div>'
+    +'<div class="ls" id="ls1"><span>⏳</span> Crime · Prices · Flood · Planning · Deprivation (6 APIs) <span class="ctag">FREE</span></div>'
+    +'<div class="ls" id="ls2"><span>⏳</span> Fetching listings <span class="ctag">varies</span></div>'
+    +'<div class="ls" id="ls3"><span>⏳</span> Merging · deduplicating <span class="ctag">FREE</span></div>'
+    +'<div class="ls" id="ls4"><span>⏳</span> Scoring properties <span class="ctag">FREE</span></div>'
+    +'<div class="ls" id="ls5"><span>⏳</span> Claude AI analysis <span class="ctag">~$0.003</span></div>'
+    +'<div class="ls" id="ls6"><span>⏳</span> Building report <span class="ctag">FREE</span></div>'
+    +'</div></div>';
+}
+function setStep(n){
+  for(let i=0;i<n;i++){const e=$('ls'+i);if(e){e.className='ls done';const s=e.querySelector('span');if(s)s.textContent='✓';}}
+  const c=$('ls'+n);if(c){c.className='ls act';const s=c.querySelector('span');if(s)s.textContent='⟳';}
+}
+
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+function getVerdict(ai,p){if(!ai?.verdicts)return null;return ai.verdicts[p.address]||ai.verdicts[p.id]||Object.entries(ai.verdicts).find(([k])=>p.address.toLowerCase().includes(k.toLowerCase().split(',')[0].trim()))?.[1]||null;}
+function getUrgencyText(ai,p){if(ai?.visitUrgency){const v=ai.visitUrgency[p.address]||ai.visitUrgency[p.id]||Object.entries(ai.visitUrgency||{}).find(([k])=>p.address.toLowerCase().includes(k.toLowerCase().split(',')[0].trim()))?.[1];if(v)return v;}return p.urgency==='high'?'Recently listed or reduced — expect competition':p.urgency==='med'?'On market a short while — book soon':'Has been available — room to negotiate';}
+function getMust(ai,p){if(!ai?.mustHaveScore)return'';return ai.mustHaveScore[p.address]||ai.mustHaveScore[p.id]||Object.entries(ai.mustHaveScore).find(([k])=>p.address.toLowerCase().includes(k.toLowerCase().split(',')[0].trim()))?.[1]||'';}
+
+function renderAll(listings,area,ai,opts){
+  const{budget,stretch,musts}=opts;
+  const{geo,crime,price,nearby,flood,planning,deprivation,hpi}=area;
+  let sorted=[...listings];
+  if(ai?.topPickId){
+    sorted=sorted.sort((a,b)=>{const n=ai.topPickId.toLowerCase().split(',')[0].trim();return((b.address+b.id).toLowerCase().includes(n)?1:0)-((a.address+a.id).toLowerCase().includes(n)?1:0);});
+    if(sorted.length)sorted[0].isTopPick=true;
+  }
+  const crimeColor=crime.total>200?'var(--red)':crime.total>120?'var(--amber)':'var(--green)';
+  const crimeLevel=crime.total>200?'High':crime.total>120?'Moderate':crime.total>60?'Low-Mod':'Low';
+  const totalSpent=S.claudeSpent+S.apifySpent;
+  const realCnt=sorted.filter(p=>!['fallback','search-link'].includes(p.source)).length;
+  let h='';
+
+  // Notice
+  if(realCnt>0){
+    const srcMap={apify:'Rightmove (Apify)',homedata:'Homedata','rightmove-live':'Rightmove (free)',purplebricks:'Purplebricks'};
+    const srcs=[...new Set(sorted.filter(p=>!['fallback','search-link'].includes(p.source)).map(p=>p.source))].map(x=>srcMap[x]||x);
+    h+='<div class="notice ok">✅ <b>'+realCnt+' live listings</b> from '+srcs.join(' + ')+'</div>';
+  } else if((S.listingMode||'free')==='keys'){
+    const msg=S.homedataKey||S.apifyKey
+      ?'No listings returned. Check the search log above for [HD] details. Try: lower min beds, raise budget, or check Homedata plan.'
+      :'Add a Homedata or Apify key to get live listings.';
+    h+='<div class="notice warn">⚠ <b>Keys mode: </b>'+msg+'</div>';
+  } else {
+    h+='<div class="notice info">🔍 <b>Free mode: </b>CORS proxies blocked by Rightmove. Click the search cards below to browse live listings on Rightmove/Zoopla/OnTheMarket. Add Apify for scraped data.</div>';
+  }
+
+  h+='<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap">'
+    +'<div><div style="font-family:\'Playfair Display\',serif;font-size:24px;letter-spacing:-.4px">'+sorted.length+' Properties · '+geo.admin_district+'</div>'
+    +'<div style="font-size:11px;color:var(--text2);margin-top:3px">'+(geo.admin_ward||'')+' · '+(geo.region||'')+' · weighted scoring</div></div>'
+    +'<div style="font-size:10px;color:var(--text2);text-align:right">Claude: $'+S.claudeSpent.toFixed(3)+' · Apify: $'+S.apifySpent.toFixed(3)+' · HD: '+S.homedataUsed+'<br><span style="color:var(--green)">Free APIs: $0.000</span></div></div>';
+
+  h+='<div class="stats">'
+    +'<div class="stat"><div class="stat-l">Crime</div><div class="stat-v" style="color:'+crimeColor+'">'+crimeLevel+'</div><div class="stat-s">'+crime.total+' incidents</div></div>'
+    +'<div class="stat"><div class="stat-l">Avg Sold</div><div class="stat-v" style="color:var(--accent)">£'+(price.avgPrice?Math.round(price.avgPrice/1000)+'k':'N/A')+'</div><div class="stat-s">Land Registry</div></div>'
+    +'<div class="stat"><div class="stat-l">Budget</div><div class="stat-v" style="color:var(--green)">£'+Math.round(budget/1000)+'k</div><div class="stat-s">Stretch: £'+Math.round(stretch/1000)+'k</div></div>'
+    +'<div class="stat"><div class="stat-l">Deprivation</div><div class="stat-v" style="color:'+(deprivation?(deprivation.decile<=4?'var(--red)':deprivation.decile<=6?'var(--amber)':'var(--green)'):'var(--text2)')+'">'+( deprivation?'D'+deprivation.decile:'N/A')+'</div><div class="stat-s">ONS IMD 2019</div></div>'
+    +'<div class="stat"><div class="stat-l">Flood Risk</div><div class="stat-v" style="color:'+(flood.highRisk?'var(--red)':flood.zones>0?'var(--amber)':'var(--green)')+'">'+( flood.highRisk?'High':flood.zones>0?'Low':'None')+'</div><div class="stat-s">'+flood.zones+' zones 1km</div></div>'
+    +'<div class="stat"><div class="stat-l">Spent</div><div class="stat-v" style="color:'+(totalSpent<0.5?'var(--green)':'var(--amber)')+'">$'+totalSpent.toFixed(2)+'</div><div class="stat-s">This session</div></div>'
+    +'</div>';
+
+  h+='<div class="tabs">'
+    +'<div class="tab on" onclick="swTab(\'listings\',this)">🏠 Listings</div>'
+    +'<div class="tab" onclick="swTab(\'area\',this)">📊 Area</div>'
+    +'<div class="tab" onclick="swTab(\'nearby\',this)">🗺 Nearby</div>'
+    +(ai?'<div class="tab" onclick="swTab(\'ai\',this)">🤖 AI Report</div>':'')
+    +'</div>';
+
+  // LISTINGS PANEL
+  h+='<div class="panel on" id="t-listings"><div class="cards">';
+  sorted.forEach((p,idx)=>{
+    const isFallback=p.source==='fallback';
+    const isNav=p.source==='search-link';
+    const isReal=!isFallback&&!isNav;
+    const srcClass={apify:'apify',homedata:'hd',fallback:'fallback','search-link':'search-link','rightmove-live':'apify',purplebricks:'hd'}[p.source]||'live';
+    const srcLabel=p.source==='apify'?'● Rightmove live (Apify) · '+(p.addedDate||'Recent')+(p.reduced?' · PRICE REDUCED':'')
+      :p.source==='homedata'?'● Homedata live · '+(p.addedDate||'Recent')
+      :p.source==='search-link'?'🔍 Click to open live search'
+      :p.source==='rightmove-live'?'● Rightmove (free) · '+(p.addedDate||'Recent')
+      :p.source==='purplebricks'?'● Purplebricks · '+(p.addedDate||'Recent')
+      :p.source==='fallback'?'ℹ No listings found'
+      :'● Live listing';
+    const tbc=p.type.includes('detach')?'bd':p.type.includes('bungalow')?'bb':p.type.includes('flat')||p.type.includes('apart')?'ba':'bs';
+    const urgColor=p.urgency==='high'?'var(--red)':p.urgency==='med'?'var(--amber)':'var(--green)';
+    const verdict=isNav?p.description:isFallback?p.description:(getVerdict(ai,p)||p.type+' at £'+fmt(p.price)+'.'+(p.chainFree?' Chain-free.':'')+(p.garden?' Has garden.':''));
+    const scores=[{l:'Safety',v:p.safetyScore},{l:'Transport',v:p.transportScore},{l:'Invest',v:p.investScore},{l:'Build',v:p.buildScore},{l:'Overall',v:p.overallScore}];
+
+    h+='<div class="card '+(p.isTopPick?'pick':'')+'">';
+    if(p.isTopPick) h+='<div class="pick-badge">⭐ AI TOP PICK</div>';
+    h+='<div class="src-strip '+srcClass+'">'+srcLabel+'</div>';
+    h+='<div class="cbody">';
+    h+='<div class="ctop"><div class="caddr">'+p.address+'</div>';
+    h+='<div class="cbadges">'+(isReal?(
+      '<span class="badge '+tbc+'">'+p.type+'</span>'
+      +(p.tenure?.toLowerCase().includes('freehold')?'<span class="badge bf">Freehold</span>':'')
+      +(p.chainFree?'<span class="badge bd">No Chain</span>':p.chain?'<span class="badge bs">In Chain</span>':'')
+      +(p.reduced?'<span class="badge" style="border-color:var(--red);color:var(--red);background:var(--red-bg)">Price↓</span>':'')
+      +(p.newBuild?'<span class="badge ba">New</span>':'')
+    ):'')+'</div></div>';
+
+    if(isReal){
+      h+='<div class="cmeta"><div class="cprice">£'+fmt(p.price)+'</div><div class="cspecs">'
+        +(p.beds?'<span class="spec">🛏 '+p.beds+'bd</span>':'')
+        +(p.baths?'<span class="spec">🚿 '+p.baths+'ba</span>':'')
+        +(p.sqft?'<span class="spec">📐 '+p.sqft+'sqft</span>':'')
+        +(p.epc?'<span class="spec"><span class="epc e'+p.epc+'">'+p.epc+'</span></span>':'')
+        +(p.garden?'<span class="spec">🌳</span>':'')
+        +(p.garage?'<span class="spec">🚗</span>':'')
+        +'</div></div>';
+      h+='<div class="scores">'+scores.map(s=>'<div class="sc-item"><div class="sc-l">'+s.l+'</div><div class="sc-bw"><div class="sc-b '+bC(s.v||5)+'" style="width:'+((s.v||5)*10)+'%"></div></div><div class="sc-n '+sC(s.v||5)+'">'+(s.v||'?')+'</div></div>').join('')+'</div>';
+      if(p.urgency) h+='<div class="urg '+(p.urgency||'low')+'"><div class="urg-lbl" style="color:'+urgColor+'">'+(p.urgency==='high'?'⚡ Visit ASAP':p.urgency==='med'?'📅 This week':'🕐 Flexible')+'</div><div class="urg-sub">'+getUrgencyText(ai,p)+'</div></div>';
+    }
+
+    h+='<div class="verdict">'+(isReal?'<b>AI:</b> ':'')+verdict+'</div>';
+
+    const mustTxt=isReal?getMust(ai,p):'';
+    if(mustTxt) h+='<div style="font-size:11px;color:var(--text2);margin-bottom:7px;padding:5px 9px;background:var(--bg3);border-radius:7px">✓ '+mustTxt+'</div>';
+
+    if(isReal){
+      h+='<div class="tags">'
+        +(nearby.gyms?.length?'<span class="tag ok">🏊 '+(nearby.gyms[0]?.tags?.name||'Gym')+'</span>':'')
+        +(nearby.shops?.length?'<span class="tag ok">🛒 '+(nearby.shops[0]?.tags?.name||'Supermarket')+'</span>':'')
+        +'<span class="tag ok">✈️ MAN ~'+(p.transportScore>=8?'20':'30')+'min</span>'
+        +(p.chainFree?'<span class="tag ok">✓ No Chain</span>':p.chain?'<span class="tag warn">⚠ Chain</span>':'')
+        +(price.avgPrice&&p.price<price.avgPrice?'<span class="tag ok">Below avg</span>':price.avgPrice&&p.price>price.avgPrice?'<span class="tag warn">Above avg</span>':'')
+        +(flood.highRisk?'<span class="tag warn">⚠ Flood</span>':'')
+        +(p.addedDate?'<span class="tag info">'+p.addedDate+'</span>':'')
+        +'<span class="tag live">'+p.source+'</span></div>';
+    }
+
+    h+='<div class="agent-box"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px">'
+      +(isFallback?'Find Listings':isNav?'Open Live Search':'Selling Agent')+'</div>';
+    if(isReal){
+      h+='<div class="agent-name">'+(p.agent?.name||'Agent')+(p.agent?.branch?' · '+p.agent.branch:'')+'</div>';
+      h+='<div class="agent-contact">'+(p.agent?.phone&&p.agent.phone!=='See Rightmove'?'📞 <a href="tel:'+p.agent.phone+'">'+p.agent.phone+'</a> · ':'')
+        +'<a href="'+p.rightmoveUrl+'" target="_blank">Rightmove ↗</a> · <a href="'+p.zooplaUrl+'" target="_blank">Zoopla ↗</a></div>';
+    }
+    h+='</div>';
+
+    h+='<div class="cactions">';
+    if(isFallback){
+      h+='<button class="abtn pri" onclick="window.open(\'https://homedata.co.uk\',\'_blank\')">Get Homedata Key ↗</button>';
+      h+='<button class="abtn" onclick="window.open(\'https://apify.com\',\'_blank\')">Get Apify Token ↗</button>';
+    } else if(isNav){
+      h+='<button class="abtn pri" style="flex:2" onclick="window.open(\''+p.url+'\',\'_blank\')">Open Live Search ↗</button>';
+      h+='<button class="abtn" onclick="window.open(\''+p.rightmoveUrl+'\',\'_blank\')">Rightmove ↗</button>';
+      h+='<button class="abtn" onclick="window.open(\''+p.zooplaUrl+'\',\'_blank\')">Zoopla ↗</button>';
+    } else {
+      h+='<button class="abtn" onclick="showDetail('+idx+')">Full Report</button>';
+      h+='<button class="abtn" onclick="window.open(\''+p.rightmoveUrl+'\',\'_blank\')">Rightmove ↗</button>';
+      h+='<button class="abtn" onclick="window.open(\''+p.zooplaUrl+'\',\'_blank\')">Zoopla ↗</button>';
+      h+='<button class="abtn pri" onclick="callAgent('+idx+')">📞 Agent</button>';
+    }
+    h+='</div></div></div>';
+  });
+  h+='</div></div>';
+
+  // AREA PANEL
+  const crimeRows=Object.entries(crime.breakdown||{}).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const maxC=crimeRows[0]?.[1]||1;
+  h+='<div class="panel" id="t-area">';
+  h+='<div class="two-col">'
+    +'<div class="box" style="margin-bottom:0"><h4>Location</h4>'
+    +[['Region',geo.region||'N/A'],['Ward',geo.admin_ward||'N/A'],['Council',geo.admin_district||'N/A'],['Constituency',geo.parliamentary_constituency||'N/A']]
+      .map(([l,v])=>'<div class="d-row"><span class="d-l">'+l+'</span><span class="d-v">'+v+'</span></div>').join('')+'</div>'
+    +'<div class="box" style="margin-bottom:0"><h4>Land Registry</h4>'
+    +[['Transactions',price.count],['Avg sold','£'+(price.avgPrice?fmt(price.avgPrice):'N/A')],['Trend',(price.trend>0?'+':'')+price.trend+'%']]
+      .map(([l,v])=>'<div class="d-row"><span class="d-l">'+l+'</span><span class="d-v">'+v+'</span></div>').join('')
+    +price.recent.slice(0,3).map(r=>'<div style="font-size:11px;color:var(--text2);padding:2px 0">'+(r.addr||'–')+' · £'+fmt(r.price)+' · '+r.date+'</div>').join('')+'</div></div>';
+  h+=(deprivation?'<div class="box" style="margin-top:10px"><h4>Deprivation (ONS IMD 2019)</h4><p>Decile: <b>'+deprivation.decile+'/10</b> ('+deprivation.label+')</p></div>':'');
+  h+='<div class="box" style="margin-top:10px"><h4>Crime — UK Police · '+crime.total+' incidents · Score: '+crime.score+'/10</h4>';
+  crimeRows.forEach(([cat,n])=>{h+='<div class="crime-row"><div class="crime-l">'+cat+'</div><div class="crime-bw"><div class="crime-b" style="width:'+Math.round(n/maxC*100)+'%;background:'+(n>maxC*.5?'var(--red)':n>maxC*.25?'var(--amber)':'var(--green)')+'"></div></div><div class="crime-n">'+n+'</div></div>';});
+  h+='</div><div class="box"><h4>Flood Risk</h4><p>Zones: <b>'+flood.zones+'</b> within 1km | High risk: <b style="color:'+(flood.highRisk?'var(--red)':'var(--green)')+'">'+(flood.highRisk?'YES':'No')+'</b>'+(flood.areas.length?' | '+flood.areas.join(', '):'')+'</p></div>';
+  h+=(hpi?'<div class="box"><h4>HM Land Registry HPI</h4><p>Avg: £'+fmt(hpi.avgPrice)+' | Growth: '+(hpi.yearGrowth>0?'+':'')+hpi.yearGrowth+'% since 2023</p></div>':'');
+  h+='</div>';
+
+  // NEARBY PANEL
+  h+='<div class="panel" id="t-nearby">';
+  h+='<div class="box"><h4>🏊 Gyms & Pools</h4>'+(nearby.gyms?.length?nearby.gyms.map(g=>'<p style="font-size:12px;color:var(--text2);padding:2px 0">• '+(g.tags?.name||'Sports Centre')+'</p>').join(''):'<p style="font-size:12px;color:var(--text2)">None OSM-tagged nearby. Known: David Lloyd Didsbury, Manchester Aquatics Centre, Withington Baths</p>')+'</div>';
+  h+='<div class="box"><h4>🛒 Supermarkets</h4>'+(nearby.shops?.length?nearby.shops.map(s=>'<p style="font-size:12px;color:var(--text2);padding:2px 0">• '+(s.tags?.name||'Supermarket')+'</p>').join(''):'<p style="font-size:12px;color:var(--text2)">Aldi, Tesco, Lidl, Waitrose in area</p>')+'</div>';
+  h+='<div class="box"><h4>🚆 Transport</h4>'+(nearby.transport?.length?nearby.transport.slice(0,8).map(t=>'<p style="font-size:12px;color:var(--text2);padding:2px 0">• '+(t.tags?.name||t.tags?.ref||'Stop')+'</p>').join(''):'<p style="font-size:12px;color:var(--text2)">Bus/tram network in area</p>')+'</div>';
+  h+='<div class="box"><h4>🏫 Schools</h4>'+(nearby.schools?.length?nearby.schools.map(s=>'<p style="font-size:12px;color:var(--text2);padding:2px 0">• '+(s.tags?.name||'School')+'</p>').join(''):'<p style="font-size:12px;color:var(--text2)">Check ofsted.gov.uk for ratings</p>')+'</div>';
+  h+='<div class="box"><h4>🌳 Parks</h4>'+(nearby.parks?.length?nearby.parks.map(p=>'<p style="font-size:12px;color:var(--text2);padding:2px 0">• '+(p.tags?.name||'Park')+'</p>').join(''):'<p style="font-size:12px;color:var(--text2)">Green space in area</p>')+'</div>';
+  h+='</div>';
+
+  if(ai){
+    h+='<div class="panel" id="t-ai"><div class="box" style="border-color:var(--accent)"><h4 style="color:var(--accent)">🤖 Claude AI Report · $'+S.claudeSpent.toFixed(3)+'</h4><pre style="font-size:11px;color:var(--text2);white-space:pre-wrap;overflow-x:auto">'+JSON.stringify(ai,null,2)+'</pre></div></div>';
+  }
+
+  $('mcontent').innerHTML=h;
+  window._listings=sorted;window._area=area;window._ai=ai;
+}
+
+function swTab(name,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  const t=$('t-'+name);if(t)t.classList.add('on');
+}
+
+function showDetail(idx){
+  const p=window._listings?.[idx];if(!p||p.source==='fallback'||p.source==='search-link')return;
+  const ai=window._ai;
+  $('modal-title').textContent=p.address;
+  let mc='<div class="msec"><div class="msec-l">Price & Specs</div>';
+  [['Price','£'+fmt(p.price),'color:var(--accent)'],['Type',p.type],['Beds',(p.beds||'?')+''],['Baths',(p.baths||'?')+''],['Floor Area',(p.floorArea?p.floorArea+'m²':'N/A')],['EPC',(p.epc||'N/A')],['Tenure',(p.tenure||'Unknown')],['Chain-free',p.chainFree?'Yes ✓':'No',p.chainFree?'color:var(--green)':'color:var(--amber)'],['Source',p.source,'color:var(--teal)'],['Added',p.addedDate||'Recent']].forEach(([l,v,st])=>{mc+='<div class="d-row"><span class="d-l">'+l+'</span><span class="d-v" style="'+(st||'')+'">'+v+'</span></div>';});
+  mc+='</div>';
+  if(p.features?.length){mc+='<div class="msec"><div class="msec-l">Features</div><div style="background:var(--bg3);border-radius:var(--r);padding:10px 12px">'+p.features.map(f=>'<div style="font-size:12px;color:var(--green);padding:2px 0">✓ '+f+'</div>').join('')+'</div></div>';}
+  const verdict=getVerdict(ai,p)||'Add Claude key for AI verdict.';
+  mc+='<div class="msec"><div class="msec-l">AI Verdict</div><div style="font-size:12px;color:var(--text2);line-height:1.7;background:var(--bg3);border-radius:var(--r);padding:10px 12px;border-left:3px solid var(--accent)">'+verdict+'</div></div>';
+  if(p.description){mc+='<div class="msec"><div class="msec-l">Description</div><div style="font-size:12px;color:var(--text2);line-height:1.6;background:var(--bg3);border-radius:var(--r);padding:10px 12px">'+p.description+'</div></div>';}
+  mc+='<div class="msec"><div class="msec-l">Agent</div><div class="agent-box" style="margin:0"><div class="agent-name">'+(p.agent?.name||'Agent')+(p.agent?.branch?' · '+p.agent.branch:'')+'</div><div class="agent-contact">'+(p.agent?.phone?'📞 <a href="tel:'+p.agent.phone+'">'+p.agent.phone+'</a><br>':'')+'<a href="'+p.rightmoveUrl+'" target="_blank">Rightmove ↗</a> · <a href="'+p.zooplaUrl+'" target="_blank">Zoopla ↗</a></div></div></div>';
+  mc+='<div style="display:flex;gap:7px;margin-top:12px;flex-wrap:wrap"><button class="abtn pri" onclick="callAgent('+idx+');closeModal()">📞 Agent</button><button class="abtn" onclick="window.open(\''+p.rightmoveUrl+'\',\'_blank\')">Rightmove ↗</button><button class="abtn" onclick="window.open(\''+p.zooplaUrl+'\',\'_blank\')">Zoopla ↗</button><button class="abtn" onclick="closeModal()">Close</button></div>';
+  $('modal-content').innerHTML=mc;
+  $('modal').classList.remove('hidden');
+}
+function callAgent(idx){const p=window._listings?.[idx];if(!p)return;alert('📞 '+(p.agent?.name||'Agent')+'\n\n'+(p.agent?.phone?'Phone: '+p.agent.phone+'\n':'')+(p.agent?.branch?'Branch: '+p.agent.branch+'\n':'')+'\nRightmove: '+p.rightmoveUrl);}
+function closeModal(){$('modal').classList.add('hidden');}
+
+// ─── MODE & KEY MANAGEMENT ────────────────────────────────────────────────────
+S.listingMode='free';
+
+function setListingMode(mode){
+  S.listingMode=mode;S.cache={};
+  const mc=$('mcontent');
+  if(mc)mc.innerHTML='<div class="empty"><div class="empty-ico">'+(mode==='free'?'🏴':'🔑')+'</div>'
+    +'<div style="font-family:\'Playfair Display\',serif;font-size:22px;margin-bottom:8px">'+(mode==='free'?'Free Mode':'API Keys Mode')+'</div>'
+    +'<div style="font-size:12px;color:var(--text2)">'+(mode==='free'?'Enter a UK postcode and click Search. Uses CORS proxies — if blocked, shows direct Rightmove/Zoopla/OTM links.':'Enter postcode and click Search. Uses Homedata live-listings API and/or Apify Rightmove scraper.')+'</div></div>';
+  const freeBtn=$('mode-free');const keysBtn=$('mode-keys');
+  const freeSection=$('section-free');const keysSection=$('section-keys');
+  if(freeBtn)freeBtn.classList.toggle('mode-active',mode==='free');
+  if(keysBtn)keysBtn.classList.toggle('mode-active',mode==='keys');
+  if(freeSection)freeSection.style.display=mode==='free'?'block':'none';
+  if(keysSection)keysSection.style.display=mode==='keys'?'block':'none';
+  uiLogClear();
+}
+
+function saveKey(t){
+  S.cache={};
+  const exp=Date.now()+6*60*60*1000;
+  const configs={
+    claude:{inp:'inp-claude',dot:'d-claude',tag:'t-claude',minLen:20,sKey:'fmnh_claude',storeKey:'claudeKey'},
+    hd:{inp:'inp-hd',dot:'d-hd',tag:'t-hd',minLen:5,sKey:'fmnh_hd',storeKey:'homedataKey'},
+    apify:{inp:'inp-apify',dot:'d-apify',tag:'t-apify',minLen:10,sKey:'fmnh_apify',storeKey:'apifyKey'},
+  };
+  const cfg=configs[t];if(!cfg)return;
+  const val=$(cfg.inp)?.value.trim()||'';
+  const ok=val.length>=cfg.minLen;
+  S[cfg.storeKey]=ok?val:'';
+  setDot(cfg.dot,ok?'g':'x');
+  $(cfg.tag).textContent=t.charAt(0).toUpperCase()+t.slice(1)+':'+(ok?'saved ✓':'no key');
+  const stEl=$('status-'+t);
+  if(ok){
+    try{sessionStorage.setItem(cfg.sKey,JSON.stringify({v:val,e:exp}));}catch(e){}
+    if(stEl){stEl.textContent='✓ Key saved — active 6hrs';stEl.style.color='var(--green)';}
+  }else if(stEl){stEl.textContent='Too short — check format';stEl.style.color='var(--red)';}
+}
+
+function restoreKeys(){
+  const now=Date.now();
+  [['claude','inp-claude','d-claude','t-claude',20,'fmnh_claude','claudeKey'],
+   ['hd','inp-hd','d-hd','t-hd',5,'fmnh_hd','homedataKey'],
+   ['apify','inp-apify','d-apify','t-apify',10,'fmnh_apify','apifyKey']
+  ].forEach(([t,inp,dot,tag,minLen,sKey,storeKey])=>{
+    try{
+      const raw=sessionStorage.getItem(sKey);if(!raw)return;
+      const obj=JSON.parse(raw);if(!obj||obj.e<now){sessionStorage.removeItem(sKey);return;}
+      if(obj.v&&obj.v.length>=minLen){
+        S[storeKey]=obj.v;const el=$(inp);if(el)el.value=obj.v;
+        setDot(dot,'g');$(tag).textContent=t.charAt(0).toUpperCase()+t.slice(1)+':saved ✓';
+      }
+    }catch(e){}
+  });
+}
+
+async function testClaude(){
+  const el=$('status-claude');if(!el)return;
+  if(!S.claudeKey){el.textContent='Save a key first';el.style.color='var(--text3)';return;}
+  el.textContent='⏳ Testing…';el.style.color='var(--amber)';
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':S.claudeKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:10,messages:[{role:'user',content:'OK'}]})});
+    const d=await r.json();
+    if(d.error){el.textContent='✗ '+d.error.message.slice(0,80);el.style.color='var(--red)';return;}
+    if(d.content?.[0]?.text){const cost=((d.usage?.input_tokens||0)*0.00025+(d.usage?.output_tokens||0)*0.00125)/1000;spend('claude',cost);el.textContent='✓ Connected · $'+cost.toFixed(5);el.style.color='var(--green)';}
+  }catch(e){el.textContent='✗ '+e.message.slice(0,60);el.style.color='var(--red)';}
+}
+
+async function testHomedata(){
+  const el=$('status-hd');if(!el)return;
+  if(!S.homedataKey){el.textContent='No key — enter and click Save Key';el.style.color='var(--text3)';return;}
+  el.textContent='⏳ Step 1: boundary (Salford)…';el.style.color='var(--amber)';
+  try{
+    // Test with a known working query
+    const br=await fetch('https://api.homedata.co.uk/api/boundaries/autocomplete/?q=Salford',{mode:'cors',headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'},signal:AbortSignal.timeout(10000)});
+    if(!br.ok){
+      if(br.status===401){el.textContent='✗ 401 — wrong key format. Must be: QRryNTjX.your-secret';el.style.color='var(--red)';return;}
+      if(br.status===403){el.textContent='✗ 403 — key lacks permission or browser CORS block. Try via proxy…';el.style.color='var(--amber)';}
+      else{el.textContent='✗ Boundaries HTTP '+br.status;el.style.color='var(--red)';return;}
+    }
+    const bd=await br.json();
+    const b=(bd.results||[])[0];
+    if(!b){el.textContent='✗ No boundary found for Salford';el.style.color='var(--red)';return;}
+    el.textContent='⏳ Step 2: live-listings for '+b.name+' (id:'+b.id+')…';el.style.color='var(--amber)';
+    const r=await fetch('https://api.homedata.co.uk/api/live-listings/search/?boundary_id='+b.id+'&transaction_type=Sale&max_price=500000&page_size=3&sort=-added_date',{mode:'cors',headers:{'Authorization':'Api-Key '+S.homedataKey,'Accept':'application/json'},signal:AbortSignal.timeout(12000)});
+    const txt=await r.text();
+    let d;try{d=JSON.parse(txt);}catch(e){el.textContent='✗ Non-JSON (HTTP '+r.status+')';el.style.color='var(--red)';return;}
+    if(r.status===401){el.textContent='✗ 401 — check key format: QRryNTjX.your-secret';el.style.color='var(--red)';return;}
+    if(r.status===403){el.textContent='✗ 403 — plan may not include live-listings. Check homedata.co.uk account.';el.style.color='var(--red)';return;}
+    if(!r.ok){el.textContent='✗ HTTP '+r.status+' — '+(d.detail||d.message||txt.slice(0,60));el.style.color='var(--red)';return;}
+    const rem=r.headers.get('X-RateLimit-Remaining')||'?';
+    const sample=(d.results||[])[0];
+    el.textContent='✓ Working! '+Number(d.count||0).toLocaleString()+' listings in '+b.name+' · '+rem+' calls left'+(sample?' · e.g. £'+Number(sample.latest_price||0).toLocaleString()+' — '+sample.display_address:'');
+    el.style.color='var(--green)';
+  }catch(e){
+    el.textContent=(e.name==='AbortError'||e.name==='TimeoutError')?'✗ Timeout — may be CORS blocked':'✗ '+e.message.slice(0,80);
+    el.style.color='var(--red)';
+  }
+}
+
+async function testApify(){
+  const el=$('status-apify');if(!el)return;
+  if(!S.apifyKey){el.textContent='Save a key first';el.style.color='var(--text3)';return;}
+  el.textContent='⏳ Checking token…';el.style.color='var(--amber)';
+  try{
+    const r=await fetch('https://api.apify.com/v2/users/me?token='+encodeURIComponent(S.apifyKey));
+    const d=await r.json();
+    if(!r.ok||d.error){el.textContent='✗ Invalid token — get one at apify.com/account/integrations';el.style.color='var(--red)';return;}
+    el.textContent='✓ Valid · Plan: '+(d.data?.plan?.id||'free')+' · '+( d.data?.stats?.totalActorRunsCreated||0)+' runs';el.style.color='var(--green)';
+  }catch(e){el.textContent='✗ '+e.message.slice(0,60);el.style.color='var(--red)';}
+}
+
+function downloadPythonScript(){
+  const script='# UK Property Finder - local scraper (no CORS restrictions)\n# pip install requests beautifulsoup4\nimport requests,json,csv\nfrom datetime import datetime\n\nLOCATION="Manchester"\nMAX_PRICE=300000\nMIN_BEDS=3\nHEADERS={"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}\n\ndef rightmove_search():\n    url="https://www.rightmove.co.uk/property-for-sale/find.html"\n    params={"searchType":"SALE","searchLocation":LOCATION,"maxPrice":MAX_PRICE,"minBedrooms":MIN_BEDS,"includeSSTC":"false","sortType":"6"}\n    r=requests.get(url,params=params,headers=HEADERS,timeout=20)\n    import re\n    m=re.search(r\'window\\.PAGE_MODEL\\s*=\\s*(\\{.*?\\});\',r.text,re.DOTALL)\n    if not m: print("No PAGE_MODEL found"); return []\n    data=json.loads(m.group(1))\n    props=data.get("results",{}).get("properties",[])\n    return [{"source":"Rightmove","address":p.get("address",{}).get("displayAddress"),"price":p.get("price",{}).get("amount"),"beds":p.get("bedrooms"),"url":"https://www.rightmove.co.uk/properties/"+str(p.get("id"))} for p in props if p.get("price",{}).get("amount",999999)<=MAX_PRICE]\n\nresults=rightmove_search()\nprint(f"{len(results)} properties found")\nfn=f"properties_{datetime.now().strftime(\'%Y%m%d_%H%M\')}.csv"\nwith open(fn,"w",newline="",encoding="utf-8") as f:\n    w=csv.DictWriter(f,fieldnames=["source","address","price","beds","url"])\n    w.writeheader();w.writerows(results)\nprint(f"Saved to {fn}")\n';
+  const blob=new Blob([script],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='find_my_home.py';a.click();
+}
 
 updateCosts();
 restoreKeys();
