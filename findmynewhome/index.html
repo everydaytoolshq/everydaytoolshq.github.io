@@ -868,46 +868,105 @@ async function runFree(){
   const{pc,budget,minBeds,wantInvest}=getParams();
   if(!pc){alert('Enter a postcode first');return;}
   switchTab('free');
-  setLoading('free','Loading area intelligence…');
+
+  // Step 1: Show search links IMMEDIATELY - no API needed
+  const pcsRaw=pc.split(' ')[0].toLowerCase();
+  const budgetFmt=fmt(budget);
+  const invBudget=Math.round(budget*0.55);
+
+  // Use postcode outcode for links - works even without geocoding
+  function makeLinks(locationName){
+    const locEnc=encodeURIComponent(locationName);
+    const pcs=locationName.toLowerCase().replace(/\s+/g,'-');
+    let h='';
+    h+='<div class="result-panel"><div class="panel-title">\ud83c\udfe0 Homes for Sale \u00b7 '+esc(locationName)+' \u00b7 max \u00a3'+budgetFmt+' \u00b7 '+minBeds+'+ beds</div>';
+    h+='<a class="search-link" href="https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+minBeds+'" target="_blank"><span class="sl-icon">\ud83c\udfe0</span><span class="sl-text"><b>Rightmove</b> \u2014 1M+ live listings, updated daily</span><span class="sl-arrow">Open \u2197</span></a>';
+    h+='<a class="search-link" href="https://www.zoopla.co.uk/for-sale/property/'+pcsRaw+'/?q='+pcsRaw+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+minBeds+'" target="_blank"><span class="sl-icon">\ud83d\udd35</span><span class="sl-text"><b>Zoopla</b> \u2014 Hundreds of estate agents</span><span class="sl-arrow">Open \u2197</span></a>';
+    h+='<a class="search-link" href="https://www.onthemarket.com/for-sale/property/'+pcs+'/?max-price='+budget+'&min-beds='+minBeds+'" target="_blank"><span class="sl-icon">\ud83d\udfe2</span><span class="sl-text"><b>OnTheMarket</b> \u2014 24hr head start on new listings</span><span class="sl-arrow">Open \u2197</span></a>';
+    h+='<a class="search-link" href="https://www.primelocation.com/for-sale/property/'+pcs+'/?beds_min='+minBeds+'&price_max='+budget+'" target="_blank"><span class="sl-icon">\u2b50</span><span class="sl-text"><b>PrimeLocation</b> \u2014 Premium properties</span><span class="sl-arrow">Open \u2197</span></a>';
+    h+='</div>';
+    if(wantInvest){
+      h+='<div class="result-panel"><div class="panel-title">\ud83d\udcb0 Investment Flats \u00b7 max \u00a3'+fmt(invBudget)+'</div>';
+      h+='<a class="search-link" href="https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+invBudget+'&propertyTypes=flat" target="_blank"><span class="sl-icon">\ud83d\udcb0</span><span class="sl-text"><b>Rightmove Flats</b> \u2014 Buy-to-let under \u00a3'+fmt(invBudget)+'</span><span class="sl-arrow">Open \u2197</span></a>';
+      h+='<a class="search-link" href="https://www.zoopla.co.uk/for-sale/flats/'+pcsRaw+'/?q='+pcsRaw+'&results_sort=newest_listings&price_max='+invBudget+'" target="_blank"><span class="sl-icon">\ud83d\udcb0</span><span class="sl-text"><b>Zoopla Flats</b> \u2014 1-2 bed investment flats</span><span class="sl-arrow">Open \u2197</span></a>';
+      h+='</div>';
+    }
+    return h;
+  }
+
+  // Show links immediately using raw postcode
+  let currentHtml='<div class="notice info">\u23f3 Loading area intelligence (crime, prices, flood)\u2026 Search links are ready now.</div>'+makeLinks(pc.split(' ')[0].toUpperCase());
+  setResult('free',currentHtml);
+
+  // Step 2: Load area data and enrich the page (non-blocking)
   try{
-    const area=await loadAreaData(pc);
-    const{geo,crime,prices,flood,dep}=area;
-    const loc=geo.admin_district||pc;
-    const locEnc=encodeURIComponent(loc);
-    const pcs=pc.split(' ')[0].toLowerCase();
-    const invBudget=Math.round(budget*0.55);
+    const geo=await geocode(pc);
+    const loc=geo.admin_district||geo.admin_ward||pc.split(' ')[0].toUpperCase();
 
-    let h=renderStats(area);
+    // Update links with proper location name
+    currentHtml='<div class="notice info">\u23f3 Loading crime, prices, flood data\u2026</div>'+makeLinks(loc);
+    setResult('free',currentHtml);
 
-    // Crime breakdown
-    const topC=Object.entries(crime.breakdown||{}).sort((a,b)=>b[1]-a[1]).slice(0,6);
-    if(topC.length){
-      const mc=topC[0][1];
-      h+=`<div class="result-panel"><div class="panel-title">🚔 Crime · UK Police · Sep 2024 · Total: ${crime.total}</div>`;
-      topC.forEach(([cat,n])=>{
-        const w=Math.round(n/mc*100);
-        const col=n>mc*.6?'#a01828':n>mc*.3?'#a07820':'#1a7848';
-        h+=`<div class="crime-row"><span>${cat}</span><div class="cbar-wrap"><div style="width:${w}%;height:100%;background:${col};border-radius:2px"></div></div><b>${n}</b></div>`;
-      });
-      h+=`</div>`;
+    // Load all area APIs, each independently (one failure doesn't kill others)
+    const[crime,prices,flood,dep]=await Promise.allSettled([
+      getCrime(geo.latitude,geo.longitude),
+      getSoldPrices(pc),
+      getFlood(geo.latitude,geo.longitude),
+      getDeprivation(geo.latitude,geo.longitude),
+    ]).then(results=>results.map(r=>r.status==='fulfilled'?r.value:null));
+
+    // Build full results page
+    let h='<div class="notice ok">\u2705 Area intelligence loaded for '+esc(loc)+'</div>';
+
+    // Stats bar
+    if(crime||prices||flood||dep){
+      const crimeData=crime||{total:0,breakdown:{},score:7};
+      const pricesData=prices||{count:0,avg:0,min:0,max:0};
+      const floodData=flood||{zones:0,high:false};
+      const cc=crimeData.score>=8?'#1a7848':crimeData.score>=5?'#a07820':'#a01828';
+      const fc=floodData.high?'#a01828':floodData.zones>0?'#a07820':'#1a7848';
+      const dc=dep?(dep.decile>=7?'#1a7848':dep.decile>=4?'#a07820':'#a01828'):'#888';
+      h+='<div class="stats-bar">';
+      h+='<div class="stat"><div class="stat-l">Area</div><div class="stat-v">'+esc(geo.admin_ward||loc)+'</div><div class="stat-s">'+esc(geo.admin_district||'')+'</div></div>';
+      h+='<div class="stat"><div class="stat-l">Crime</div><div class="stat-v" style="color:'+cc+'">'+(crimeData.score>=8?'Low':crimeData.score>=5?'Moderate':'High')+'</div><div class="stat-s">'+crimeData.total+' incidents</div></div>';
+      h+='<div class="stat"><div class="stat-l">Avg Sold</div><div class="stat-v">\u00a3'+(pricesData.avg?fmt(pricesData.avg):'N/A')+'</div><div class="stat-s">'+pricesData.count+' LR sales</div></div>';
+      h+='<div class="stat"><div class="stat-l">Flood</div><div class="stat-v" style="color:'+fc+'">'+(floodData.high?'High Risk':floodData.zones>0?'Low-Med':'None')+'</div><div class="stat-s">'+floodData.zones+' zones</div></div>';
+      h+='<div class="stat"><div class="stat-l">Deprivation</div><div class="stat-v" style="color:'+dc+'">'+(dep?dep.label:'N/A')+'</div><div class="stat-s">'+(dep?'D'+dep.decile+'/10':'')+'</div></div>';
+      h+='</div>';
+
+      // Crime breakdown
+      if(crime){
+        const topC=Object.entries(crimeData.breakdown||{}).sort((a,b)=>b[1]-a[1]).slice(0,6);
+        if(topC.length){
+          const mc=topC[0][1];
+          h+='<div class="result-panel"><div class="panel-title">\ud83d\udc6e Crime Breakdown \u00b7 UK Police \u00b7 Total: '+crimeData.total+'</div>';
+          topC.forEach(([cat,n])=>{const w=Math.round(n/mc*100);const col=n>mc*.6?'#a01828':n>mc*.3?'#a07820':'#1a7848';h+='<div class="crime-row"><span>'+esc(cat)+'</span><div class="cbar-wrap"><div style="width:'+w+'%;height:100%;background:'+col+';border-radius:2px"></div></div><b>'+n+'</b></div>';});
+          h+='</div>';
+        }
+      }
+
+      // Sold prices
+      if(prices&&pricesData.count>0){
+        h+='<div class="result-panel"><div class="panel-title">\ud83d\udcb0 Land Registry Sold Prices \u00b7 '+esc(pc.split(' ')[0])+'</div>';
+        h+='<div class="price-stats">';
+        h+='<div><div class="ps-l">Average</div><div class="ps-v">\u00a3'+fmt(pricesData.avg)+'</div></div>';
+        h+='<div><div class="ps-l">Lowest</div><div class="ps-v">\u00a3'+fmt(pricesData.min)+'</div></div>';
+        h+='<div><div class="ps-l">Highest</div><div class="ps-v">\u00a3'+fmt(pricesData.max)+'</div></div>';
+        h+='<div><div class="ps-l">Sales</div><div class="ps-v">'+pricesData.count+'</div></div>';
+        h+='</div></div>';
+      }
     }
 
-    if(prices.count>0)h+=`<div class="result-panel"><div class="panel-title">💰 Land Registry · ${pc.split(' ')[0]}</div><div class="price-stats"><div><div class="ps-l">Average</div><div class="ps-v">£${fmt(prices.avg)}</div></div><div><div class="ps-l">Lowest</div><div class="ps-v">£${fmt(prices.min)}</div></div><div><div class="ps-l">Highest</div><div class="ps-v">£${fmt(prices.max)}</div></div><div><div class="ps-l">Sales</div><div class="ps-v">${prices.count}</div></div></div></div>`;
-
-    h+=`<div class="result-panel"><div class="panel-title">🏠 Homes · ${loc} · max £${fmt(budget)} · ${minBeds}+ beds</div>
-      <a class="search-link" href="https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation=${locEnc}&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice=${budget}&minBedrooms=${minBeds}" target="_blank"><span class="sl-icon">🏠</span><span class="sl-text"><b>Rightmove</b> — 1M+ live listings, updated daily</span><span class="sl-arrow">Open ↗</span></a>
-      <a class="search-link" href="https://www.zoopla.co.uk/for-sale/property/${pcs}/?q=${pcs}&results_sort=newest_listings&price_max=${budget}&beds_min=${minBeds}" target="_blank"><span class="sl-icon">🔵</span><span class="sl-text"><b>Zoopla</b> — Aggregates hundreds of agents</span><span class="sl-arrow">Open ↗</span></a>
-      <a class="search-link" href="https://www.onthemarket.com/for-sale/property/${pcs}/?max-price=${budget}&min-beds=${minBeds}" target="_blank"><span class="sl-icon">🟢</span><span class="sl-text"><b>OnTheMarket</b> — New listings 24hrs before Rightmove</span><span class="sl-arrow">Open ↗</span></a>
-      <a class="search-link" href="https://www.primelocation.com/for-sale/property/${pcs}/?beds_min=${minBeds}&price_max=${budget}" target="_blank"><span class="sl-icon">⭐</span><span class="sl-text"><b>PrimeLocation</b> — Premium properties</span><span class="sl-arrow">Open ↗</span></a>
-    </div>`;
-
-    if(wantInvest)h+=`<div class="result-panel"><div class="panel-title">💰 Investment Flats · max £${fmt(invBudget)}</div>
-      <a class="search-link" href="https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation=${locEnc}&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice=${invBudget}&propertyTypes=flat" target="_blank"><span class="sl-icon">💰</span><span class="sl-text"><b>Rightmove Flats</b> — Buy-to-let under £${fmt(invBudget)}</span><span class="sl-arrow">Open ↗</span></a>
-      <a class="search-link" href="https://www.zoopla.co.uk/for-sale/flats/${pcs}/?q=${pcs}&results_sort=newest_listings&price_max=${invBudget}" target="_blank"><span class="sl-icon">💰</span><span class="sl-text"><b>Zoopla Flats</b> — 1-2 bed investment flats</span><span class="sl-arrow">Open ↗</span></a>
-    </div>`;
-
+    // Search links with proper location name
+    h+=makeLinks(loc);
     setResult('free',h);
-  }catch(err){setError('free',err.message);}
+
+  }catch(err){
+    // Area data failed - but show links anyway with a warning
+    console.warn('Area data error:',err);
+    currentHtml='<div class="notice warn">\u26a0\ufe0f Could not load area data ('+esc(err.message)+') \u2014 search links below still work.</div>'+makeLinks(pc.split(' ')[0].toUpperCase());
+    setResult('free',currentHtml);
+  }
 }
 
 // ── MODE 2: CLAUDE ──────────────────────────────────────────────────────────
