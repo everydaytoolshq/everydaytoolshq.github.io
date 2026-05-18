@@ -3,1255 +3,667 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FindMyNewHome</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Find My New Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { height: 100%; }
-body {
-  height: 100%;
-  font-family: 'Instrument Sans', sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #1a1a2e;
-  background: #f0f0f6;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Inter',sans-serif;font-size:14px;color:#111;background:#f5f5f0}
+a{text-decoration:none;color:inherit}
 
-/* TOP BAR */
-.topbar {
-  flex-shrink: 0;
-  height: 52px;
-  background: #12121e;
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-  gap: 12px;
-}
-.logo {
-  font-family: 'Fraunces', serif;
-  font-size: 20px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: -0.3px;
-}
-.logo em { color: #d4a030; font-style: normal; }
-.logo-sub { font-size: 10px; color: rgba(255,255,255,0.35); letter-spacing: 1px; text-transform: uppercase; }
-.cost-pill { margin-left: auto; font-size: 11px; color: rgba(255,255,255,0.4); }
-.cost-pill b { color: #d4a030; }
-
-/* TAB BAR */
-.tabbar {
-  flex-shrink: 0;
-  height: 42px;
-  background: #fff;
-  border-bottom: 1px solid #dde;
-  display: flex;
-  padding: 0 20px;
-  gap: 0;
-  overflow-x: auto;
-}
-.tab {
-  padding: 0 16px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  color: #888;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
-  transition: all 0.15s;
-}
-.tab:hover { color: #444; }
-.tab.active { color: #12121e; border-bottom-color: #12121e; }
-.tab-badge {
-  font-size: 9px;
-  padding: 1px 5px;
-  border-radius: 8px;
-  background: #eee;
-  color: #888;
-}
-.tab.active .tab-badge { background: #12121e; color: #fff; }
-
-/* MAIN AREA */
-.layout {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-  min-height: 0;
-}
+/* LAYOUT */
+.shell{height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.topnav{flex-shrink:0;background:#111;color:#fff;padding:12px 20px;display:flex;align-items:center;gap:16px}
+.logo{font-family:'Fraunces',serif;font-size:20px;font-weight:700}
+.logo em{color:#d4a030;font-style:normal}
+#cost-display{margin-left:auto;font-size:11px;color:rgba(255,255,255,.45)}
+.main-grid{flex:1;display:flex;overflow:hidden;min-height:0}
 
 /* SIDEBAR */
-.sidebar {
-  width: 280px;
-  flex-shrink: 0;
-  background: #fff;
-  border-right: 1px solid #dde;
-  overflow-y: auto;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+.sidebar{width:260px;flex-shrink:0;background:#fff;border-right:1px solid #e5e5e5;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px}
+.sidebar-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#111;margin-bottom:2px}
+.sidebar-sub{font-size:11px;color:#888;line-height:1.4}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-label{font-size:11px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.6px}
+.form-input{padding:8px 10px;border:1.5px solid #e0e0e0;border-radius:7px;font-size:13px;font-family:inherit;color:#111;background:#fafafa;outline:none;width:100%;transition:border-color .15s}
+.form-input:focus{border-color:#1448a8;background:#fff}
+.range-wrap{display:flex;align-items:center;gap:8px}
+.range-wrap input[type=range]{flex:1;accent-color:#1448a8}
+.range-val{font-size:13px;font-weight:600;color:#1448a8;min-width:78px;text-align:right}
+.divider{height:1px;background:#eee;margin:2px 0}
 
-/* SIDEBAR SECTION BOXES */
-.sb-box {
-  border: 1px solid #dde;
-  border-radius: 8px;
-  overflow: hidden;
-}
-.sb-box-title {
-  font-size: 10px;
-  font-weight: 600;
-  color: #888;
-  text-transform: uppercase;
-  letter-spacing: 0.9px;
-  padding: 8px 12px;
-  background: #f7f7fb;
-  border-bottom: 1px solid #dde;
-}
-.sb-box-body { padding: 12px; }
+/* KEY INPUT */
+.key-box{background:#f0f4ff;border:1.5px solid #c8d8f8;border-radius:8px;padding:12px}
+.key-box-title{font-size:11px;font-weight:700;color:#1448a8;text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px}
+.key-row{display:flex;gap:4px}
+.key-row input{flex:1;font-size:11px;font-family:monospace}
+.btn-eye{padding:7px 9px;border:1.5px solid #e0e0e0;border-radius:7px;background:#fff;cursor:pointer;font-size:12px;line-height:1}
+.btn-save-key{padding:8px 12px;border:none;border-radius:7px;background:#1448a8;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+.btn-save-key:hover{background:#1020a0}
+.key-msg{font-size:11px;margin-top:5px;min-height:15px}
+.key-msg.ok{color:#1a7848}
+.key-msg.err{color:#a01828}
+.key-hint{font-size:10px;color:#888;line-height:1.5;margin-top:6px}
+.key-hint a{color:#1448a8}
 
-/* TAB-SPECIFIC SIDEBAR PANELS - hidden by default */
-.sb-panel { display: none; }
-.sb-panel.active { display: block; }
+/* ACTION BUTTONS */
+.btn-action{width:100%;padding:12px;border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
+.btn-action:disabled{opacity:.4;cursor:not-allowed}
+.btn-primary{background:#111;color:#fff}
+.btn-primary:hover:not(:disabled){background:#333}
+.btn-invest{background:#5038a0;color:#fff}
+.btn-invest:hover:not(:disabled){background:#3a2080}
+.btn-free{background:#1a7848;color:#fff}
+.btn-free:hover:not(:disabled){background:#156038}
+.btn-sm-note{font-size:10px;color:#888;text-align:center;margin-top:4px}
 
-/* FORM CONTROLS */
-label {
-  display: block;
-  font-size: 11px;
-  font-weight: 500;
-  color: #555;
-  margin-bottom: 4px;
-  margin-top: 10px;
-}
-label:first-child { margin-top: 0; }
-input[type=text], input[type=password], select {
-  width: 100%;
-  padding: 7px 10px;
-  border: 1px solid #dde;
-  border-radius: 6px;
-  font-size: 12px;
-  font-family: inherit;
-  color: #1a1a2e;
-  background: #f7f7fb;
-  outline: none;
-  transition: border-color 0.15s;
-}
-input:focus, select:focus {
-  border-color: #1448a8;
-  box-shadow: 0 0 0 2px rgba(20,72,168,0.08);
-}
-.range-row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
-input[type=range] { flex: 1; accent-color: #1448a8; }
-.rv { font-size: 12px; font-weight: 600; color: #1448a8; min-width: 76px; text-align: right; }
-.chips { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 6px; }
-.chip {
-  font-size: 11px;
-  padding: 5px 8px;
-  border: 1px solid #dde;
-  border-radius: 6px;
-  cursor: pointer;
-  color: #888;
-  user-select: none;
-  transition: all 0.15s;
-}
-.chip.on { border-color: #1448a8; color: #1448a8; background: #eef2fd; }
-.invest-row {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin-top: 10px;
-  cursor: pointer;
-  font-size: 11px;
-  color: #555;
-}
-.invest-row input { width: auto; cursor: pointer; accent-color: #a07820; }
+/* SCREENS */
+.content{flex:1;overflow-y:auto;min-width:0}
+.screen{display:none;padding:24px;max-width:800px}
+.screen.active{display:block}
 
-/* KEY ROW */
-.key-row { display: flex; gap: 4px; margin-top: 5px; }
-.key-row input { flex: 1; font-size: 11px; }
-.btn-eye {
-  flex-shrink: 0;
-  padding: 6px 9px;
-  border: 1px solid #dde;
-  border-radius: 6px;
-  background: #f7f7fb;
-  cursor: pointer;
-  font-size: 12px;
-  line-height: 1;
-}
-.btn-save {
-  flex-shrink: 0;
-  padding: 7px 12px;
-  border: none;
-  border-radius: 6px;
-  background: #1a7848;
-  color: #fff;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: inherit;
-}
-.st { font-size: 11px; margin-top: 5px; min-height: 16px; display: block; }
-.st.ok { color: #1a7848; }
-.st.err { color: #a01828; }
-.st.wait { color: #a07820; }
+/* HOME SCREEN */
+.home-hero{text-align:center;padding:40px 20px}
+.home-h{font-family:'Fraunces',serif;font-size:30px;font-weight:700;color:#111;margin-bottom:10px}
+.home-p{font-size:14px;color:#666;line-height:1.7;max-width:440px;margin:0 auto 24px}
+.home-steps{display:flex;flex-direction:column;gap:10px;max-width:380px;margin:0 auto}
+.step{display:flex;align-items:flex-start;gap:10px;background:#fff;border:1.5px solid #e5e5e5;border-radius:8px;padding:10px 13px;text-align:left}
+.step-num{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:#1448a8;flex-shrink:0}
+.step-text{font-size:13px;color:#555;line-height:1.4}
+.step-text b{color:#111}
 
-/* RUN BUTTON */
-.btn-run {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  width: 100%;
-  padding: 11px;
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: inherit;
-  margin-top: 8px;
-  transition: all 0.2s;
-  color: #fff;
-}
-.btn-run:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,0.2); }
-.btn-run:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
-.btn-free { background: #1a7848; }
-.btn-claude { background: #12121e; }
-.btn-hd { background: #1448a8; }
-.btn-apify { background: #5038a0; }
+/* LOADING */
+.loading-box{text-align:center;padding:60px 20px}
+.spinner{width:40px;height:40px;border:3px solid #e5e5e5;border-top-color:#1448a8;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-title{font-family:'Fraunces',serif;font-size:20px;color:#111;margin-bottom:6px}
+#load-msg{font-size:13px;color:#666}
+.loading-note{font-size:11px;color:#aaa;margin-top:10px}
 
-.hint {
-  font-size: 10px;
-  color: #888;
-  line-height: 1.5;
-  padding: 7px 8px;
-  background: #f7f7fb;
-  border-radius: 6px;
-  border: 1px solid #eee;
-  margin-bottom: 4px;
-}
-.hint a { color: #1448a8; }
+/* AREA BAR */
+.area-bar{display:flex;flex-wrap:wrap;background:#fff;border:1.5px solid #e5e5e5;border-radius:10px;overflow:hidden;margin-bottom:16px}
+.astat{flex:1;min-width:110px;padding:10px 13px;border-right:1.5px solid #e5e5e5}
+.astat:last-child{border-right:none}
+.asl{font-size:9px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px}
+.asv{font-size:15px;font-weight:700;color:#111}
+.ass{font-size:10px;color:#aaa;margin-top:1px}
 
-/* RESULTS AREA */
-.results-area {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-  min-width: 0;
-}
+/* SUMMARY */
+.summary-box{background:#f0f4ff;border:1.5px solid #c8d8f8;border-radius:9px;padding:12px 15px;margin-bottom:14px}
+.summary-label{font-size:11px;font-weight:700;color:#1448a8;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.summary-text{font-size:13px;color:#333;line-height:1.6}
 
-/* Result panels - hidden by default */
-.res-panel { display: none; }
-.res-panel.active { display: block; max-width: 860px; }
+.cost-note{font-size:11px;color:#aaa;margin-bottom:14px}
 
-/* EMPTY STATE */
-.state-box { text-align: center; padding: 60px 20px; }
-.state-icon { font-size: 44px; opacity: 0.2; margin-bottom: 16px; }
-.state-title { font-family: 'Fraunces', serif; font-size: 22px; color: #1a1a2e; margin-bottom: 8px; }
-.state-sub { font-size: 13px; color: #888; max-width: 400px; margin: 0 auto; }
-.state-tags { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-top: 14px; }
-.stag { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 1px solid #dde; color: #888; }
-.stag.g { border-color: #90d0a8; color: #1a7848; background: #edf8f2; }
-.stag.b { border-color: #a0bff0; color: #1448a8; background: #eef2fd; }
-.stag.a { border-color: #e8d488; color: #a07820; background: #fdf5e0; }
+/* PROPERTY CARDS */
+.prop-card{background:#fff;border:1.5px solid #e5e5e5;border-radius:12px;overflow:hidden;margin-bottom:14px;transition:box-shadow .2s}
+.prop-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.prop-top{border-color:#d4a030;box-shadow:0 2px 10px rgba(212,160,48,.15)}
+.prop-invest{border-left:4px solid #5038a0}
+.card-strip{font-size:10px;font-weight:700;padding:5px 14px;letter-spacing:.5px;text-transform:uppercase}
+.strip-top{background:#fdf5e0;color:#a07820;border-bottom:1.5px solid #e8d488}
+.strip-sale{background:#f0f8f0;color:#1a7848;border-bottom:1.5px solid #c0e0c8}
+.strip-invest{background:#f0eefb;color:#5038a0;border-bottom:1.5px solid #c8b8f0}
+.strip-invest-plain{background:#f7f5fc;color:#5038a0;border-bottom:1.5px solid #e0d8f0;font-size:9px}
+.prop-body{padding:14px 16px}
+.prop-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:9px}
+.prop-addr{font-size:14px;font-weight:600;line-height:1.3;color:#111}
+.prop-score{font-size:13px;font-weight:800;color:#fff;padding:4px 9px;border-radius:8px;white-space:nowrap;flex-shrink:0}
+.prop-price-row{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.prop-price{font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:#111}
+.prop-specs{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.prop-specs span{font-size:12px;color:#666;background:#f5f5f5;padding:2px 7px;border-radius:10px}
+.badge-good{background:#e8f5ec!important;color:#1a7848!important;border:1px solid #b0d8bc!important}
+.badge-warn{background:#fff8e8!important;color:#a07820!important;border:1px solid #e8d488!important}
+.badge-reduced{background:#fef0f2!important;color:#a01828!important;border:1px solid #f0b0b8!important}
+/* THE VERDICT - most important part */
+.prop-verdict{background:#f8f8f0;border-left:4px solid #1448a8;border-radius:0 7px 7px 0;padding:10px 13px;font-size:13px;color:#222;line-height:1.65;margin-bottom:10px;font-style:normal}
+.prop-features{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.feat{font-size:11px;padding:3px 8px;border-radius:10px;background:#f5f5f5;border:1px solid #e5e5e5;color:#666}
+.feat-ok{background:#e8f5ec;border-color:#b0d8bc;color:#1a7848}
+.feat-warn{background:#fef0f2;border-color:#f0b0b8;color:#a01828}
+.prop-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.btn-view{padding:8px 16px;background:#111;color:#fff;border-radius:7px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:4px}
+.btn-view:hover{background:#333}
+.btn-zoopla{padding:7px 12px;background:#fff;color:#666;border:1.5px solid #e0e0e0;border-radius:7px;font-size:12px;font-weight:500}
+.btn-zoopla:hover{border-color:#1448a8;color:#1448a8}
+.prop-agent{font-size:11px;color:#aaa;margin-left:4px}
 
-/* SPINNER */
-.spinner {
-  width: 36px; height: 36px;
-  border: 2px solid #dde;
-  border-top-color: #1448a8;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  margin: 0 auto 16px;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
+/* SEARCH LINKS */
+.search-links-box{background:#f5f5f0;border:1.5px solid #e5e5e5;border-radius:10px;padding:14px 16px;margin-top:16px}
+.sl-title{font-size:12px;font-weight:700;color:#555;margin-bottom:10px}
+.sl-link{display:inline-block;padding:8px 14px;background:#fff;border:1.5px solid #e0e0e0;border-radius:7px;font-size:12px;font-weight:600;color:#333;margin-right:6px;margin-bottom:6px}
+.sl-link:hover{border-color:#1448a8;color:#1448a8}
 
-/* NOTICE BARS */
-.notice {
-  padding: 9px 13px;
-  border-radius: 8px;
-  font-size: 12px;
-  margin-bottom: 12px;
-  border: 1px solid;
-  line-height: 1.5;
-}
-.notice.ok { background: #edf8f2; border-color: #90d0a8; color: #1a7848; }
-.notice.warn { background: #fdf5e0; border-color: #e8d488; color: #a07820; }
-.notice.err { background: #fef0f2; border-color: #f0a0a8; color: #a01828; }
+/* OPENED PORTALS */
+.sl-opened-title{font-size:14px;font-weight:600;color:#111;margin-bottom:12px}
+.sl-link-big{display:block;padding:13px 16px;background:#fff;border:1.5px solid #e0e0e0;border-radius:9px;font-size:13px;font-weight:600;color:#333;margin-bottom:8px}
+.sl-link-big:hover{border-color:#1448a8;color:#1448a8}
 
-/* AREA STATS BAR */
-.stats-bar {
-  display: flex;
-  background: #fff;
-  border: 1px solid #dde;
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-}
-.stat {
-  flex: 1;
-  min-width: 100px;
-  padding: 10px 13px;
-  border-right: 1px solid #dde;
-}
-.stat:last-child { border-right: none; }
-.stat-l { font-size: 9px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 3px; }
-.stat-v { font-size: 14px; font-weight: 600; color: #1a1a2e; }
-.stat-s { font-size: 10px; color: #888; margin-top: 1px; }
+/* NOTICES */
+.notice-warn{background:#fff8e8;border:1.5px solid #e8d488;border-radius:8px;padding:10px 13px;font-size:12px;color:#7a6010;margin-bottom:12px;line-height:1.5}
+.raw-box{background:#fff;border:1.5px solid #e5e5e5;border-radius:8px;padding:14px;white-space:pre-wrap;font-size:12px;color:#444;line-height:1.7;max-height:500px;overflow-y:auto;margin-bottom:14px}
 
-/* INSIGHT */
-.insight-box {
-  background: #eef2fd;
-  border: 1px solid #b0c8f8;
-  border-radius: 8px;
-  padding: 10px 13px;
-  font-size: 12px;
-  color: #1448a8;
-  line-height: 1.6;
-  margin-bottom: 12px;
-}
+/* ERROR */
+.error-box{text-align:center;padding:50px 20px}
+.error-icon{font-size:36px;margin-bottom:12px}
+.error-title{font-family:'Fraunces',serif;font-size:20px;color:#a01828;margin-bottom:10px}
+.error-msg{font-size:13px;color:#444;background:#fef0f2;border:1.5px solid #f0b0b8;border-radius:8px;padding:13px 16px;max-width:500px;margin:0 auto;line-height:1.6;text-align:left}
 
-/* SECTION HEADER */
-.section-head {
-  font-family: 'Fraunces', serif;
-  font-size: 17px;
-  font-weight: 600;
-  color: #1a1a2e;
-  margin: 0 0 10px;
-}
-
-/* CARDS */
-.cards { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
-.card {
-  background: #fff;
-  border: 1px solid #dde;
-  border-radius: 12px;
-  overflow: hidden;
-  transition: box-shadow 0.2s, transform 0.15s;
-}
-.card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.07); transform: translateY(-1px); }
-.card-top { border: 2px solid #d4a030; }
-.card-invest { border-left: 3px solid #5038a0; }
-.ribbon {
-  font-size: 10px;
-  font-weight: 600;
-  padding: 4px 14px;
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
-}
-.r-home { background: #fdf5e0; color: #a07820; border-bottom: 1px solid #e8d488; }
-.r-invest { background: #f0eefb; color: #5038a0; border-bottom: 1px solid #c0b0ec; }
-.r-invest-plain { background: #f0eefb; color: #5038a0; border-bottom: 1px solid #c0b0ec; font-size: 9px; }
-.card-body { padding: 13px 16px; }
-.card-top-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 7px; }
-.card-addr { font-size: 13px; font-weight: 600; line-height: 1.3; }
-.card-badges { display: flex; flex-wrap: wrap; gap: 3px; flex-shrink: 0; }
-.badge {
-  font-size: 10px;
-  padding: 2px 7px;
-  border-radius: 10px;
-  border: 1px solid;
-  white-space: nowrap;
-  font-weight: 500;
-}
-.b-green { border-color: #90d0a8; color: #1a7848; background: #edf8f2; }
-.b-amber { border-color: #e8d488; color: #a07820; background: #fdf5e0; }
-.b-red { border-color: #f0a0a8; color: #a01828; background: #fef0f2; }
-.b-purple { border-color: #c0b0ec; color: #5038a0; background: #f0eefb; }
-.card-price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 9px; flex-wrap: wrap; }
-.card-price { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 700; }
-.card-specs { font-size: 12px; color: #888; }
-.card-analysis {
-  background: #f7f7fb;
-  border-radius: 6px;
-  padding: 9px 11px;
-  border-left: 3px solid #1448a8;
-  font-size: 12px;
-  color: #3a3a5a;
-  line-height: 1.6;
-  margin-bottom: 9px;
-}
-.card-analysis.inv { border-left-color: #5038a0; }
-.card-feats { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 9px; }
-.feat {
-  font-size: 11px;
-  padding: 2px 7px;
-  border-radius: 10px;
-  background: #f7f7fb;
-  border: 1px solid #dde;
-  color: #888;
-}
-.feat-ok { background: #edf8f2; border-color: #90d0a8; color: #1a7848; }
-.card-desc { font-size: 11px; color: #888; line-height: 1.5; margin-bottom: 9px; }
-.card-actions { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px; }
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 7px 12px;
-  background: #12121e;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: inherit;
-  text-decoration: none;
-}
-.btn-primary:hover { background: #2a2a3e; }
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 6px 11px;
-  background: #fff;
-  color: #3a3a5a;
-  border: 1px solid #ccd;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 500;
-  cursor: pointer;
-  font-family: inherit;
-  text-decoration: none;
-}
-.btn-secondary:hover { border-color: #1448a8; color: #1448a8; }
-.score-row { display: flex; align-items: center; gap: 7px; font-size: 11px; color: #888; padding-top: 8px; border-top: 1px solid #eee; }
-.score-track { flex: 1; height: 3px; background: #eee; border-radius: 2px; overflow: hidden; }
-
-/* FREE TAB PANELS */
-.result-panel {
-  background: #fff;
-  border: 1px solid #dde;
-  border-radius: 8px;
-  padding: 12px 14px;
-  margin-bottom: 12px;
-}
-.panel-title { font-size: 12px; font-weight: 600; color: #1a1a2e; margin-bottom: 10px; }
-.crime-row { display: flex; align-items: center; gap: 8px; padding: 3px 0; border-bottom: 1px solid #f0f0f6; font-size: 11px; color: #888; }
-.crime-row:last-child { border-bottom: none; }
-.crime-row span { flex: 1; text-transform: capitalize; }
-.cbar-wrap { width: 80px; height: 4px; background: #eee; border-radius: 2px; overflow: hidden; }
-.crime-row b { min-width: 22px; text-align: right; color: #3a3a5a; }
-.price-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
-.ps-l { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 3px; }
-.ps-v { font-size: 18px; font-weight: 700; font-family: 'Fraunces', serif; color: #1a1a2e; }
-.search-link {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border: 1px solid #dde;
-  border-radius: 6px;
-  margin-bottom: 6px;
-  text-decoration: none;
-  color: inherit;
-  transition: all 0.15s;
-}
-.search-link:hover { border-color: #1448a8; background: #f7f9ff; }
-.sl-icon { font-size: 18px; flex-shrink: 0; }
-.sl-text { flex: 1; font-size: 12px; color: #888; }
-.sl-text b { color: #1a1a2e; display: block; margin-bottom: 1px; }
-.sl-arrow { font-size: 13px; color: #1448a8; font-weight: 600; }
-
-/* LOG PANEL */
-.log-panel {
-  background: #1e1e2e;
-  border-radius: 8px;
-  padding: 10px 12px;
-  font-size: 11px;
-  color: rgba(255,255,255,0.5);
-  line-height: 2;
-  max-height: 130px;
-  overflow-y: auto;
-  margin-bottom: 12px;
-}
-.log-panel .ok { color: #6de0a0; }
-.log-panel .err { color: #f08090; }
-
-/* ERROR MSG */
-.error-msg {
-  font-size: 12px;
-  color: #3a3a5a;
-  background: #fef0f2;
-  border: 1px solid #f0a0a8;
-  border-radius: 8px;
-  padding: 11px 14px;
-  max-width: 520px;
-  margin: 0 auto;
-  line-height: 1.6;
-  text-align: left;
-}
-
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-thumb { background: #ccd; border-radius: 2px; }
-a { color: inherit; text-decoration: none; }
-code { font-family: monospace; font-size: 11px; background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 3px; }
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px}
 </style>
 </head>
 <body>
+<div class="shell">
 
-<!-- TOP BAR -->
-<div class="topbar">
+<div class="topnav">
+  <div class="logo">Find<em>My</em>NewHome</div>
+  <div id="cost-display"></div>
+</div>
+
+<div class="main-grid">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
   <div>
-    <div class="logo">Find<em>My</em>NewHome</div>
-    <div class="logo-sub">Live UK Property Search</div>
+    <div class="sidebar-title">Property Search</div>
+    <div class="sidebar-sub">Find houses for sale. Get honest buying advice.</div>
   </div>
-  <div class="cost-pill">Cost: <b id="cost-disp">$0.0000</b></div>
+
+  <div class="form-group">
+    <div class="form-label">Postcode</div>
+    <input class="form-input" id="inp-postcode" type="text" value="M21 9WQ" placeholder="M21, M20, M21 9WQ…">
+  </div>
+
+  <div class="form-group">
+    <div class="form-label">Max Budget</div>
+    <div class="range-wrap">
+      <input type="range" min="80000" max="700000" step="5000" value="300000" id="inp-budget"
+        oninput="$('rv-budget').textContent='£'+fmt(+this.value)">
+      <span class="range-val" id="rv-budget">£300,000</span>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="form-label">Min Bedrooms</div>
+    <select class="form-input" id="inp-beds">
+      <option value="2">2+</option>
+      <option value="3" selected>3+</option>
+      <option value="4">4+</option>
+    </select>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="key-box">
+    <div class="key-box-title">Claude API Key</div>
+    <div class="key-row">
+      <input class="form-input" type="password" id="inp-key" placeholder="sk-ant-api03-…">
+      <button class="btn-eye" onclick="toggleEye('inp-key')">👁</button>
+      <button class="btn-save-key" onclick="saveClaudeKey()">Save</button>
+    </div>
+    <div class="key-msg" id="key-msg"></div>
+    <div class="key-hint">
+      Get a key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a><br>
+      If you hit rate limits: wait 60 seconds, then try again.<br>
+      Cost: ~$0.02–0.06 per search.
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <button class="btn-action btn-primary" id="btn-find" onclick="findHomes()" disabled>
+    🔍 Find Houses for Sale
+  </button>
+  <div class="btn-sm-note">Claude searches Rightmove &amp; Zoopla now · returns real listings with buying advice</div>
+
+  <button class="btn-action btn-invest" id="btn-invest" onclick="findInvestment()" disabled>
+    💰 Find Investment Flats
+  </button>
+  <div class="btn-sm-note">Finds cheap flats with rental yield analysis</div>
+
+  <button class="btn-action btn-free" onclick="openPortals()">
+    🔗 Open Search Links
+  </button>
+  <div class="btn-sm-note">Opens Rightmove, Zoopla &amp; OTM — no key needed, always works</div>
 </div>
 
-<!-- TAB BAR -->
-<div class="tabbar">
-  <div class="tab active" id="tab-free" onclick="switchTab('free')">
-    🏴 Free <span class="tab-badge">No key</span>
+<!-- CONTENT -->
+<div class="content">
+
+  <div class="screen active" id="screen-home">
+    <div class="home-hero">
+      <div class="home-h">Find Your Perfect Home</div>
+      <div class="home-p">AI-powered search that finds real houses for sale and tells you honestly which ones are worth buying.</div>
+      <div class="home-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text"><b>Enter your postcode and budget</b> in the left panel</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text"><b>Add your Claude API key</b> — Claude searches Rightmove &amp; Zoopla in real-time</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text"><b>Get honest verdicts</b> — which properties are worth buying, which to avoid, and why</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text"><b>No API key?</b> Click "Open Search Links" — opens portals with your filters instantly</div></div>
+      </div>
+    </div>
   </div>
-  <div class="tab" id="tab-claude" onclick="switchTab('claude')">
-    🤖 Claude AI <span class="tab-badge">Real listings</span>
+
+  <div class="screen" id="screen-loading">
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <div class="loading-title">Searching for properties…</div>
+      <div id="load-msg">Checking Rightmove and Zoopla</div>
+      <div class="loading-note">This takes 30–60 seconds · area data loads in parallel</div>
+    </div>
   </div>
-  <div class="tab" id="tab-hd" onclick="switchTab('hd')">
-    🏠 Homedata <span class="tab-badge">Live API</span>
+
+  <div class="screen" id="screen-results">
+    <div id="results-area"></div>
   </div>
-  <div class="tab" id="tab-apify" onclick="switchTab('apify')">
-    🕷 Apify <span class="tab-badge">Rightmove</span>
-  </div>
+
 </div>
-
-<div class="layout">
-
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-
-    <!-- SHARED: Search Criteria (always visible) -->
-    <div class="sb-box">
-      <div class="sb-box-title">Search Criteria</div>
-      <div class="sb-box-body">
-        <label>Postcode</label>
-        <input type="text" id="postcode" value="M21 9WQ" placeholder="M21, M20, M21 9WQ…">
-        <label>Max Budget</label>
-        <div class="range-row">
-          <input type="range" id="budget" min="80000" max="600000" step="5000" value="300000"
-            oninput="$('rv-b').textContent='£'+fmt(+this.value)">
-          <span class="rv" id="rv-b">£300,000</span>
-        </div>
-        <label>Stretch Budget</label>
-        <div class="range-row">
-          <input type="range" id="stretch" min="80000" max="750000" step="5000" value="375000"
-            oninput="$('rv-s').textContent='£'+fmt(+this.value)">
-          <span class="rv" id="rv-s">£375,000</span>
-        </div>
-        <label>Min Bedrooms</label>
-        <select id="min-beds">
-          <option value="2">2+</option>
-          <option value="3" selected>3+</option>
-          <option value="4">4+</option>
-        </select>
-        <label>Property Types</label>
-        <div class="chips" id="type-grid">
-          <div class="chip on" onclick="tog(this)">🏠 Detached</div>
-          <div class="chip on" onclick="tog(this)">🏘 Semi</div>
-          <div class="chip on" onclick="tog(this)">🏡 Bungalow</div>
-          <div class="chip" onclick="tog(this)">🏚 Terraced</div>
-        </div>
-        <label class="invest-row">
-          <input type="checkbox" id="want-invest" checked>
-          Also find investment flats
-        </label>
-      </div>
-    </div>
-
-    <!-- SIDEBAR PANEL: FREE -->
-    <div class="sb-panel active" id="sb-free">
-      <div class="sb-box">
-        <div class="sb-box-title">🏴 Free — No Key Needed</div>
-        <div class="sb-box-body">
-          <div class="hint">Crime · flood · deprivation · sold prices + direct links to Rightmove, Zoopla, OTM with your filters pre-applied.</div>
-          <button class="btn-run btn-free" onclick="runFree()">🏴 Run Free Search</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- SIDEBAR PANEL: CLAUDE -->
-    <div class="sb-panel" id="sb-claude">
-      <div class="sb-box">
-        <div class="sb-box-title">🤖 Claude API Key</div>
-        <div class="sb-box-body">
-          <div class="hint">Claude searches Rightmove &amp; Zoopla right now and returns real listings. ~$0.03–0.10/search. Get key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></div>
-          <div class="key-row">
-            <input type="password" id="inp-claude" placeholder="sk-ant-api03-…">
-            <button class="btn-eye" onclick="toggleEye('inp-claude')">👁</button>
-            <button class="btn-save" onclick="saveKey('claude')">Save</button>
-          </div>
-          <span class="st" id="st-claude"></span>
-          <button class="btn-run btn-claude" id="btn-claude" onclick="runClaude()" disabled>🤖 Search with Claude AI</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- SIDEBAR PANEL: HOMEDATA -->
-    <div class="sb-panel" id="sb-hd">
-      <div class="sb-box">
-        <div class="sb-box-title">🏠 Homedata API Key</div>
-        <div class="sb-box-body">
-          <div class="hint">100 free calls/month. Get key at <a href="https://homedata.co.uk" target="_blank">homedata.co.uk</a>. Format: <code>QRryNTjX.secret</code></div>
-          <div class="key-row">
-            <input type="password" id="inp-hd" placeholder="QRryNTjX.secret">
-            <button class="btn-eye" onclick="toggleEye('inp-hd')">👁</button>
-            <button class="btn-save" onclick="saveKey('hd')">Save</button>
-          </div>
-          <span class="st" id="st-hd"></span>
-          <button class="btn-run btn-hd" id="btn-hd" onclick="runHomedata()" disabled>🏠 Search Homedata</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- SIDEBAR PANEL: APIFY -->
-    <div class="sb-panel" id="sb-apify">
-      <div class="sb-box">
-        <div class="sb-box-title">🕷 Apify Token</div>
-        <div class="sb-box-body">
-          <div class="hint">Scrapes Rightmove live. 1–3 min/search. ~$0.09/25 listings. Get token at <a href="https://apify.com/account/integrations" target="_blank">apify.com</a></div>
-          <div class="key-row">
-            <input type="password" id="inp-apify" placeholder="apify_api_…">
-            <button class="btn-eye" onclick="toggleEye('inp-apify')">👁</button>
-            <button class="btn-save" onclick="saveKey('apify')">Save</button>
-          </div>
-          <span class="st" id="st-apify"></span>
-          <button class="btn-run btn-apify" id="btn-apify" onclick="runApify()" disabled>🕷 Scrape via Apify</button>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /sidebar -->
-
-  <!-- RESULTS -->
-  <div class="results-area">
-
-    <!-- FREE results -->
-    <div class="res-panel active" id="res-free">
-      <div class="state-box">
-        <div class="state-icon">🏴</div>
-        <div class="state-title">Free Area Intelligence</div>
-        <div class="state-sub">No key needed. Click <b>Run Free Search</b> to load crime, flood, sold prices and live portal links.</div>
-        <div class="state-tags">
-          <span class="stag g">✓ Crime data</span>
-          <span class="stag g">✓ Sold prices</span>
-          <span class="stag g">✓ Flood risk</span>
-          <span class="stag g">✓ Deprivation</span>
-          <span class="stag g">✓ Portal links</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- CLAUDE results -->
-    <div class="res-panel" id="res-claude">
-      <div class="state-box">
-        <div class="state-icon">🤖</div>
-        <div class="state-title">Claude AI Property Search</div>
-        <div class="state-sub">Save your Claude API key and click Search. Claude finds real current listings on Rightmove and Zoopla.</div>
-        <div class="state-tags">
-          <span class="stag g">✓ Real live listings</span>
-          <span class="stag g">✓ Investment analysis</span>
-          <span class="stag b">Needs Claude API key</span>
-          <span class="stag a">~$0.03–$0.10</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- HOMEDATA results -->
-    <div class="res-panel" id="res-hd">
-      <div class="state-box">
-        <div class="state-icon">🏠</div>
-        <div class="state-title">Homedata Live Listings</div>
-        <div class="state-sub">Save your Homedata key and click Search. If CORS blocks it, the error will say so clearly.</div>
-        <div class="state-tags">
-          <span class="stag g">✓ Live listings if CORS allows</span>
-          <span class="stag b">Needs homedata.co.uk key</span>
-          <span class="stag a">100 free/month</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- APIFY results -->
-    <div class="res-panel" id="res-apify">
-      <div class="state-box">
-        <div class="state-icon">🕷</div>
-        <div class="state-title">Apify Rightmove Scraper</div>
-        <div class="state-sub">Save your Apify token and click Search. Takes 1–3 minutes but returns real Rightmove listings.</div>
-        <div class="state-tags">
-          <span class="stag g">✓ Real Rightmove listings</span>
-          <span class="stag b">Needs apify.com token</span>
-          <span class="stag a">~$0.09/25 results</span>
-          <span class="stag a">1–3 min wait</span>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /results -->
-
-</div><!-- /layout -->
+</div>
+</div>
 
 <script>
-
 'use strict';
 const $=id=>document.getElementById(id);
 const fmt=n=>Number(n).toLocaleString('en-GB');
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 function toggleEye(id){const el=$(id);if(el)el.type=el.type==='password'?'text':'password';}
-function tog(el){el.classList.toggle('on');}
-let SPENT=0;
-function addSpent(n){SPENT+=n;const el=$('cost-disp');if(el)el.textContent='$'+SPENT.toFixed(4);}
 
-// ── KEY MANAGEMENT ────────────────────────────────────────────────────────────
-function saveKey(name){
-  const inp=$('inp-'+name);
-  if(!inp)return;
-  const v=inp.value.trim();
-  if(v.length<5){setStatus(name,'Too short','err');return;}
-  try{sessionStorage.setItem('fmnh_'+name,JSON.stringify({v,e:Date.now()+8*3600000}));}catch(e){}
-  setStatus(name,'✓ Key saved','ok');
-  const btn=$('btn-'+name);
-  if(btn)btn.disabled=false;
+// ── KEYS ─────────────────────────────────────────────────────────────────────
+let CLAUDE_KEY='';
+let SESSION_COST=0;
+
+function saveClaudeKey(){
+  const v=$('inp-key').value.trim();
+  if(v.length<20){showKeyMsg('Key looks too short','err');return;}
+  CLAUDE_KEY=v;
+  try{sessionStorage.setItem('fmnh_k',JSON.stringify({v,e:Date.now()+28800000}));}catch(e){}
+  showKeyMsg('✓ Key saved','ok');
+  $('btn-find').disabled=false;
+  $('btn-invest').disabled=false;
 }
-function loadKeys(){
-  ['claude','hd','apify'].forEach(name=>{
-    try{
-      const raw=sessionStorage.getItem('fmnh_'+name);
-      if(!raw)return;
-      const o=JSON.parse(raw);
-      if(o.e<Date.now()){sessionStorage.removeItem('fmnh_'+name);return;}
-      const inp=$('inp-'+name);
-      if(inp)inp.value=o.v;
-      setStatus(name,'✓ Restored','ok');
-      const btn=$('btn-'+name);
-      if(btn)btn.disabled=false;
-    }catch(e){}
-  });
+
+function loadKey(){
+  try{
+    const raw=sessionStorage.getItem('fmnh_k');
+    if(!raw)return;
+    const o=JSON.parse(raw);
+    if(o.e>Date.now()&&o.v.length>10){
+      CLAUDE_KEY=o.v;
+      $('inp-key').value=o.v;
+      showKeyMsg('✓ Key active','ok');
+      $('btn-find').disabled=false;
+      $('btn-invest').disabled=false;
+    }
+  }catch(e){}
 }
-function getKey(name){
-  const inp=$('inp-'+name);
-  if(inp&&inp.value.trim().length>4)return inp.value.trim();
-  try{const raw=sessionStorage.getItem('fmnh_'+name);if(!raw)return'';const o=JSON.parse(raw);return o.e>Date.now()?o.v:'';}
-  catch(e){return'';}
-}
-function setStatus(name,msg,type){
-  const el=$('st-'+name);
+
+function showKeyMsg(msg,type){
+  const el=$('key-msg');
   if(!el)return;
   el.textContent=msg;
-  el.className='st '+(type||'');
+  el.className='key-msg '+(type||'');
 }
 
-// ── TAB SWITCHING ─────────────────────────────────────────────────────────────
-function switchTab(name){
-  ['free','claude','hd','apify'].forEach(t=>{
-    $('tab-'+t)?.classList.toggle('active',t===name);
-    $('sb-'+t)?.classList.toggle('active',t===name);
-    $('res-'+t)?.classList.toggle('active',t===name);
-  });
+function addCost(n){
+  SESSION_COST+=n;
+  const el=$('cost-display');
+  if(el)el.textContent='Session cost: $'+SESSION_COST.toFixed(4);
 }
 
-// ── SHARED PARAMS ─────────────────────────────────────────────────────────────
-function getParams(){
-  return{
-    pc:$('postcode').value.trim(),
-    budget:parseInt($('budget').value)||300000,
-    stretch:parseInt($('stretch').value)||375000,
-    minBeds:parseInt($('min-beds').value)||3,
-    wantInvest:$('want-invest')?.checked||false,
-  };
-}
-
-// ── FREE APIs ─────────────────────────────────────────────────────────────────
-async function geocode(pc){
-  const c=pc.replace(/\s+/g,'').toUpperCase();
+// ── FREE AREA DATA ────────────────────────────────────────────────────────────
+async function getGeo(pc){
+  const c=pc.replace(/\s/g,'').toUpperCase();
   let r=await fetch('https://api.postcodes.io/postcodes/'+c);
   let d=await r.json();
   if(d.status===200)return d.result;
   const r2=await fetch('https://api.postcodes.io/postcodes/'+c+'/autocomplete');
   const d2=await r2.json();
-  if(d2.result?.length){const r3=await fetch('https://api.postcodes.io/postcodes/'+d2.result[0]);return(await r3.json()).result;}
-  throw new Error('Postcode not found: '+pc+' — try M21 9WQ format');
+  if(d2.result?.length){
+    const r3=await fetch('https://api.postcodes.io/postcodes/'+d2.result[0]);
+    return(await r3.json()).result;
+  }
+  return null;
 }
+
 async function getCrime(lat,lng){
-  try{const r=await fetch(`https://data.police.uk/api/crimes-street/all-crime?lat=${lat}&lng=${lng}&date=2024-09`);const d=await r.json();if(!Array.isArray(d))return{total:0,breakdown:{},score:7};const bk={};d.forEach(c=>{const k=c.category.replace(/-/g,' ');bk[k]=(bk[k]||0)+1;});const t=d.length;return{total:t,breakdown:bk,score:t>200?2:t>120?4:t>60?6:t>30?8:9};}catch(e){return{total:0,breakdown:{},score:7};}
+  try{
+    const r=await fetch(`https://data.police.uk/api/crimes-street/all-crime?lat=${lat}&lng=${lng}&date=2024-09`);
+    const d=await r.json();
+    if(!Array.isArray(d))return{total:0,score:7,label:'Unknown'};
+    const t=d.length;
+    const score=t>200?2:t>120?4:t>60?6:t>30?8:9;
+    const label=score>=8?'Low':score>=5?'Moderate':'High';
+    const bk={};d.forEach(c=>{const k=c.category.replace(/-/g,' ');bk[k]=(bk[k]||0)+1;});
+    return{total:t,score,label,breakdown:bk};
+  }catch(e){return{total:0,score:7,label:'Unknown',breakdown:{}};}
 }
-async function getSoldPrices(pc){
-  try{const area=pc.split(' ')[0].toUpperCase();const q=`SELECT ?amount WHERE{?t <http://landregistry.data.gov.uk/def/ppi/propertyAddress> ?a.?a <http://landregistry.data.gov.uk/def/common/postcode> "${area}"^^<http://www.w3.org/2001/XMLSchema#string>.?t <http://landregistry.data.gov.uk/def/ppi/pricePaid> ?amount.?t <http://landregistry.data.gov.uk/def/ppi/transactionDate> ?d}ORDER BY DESC(?d)LIMIT 60`;const r=await fetch('https://landregistry.data.gov.uk/landregistry/query?query='+encodeURIComponent(q)+'&output=json');const d=await r.json();const prices=(d.results?.bindings||[]).map(x=>parseInt(x.amount?.value||0)).filter(p=>p>0);const avg=prices.length?Math.round(prices.reduce((a,b)=>a+b,0)/prices.length):0;return{count:prices.length,avg,min:prices.length?Math.min(...prices):0,max:prices.length?Math.max(...prices):0};}catch(e){return{count:0,avg:0,min:0,max:0};}
+
+async function getPrices(pc){
+  try{
+    const area=pc.split(' ')[0].toUpperCase();
+    const q=`SELECT ?amount WHERE{?t <http://landregistry.data.gov.uk/def/ppi/propertyAddress> ?a.?a <http://landregistry.data.gov.uk/def/common/postcode> "${area}"^^<http://www.w3.org/2001/XMLSchema#string>.?t <http://landregistry.data.gov.uk/def/ppi/pricePaid> ?amount.?t <http://landregistry.data.gov.uk/def/ppi/transactionDate> ?d}ORDER BY DESC(?d)LIMIT 60`;
+    const r=await fetch('https://landregistry.data.gov.uk/landregistry/query?query='+encodeURIComponent(q)+'&output=json');
+    const data=await r.json();
+    const prices=(data.results?.bindings||[]).map(x=>parseInt(x.amount?.value||0)).filter(p=>p>0);
+    if(!prices.length)return null;
+    const avg=Math.round(prices.reduce((a,b)=>a+b,0)/prices.length);
+    return{avg,min:Math.min(...prices),max:Math.max(...prices),count:prices.length};
+  }catch(e){return null;}
 }
+
 async function getFlood(lat,lng){
-  try{const r=await fetch(`https://environment.data.gov.uk/flood-monitoring/id/floodAreas?lat=${lat}&long=${lng}&dist=1`);const d=await r.json();const items=d.items||[];return{zones:items.length,high:items.some(i=>i.riverOrSea||/high/i.test(i.description||''))};}catch(e){return{zones:0,high:false};}
-}
-async function getDeprivation(lat,lng){
-  try{const r=await fetch(`https://services3.arcgis.com/ivmBBrHfQfDnDf8Q/arcgis/rest/services/Indices_of_Multiple_Deprivation_(IMD)_2019/FeatureServer/0/query?geometry=${lng}%2C${lat}&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&outFields=IMDDecil%2CIMD2019&f=json&returnGeometry=false`);const d=await r.json();const f=d.features?.[0]?.attributes;if(!f)return null;return{decile:f.IMDDecil,label:f.IMDDecil<=2?'Very deprived':f.IMDDecil<=4?'Deprived':f.IMDDecil<=6?'Average':f.IMDDecil<=8?'Affluent':'Very affluent'};}catch(e){return null;}
-}
-async function loadAreaData(pc){
-  const geo=await geocode(pc);
-  const[crime,prices,flood,dep]=await Promise.all([getCrime(geo.latitude,geo.longitude),getSoldPrices(pc),getFlood(geo.latitude,geo.longitude),getDeprivation(geo.latitude,geo.longitude)]);
-  return{geo,crime,prices,flood,dep};
+  try{
+    const r=await fetch(`https://environment.data.gov.uk/flood-monitoring/id/floodAreas?lat=${lat}&long=${lng}&dist=1`);
+    const d=await r.json();
+    const zones=(d.items||[]).length;
+    const high=(d.items||[]).some(i=>i.riverOrSea);
+    return{zones,high,label:high?'High risk':zones>0?'Some risk':'Low'};
+  }catch(e){return{zones:0,high:false,label:'Unknown'};}
 }
 
-// ── RENDER HELPERS ────────────────────────────────────────────────────────────
-function renderStats(area){
-  const{geo,crime,prices,flood,dep}=area;
-  const cc=crime.score>=8?'#1a7848':crime.score>=5?'#a07820':'#a01828';
-  const fc=flood.high?'#a01828':flood.zones>0?'#a07820':'#1a7848';
-  const dc=dep?(dep.decile>=7?'#1a7848':dep.decile>=4?'#a07820':'#a01828'):'#888';
-  return`<div class="stats-bar">
-    <div class="stat"><div class="stat-l">Area</div><div class="stat-v">${geo.admin_ward||geo.admin_district||'—'}</div><div class="stat-s">${geo.admin_district||''}</div></div>
-    <div class="stat"><div class="stat-l">Crime</div><div class="stat-v" style="color:${cc}">${crime.score>=8?'Low':crime.score>=5?'Moderate':'High'}</div><div class="stat-s">${crime.total} incidents</div></div>
-    <div class="stat"><div class="stat-l">Avg Sold</div><div class="stat-v">£${prices.avg?fmt(prices.avg):'N/A'}</div><div class="stat-s">${prices.count} LR sales</div></div>
-    <div class="stat"><div class="stat-l">Flood</div><div class="stat-v" style="color:${fc}">${flood.high?'High':flood.zones>0?'Low-Med':'None'}</div><div class="stat-s">${flood.zones} zones</div></div>
-    <div class="stat"><div class="stat-l">Deprivation</div><div class="stat-v" style="color:${dc}">${dep?dep.label:'N/A'}</div><div class="stat-s">${dep?'D'+dep.decile+'/10':''}</div></div>
-  </div>`;
+// ── CLAUDE SEARCH ─────────────────────────────────────────────────────────────
+async function findHomes(){
+  if(!CLAUDE_KEY){alert('Enter your Claude API key first');return;}
+  const pc=$('inp-postcode').value.trim();
+  const budget=parseInt($('inp-budget').value)||300000;
+  const beds=parseInt($('inp-beds').value)||3;
+  if(!pc){alert('Enter a postcode');return;}
+  await runClaudeSearch(pc,budget,beds,false);
 }
 
-function renderCard(p,isTop,areaAvg,isInvest){
-  const diff=areaAvg&&p.price?Math.round((p.price-areaAvg)/areaAvg*100):null;
-  const badges=[];
-  if(p.tenure?.toLowerCase().includes('freehold'))badges.push({t:'Freehold',c:'green'});
-  if(p.chainFree)badges.push({t:'No Chain',c:'green'});
-  if(p.reduced)badges.push({t:'Reduced',c:'amber'});
-  if(diff!=null&&diff<=-5)badges.push({t:Math.abs(diff)+'% below avg',c:'green'});
-  if(diff!=null&&diff>=10)badges.push({t:diff+'% above avg',c:'red'});
-  if(isInvest&&p.grossYield)badges.push({t:p.grossYield+'% yield',c:'purple'});
+async function findInvestment(){
+  if(!CLAUDE_KEY){alert('Enter your Claude API key first');return;}
+  const pc=$('inp-postcode').value.trim();
+  const budget=parseInt($('inp-budget').value)||300000;
+  if(!pc){alert('Enter a postcode');return;}
+  await runClaudeSearch(pc,Math.round(budget*0.55),1,true);
+}
 
-  let h=`<div class="card${isTop?' card-top':''}${isInvest?' card-invest':''}">`;
-  if(isTop&&!isInvest)h+=`<div class="ribbon r-home">⭐ Top Pick</div>`;
-  else if(isTop&&isInvest)h+=`<div class="ribbon r-invest">⭐ Best Investment</div>`;
-  else if(isInvest)h+=`<div class="ribbon r-invest-plain">💰 Investment</div>`;
-  h+=`<div class="card-body">
-    <div class="card-top-row">
-      <div class="card-addr">${esc(p.address||'Address unavailable')}</div>
-      <div class="card-badges">${badges.map(b=>`<span class="badge b-${b.c}">${b.t}</span>`).join('')}</div>
-    </div>
-    <div class="card-price-row">
-      <span class="card-price">£${fmt(p.price||0)}</span>
-      <span class="card-specs">${[p.beds?'🛏 '+p.beds+'bd':'',p.baths?'🚿 '+p.baths+'ba':'',p.type?'🏡 '+p.type:'',p.addedDate?'📅 '+p.addedDate:'',isInvest&&p.estRentalPcm?'💷 ~£'+fmt(p.estRentalPcm)+'/mo':''].filter(Boolean).join(' · ')}</span>
+async function runClaudeSearch(pc,budget,minBeds,isInvest){
+  $('btn-find').disabled=true;
+  $('btn-invest').disabled=true;
+  showScreen('loading');
+  setLoadMsg(isInvest?'Searching for investment flats...':'Searching for houses for sale...');
+
+  // Load area data in background
+  let geo=null,crime=null,prices=null,flood=null;
+  getGeo(pc).then(g=>{
+    if(!g)return;
+    geo=g;
+    Promise.allSettled([getCrime(g.latitude,g.longitude),getPrices(pc),getFlood(g.latitude,g.longitude)])
+      .then(([c,p,f])=>{
+        crime=c.value||null;
+        prices=p.value||null;
+        flood=f.value||null;
+      });
+  });
+
+  // Build a SHORT, focused prompt that fits in rate limits
+  const type=isInvest?'1-2 bedroom flats/apartments for buy-to-let investment':'houses (detached, semi-detached, bungalows, terraced)';
+  const goal=isInvest
+    ?'high rental yield, near transport, manageable service charges'
+    :'3+ bedrooms, garden preferred, freehold preferred, good area';
+
+  const prompt=`Search Rightmove.co.uk and Zoopla.co.uk now for ${type} for sale near ${pc}, max £${fmt(budget)}${minBeds>1?', '+minBeds+'+ beds':''}.
+
+Find real current listings. For each property return honest analysis: is it worth buying and why?
+
+Respond with ONLY a JSON object (no other text):
+{"area":"area name","avgAreaPrice":285000,"properties":[{"address":"full address","price":270000,"beds":3,"type":"semi-detached","tenure":"Freehold","chainFree":true,"addedDate":"2 weeks ago","features":["garden","parking","new kitchen"],"url":"https://www.rightmove.co.uk/properties/XXXXXXX","agent":"Agent Name","verdict":"Worth it: 5% below area average, freehold, good condition. Watch: busy road.","score":8,"reduced":false}],"topPickIndex":0,"summary":"Overall market comment for this area"}
+
+Find at least 5 properties. Score 1-10. Be honest - flag overpriced ones, chain risks, flood zones, leasehold traps.`;
+
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':CLAUDE_KEY,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
+      body:JSON.stringify({
+        model:'claude-sonnet-4-5-20250929',
+        max_tokens:4000,
+        tools:[{type:'web_search_20250305',name:'web_search'}],
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+
+    const data=await resp.json();
+
+    // Handle errors clearly
+    if(data.error){
+      const msg=data.error.message||'';
+      if(msg.includes('rate limit')||msg.includes('rate_limit')){
+        showError('Rate limit hit — you have a free tier limit of 30,000 tokens/minute. Wait 60 seconds then try again. This is a Claude account limit, not a bug.');
+      } else if(msg.includes('authentication')||msg.includes('auth')){
+        showError('Invalid API key. Check your key at console.anthropic.com');
+      } else {
+        showError('Claude API error: '+msg);
+      }
+      return;
+    }
+
+    // Extract text content (Claude may use multiple tool_use and text blocks)
+    let text='';
+    for(const block of data.content||[]){
+      if(block.type==='text')text+=block.text;
+    }
+
+    const cost=((data.usage?.input_tokens||0)*3+(data.usage?.output_tokens||0)*15)/1000000;
+    addCost(cost);
+
+    // Parse JSON
+    let result=null;
+    const match=text.match(/\{[\s\S]*\}/);
+    if(match){
+      try{result=JSON.parse(match[0]);}
+      catch(e){
+        // Try fixing common Claude JSON issues
+        try{
+          const fixed=match[0].replace(/,\s*([}\]])/g,'$1').replace(/'/g,'"');
+          result=JSON.parse(fixed);
+        }catch(e2){}
+      }
+    }
+
+    if(!result||!result.properties?.length){
+      // Show raw text if JSON failed - still useful
+      await new Promise(r=>setTimeout(r,1000));
+      showRawResults(text,geo,crime,prices,flood,pc,budget,isInvest);
+      return;
+    }
+
+    // Wait briefly for area data
+    await new Promise(r=>setTimeout(r,800));
+    showResults(result,geo,crime,prices,flood,pc,budget,isInvest,cost);
+
+  }catch(err){
+    showError('Network error: '+err.message);
+    console.error(err);
+  }finally{
+    $('btn-find').disabled=false;
+    $('btn-invest').disabled=false;
+  }
+}
+
+// ── RENDER RESULTS ────────────────────────────────────────────────────────────
+function showResults(result,geo,crime,prices,flood,pc,budget,isInvest,cost){
+  const props=result.properties||[];
+  const areaAvg=result.avgAreaPrice||prices?.avg||0;
+
+  let h='';
+
+  // Area intelligence bar
+  h+=buildAreaBar(geo,crime,prices,flood,pc);
+
+  // Summary
+  if(result.summary){
+    h+=`<div class="summary-box">
+      <div class="summary-label">📍 ${esc(result.area||geo?.admin_district||pc)}</div>
+      <div class="summary-text">${esc(result.summary)}</div>
     </div>`;
-  if(p.whyGood||p.analysis)h+=`<div class="card-analysis${isInvest?' inv':''}">${esc(p.whyGood||p.analysis||'')}</div>`;
-  if(p.features?.length)h+=`<div class="card-feats">${p.features.map(f=>`<span class="feat${/garden|freehold|chain.free|park|refurb/i.test(f)?' feat-ok':''}">${esc(f)}</span>`).join('')}</div>`;
-  if(p.description)h+=`<p class="card-desc">${esc(String(p.description).slice(0,200))}</p>`;
-  h+=`<div class="card-actions">`;
-  if(p.url)h+=`<a href="${esc(p.url)}" target="_blank" class="btn-primary">View on ${esc(p.portal||'Portal')} ↗</a>`;
-  if(p.agent){const ai='Agent: '+p.agent+(p.agentPhone?'\nPhone: '+p.agentPhone:'');h+=`<button class="btn-secondary" onclick="alert('${esc(ai)}')">📞 ${esc(p.agent)}</button>`;}
-  const zp=(p.address||'').match(/[A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2}/i)?.[0]?.replace(/\s/,'').toLowerCase();
-  if(zp)h+=`<a href="https://www.zoopla.co.uk/for-sale/property/${zp}/?q=${zp}" target="_blank" class="btn-secondary">Zoopla ↗</a>`;
+  }
+
+  // Cost
+  h+=`<div class="cost-note">Search cost: $${cost.toFixed(4)} · ${props.length} properties found</div>`;
+
+  // Properties
+  const sorted=[...props].sort((a,b)=>(b.score||0)-(a.score||0));
+  sorted.forEach((p,i)=>{
+    const isTop=i===0;
+    const below=areaAvg&&p.price&&p.price<areaAvg;
+    const above=areaAvg&&p.price&&p.price>areaAvg*1.1;
+    const diff=areaAvg&&p.price?Math.round((p.price-areaAvg)/areaAvg*100):null;
+    const scoreCol=p.score>=8?'#1a7848':p.score>=6?'#b07820':'#a01828';
+
+    h+=`<div class="prop-card${isTop?' prop-top':''}${isInvest?' prop-invest':''}">`;
+
+    // Header strip
+    if(isTop&&!isInvest)h+=`<div class="card-strip strip-top">⭐ Top Pick</div>`;
+    else if(isTop&&isInvest)h+=`<div class="card-strip strip-invest">⭐ Best Investment</div>`;
+    else if(isInvest)h+=`<div class="card-strip strip-invest-plain">💰 Investment</div>`;
+    else h+=`<div class="card-strip strip-sale">🏠 For Sale</div>`;
+
+    h+=`<div class="prop-body">`;
+
+    // Address + score
+    h+=`<div class="prop-head">
+      <div class="prop-addr">${esc(p.address||'Address not available')}</div>
+      <div class="prop-score" style="background:${scoreCol}">${p.score||'?'}/10</div>
+    </div>`;
+
+    // Price row
+    h+=`<div class="prop-price-row">
+      <span class="prop-price">£${fmt(p.price||0)}</span>
+      <span class="prop-specs">
+        ${p.beds?`<span>🛏 ${p.beds}bd</span>`:''}
+        ${p.type?`<span>${esc(p.type)}</span>`:''}
+        ${p.tenure?`<span>${esc(p.tenure)}</span>`:''}
+        ${p.addedDate?`<span>📅 ${esc(p.addedDate)}</span>`:''}
+        ${p.reduced?`<span class="badge-reduced">Price reduced</span>`:''}
+        ${p.chainFree?`<span class="badge-good">No chain</span>`:''}
+        ${below&&diff?`<span class="badge-good">${Math.abs(diff)}% below avg</span>`:''}
+        ${above&&diff?`<span class="badge-warn">${diff}% above avg</span>`:''}
+      </span>
+    </div>`;
+
+    // Verdict — the key part
+    if(p.verdict){
+      h+=`<div class="prop-verdict">${esc(p.verdict)}</div>`;
+    }
+
+    // Features
+    if(p.features?.length){
+      h+=`<div class="prop-features">`;
+      p.features.forEach(f=>{
+        const good=/garden|freehold|chain.free|park|refurb|new|modern|transport|tram|train|drive/i.test(f);
+        const bad=/leasehold|busy|road|noise|flood|damp|work.needed/i.test(f);
+        h+=`<span class="feat${good?' feat-ok':bad?' feat-warn':''}">${esc(f)}</span>`;
+      });
+      h+=`</div>`;
+    }
+
+    // Actions
+    h+=`<div class="prop-actions">`;
+    if(p.url&&p.url.startsWith('http')){
+      h+=`<a href="${esc(p.url)}" target="_blank" class="btn-view">View Listing ↗</a>`;
+    }
+    if(p.agent){
+      h+=`<span class="prop-agent">via ${esc(p.agent)}</span>`;
+    }
+    // Also add Zoopla search
+    const pcs=(p.address||'').match(/[A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2}/i);
+    const slug=pcs?pcs[0].replace(/\s/,'').toLowerCase():(geo?.admin_district||pc).toLowerCase().replace(/\s/,'-');
+    h+=`<a href="https://www.zoopla.co.uk/for-sale/property/${slug}/?q=${slug}&price_max=${p.price+20000}" target="_blank" class="btn-zoopla">Zoopla ↗</a>`;
+    h+=`</div>`;
+
+    h+=`</div></div>`;
+  });
+
+  // Search links at bottom
+  h+=buildSearchLinks(geo,pc,budget,Math.max(...(sorted.map(p=>p.beds||3))));
+
+  $('results-area').innerHTML=h;
+  showScreen('results');
+}
+
+function showRawResults(text,geo,crime,prices,flood,pc,budget,isInvest){
+  let h=buildAreaBar(geo,crime,prices,flood,pc);
+  h+=`<div class="notice-warn">⚠️ Claude found properties but the response wasn't in the expected format. The raw findings are below — you can see addresses and prices directly, and use the search links to find them.</div>`;
+  h+=`<div class="raw-box">${esc(text)}</div>`;
+  h+=buildSearchLinks(geo,pc,budget,3);
+  $('results-area').innerHTML=h;
+  showScreen('results');
+}
+
+function buildAreaBar(geo,crime,prices,flood,pc){
+  if(!geo&&!crime&&!prices&&!flood)return'';
+  const cc=crime?(crime.score>=8?'#1a7848':crime.score>=5?'#b07820':'#a01828'):'#888';
+  const fc=flood?(flood.high?'#a01828':flood.zones>0?'#b07820':'#1a7848'):'#888';
+  let h=`<div class="area-bar">`;
+  if(geo)h+=`<div class="astat"><div class="asl">Area</div><div class="asv">${esc(geo.admin_ward||geo.admin_district||pc)}</div></div>`;
+  if(crime)h+=`<div class="astat"><div class="asl">Crime</div><div class="asv" style="color:${cc}">${crime.label}</div><div class="ass">${crime.total} incidents</div></div>`;
+  if(prices)h+=`<div class="astat"><div class="asl">Avg Sold Price</div><div class="asv">£${fmt(prices.avg)}</div><div class="ass">${prices.count} sales</div></div>`;
+  if(flood)h+=`<div class="astat"><div class="asl">Flood Risk</div><div class="asv" style="color:${fc}">${flood.label}</div><div class="ass">${flood.zones} zones nearby</div></div>`;
   h+=`</div>`;
-  if(p.score){const col=p.score>=8?'#1a7848':p.score>=6?'#a07820':'#a01828';h+=`<div class="score-row"><span>Match</span><div class="score-track"><div style="width:${p.score*10}%;height:100%;background:${col};border-radius:2px"></div></div><span style="color:${col};font-weight:600">${p.score}/10</span></div>`;}
-  h+=`</div></div>`;
   return h;
 }
 
-function setLoading(tab,msg){
-  const el=$('res-'+tab);
-  if(el)el.innerHTML=`<div class="state-box"><div class="spinner"></div><div class="state-title">${esc(msg)}</div><p class="state-sub">Area data (crime, flood, prices) loads in parallel for free</p></div>`;
-}
-function setError(tab,msg){
-  const el=$('res-'+tab);
-  if(el)el.innerHTML=`<div class="state-box"><div style="font-size:32px;margin-bottom:12px">⚠️</div><div class="state-title" style="color:#a01828">Error</div><div class="error-msg">${esc(msg)}</div></div>`;
-}
-function setResult(tab,html){
-  const el=$('res-'+tab);
-  if(el)el.innerHTML=html;
-}
-
-// ── MODE 1: FREE ──────────────────────────────────────────────────────────────
-async function runFree(){
-  const{pc,budget,minBeds,wantInvest}=getParams();
-  if(!pc){alert('Enter a postcode first');return;}
-  switchTab('free');
-
-  // Step 1: Show search links IMMEDIATELY - no API needed
-  const pcsRaw=pc.split(' ')[0].toLowerCase();
-  const budgetFmt=fmt(budget);
-  const invBudget=Math.round(budget*0.55);
-
-  // Use postcode outcode for links - works even without geocoding
-  function makeLinks(locationName){
-    const locEnc=encodeURIComponent(locationName);
-    const pcs=locationName.toLowerCase().replace(/\s+/g,'-');
-    let h='';
-    h+='<div class="result-panel"><div class="panel-title">\ud83c\udfe0 Homes for Sale \u00b7 '+esc(locationName)+' \u00b7 max \u00a3'+budgetFmt+' \u00b7 '+minBeds+'+ beds</div>';
-    h+='<a class="search-link" href="https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+minBeds+'" target="_blank"><span class="sl-icon">\ud83c\udfe0</span><span class="sl-text"><b>Rightmove</b> \u2014 1M+ live listings, updated daily</span><span class="sl-arrow">Open \u2197</span></a>';
-    h+='<a class="search-link" href="https://www.zoopla.co.uk/for-sale/property/'+pcsRaw+'/?q='+pcsRaw+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+minBeds+'" target="_blank"><span class="sl-icon">\ud83d\udd35</span><span class="sl-text"><b>Zoopla</b> \u2014 Hundreds of estate agents</span><span class="sl-arrow">Open \u2197</span></a>';
-    h+='<a class="search-link" href="https://www.onthemarket.com/for-sale/property/'+pcs+'/?max-price='+budget+'&min-beds='+minBeds+'" target="_blank"><span class="sl-icon">\ud83d\udfe2</span><span class="sl-text"><b>OnTheMarket</b> \u2014 24hr head start on new listings</span><span class="sl-arrow">Open \u2197</span></a>';
-    h+='<a class="search-link" href="https://www.primelocation.com/for-sale/property/'+pcs+'/?beds_min='+minBeds+'&price_max='+budget+'" target="_blank"><span class="sl-icon">\u2b50</span><span class="sl-text"><b>PrimeLocation</b> \u2014 Premium properties</span><span class="sl-arrow">Open \u2197</span></a>';
-    h+='</div>';
-    if(wantInvest){
-      h+='<div class="result-panel"><div class="panel-title">\ud83d\udcb0 Investment Flats \u00b7 max \u00a3'+fmt(invBudget)+'</div>';
-      h+='<a class="search-link" href="https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+invBudget+'&propertyTypes=flat" target="_blank"><span class="sl-icon">\ud83d\udcb0</span><span class="sl-text"><b>Rightmove Flats</b> \u2014 Buy-to-let under \u00a3'+fmt(invBudget)+'</span><span class="sl-arrow">Open \u2197</span></a>';
-      h+='<a class="search-link" href="https://www.zoopla.co.uk/for-sale/flats/'+pcsRaw+'/?q='+pcsRaw+'&results_sort=newest_listings&price_max='+invBudget+'" target="_blank"><span class="sl-icon">\ud83d\udcb0</span><span class="sl-text"><b>Zoopla Flats</b> \u2014 1-2 bed investment flats</span><span class="sl-arrow">Open \u2197</span></a>';
-      h+='</div>';
-    }
-    return h;
-  }
-
-  // Show links immediately using raw postcode
-  let currentHtml='<div class="notice info">\u23f3 Loading area intelligence (crime, prices, flood)\u2026 Search links are ready now.</div>'+makeLinks(pc.split(' ')[0].toUpperCase());
-  setResult('free',currentHtml);
-
-  // Step 2: Load area data and enrich the page (non-blocking)
-  try{
-    const geo=await geocode(pc);
-    const loc=geo.admin_district||geo.admin_ward||pc.split(' ')[0].toUpperCase();
-
-    // Update links with proper location name
-    currentHtml='<div class="notice info">\u23f3 Loading crime, prices, flood data\u2026</div>'+makeLinks(loc);
-    setResult('free',currentHtml);
-
-    // Load all area APIs, each independently (one failure doesn't kill others)
-    const[crime,prices,flood,dep]=await Promise.allSettled([
-      getCrime(geo.latitude,geo.longitude),
-      getSoldPrices(pc),
-      getFlood(geo.latitude,geo.longitude),
-      getDeprivation(geo.latitude,geo.longitude),
-    ]).then(results=>results.map(r=>r.status==='fulfilled'?r.value:null));
-
-    // Build full results page
-    let h='<div class="notice ok">\u2705 Area intelligence loaded for '+esc(loc)+'</div>';
-
-    // Stats bar
-    if(crime||prices||flood||dep){
-      const crimeData=crime||{total:0,breakdown:{},score:7};
-      const pricesData=prices||{count:0,avg:0,min:0,max:0};
-      const floodData=flood||{zones:0,high:false};
-      const cc=crimeData.score>=8?'#1a7848':crimeData.score>=5?'#a07820':'#a01828';
-      const fc=floodData.high?'#a01828':floodData.zones>0?'#a07820':'#1a7848';
-      const dc=dep?(dep.decile>=7?'#1a7848':dep.decile>=4?'#a07820':'#a01828'):'#888';
-      h+='<div class="stats-bar">';
-      h+='<div class="stat"><div class="stat-l">Area</div><div class="stat-v">'+esc(geo.admin_ward||loc)+'</div><div class="stat-s">'+esc(geo.admin_district||'')+'</div></div>';
-      h+='<div class="stat"><div class="stat-l">Crime</div><div class="stat-v" style="color:'+cc+'">'+(crimeData.score>=8?'Low':crimeData.score>=5?'Moderate':'High')+'</div><div class="stat-s">'+crimeData.total+' incidents</div></div>';
-      h+='<div class="stat"><div class="stat-l">Avg Sold</div><div class="stat-v">\u00a3'+(pricesData.avg?fmt(pricesData.avg):'N/A')+'</div><div class="stat-s">'+pricesData.count+' LR sales</div></div>';
-      h+='<div class="stat"><div class="stat-l">Flood</div><div class="stat-v" style="color:'+fc+'">'+(floodData.high?'High Risk':floodData.zones>0?'Low-Med':'None')+'</div><div class="stat-s">'+floodData.zones+' zones</div></div>';
-      h+='<div class="stat"><div class="stat-l">Deprivation</div><div class="stat-v" style="color:'+dc+'">'+(dep?dep.label:'N/A')+'</div><div class="stat-s">'+(dep?'D'+dep.decile+'/10':'')+'</div></div>';
-      h+='</div>';
-
-      // Crime breakdown
-      if(crime){
-        const topC=Object.entries(crimeData.breakdown||{}).sort((a,b)=>b[1]-a[1]).slice(0,6);
-        if(topC.length){
-          const mc=topC[0][1];
-          h+='<div class="result-panel"><div class="panel-title">\ud83d\udc6e Crime Breakdown \u00b7 UK Police \u00b7 Total: '+crimeData.total+'</div>';
-          topC.forEach(([cat,n])=>{const w=Math.round(n/mc*100);const col=n>mc*.6?'#a01828':n>mc*.3?'#a07820':'#1a7848';h+='<div class="crime-row"><span>'+esc(cat)+'</span><div class="cbar-wrap"><div style="width:'+w+'%;height:100%;background:'+col+';border-radius:2px"></div></div><b>'+n+'</b></div>';});
-          h+='</div>';
-        }
-      }
-
-      // Sold prices
-      if(prices&&pricesData.count>0){
-        h+='<div class="result-panel"><div class="panel-title">\ud83d\udcb0 Land Registry Sold Prices \u00b7 '+esc(pc.split(' ')[0])+'</div>';
-        h+='<div class="price-stats">';
-        h+='<div><div class="ps-l">Average</div><div class="ps-v">\u00a3'+fmt(pricesData.avg)+'</div></div>';
-        h+='<div><div class="ps-l">Lowest</div><div class="ps-v">\u00a3'+fmt(pricesData.min)+'</div></div>';
-        h+='<div><div class="ps-l">Highest</div><div class="ps-v">\u00a3'+fmt(pricesData.max)+'</div></div>';
-        h+='<div><div class="ps-l">Sales</div><div class="ps-v">'+pricesData.count+'</div></div>';
-        h+='</div></div>';
-      }
-    }
-
-    // Search links with proper location name
-    h+=makeLinks(loc);
-    setResult('free',h);
-
-  }catch(err){
-    // Area data failed - but show links anyway with a warning
-    console.warn('Area data error:',err);
-    currentHtml='<div class="notice warn">\u26a0\ufe0f Could not load area data ('+esc(err.message)+') \u2014 search links below still work.</div>'+makeLinks(pc.split(' ')[0].toUpperCase());
-    setResult('free',currentHtml);
-  }
+function buildSearchLinks(geo,pc,budget,minBeds){
+  const loc=geo?.admin_district||pc.split(' ')[0];
+  const locEnc=encodeURIComponent(loc);
+  const slug=loc.toLowerCase().replace(/\s+/g,'-');
+  const pcs=pc.split(' ')[0].toLowerCase();
+  return`<div class="search-links-box">
+    <div class="sl-title">🔍 Browse live listings directly</div>
+    <a class="sl-link" href="https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation=${locEnc}&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice=${budget}&minBedrooms=${minBeds}" target="_blank">Rightmove — full listings ↗</a>
+    <a class="sl-link" href="https://www.zoopla.co.uk/for-sale/property/${pcs}/?q=${pcs}&results_sort=newest_listings&price_max=${budget}&beds_min=${minBeds}" target="_blank">Zoopla ↗</a>
+    <a class="sl-link" href="https://www.onthemarket.com/for-sale/property/${slug}/?max-price=${budget}&min-beds=${minBeds}" target="_blank">OnTheMarket — new first ↗</a>
+  </div>`;
 }
 
-// ── MODE 2: CLAUDE ──────────────────────────────────────────────────────────
-async function runClaude(){
-  const key=getKey('claude');
-  if(!key){setError('claude','Save your Claude API key in the left panel first.');return;}
-  const{pc,budget,stretch,minBeds,wantInvest}=getParams();
-  if(!pc){alert('Enter a postcode');return;}
-  switchTab('claude');
-  setLoading('claude','Claude is searching Rightmove and Zoopla\u2026 (30\u201390 seconds)');
-
-  let area=null;
-  loadAreaData(pc).then(a=>{area=a;}).catch(()=>{});
-
-  const invBudget=Math.round(budget*0.55);
-
-  // TURN 1: Search (natural language, no JSON pressure - Claude searches better this way)
-  const searchPrompt='You are a UK property search assistant. Search Rightmove.co.uk and Zoopla.co.uk RIGHT NOW for properties for sale near postcode '+pc+'.\n\n'
-    +'Find HOMES (houses): max \u00a3'+fmt(budget)+', '+minBeds+'+ bedrooms, not sold STC.\n'
-    +(wantInvest?'Also find INVESTMENT FLATS: max \u00a3'+fmt(invBudget)+', 1-2 beds, good buy-to-let potential.\n':'')
-    +'\nFor each property list: full address, exact price, beds, baths, type, tenure, chain-free status, date added, key features, exact URL, agent name and phone, brief description.\n'
-    +'Find at least 5 homes'+(wantInvest?' and 3 investment flats':'')+'. Search thoroughly.';
-
-  try{
-    const models=['claude-sonnet-4-5','claude-sonnet-4-20250514'];
-    let searchData=null,usedModel='',lastErr='';
-    for(const model of models){
-      try{
-        const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
-          headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-          body:JSON.stringify({model,max_tokens:6000,tools:[{type:'web_search_20250305',name:'web_search'}],messages:[{role:'user',content:searchPrompt}]})
-        });
-        searchData=await r.json();
-        if(searchData.error){lastErr=searchData.error.message;if(searchData.error.type==='authentication_error')break;continue;}
-        usedModel=model;break;
-      }catch(e){lastErr=e.message;}
-    }
-    if(!searchData||searchData.error)throw new Error('Claude API: '+(lastErr||'check key and credits'));
-
-    const cost1=((searchData.usage?.input_tokens||0)*3+(searchData.usage?.output_tokens||0)*15)/1000000;
-    addSpent(cost1);
-
-    let findings='';
-    for(const block of searchData.content||[]){if(block.type==='text')findings+=block.text;}
-    if(!findings||findings.length<50)throw new Error('Claude returned no text. Check key has web search access.');
-
-    setLoading('claude','Properties found \u2014 formatting results\u2026');
-
-    // TURN 2: Format as JSON (no web search, just reformatting what was found)
-    const jsonPrompt='Based on the property search results above, output them as a JSON object.\n\n'
-      +'Output ONLY raw JSON starting with { and ending with }. No explanation, no markdown, no code fences.\n\n'
-      +'Use this exact structure:\n'
-      +'{"location":"area name","homes":[{"address":"full address","price":285000,"beds":3,"baths":1,"type":"semi-detached","tenure":"Freehold","chainFree":true,"reduced":false,"addedDate":"Added 2 weeks ago","features":["garden","parking"],"url":"https://www.rightmove.co.uk/properties/12345678","portal":"Rightmove","agent":"Agent name","agentPhone":"0161 123 4567","description":"brief description","whyGood":"why good value: price vs area avg, features, location","score":8}],"topHomeIndex":0,"areaInsight":"area commentary"'
-      +(wantInvest?',"flats":[{"address":"full address","price":145000,"beds":2,"type":"flat","tenure":"Leasehold","leaseYears":100,"serviceCharge":"\u00a3100/month","estRentalPcm":850,"grossYield":7.0,"chainFree":false,"addedDate":"Added 1 week ago","features":["modern","near tram"],"url":"https://www.rightmove.co.uk/properties/87654321","portal":"Rightmove","agent":"Agent","agentPhone":"","description":"description","whyGood":"investment case with yield"}],"topFlatIndex":0':',"flats":[]')
-      +'}\n\nInclude ALL properties from your search. Use actual data. Empty string for unknown fields.';
-
-    const jsonR=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:usedModel||'claude-sonnet-4-5',max_tokens:6000,
-        messages:[
-          {role:'user',content:searchPrompt},
-          {role:'assistant',content:findings},
-          {role:'user',content:jsonPrompt}
-        ]
-      })
-    });
-    const jsonData=await jsonR.json();
-    if(jsonData.error)throw new Error('Format step: '+jsonData.error.message);
-
-    const cost2=((jsonData.usage?.input_tokens||0)*3+(jsonData.usage?.output_tokens||0)*15)/1000000;
-    addSpent(cost2);
-
-    let jsonText='';
-    for(const block of jsonData.content||[]){if(block.type==='text')jsonText+=block.text;}
-
-    // Parse JSON - multiple fallback strategies
-    let result=null;
-    const jm=jsonText.match(/\{[\s\S]*\}/);
-    if(jm){
-      try{result=JSON.parse(jm[0]);}catch(e){
-        try{result=JSON.parse(jm[0].replace(/,\s*}/g,'}').replace(/,\s*]/g,']'));}catch(e2){}
-      }
-    }
-
-    await new Promise(r=>setTimeout(r,300));
-    const totalCost=(cost1+cost2).toFixed(4);
-
-    // If JSON failed, show raw findings - still useful
-    if(!result){
-      let h='';
-      if(area)h+=renderStats(area);
-      h+='<div class="notice warn">\u26a0\ufe0f Claude found properties but could not format as cards ($'+totalCost+'). Raw results below \u2014 copy any Rightmove/Zoopla URL to open the listing:</div>';
-      h+='<div style="background:#fff;border:1px solid #dde;border-radius:8px;padding:16px;white-space:pre-wrap;font-size:12px;color:#3a3a5a;line-height:1.8;max-height:500px;overflow-y:auto">'+esc(findings)+'</div>';
-      setResult('claude',h);
-      return;
-    }
-
-    const homes=result.homes||[];
-    const flats=result.flats||[];
-
-    if(!homes.length&&!flats.length){
-      let h='';
-      if(area)h+=renderStats(area);
-      h+='<div class="notice warn">\u26a0\ufe0f No properties found for '+esc(pc)+' under \u00a3'+fmt(budget)+' with '+minBeds+'+ beds. Try higher budget or lower bedrooms.</div>';
-      h+='<div style="background:#fff;border:1px solid #dde;border-radius:8px;padding:12px;font-size:12px;color:#888;max-height:300px;overflow-y:auto">'+esc(findings.slice(0,800))+'</div>';
-      setResult('claude',h);
-      return;
-    }
-
-    if(homes[result.topHomeIndex])homes[result.topHomeIndex]._top=true;
-    if(flats&&flats[result.topFlatIndex])flats[result.topFlatIndex]._top=true;
-
-    let h='';
-    if(area)h+=renderStats(area);
-    if(result.areaInsight)h+='<div class="insight-box">\ud83d\udccd <b>'+esc(result.location||'')+'</b> \u2014 '+esc(result.areaInsight)+'</div>';
-    h+='<div class="notice ok">\u2705 '+homes.length+' homes found via Claude web search \u00b7 $'+totalCost+'</div>';
-
-    if(homes.length){
-      h+='<div class="section-head">\ud83c\udfe0 Homes to Buy ('+homes.length+')</div>';
-      h+='<div class="cards">'+homes.map(p=>renderCard(p,!!p._top,area?.prices?.avg,false)).join('')+'</div>';
-    }
-    if(flats&&flats.length){
-      h+='<div class="section-head" style="color:#5038a0">\ud83d\udcb0 Investment Flats ('+flats.length+')</div>';
-      h+='<div class="cards">'+flats.map(p=>renderCard(p,!!p._top,null,true)).join('')+'</div>';
-    }
-    setResult('claude',h);
-
-  }catch(err){
-    setError('claude',err.message+'<br><br>Fixes: check key valid at console.anthropic.com, check credits, use claude-sonnet-4-5 or claude-sonnet-4-20250514');
-    console.error('Claude:',err);
-  }
+// ── UI STATE ──────────────────────────────────────────────────────────────────
+function showScreen(name){
+  ['home','loading','results'].forEach(s=>$('screen-'+s)?.classList.toggle('active',s===name));
+}
+function setLoadMsg(msg){const el=$('load-msg');if(el)el.textContent=msg;}
+function showError(msg){
+  $('results-area').innerHTML=`<div class="error-box">
+    <div class="error-icon">⚠️</div>
+    <div class="error-title">Search failed</div>
+    <div class="error-msg">${esc(msg)}</div>
+  </div>`;
+  showScreen('results');
 }
 
-// ── MODE 3: HOMEDATA ──────────────────────────────────────────────────────────
-async function runHomedata(){
-  const key=getKey('hd');
-  if(!key){setError('hd','Save your Homedata API key first. Get one at homedata.co.uk');return;}
-  const{pc,budget,minBeds}=getParams();
-  if(!pc){alert('Enter a postcode');return;}
-  switchTab('hd');
-  setLoading('hd','Fetching from Homedata API…');
+// ── OPEN PORTAL LINKS (free, instant) ────────────────────────────────────────
+function openPortals(){
+  const pc=$('inp-postcode').value.trim()||'M21';
+  const budget=parseInt($('inp-budget').value)||300000;
+  const beds=parseInt($('inp-beds').value)||3;
+  const loc=pc.split(' ')[0];
+  const locEnc=encodeURIComponent(loc);
+  const pcs=loc.toLowerCase();
 
-  const logs=[];
-  const L=(m,t)=>{logs.push({m,t});console.log('[HD]',m);};
+  const urls=[
+    'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+locEnc+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget+'&minBedrooms='+beds,
+    'https://www.zoopla.co.uk/for-sale/property/'+pcs+'/?q='+pcs+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+beds,
+    'https://www.onthemarket.com/for-sale/property/'+pcs+'/?max-price='+budget+'&min-beds='+beds
+  ];
 
-  async function hdFetch(url,auth){
-    const h={'Accept':'application/json'};
-    if(auth)h['Authorization']='Api-Key '+key;
-    try{const r=await fetch(url,{mode:'cors',headers:h,signal:AbortSignal.timeout(12000)});if(r.status===401||r.status===403||r.ok)return r;}catch(e){L('Direct blocked, trying proxy…');}
-    try{return await fetch('https://corsproxy.io/?'+encodeURIComponent(url),{mode:'cors',headers:h,signal:AbortSignal.timeout(15000)});}
-    catch(e){return null;}
-  }
-
-  try{
-    L('Geocoding '+pc+'…');
-    const area=await loadAreaData(pc);
-    const{geo}=area;
-    L('✓ '+geo.admin_ward+', '+geo.admin_district,'ok');
-
-    let boundary=null;
-    for(const term of[geo.admin_ward,geo.admin_district].filter(Boolean)){
-      if(boundary)break;
-      L('Boundary: "'+term+'"');
-      const br=await hdFetch('https://api.homedata.co.uk/api/boundaries/autocomplete/?q='+encodeURIComponent(term),true);
-      if(!br||!br.ok)continue;
-      const bd=await br.json();
-      const res=bd.results||[];
-      if(res.length){boundary=res[0];L('✓ '+boundary.name+' (id:'+boundary.id+')','ok');}
-    }
-
-    if(!boundary){
-      let h=renderStats(area)+renderLog(logs);
-      h+=`<div class="notice err">❌ No boundary found for "${geo.admin_ward}" or "${geo.admin_district}".<br>This may be a CORS block. Use the Claude tab for reliable results.</div>`;
-      setResult('hd',h);return;
-    }
-
-    const params=new URLSearchParams({boundary_id:boundary.id,transaction_type:'Sale',max_price:budget,sort:'-added_date',page_size:50});
-    L('Fetching listings…');
-    const lr=await hdFetch('https://api.homedata.co.uk/api/live-listings/search/?'+params,true);
-
-    if(!lr){
-      let h=renderStats(area)+renderLog(logs);
-      h+=`<div class="notice err">❌ Homedata unreachable — CORS blocked.<br>The Homedata API requires server-side calls. Use the <b>Claude tab</b> instead.</div>`;
-      setResult('hd',h);return;
-    }
-    if(lr.status===401){setResult('hd',renderStats(area)+renderLog(logs)+`<div class="notice err">❌ 401 — Key format wrong. Must be: QRryNTjX.your-secret</div>`);return;}
-    if(lr.status===403){setResult('hd',renderStats(area)+renderLog(logs)+`<div class="notice err">❌ 403 — Plan may not include live-listings. Check homedata.co.uk/account</div>`);return;}
-    if(!lr.ok){setResult('hd',renderStats(area)+renderLog(logs)+`<div class="notice err">❌ HTTP ${lr.status}</div>`);return;}
-
-    const ld=await lr.json();
-    const rem=lr.headers?.get?.('X-RateLimit-Remaining')||'?';
-    L('✓ '+ld.count+' total · '+rem+' calls left','ok');
-
-    const sample2=(ld.results||[])[0];
-    if(sample2)L('API sample: beds='+sample2.bedrooms+' price='+sample2.latest_price+' addr='+(sample2.display_address||'').slice(0,25));
-    const all=(ld.results||[]).filter(p=>{
-      const price=p.latest_price||0;
-      const beds=p.bedrooms||0;
-      if(price>0&&price>budget)return false;
-      if(beds>0&&beds<minBeds)return false;
-      return true;
-    });
-    L(all.length+' match filters','ok');
-
-    if(!all.length){
-      const rawSample=(ld.results||[])[0];
-      const sampleInfo=rawSample?(' API field check: bedrooms='+rawSample.bedrooms+' latest_price='+rawSample.latest_price):'';
-      setResult('hd',renderStats(area)+renderLog(logs)+'<div class="notice warn">⚠️ '+ld.count+' listings in '+boundary.name+' but all filtered out (max £'+fmt(budget)+', '+minBeds+'+ beds).'+sampleInfo+'<br>The Homedata API may not return bed/price data for all listings. Check log above.</div>');
-      return;
-    }
-
-    const homes=all.map(p=>{
-      const addr=p.display_address||pc;
-      const status=p.latest_status||'For Sale';
-      return{address:addr,price:p.latest_price||0,beds:p.bedrooms||0,baths:p.bathrooms||0,type:(p.listing_property_type||'property').toLowerCase(),tenure:'',chainFree:/no chain/i.test(status),reduced:/reduc/i.test(status),addedDate:(p.added_date||'').slice(0,10)||'Recent',features:[status,p.source||''].filter(Boolean),url:'https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+encodeURIComponent(pc.split(' ')[0])+'&useLocationIdentifier=false&sortType=6&includeSSTC=false&maxPrice='+budget,portal:'Rightmove',agent:'Homedata · '+(p.source||'Portal'),description:'',whyGood:'',score:0};
-    });
-
-    let h=renderStats(area)+renderLog(logs);
-    h+=`<div class="notice ok">✅ ${homes.length} listings from Homedata · ${boundary.name}</div>`;
-    h+=`<div class="section-head">🏠 Live Listings (${homes.length})</div>`;
-    h+=`<div class="cards">${homes.map((p,i)=>renderCard(p,i===0,area.prices?.avg,false)).join('')}</div>`;
-    setResult('hd',h);
-  }catch(err){setError('hd',err.message);}
+  let h=`<div class="sl-opened-title">Opened 3 portal searches for <b>${esc(loc)}</b> · max £${fmt(budget)} · ${beds}+ beds</div>`;
+  urls.forEach((url,i)=>{
+    const names=['Rightmove','Zoopla','OnTheMarket'];
+    h+=`<a class="sl-link-big" href="${esc(url)}" target="_blank">${names[i]} ↗</a>`;
+  });
+  $('results-area').innerHTML=h;
+  showScreen('results');
+  urls.forEach(url=>window.open(url,'_blank'));
 }
 
-// ── MODE 4: APIFY ─────────────────────────────────────────────────────────────
-async function runApify(){
-  const key=getKey('apify');
-  if(!key){setError('apify','Save your Apify token first. Get one at apify.com/account/integrations');return;}
-  const{pc,budget,minBeds}=getParams();
-  if(!pc){alert('Enter a postcode');return;}
-  switchTab('apify');
-  setLoading('apify','Starting Apify Rightmove scraper… (1–3 minutes)');
-
-  try{
-    const area=await loadAreaData(pc).catch(()=>null);
-    const loc=area?.geo?.admin_district||pc;
-
-    const runRes=await fetch('https://api.apify.com/v2/acts/automation-lab~rightmove-scraper/runs?token='+key,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({searchLocation:loc,channel:'BUY',maxResults:25,radius:1.0,sortType:'6',includeSSTC:false,maxPrice:budget,minBedrooms:minBeds})});
-    const runData=await runRes.json();
-    if(runData.error)throw new Error('Apify: '+runData.error.message);
-    if(!runData.data?.id)throw new Error('Apify run failed to start');
-
-    const runId=runData.data.id,dsId=runData.data.defaultDatasetId;
-    let status='RUNNING',attempts=0;
-    while(status==='RUNNING'&&attempts<36){
-      await new Promise(r=>setTimeout(r,5000));
-      const sr=await fetch('https://api.apify.com/v2/actor-runs/'+runId+'?token='+key);
-      const sd=await sr.json();
-      status=sd.data?.status||'FAILED';
-      attempts++;
-      if(attempts%3===0)setLoading('apify','Apify scraping… '+attempts*5+'s elapsed ('+status+')');
-    }
-    if(status!=='SUCCEEDED')throw new Error('Apify ended: '+status+' after '+(attempts*5)+'s');
-
-    const ir=await fetch('https://api.apify.com/v2/datasets/'+dsId+'/items?token='+key+'&limit=25');
-    const items=await ir.json();
-    if(!Array.isArray(items)||!items.length)throw new Error('Apify returned no results for '+loc);
-
-    addSpent((items.length*3.45/1000)+0.005);
-
-    const homes=items.map(p=>{
-      const id=p.id||p.propertyId||'';
-      const ft=((p.keyFeatures||[]).join(' ')+(p.summary||'')).toLowerCase();
-      const price=typeof p.price==='object'?(p.price?.amount||0):(parseInt(String(p.price||0).replace(/\D/g,''))||0);
-      return{address:p.displayAddress||'Unknown',price,beds:p.bedrooms||0,baths:p.bathrooms||0,type:(p.propertySubType||p.propertyType||'property').toLowerCase(),tenure:p.tenure?.tenureType||(/freehold/i.test(ft)?'Freehold':''),chainFree:p.isChainFree===true||/no chain/i.test(ft),reduced:/reduc/i.test(p.addedOrReduced||''),addedDate:p.addedOrReduced||'Recent',features:(p.keyFeatures||[]).slice(0,6),url:id?'https://www.rightmove.co.uk/properties/'+id+'#/':'https://www.rightmove.co.uk',portal:'Rightmove',agent:p.customer?.brandTradingName||'Agent',agentPhone:p.customer?.contactTelephone||'',description:(p.summary||'').slice(0,200),whyGood:'',score:0};
-    }).filter(p=>p.price>0&&p.price<=budget);
-
-    if(!homes.length)throw new Error('No matching results under £'+fmt(budget));
-
-    let h='';
-    if(area)h+=renderStats(area);
-    h+=`<div class="notice ok">✅ ${homes.length} live listings from Rightmove via Apify</div>`;
-    h+=`<div class="section-head">🏠 Rightmove Live Listings (${homes.length})</div>`;
-    h+=`<div class="cards">${homes.map((p,i)=>renderCard(p,i===0,area?.prices?.avg,false)).join('')}</div>`;
-    setResult('apify',h);
-  }catch(err){setError('apify',err.message);}
-}
-
-function renderLog(logs){
-  if(!logs.length)return'';
-  return`<div class="log-panel">${logs.map(l=>`<span class="${l.t||''}">${esc(l.m)}</span>`).join('<br>')}</div>`;
-}
-
-loadKeys();
+loadKey();
 
 </script>
 </body>
