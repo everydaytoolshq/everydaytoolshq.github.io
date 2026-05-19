@@ -314,18 +314,59 @@ function getSelections(){
 }
 
 function buildRmUrl(outcode,budget,minBeds,radius,typeChips,mustChips){
+  // Rightmove outcode -> locationIdentifier lookup (OUTCODE^NNNN)
+  const RM_IDS={'M1':1000,'M2':1001,'M3':1002,'M4':1003,'M5':1004,'M6':1005,'M7':1006,'M8':1007,'M9':1008,'M11':1009,'M12':1010,'M13':1011,'M14':1012,'M15':1013,'M16':1014,'M17':1015,'M18':1016,'M19':1017,'M20':1018,'M21':1019,'M22':1020,'M23':1021,'M24':1022,'M25':1023,'M26':1024,'M27':1025,'M28':1026,'M29':1027,'M30':1028,'M31':1029,'M32':1030,'M33':1031,'M34':1032,'M35':1033,'M38':1034,'M40':1035,'M41':1595,'M43':1037,'M44':1038,'M45':1039,'M46':1040,'SK1':1100,'SK2':1101,'SK3':1102,'SK4':1103,'SK5':1104,'SK6':1105,'SK7':1106,'SK8':1107,'SK9':1108,'WA1':1200,'WA2':1201,'WA3':1202,'WA4':1203,'WA14':1204,'WA15':1205,'WA16':1206,'BL1':1300,'BL2':1301,'BL3':1302,'BL4':1303,'BL5':1304,'BL6':1305,'OL1':1400,'OL2':1401,'OL3':1402,'OL4':1403,'OL5':1404,'OL6':1405,'OL7':1406,'OL8':1407,'OL9':1408,'OL10':1409,'OL11':1410,'OL12':1411,'OL15':1412,'OL16':1413};
   const typeMap={detached:'detached','semi-detached':'semi-detached',bungalow:'bungalow',terraced:'terraced',flat:'flat'};
   const rmTypes=(typeChips.length?typeChips.map(t=>typeMap[t]||t):['detached','semi-detached','bungalow']).join(',');
   const rmMusts=mustChips.filter(m=>m==='garden'||m==='parking').join(',');
   const wantFreehold=mustChips.includes('freehold');
-  let url='https://www.rightmove.co.uk/property-for-sale/find.html'
-    +'?searchType=SALE&searchLocation='+encodeURIComponent(outcode)
-    +'&useLocationIdentifier=false&radius='+radius
-    +'&maxPrice='+budget+'&minBedrooms='+minBeds
-    +'&propertyTypes='+encodeURIComponent(rmTypes)
-    +'&_includeSSTC=on&sortType=6';
-  if(rmMusts)url+='&mustHave='+encodeURIComponent(rmMusts);
+  const locId=RM_IDS[outcode];
+  let url='https://www.rightmove.co.uk/property-for-sale/find.html?searchLocation='+encodeURIComponent(outcode);
+  if(locId){
+    url+='&useLocationIdentifier=true&locationIdentifier='+encodeURIComponent('OUTCODE^'+locId);
+    url+='&displayLocationIdentifier='+outcode;
+  } else {
+    url+='&useLocationIdentifier=false';
+  }
+  url+='&buy=For+sale&channel=BUY&transactionType=BUY';
+  url+='&radius='+radius+'&maxPrice='+budget+'&minBedrooms='+minBeds;
+  url+='&propertyTypes='+encodeURIComponent(rmTypes);
+  url+='&_includeSSTC=on&sortType=2&index=0';
   if(wantFreehold)url+='&tenureTypes=FREEHOLD';
+  if(rmMusts)url+='&mustHave='+encodeURIComponent(rmMusts);
+  return url;
+}
+
+function buildZpUrl(outcode,budget,minBeds,radius,typeChips,mustChips){
+  // Zoopla: path /for-sale/houses/OUTCODE/ with specific param names
+  const typeSubMap={detached:'detached','semi-detached':'semi_detached',bungalow:'bungalow',terraced:'terraced',flat:'flat'};
+  const zpTypes=(typeChips.length?typeChips.map(t=>typeSubMap[t]||t):['detached','semi_detached','bungalow']);
+  const wantGarden=mustChips.includes('garden');
+  const wantFreehold=mustChips.includes('freehold');
+  const slug=outcode.toLowerCase();
+  // Path: /for-sale/houses/ for houses, /for-sale/flats/ for flats
+  const hasFlat=typeChips.includes('flat')&&typeChips.length===1;
+  const pathType=hasFlat?'flats':'houses';
+  let url='https://www.zoopla.co.uk/for-sale/'+pathType+'/'+slug+'/';
+  url+='?q='+slug+'&results_sort=newest_listings&search_source=for-sale';
+  url+='&radius='+radius+'&price_max='+budget+'&beds_min='+minBeds;
+  zpTypes.forEach(t=>{url+='&property_sub_type='+encodeURIComponent(t);});
+  if(wantGarden)url+='&feature=has_garden';
+  if(wantFreehold)url+='&tenure=freehold';
+  return url;
+}
+
+function buildOtmUrl(outcode,budget,minBeds,radius,typeChips,mustChips){
+  // OTM: /for-sale/property/SLUG/ with prop-types and keywords
+  const otmTypeMap={detached:'detached','semi-detached':'semi-detached',bungalow:'bungalows',terraced:'terraced',flat:'flats'};
+  const otmTypes=(typeChips.length?typeChips.map(t=>otmTypeMap[t]||t):['detached','semi-detached','bungalows']);
+  const keywords=mustChips.filter(m=>['freehold','garden','parking'].includes(m));
+  const slug=outcode.toLowerCase();
+  let url='https://www.onthemarket.com/for-sale/property/'+slug+'/';
+  url+='?min-beds='+minBeds+'&max-price='+budget+'&radius='+radius;
+  otmTypes.forEach(t=>{url+='&prop-types='+encodeURIComponent(t);});
+  if(keywords.length)url+='&keywords='+encodeURIComponent(keywords.join(','))+'&sort-field=keywords';
+  else url+='&sort-field=newest_listings';
   return url;
 }
 
@@ -353,9 +394,8 @@ function openPortals(){
   const outcode=pc.split(' ')[0].toUpperCase();
   const {typeChips,mustChips}=getSelections();
   const rmUrl=buildRmUrl(outcode,budget,minBeds,radius,typeChips,mustChips);
-  const zpSlug=outcode.toLowerCase();
-  const zpUrl='https://www.zoopla.co.uk/for-sale/property/'+zpSlug+'/?q='+zpSlug+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+minBeds+'&radius='+radius;
-  const otmUrl='https://www.onthemarket.com/for-sale/property/'+zpSlug+'/?max-price='+budget+'&min-beds='+minBeds+'&radius='+radius;
+  const zpUrl=buildZpUrl(outcode,budget,minBeds,radius,typeChips,mustChips);
+  const otmUrl=buildOtmUrl(outcode,budget,minBeds,radius,typeChips,mustChips);
   const urls=[rmUrl,zpUrl,otmUrl];
   const names=['Rightmove','Zoopla','OnTheMarket'];
   let h='<div class="sl-opened-title">Live searches: <b>'+esc(outcode)+'</b> \u00b7 max \u00a3'+fmt(budget)+' \u00b7 '+minBeds+'+ beds \u00b7 '+radius+'mi</div>';
@@ -387,7 +427,7 @@ async function runClaudeSearch(pc,budget,minBeds,isInvest,radius){
     +(wantFreehold?'Prefer freehold.\n':'')
     +'\nDo maximum 3 web searches total. Search broadly but efficiently. If budget is below market rate, show what IS available (even at higher prices) and explain honestly.\n'
     +'\nFor each property: address, price, beds, baths, type, tenure, chain-free status, key features, direct URL, agent name, honest verdict (worth viewing? price vs avg? red flags?), score 1-10.\n'
-    +'\nRespond with ONLY a JSON object. Start with { end with }. No text outside the JSON.\n\n'
+    +'\nIMPORTANT: Only include properties currently for sale. Provide the exact Rightmove or Zoopla URL for each listing (rightmove.co.uk/properties/XXXXXXXX format). Do not include sold or under offer properties.\n'+'\nRespond with ONLY a JSON object starting with { and ending with }. No text before or after.\n\n'
     +'{"area":"area searched","avgAreaPrice":0,"marketReality":"honest 2-3 sentence market summary for this budget","properties":[{"address":"full address","price":295000,"beds":3,"baths":1,"type":"semi-detached","tenure":"Freehold","chainFree":true,"addedDate":"2 weeks ago","features":["garden","parking"],"url":"https://www.rightmove.co.uk/properties/12345678","agent":"Agent Name","verdict":"Worth viewing: 5% below area average, freehold, garden. Watch: busy road front aspect.","score":7,"reduced":false,"overBudget":false}],"topPickIndex":0}';
 
   try{
@@ -435,9 +475,8 @@ function buildSearchLinks(geo,pc,budget,minBeds,radius){
   const outcode=pc.split(' ')[0].toUpperCase();
   const {typeChips,mustChips}=getSelections();
   const rmUrl=buildRmUrl(outcode,budget,minBeds,radius,typeChips,mustChips);
-  const zpSlug=outcode.toLowerCase();
-  const zpUrl='https://www.zoopla.co.uk/for-sale/property/'+zpSlug+'/?q='+zpSlug+'&results_sort=newest_listings&price_max='+budget+'&beds_min='+minBeds+'&radius='+radius;
-  const otmUrl='https://www.onthemarket.com/for-sale/property/'+zpSlug+'/?max-price='+budget+'&min-beds='+minBeds+'&radius='+radius;
+  const zpUrl=buildZpUrl(outcode,budget,minBeds,radius,typeChips,mustChips);
+  const otmUrl=buildOtmUrl(outcode,budget,minBeds,radius,typeChips,mustChips);
   return '<div class="search-links-box"><div class="sl-title">Browse live listings directly</div>'
     +'<a class="sl-link" href="'+esc(rmUrl)+'" target="_blank">Rightmove \u2197</a>'
     +'<a class="sl-link" href="'+esc(zpUrl)+'" target="_blank">Zoopla \u2197</a>'
