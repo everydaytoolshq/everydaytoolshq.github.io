@@ -362,7 +362,7 @@ function openPortals(){
   urls.forEach((url,i)=>{h+='<a class="sl-link-big" href="'+esc(url)+'" target="_blank">'+names[i]+' \u2197</a>';});
   $('results-area').innerHTML=h;
   showScreen('results');
-  urls.forEach(url=>window.open(url,'_blank'));
+  // Don't auto-open (popup blocker) - user clicks the links below
 }
 
 async function runClaudeSearch(pc,budget,minBeds,isInvest,radius){
@@ -385,7 +385,7 @@ async function runClaudeSearch(pc,budget,minBeds,isInvest,radius){
     +'Min bedrooms: '+minBeds+'+.\n'
     +(mustStr?'Preferences: '+mustStr+'.\n':'')
     +(wantFreehold?'Prefer freehold.\n':'')
-    +'\nSearch broadly. If budget is below market rate for this area, show what IS available (even if over budget) and explain the market reality honestly.\n'
+    +'\nDo maximum 3 web searches total. Search broadly but efficiently. If budget is below market rate, show what IS available (even at higher prices) and explain honestly.\n'
     +'\nFor each property: address, price, beds, baths, type, tenure, chain-free status, key features, direct URL, agent name, honest verdict (worth viewing? price vs avg? red flags?), score 1-10.\n'
     +'\nRespond with ONLY a JSON object. Start with { end with }. No text outside the JSON.\n\n'
     +'{"area":"area searched","avgAreaPrice":0,"marketReality":"honest 2-3 sentence market summary for this budget","properties":[{"address":"full address","price":295000,"beds":3,"baths":1,"type":"semi-detached","tenure":"Freehold","chainFree":true,"addedDate":"2 weeks ago","features":["garden","parking"],"url":"https://www.rightmove.co.uk/properties/12345678","agent":"Agent Name","verdict":"Worth viewing: 5% below area average, freehold, garden. Watch: busy road front aspect.","score":7,"reduced":false,"overBudget":false}],"topPickIndex":0}';
@@ -394,7 +394,7 @@ async function runClaudeSearch(pc,budget,minBeds,isInvest,radius){
     const resp=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':CLAUDE_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-5-20250929',max_tokens:4000,tools:[{type:'web_search_20250305',name:'web_search'}],messages:[{role:'user',content:prompt}]})
+      body:JSON.stringify({model:'claude-sonnet-4-5-20250929',max_tokens:2000,tools:[{type:'web_search_20250305',name:'web_search',max_uses:3}],messages:[{role:'user',content:prompt}]})
     });
     const data=await resp.json();
     if(data.error){
