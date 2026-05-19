@@ -138,6 +138,11 @@ a{text-decoration:none;color:inherit}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px}
 .area-loading{display:flex;align-items:center;font-size:13px;color:#888;padding:14px 2px;margin-bottom:14px}
 .area-err{background:#fef0f2;border:1.5px solid #f0b0b8;border-radius:8px;padding:10px 14px;font-size:12px;color:#a01828;margin-bottom:14px}
+
+.notice-no-real{background:#fff;border:1.5px solid #e5e5e5;border-radius:10px;padding:20px;margin-bottom:14px;text-align:center}
+.nr-icon{font-size:32px;margin-bottom:10px}
+.nr-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#111;margin-bottom:8px}
+.nr-body{font-size:13px;color:#666;line-height:1.7;max-width:480px;margin:0 auto}
 </style>
 </head>
 <body>
@@ -227,16 +232,54 @@ function addCost(n){SESSION_COST+=n;const el=$('cost-display');if(el)el.textCont
 
 // ── FREE AREA APIs ─────────────────────────────────────────────────────────────
 async function getGeo(pc){
-  const code=pc.replace(/\s/g,'').toUpperCase();
-  let r=await fetch('https://api.postcodes.io/postcodes/'+code);
-  let d=await r.json();
-  if(d.status===200)return d.result;
-  const r2=await fetch('https://api.postcodes.io/postcodes/'+code+'/autocomplete');
-  const d2=await r2.json();
-  if(d2.result&&d2.result.length){
-    const r3=await fetch('https://api.postcodes.io/postcodes/'+d2.result[0]);
-    return (await r3.json()).result;
-  }
+  const code=pc.trim().replace(/\s+/g,'').toUpperCase();
+  const outcode=pc.trim().split(/\s+/)[0].toUpperCase();
+
+  // Try 1: full postcode
+  try{
+    const r=await fetch('https://api.postcodes.io/postcodes/'+code);
+    const d=await r.json();
+    if(d.status===200)return d.result;
+  }catch(e){}
+
+  // Try 2: autocomplete on full code
+  try{
+    const r2=await fetch('https://api.postcodes.io/postcodes/'+code+'/autocomplete');
+    const d2=await r2.json();
+    if(d2.result&&d2.result.length){
+      const r3=await fetch('https://api.postcodes.io/postcodes/'+d2.result[0]);
+      const d3=await r3.json();
+      if(d3.status===200)return d3.result;
+    }
+  }catch(e){}
+
+  // Try 3: outcode lookup (works for 'M41', 'M41 9WQ' where full postcode fails)
+  try{
+    const r4=await fetch('https://api.postcodes.io/outcodes/'+outcode);
+    const d4=await r4.json();
+    if(d4.status===200){
+      // outcodes endpoint returns lat/lng + admin info — map to same shape as postcodes
+      const res=d4.result;
+      return{
+        latitude:res.latitude,longitude:res.longitude,
+        admin_district:res.admin_district&&res.admin_district[0]||outcode,
+        admin_ward:res.admin_ward&&res.admin_ward[0]||outcode,
+        postcode:outcode
+      };
+    }
+  }catch(e){}
+
+  // Try 4: autocomplete on outcode to get a sample full postcode
+  try{
+    const r5=await fetch('https://api.postcodes.io/postcodes/'+outcode+'/autocomplete');
+    const d5=await r5.json();
+    if(d5.result&&d5.result.length){
+      const r6=await fetch('https://api.postcodes.io/postcodes/'+d5.result[0]);
+      const d6=await r6.json();
+      if(d6.status===200)return d6.result;
+    }
+  }catch(e){}
+
   return null;
 }
 
@@ -289,7 +332,7 @@ async function getFlood(lat,lng){
 
 async function loadAreaData(pc){
   const geo=await getGeo(pc);
-  if(!geo)throw new Error('Postcode not found: '+pc);
+  if(!geo)throw new Error('Could not locate postcode "'+pc+'". Try the outcode only (e.g. M41) or check spelling.');
   const[crime,prices,flood]=await Promise.allSettled([
     getCrime(geo.latitude,geo.longitude),
     getPrices(pc),
@@ -569,86 +612,71 @@ function buildAreaIntel(area){
 // ── RENDER RESULTS ────────────────────────────────────────────────────────────
 function showResults(result,area,pc,budget,minBeds,radius,isInvest,cost,typeChips,mustChips){
   const outcode=pc.split(' ')[0].toUpperCase();
-  const props=result.properties||[];
+  const allProps=result.properties||[];
   const areaAvg=(area&&area.prices&&area.prices.avg)||result.avgAreaPrice||0;
+  const realProps=allProps.filter(p=>!p.isExample&&p.price>0&&p.address&&p.address.length>5);
+  const exampleProps=allProps.filter(p=>p.isExample&&p.price>0&&p.address&&p.address.length>5);
   let h='';
-
   h+=buildAreaIntel(area);
-
   if(result.marketReality){
     h+='<div class="market-box">';
-    h+='<div class="mbl">📋 Market Analysis — '+esc(result.area||outcode)+' <span style="font-size:10px;color:#aaa;font-weight:400">Claude AI · $'+cost.toFixed(4)+'</span></div>';
+    h+='<div class="mbl">&#128203; Market Analysis &mdash; '+esc(result.area||outcode)+' <span style="font-size:10px;color:#aaa;font-weight:400">Claude AI &middot; $'+cost.toFixed(4)+'</span></div>';
     h+='<div class="mbt">'+esc(result.marketReality)+'</div>';
     if(result.buyingStrategy)h+='<div class="mbt" style="margin-top:8px;padding-top:8px;border-top:1px solid #e8d488"><strong>Strategy:</strong> '+esc(result.buyingStrategy)+'</div>';
     h+='</div>';
   }
-
-  if(props.length){
-    h+='<div class="section-head">'+(isInvest?'💰 Investment Options':'🏠 Property Examples')
-    const realCount=props.filter(p=>!p.isExample).length;
-    const exCount=props.filter(p=>p.isExample).length;
-    const headNote=realCount>0?(realCount+' real listing'+(realCount>1?'s':'')+' found via web search'+(exCount>0?' + '+exCount+' AI estimate'+(exCount>1?'s':''):'')):'AI estimates — use portal links for live listings';
-    h+='<div class="section-head">'+(isInvest?'💰 Investment Options':'🏠 Properties')
-      +' <span class="section-note">'+headNote+'</span></div>';
-    const sorted=[...props].sort((a,b)=>(b.score||0)-(a.score||0));
-    sorted.forEach((p,i)=>{
-      const isTop=i===0&&!p.overBudget;
-      const diff=areaAvg&&p.price?Math.round((p.price-areaAvg)/areaAvg*100):null;
-      const sc=p.score||5;
-      const scCol=sc>=8?'#1a7848':sc>=6?'#b07820':'#a01828';
-
-      h+='<div class="prop-card'+(isTop?' prop-top':'')+(p.overBudget?' prop-over':'')+(isInvest?' prop-invest':'')+'">';
-      if(isTop&&!isInvest)h+='<div class="card-strip strip-top">⭐ Best Match</div>';
-      else if(p.overBudget)h+='<div class="card-strip strip-over">⬆ Stretch Option — over budget</div>';
-      else if(isInvest)h+='<div class="card-strip strip-invest">💰 Investment</div>';
-      else h+='<div class="card-strip strip-sale">🏠 For Sale</div>';
-    if(p.isExample){h+='<div class="example-note">📌 AI estimate — not a real listing</div>';}
-    else{h+='<div class="example-note" style="background:#edf8f2;border-bottom:1px solid #b0d8bc;color:#1a7848">✅ Real listing found via web search</div>';}
-
-      h+='<div class="prop-body">';
-      h+='<div class="prop-head"><div class="prop-addr">'+esc(p.address||'Address unavailable')+'</div><div class="prop-score" style="background:'+scCol+'">'+sc+'/10</div></div>';
-      h+='<div class="prop-price-row"><span class="prop-price">£'+fmt(p.price||0)+'</span><span class="prop-specs">';
-      if(p.beds)h+='<span>🛏 '+p.beds+'bd</span>';
-      if(p.type)h+='<span>'+esc(p.type)+'</span>';
-      if(p.tenure)h+='<span>'+esc(p.tenure)+'</span>';
-      if(p.chainFree)h+='<span class="badge-good">No chain</span>';
-      if(p.reduced)h+='<span class="badge-reduced">Reduced</span>';
-      if(diff!==null&&diff<=-5)h+='<span class="badge-good">'+Math.abs(diff)+'% below avg</span>';
-      if(diff!==null&&diff>=10)h+='<span class="badge-warn">'+diff+'% above avg</span>';
-      h+='</span></div>';
-
-      if(p.verdict)h+='<div class="prop-verdict">'+esc(p.verdict)+'</div>';
-      if(p.features&&p.features.length){
-        h+='<div class="prop-features">';
-        p.features.forEach(f=>{
-          const g=/garden|freehold|parking|drive|no chain|refurb|new|modern/i.test(f);
-          const b=/leasehold|busy road|flood|damp|work needed/i.test(f);
-          h+='<span class="feat'+(g?' feat-ok':b?' feat-warn':'')+'">'+esc(f)+'</span>';
-        });
-        h+='</div>';
-      }
-
-      h+='<div class="prop-actions">';
-      const hasRealUrl=p.url&&p.url.startsWith('http')&&/\/properties\/\d{6,}/.test(p.url);
-      if(hasRealUrl){
-        h+='<a href="'+esc(p.url)+'" target="_blank" class="btn-view">View on Rightmove ↗</a>';
-      } else if(!p.isExample&&p.address){
-        const addrEnc=encodeURIComponent(p.address);
-        h+='<a href="https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+addrEnc+'&useLocationIdentifier=false&sortType=2&maxPrice='+(p.price?Math.round(p.price*1.05):budget)+'" target="_blank" class="btn-view">Search Address ↗</a>';
-      } else {
-        const simUrl=buildRmUrl(outcode,p.price?Math.round(p.price*1.1):budget,p.beds||minBeds,1,p.type?[p.type]:[],[]);
-        h+='<a href="'+esc(simUrl)+'" target="_blank" class="btn-view">Find Similar ↗</a>';
-      }
-      const zpSearch=buildZpUrl(outcode,p.price?Math.round(p.price*1.1):budget,p.beds||minBeds,1,[],[]);
-      h+='<a href="'+esc(zpSearch)+'" target="_blank" class="btn-zoopla">Zoopla ↗</a>';
-      h+='</div></div></div>';
-    });
+  if(realProps.length>0){
+    const badge=realProps.length+' real listing'+(realProps.length>1?'s':'')+' found via web search'+(exampleProps.length?' + '+exampleProps.length+' AI estimate'+(exampleProps.length>1?'s':''):'');
+    h+='<div class="section-head">&#127968; Live Listings <span class="section-note">'+badge+'</span></div>';
+    [...realProps].sort((a,b)=>(b.score||0)-(a.score||0)).forEach((p,i)=>{h+=renderCard(p,i===0,areaAvg,budget,minBeds,outcode,isInvest,false);});
+    if(exampleProps.length){
+      h+='<div class="section-head" style="margin-top:16px">&#128204; Also in this area <span class="section-note">AI estimates &mdash; not real listings</span></div>';
+      exampleProps.slice(0,2).forEach(p=>{h+=renderCard(p,false,areaAvg,budget,minBeds,outcode,isInvest,true);});
+    }
+  } else {
+    h+='<div class="notice-no-real"><div class="nr-icon">&#128269;</div><div class="nr-title">No specific listings extracted from web search</div><div class="nr-body">Claude searched but results showed listing summaries rather than individual property pages. The market analysis above is accurate. Use the portal links below to browse live listings directly &mdash; all your filters are pre-applied.</div></div>';
   }
-
   h+=buildPortalLinks(outcode,budget,minBeds,radius,typeChips,mustChips);
   $('results-area').innerHTML=h;
   showScreen('results');
 }
+
+function renderCard(p,isTop,areaAvg,budget,minBeds,outcode,isInvest,isExample){
+  const diff=areaAvg&&p.price?Math.round((p.price-areaAvg)/areaAvg*100):null;
+  const sc=p.score||5;
+  const scCol=sc>=8?'#1a7848':sc>=6?'#b07820':'#a01828';
+  let h='<div class="prop-card'+(isTop&&!p.overBudget?' prop-top':'')+(p.overBudget?' prop-over':'')+(isInvest?' prop-invest':'')+'">';
+  if(isTop&&!p.overBudget)h+='<div class="card-strip strip-top">&#11088; Best Match</div>';
+  else if(p.overBudget)h+='<div class="card-strip strip-over">&#11014; Stretch &middot; over budget</div>';
+  else if(isInvest)h+='<div class="card-strip strip-invest">&#128176; Investment</div>';
+  else h+='<div class="card-strip strip-sale">&#127968; For Sale</div>';
+  if(isExample){h+='<div class="example-note">&#128204; AI estimate &mdash; not a real listing</div>';}
+  else{h+='<div class="example-note" style="background:#edf8f2;border-bottom:1px solid #b0d8bc;color:#1a7848">&#10003; Real listing found via web search</div>';}
+  h+='<div class="prop-body">';
+  h+='<div class="prop-head"><div class="prop-addr">'+esc(p.address)+'</div><div class="prop-score" style="background:'+scCol+'">'+sc+'/10</div></div>';
+  h+='<div class="prop-price-row"><span class="prop-price">&pound;'+fmt(p.price)+'</span><span class="prop-specs">';
+  if(p.beds)h+='<span>&#128718; '+p.beds+'bd</span>';
+  if(p.type)h+='<span>'+esc(p.type)+'</span>';
+  if(p.tenure)h+='<span>'+esc(p.tenure)+'</span>';
+  if(p.addedDate&&!/^(recently|example)$/i.test(p.addedDate))h+='<span>'+esc(p.addedDate)+'</span>';
+  if(p.chainFree)h+='<span class="badge-good">No chain</span>';
+  if(p.reduced)h+='<span class="badge-reduced">Reduced</span>';
+  if(diff!==null&&diff<=-5)h+='<span class="badge-good">'+Math.abs(diff)+'% below avg</span>';
+  if(diff!==null&&diff>=10)h+='<span class="badge-warn">'+diff+'% above avg</span>';
+  h+='</span></div>';
+  if(p.verdict)h+='<div class="prop-verdict">'+esc(p.verdict)+'</div>';
+  if(p.features&&p.features.length){h+='<div class="prop-features">';p.features.forEach(f=>{const g=/garden|freehold|parking|drive|no chain|refurb|new|modern/i.test(f),b=/leasehold|busy road|flood|damp|work needed/i.test(f);h+='<span class="feat'+(g?' feat-ok':b?' feat-warn':'')+'">'+esc(f)+'</span>';});h+='</div>';}
+  h+='<div class="prop-actions">';
+  const hasRealUrl=p.url&&p.url.startsWith('http')&&/\/properties\/\d{6,}/.test(p.url);
+  if(hasRealUrl){h+='<a href="'+esc(p.url)+'" target="_blank" class="btn-view">&#128279; View on Rightmove &#8599;</a>';}
+  else if(!isExample&&p.address){const addrEnc=encodeURIComponent(p.address);h+='<a href="https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+addrEnc+'&useLocationIdentifier=false&sortType=2&maxPrice='+(p.price?Math.round(p.price*1.05):budget)+'" target="_blank" class="btn-view">Search Address &#8599;</a>';}
+  else{const simUrl=buildRmUrl(outcode,p.price?Math.round(p.price*1.1):budget,p.beds||minBeds,1,p.type?[p.type]:[],[]);h+='<a href="'+esc(simUrl)+'" target="_blank" class="btn-view">Find Similar &#8599;</a>';}
+  const zpS=buildZpUrl(outcode,p.price?Math.round(p.price*1.1):budget,p.beds||minBeds,1,[],[]);
+  h+='<a href="'+esc(zpS)+'" target="_blank" class="btn-zoopla">Zoopla &#8599;</a>';
+  h+='</div></div></div>';
+  return h;
+}
+
 
 function buildPortalLinks(outcode,budget,minBeds,radius,typeChips,mustChips){
   const rmUrl=buildRmUrl(outcode,budget,minBeds,radius,typeChips,mustChips);
