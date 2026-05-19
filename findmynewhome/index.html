@@ -135,7 +135,10 @@ a{text-decoration:none;color:inherit}
 .error-icon{font-size:36px;margin-bottom:12px}
 .error-title{font-family:'Fraunces',serif;font-size:20px;color:#a01828;margin-bottom:10px}
 .error-msg{font-size:13px;color:#444;background:#fef0f2;border:1.5px solid #f0b0b8;border-radius:8px;padding:13px 16px;max-width:520px;margin:0 auto;line-height:1.7;text-align:left;white-space:pre-wrap}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px}</style>
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px}
+.area-loading{display:flex;align-items:center;font-size:13px;color:#888;padding:14px 2px;margin-bottom:14px}
+.area-err{background:#fef0f2;border:1.5px solid #f0b0b8;border-radius:8px;padding:10px 14px;font-size:12px;color:#a01828;margin-bottom:14px}
+</style>
 </head>
 <body>
 <div class="shell">
@@ -394,24 +397,34 @@ async function runSearch(pc,isInvest){
     areaData.geo?'Ward: '+areaData.geo.admin_ward+', '+areaData.geo.admin_district:''
   ].filter(Boolean).join('\n'):'No area data available.';
 
-  const prompt='You are a UK property expert helping someone buy a home.\n\n'
-    +'SEARCH CRITERIA:\n'
-    +'Area: '+outcode+' ('+radius+'mi radius)\n'
-    +'Property type: '+type+'\n'
-    +'Budget: £'+fmt(budget)+' (stretch to £'+fmt(stretch)+')\n'
-    +'Min bedrooms: '+minBeds+'+\n'
-    +(mustStr?'Must-haves: '+mustStr+'\n':'')
-    +(wantFreehold?'Tenure: Freehold preferred\n':'')
-    +'\n'+areaContext+'\n\n'
-    +'Using your knowledge of this UK area and property market, provide:\n'
-    +'1. Detailed market analysis — what does £'+fmt(budget)+' actually buy in '+outcode+'? Typical streets, property condition, competition.\n'
-    +'2. 5-8 REALISTIC property examples that genuinely exist or have sold in this area matching the criteria. Use real street names and realistic prices. Be honest — if budget is tight say so.\n'
-    +'3. Buying strategy advice — when to offer, what to check, negotiation tips.\n\n'
-    +'CRITICAL: Do NOT make up fake addresses. Use real street names in '+outcode+' that you know exist. Mark properties as "example" if you are not certain they are currently listed.\n\n'
-    +'Respond as JSON only (start with { end with }):\n'
-    +'{"area":"'+outcode+'","avgAreaPrice":0,"marketReality":"detailed 4-5 sentence honest market analysis","buyingStrategy":"2-3 sentences on strategy","properties":[{"address":"real street name, '+outcode+'","price":295000,"beds":3,"type":"semi-detached","tenure":"Freehold","chainFree":false,"addedDate":"example","features":["garden","parking"],"url":"","portal":"","agent":"","verdict":"honest buying analysis for this type of property","score":7,"reduced":false,"overBudget":false,"isExample":true}],"topPickIndex":0}';
+  const prompt='You are a UK property search assistant. Use web search to find REAL, CURRENT properties for sale.\n\n'
+    +'SEARCH: Use web search to find: "site:rightmove.co.uk '+outcode+' '+minBeds+' bed '+type+' for sale"\n'
+    +'Then search: "rightmove.co.uk '+outcode+' for sale '+type+' £'+fmt(budget)+'"\n'
+    +'Also try: "zoopla '+outcode+' '+type+' for sale '+minBeds+' bedrooms"\n\n'
+    +'CRITERIA:\n'
+    +'- Area: '+outcode+' ('+radius+'mi radius)\n'
+    +'- Type: '+type+'\n'
+    +'- Budget: £'+fmt(budget)+' (stretch £'+fmt(stretch)+')\n'
+    +'- Min bedrooms: '+minBeds+'+\n'
+    +(mustStr?'- Must-haves: '+mustStr+'\n':'')
+    +(wantFreehold?'- Freehold preferred\n':'')
+    +'\nEXTRACT from your search results:\n'
+    +'- Real property addresses (street name, town, postcode)\n'
+    +'- Actual asking prices from listings\n'
+    +'- Rightmove property IDs from URLs (rightmove.co.uk/properties/XXXXXXXX)\n'
+    +'- Number of beds, property type, key features listed\n'
+    +'- Estate agent name\n'
+    +'\nRULES:\n'
+    +'- Only include properties you actually found in search results\n'
+    +'- Set isExample:false for real found listings, isExample:true only if estimating\n'
+    +'- For real listings: include the exact rightmove.co.uk/properties/XXXXXXX URL\n'
+    +'- Do NOT invent addresses or prices\n'
+    +'\nRespond ONLY as JSON (start { end }):\n'
+    +'{"area":"'+outcode+'","avgAreaPrice":0,"marketReality":"2-3 honest sentences about what this budget gets in '+outcode+' right now","properties":[{"address":"full address with postcode","price":295000,"beds":3,"type":"semi-detached","tenure":"Freehold","chainFree":false,"addedDate":"added X ago","features":["garden","parking"],"url":"https://www.rightmove.co.uk/properties/12345678","portal":"Rightmove","agent":"Agent Name","verdict":"honest analysis: value vs market, condition, red flags, why worth viewing or not","score":7,"reduced":false,"overBudget":false,"isExample":false}],"topPickIndex":0}';
 
   try{
+
+
     const resp=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{
@@ -422,8 +435,8 @@ async function runSearch(pc,isInvest){
       },
       body:JSON.stringify({
         model:'claude-sonnet-4-5-20250929',
-        max_tokens:3000,
-        // NO tools: [] — this is the key fix. No web_search = no rate limits.
+        max_tokens:2500,
+        tools:[{type:'web_search_20250305',name:'web_search',max_uses:3}],
         messages:[{role:'user',content:prompt}]
       })
     });
@@ -433,7 +446,7 @@ async function runSearch(pc,isInvest){
     if(data.error){
       const msg=data.error.message||'';
       if(msg.includes('rate_limit')||msg.includes('rate limit')){
-        showError('Rate limit hit.\n\nThis should NOT happen now (no web search = very low token count).\nYour account may have a very low limit. Check: console.anthropic.com/settings/limits\nIf limit shows 0, you need to add credits at console.anthropic.com/settings/billing');
+        showError('Rate limit hit (30k tokens/min on free tier).\n\nFix: Wait 60 seconds then try again.\n\nOr upgrade at console.anthropic.com/settings/billing to remove the limit.\n\nYour key IS working — this is just a free tier restriction.');
       } else if(msg.includes('auth')){
         showError('Invalid API key. Get one at console.anthropic.com — make sure you have credits.');
       } else {
@@ -572,7 +585,11 @@ function showResults(result,area,pc,budget,minBeds,radius,isInvest,cost,typeChip
 
   if(props.length){
     h+='<div class="section-head">'+(isInvest?'💰 Investment Options':'🏠 Property Examples')
-      +' <span class="section-note">AI-generated based on area knowledge'+(props.some(p=>p.isExample)?' · use search links below for live listings':'')+'</span></div>';
+    const realCount=props.filter(p=>!p.isExample).length;
+    const exCount=props.filter(p=>p.isExample).length;
+    const headNote=realCount>0?(realCount+' real listing'+(realCount>1?'s':'')+' found via web search'+(exCount>0?' + '+exCount+' AI estimate'+(exCount>1?'s':''):'')):'AI estimates — use portal links for live listings';
+    h+='<div class="section-head">'+(isInvest?'💰 Investment Options':'🏠 Properties')
+      +' <span class="section-note">'+headNote+'</span></div>';
     const sorted=[...props].sort((a,b)=>(b.score||0)-(a.score||0));
     sorted.forEach((p,i)=>{
       const isTop=i===0&&!p.overBudget;
@@ -585,7 +602,8 @@ function showResults(result,area,pc,budget,minBeds,radius,isInvest,cost,typeChip
       else if(p.overBudget)h+='<div class="card-strip strip-over">⬆ Stretch Option — over budget</div>';
       else if(isInvest)h+='<div class="card-strip strip-invest">💰 Investment</div>';
       else h+='<div class="card-strip strip-sale">🏠 For Sale</div>';
-      if(p.isExample)h+='<div class="example-note">📌 Example based on area knowledge — search below for live listings</div>';
+    if(p.isExample){h+='<div class="example-note">📌 AI estimate — not a real listing</div>';}
+    else{h+='<div class="example-note" style="background:#edf8f2;border-bottom:1px solid #b0d8bc;color:#1a7848">✅ Real listing found via web search</div>';}
 
       h+='<div class="prop-body">';
       h+='<div class="prop-head"><div class="prop-addr">'+esc(p.address||'Address unavailable')+'</div><div class="prop-score" style="background:'+scCol+'">'+sc+'/10</div></div>';
@@ -613,11 +631,13 @@ function showResults(result,area,pc,budget,minBeds,radius,isInvest,cost,typeChip
       h+='<div class="prop-actions">';
       const hasRealUrl=p.url&&p.url.startsWith('http')&&/\/properties\/\d{6,}/.test(p.url);
       if(hasRealUrl){
-        h+='<a href="'+esc(p.url)+'" target="_blank" class="btn-view">View Listing ↗</a>';
+        h+='<a href="'+esc(p.url)+'" target="_blank" class="btn-view">View on Rightmove ↗</a>';
+      } else if(!p.isExample&&p.address){
+        const addrEnc=encodeURIComponent(p.address);
+        h+='<a href="https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&searchLocation='+addrEnc+'&useLocationIdentifier=false&sortType=2&maxPrice='+(p.price?Math.round(p.price*1.05):budget)+'" target="_blank" class="btn-view">Search Address ↗</a>';
       } else {
-        // Build a Rightmove search for this type of property
-        const searchUrl=buildRmUrl(outcode,p.price?Math.round(p.price*1.1):budget,p.beds||minBeds,1,[p.type||'detached'],[]);
-        h+='<a href="'+esc(searchUrl)+'" target="_blank" class="btn-view">Find Similar ↗</a>';
+        const simUrl=buildRmUrl(outcode,p.price?Math.round(p.price*1.1):budget,p.beds||minBeds,1,p.type?[p.type]:[],[]);
+        h+='<a href="'+esc(simUrl)+'" target="_blank" class="btn-view">Find Similar ↗</a>';
       }
       const zpSearch=buildZpUrl(outcode,p.price?Math.round(p.price*1.1):budget,p.beds||minBeds,1,[],[]);
       h+='<a href="'+esc(zpSearch)+'" target="_blank" class="btn-zoopla">Zoopla ↗</a>';
@@ -644,16 +664,27 @@ function buildPortalLinks(outcode,budget,minBeds,radius,typeChips,mustChips){
     +'</div></div>';
 }
 
-function openPortals(){
+async function openPortals(){
   const pc=$('inp-postcode').value.trim()||'M21';
   const budget=parseInt($('inp-budget').value)||300000;
   const minBeds=parseInt($('inp-beds').value)||3;
   const radius=parseFloat($('inp-radius').value)||3;
   const outcode=pc.split(' ')[0].toUpperCase();
   const{typeChips,mustChips}=getChips();
-  const h=buildPortalLinks(outcode,budget,minBeds,radius,typeChips,mustChips);
-  $('results-area').innerHTML=h;
+
+  // Show portal links immediately
+  const portalHtml=buildPortalLinks(outcode,budget,minBeds,radius,typeChips,mustChips);
+  $('results-area').innerHTML='<div class="area-loading"><div class="spinner" style="width:24px;height:24px;border-width:2px;margin:0 8px 0 0;display:inline-block;vertical-align:middle"></div>Loading area intelligence…</div>'+portalHtml;
   showScreen('results');
+
+  // Load area data in parallel and inject above portal links
+  try{
+    const areaData=await loadAreaData(pc);
+    const areaHtml=buildAreaIntel(areaData);
+    $('results-area').innerHTML=areaHtml+portalHtml;
+  }catch(err){
+    $('results-area').innerHTML='<div class="area-err">⚠️ Could not load area data for <b>'+esc(pc)+'</b>: '+esc(err.message)+'</div>'+portalHtml;
+  }
 }
 
 // ── UI ─────────────────────────────────────────────────────────────────────────
